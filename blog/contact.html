@@ -9,10 +9,10 @@
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display:flex; flex-direction:column; align-items:center; padding:20px; margin:0; min-height: 100vh; justify-content: center; }
         .content-box { background: var(--card); padding: 40px; border-radius: 24px; border: 1px solid var(--border); max-width: 600px; width: 100%; box-sizing: border-box; text-align: center; }
         h1 { color: var(--primary); letter-spacing: 4px; font-size: 1.5em; text-transform: uppercase; margin-bottom: 20px; }
-        p { line-height: 1.6; color: #aaa; font-size: 0.9em; }
         .contact-method { margin: 30px 0; padding: 20px; border: 1px solid var(--border); border-radius: 12px; background: #1f1f2e; }
         .email-link { color: var(--primary); font-weight: bold; text-decoration: none; font-size: 1.1em; }
-        .disclaimer { margin-top: 40px; font-size: 0.75em; color: #555; border-top: 1px solid #333; padding-top: 20px; text-align: justify; }
+        .disclaimer { margin-top: 40px; font-size: 0.75em; color: #555; border-top: 1px solid #333; padding-top: 20px; text-align: justify; line-height: 1.4; }
+        /* Notice the button link below */
         .back-btn { margin-top: 30px; display: inline-block; padding: 10px 20px; border: 1px solid var(--primary); color: var(--primary); text-decoration: none; border-radius: 8px; font-size: 0.8em; font-weight: bold; transition: 0.3s; }
         .back-btn:hover { background: var(--primary); color: white; }
     </style>
@@ -21,17 +21,17 @@
 
 <div class="content-box">
     <h1>Contact Systems</h1>
-    <p>For biomechanical inquiries, data corrections, or collaboration requests regarding the Cali-Biotech Command Center.</p>
+    <p style="color: #888; font-size: 0.9em;">For biomechanical inquiries or collaboration regarding the Command Center.</p>
 
     <div class="contact-method">
-        <label style="display:block; font-size:0.6em; color:var(--primary); text-transform:uppercase; margin-bottom:5px;">Direct Intelligence (Email)</label>
+        <label style="display:block; font-size:0.6em; color:var(--primary); text-transform:uppercase; margin-bottom:5px;">Direct Email</label>
         <a href="mailto:contactcalicalculator@gmail.com" class="email-link">contactcalicalculator@gmail.com</a>
     </div>
 
-    <a href="index.html" class="back-btn">← BACK TO COMMAND CENTER</a>
+    <a href="../index.html" class="back-btn">← RETURN TO MAIN COMMAND</a>
 
     <div class="disclaimer">
-        <strong>PHYSICAL DISCLAIMER:</strong> Cali-Biotech provides training estimates based on mathematical torque and general biomechanical principles. These calculations do not account for individual medical history or existing injuries. Always consult with a professional before attempting high-intensity physical activity.
+        <strong>PHYSICAL DISCLAIMER:</strong> Cali-Biotech estimates are based on mathematical models and general biomechanical principles. Always consult with a professional before attempting high-intensity physical activity.
     </div>
 </div>
 
