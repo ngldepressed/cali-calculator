@@ -1,38 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Cali-Biotech: Baseline Command</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root { --primary: #4c6fff; --potential: #00ffcc; --bg: #0b0b12; --card: #161621; --border: #2a2a3a; --danger: #ff4c4c; --text: #e0e0e0; --warning: #ffcc00; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display:flex; flex-direction:column; align-items:center; padding:10px; margin:0; }
-        .container { background:var(--card); padding:20px; border-radius:24px; width:100%; max-width:1300px; border: 1px solid var(--border); box-sizing: border-box; }
-        .main-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; width:100%; }
-        .card { background: #1f1f2e; padding: 18px; border-radius: 16px; border: 1px solid #333; }
-        .card h3 { margin-top: 0; color: var(--primary); font-size: 0.75em; text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid #333; padding-bottom: 5px; }
-        label { display:block; margin-top:8px; font-size: 0.65em; color: #888; text-transform: uppercase; font-weight: bold;}
-        input, select { width:100%; padding:10px; margin-top:4px; border-radius:8px; border:1px solid #333; background:var(--bg); color:white; font-size: 0.85em; box-sizing: border-box; }
-        .inline-quad { display: grid; grid-template-columns: 1.2fr 0.8fr 0.8fr 1fr; gap: 5px; }
-        .dashboard-row { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 20px; margin-top: 30px; width:100%; }
-        .analysis-panel { background:#1f1f2e; padding:20px; border-radius:20px; border: 1px solid #333; min-height: 400px; }
-        .skill-bar-container { margin-bottom: 12px; }
-        .skill-label { display: flex; justify-content: space-between; font-size: 0.75em; margin-bottom: 4px; font-weight: bold; }
-        .bar-bg { background: #0b0b12; height: 8px; border-radius: 4px; overflow: hidden; }
-        .bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--potential)); transition: width 0.5s ease; }
-        .col-header { font-size: 0.5em; color: var(--primary); text-align: center; }
-        .session-guide { padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 0.75em; font-weight: bold; text-align: center; border: 1px solid #444; }
-        
-        /* Fixed SEO & Nav Sections */
-        .seo-content { margin-top: 40px; color: #888; font-size: 0.85em; line-height: 1.6; max-width: 900px; text-align: justify; border-top: 1px solid #333; padding-top: 20px; }
-        .seo-content h2 { color: var(--primary); font-size: 1.2em; }
-        .guide-link { color: var(--potential); text-decoration: none; font-weight: bold; border: 1px solid var(--potential); padding: 5px 10px; border-radius: 5px; display: inline-block; margin-top: 10px;}
-        footer { margin-top: 50px; padding: 20px; border-top: 1px solid var(--border); width: 100%; text-align: center; font-size: 0.7em; }
-        footer a { color: #888; text-decoration: none; margin: 0 10px; }
-        footer a:hover { color: var(--primary); }
-
-        @media (max-width: 1000px) { .dashboard-row { grid-template-columns: 1fr; } }
-    </style>
+  <title>Cali-Biotech: Baseline Command</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root { --primary: #4c6fff; --potential: #00ffcc; --bg: #0b0b12; --card: #161621; --border: #2a2a3a; --danger: #ff4c4c; --text: #e0e0e0; --warning: #ffcc00; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display:flex; flex-direction:column; align-items:center; padding:10px; margin:0; }
+    .container { background:var(--card); padding:20px; border-radius:24px; width:100%; max-width:1300px; border: 1px solid var(--border); box-sizing: border-box; }
+    .main-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; width:100%; }
+    .card { background: #1f1f2e; padding: 18px; border-radius: 16px; border: 1px solid #333; }
+    .card h3 { margin-top: 0; color: var(--primary); font-size: 0.75em; text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+    label { display:block; margin-top:8px; font-size: 0.65em; color: #888; text-transform: uppercase; font-weight: bold;}
+    input, select { width:100%; padding:10px; margin-top:4px; border-radius:8px; border:1px solid #333; background:var(--bg); color:white; font-size: 0.85em; box-sizing: border-box; }
+    .inline-quad { display: grid; grid-template-columns: 1.2fr 0.8fr 0.8fr 1fr; gap: 5px; }
+    .dashboard-row { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 20px; margin-top: 30px; width:100%; }
+    .analysis-panel { background:#1f1f2e; padding:20px; border-radius:20px; border: 1px solid #333; min-height: 400px; }
+    .skill-bar-container { margin-bottom: 12px; }
+    .skill-label { display: flex; justify-content: space-between; font-size: 0.75em; margin-bottom: 4px; font-weight: bold; }
+    .bar-bg { background: #0b0b12; height: 8px; border-radius: 4px; overflow: hidden; }
+    .bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--potential)); transition: width 0.5s ease; }
+    .col-header { font-size: 0.5em; color: var(--primary); text-align: center; }
+    .session-guide { padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 0.75em; font-weight: bold; text-align: center; border: 1px solid #444; }
+    @media (max-width: 1000px) { .dashboard-row { grid-template-columns: 1fr; } }
+  </style>
 </head>
 <body onload="loadSavedData(); analyze();">
 
@@ -64,13 +55,14 @@
         </div>
 
         <div class="card">
-            <h3>Navigation & Guides</h3>
-            <p style="font-size: 0.7em; color: #888;">USE THESE RESOURCES TO IMPROVE YOUR BASELINE:</p>
-            <a href="pullup-guide.html" class="guide-link">THE FIRST PULLUP GUIDE</a>
-            <div style="margin-top: 15px;">
-                <a href="about.html" style="color: var(--primary); font-size: 0.8em; text-decoration: none;">ABOUT THE SYSTEM</a><br>
-                <a href="privacy.html" style="color: var(--primary); font-size: 0.8em; text-decoration: none;">PRIVACY POLICY</a>
-            </div>
+            <h3>Weighted Matrix</h3>
+            <div class="inline-quad"><div class="col-header">Weight</div><div class="col-header">Reps</div><div class="col-header">Sets</div><div class="col-header">RPE</div></div>
+            <label>Weighted Pull-up</label>
+            <div class="inline-quad"><input type="number" id="wpW" value="25" oninput="analyze(); saveToLocal();"><input type="number" id="wpR" value="5" oninput="analyze(); saveToLocal();"><input type="number" id="wpS" value="3" oninput="analyze(); saveToLocal();"><input type="number" id="wpRPE" value="8" oninput="analyze(); saveToLocal();"></div>
+            <label>Weighted Dip</label>
+            <div class="inline-quad"><input type="number" id="wdW" value="35" oninput="analyze(); saveToLocal();"><input type="number" id="wdR" value="5" oninput="analyze(); saveToLocal();"><input type="number" id="wdS" value="3" oninput="analyze(); saveToLocal();"><input type="number" id="wdRPE" value="8" oninput="analyze(); saveToLocal();"></div>
+            <label>Zanetti Raise (SA)</label>
+            <div class="inline-quad"><input type="number" id="saW" value="12" oninput="analyze(); saveToLocal();"><input type="number" id="saR" value="8" oninput="analyze(); saveToLocal();"><input type="number" id="saS" value="3" oninput="analyze(); saveToLocal();"><input type="number" id="saRPE" value="9" oninput="analyze(); saveToLocal();"></div>
         </div>
     </div>
 
@@ -79,19 +71,6 @@
         <div class="analysis-panel" id="skillBars"></div>
         <div class="analysis-panel" id="aiFeedback"></div>
     </div>
-
-    <div class="seo-content">
-        <h2>About Cali-Biotech Biomechanics</h2>
-        <p>This command system uses advanced torque calculations based on height, weight, and limb length to predict calisthenics performance. By calculating the ratio between your Weighted Pull-up and Dip, we determine structural integrity for elite moves.</p>
-    </div>
-
-    <footer>
-        <p>© 2026 Cali-Biotech Systems</p>
-        <a href="index.html">Command Center</a> | 
-        <a href="about.html">About Us</a> | 
-        <a href="privacy.html">Privacy Policy</a> | 
-        <a href="contact.html">Contact</a>
-    </footer>
 </div>
 
 <script>
@@ -109,31 +88,27 @@ function analyze() {
     let h = parseFloat(document.getElementById("hCm").value) || 175;
     let cnsVal = parseInt(document.getElementById("cns").value);
     
-    // Note: This logic assumes inputs for weighted work are present elsewhere or uses defaults if you kept the 3rd card
-    // Since you asked to fix the layout specifically, I've kept your core logic script intact.
+    const get1RM = (idW, idR, idRPE) => (bw + (parseFloat(document.getElementById(idW).value)||0) * (1 + (parseInt(document.getElementById(idR).value)||0)/30) * (1+(10-parseInt(document.getElementById(idRPE).value))/18)) / bw;
     
-    const get1RM = (idW, idR, idRPE) => {
-        let el = document.getElementById(idW);
-        if(!el) return 1; // Safety fallback
-        return (bw + (parseFloat(el.value)||0) * (1 + (parseInt(document.getElementById(idR).value)||0)/30) * (1+(10-parseInt(document.getElementById(idRPE).value))/18)) / bw;
-    };
-    
-    // Fallback logic for ratios if you removed the 3rd card in your version
-    const pullRatio = document.getElementById("wpW") ? get1RM("wpW", "wpR", "wpRPE") : 1.5;
-    const pushRatio = document.getElementById("wdW") ? get1RM("wdW", "wdR", "wdRPE") : 1.6;
-    const saRatio = document.getElementById("saW") ? get1RM("saW", "saR", "saRPE") : 0.8;
+    const pullRatio = get1RM("wpW", "wpR", "wpRPE");
+    const pushRatio = get1RM("wdW", "wdR", "wdRPE");
+    const saRatio = get1RM("saW", "saR", "saRPE");
     const torque = Math.pow(h / 170, 2.3) * parseFloat(document.getElementById("legRatio").value);
 
+    // Session Guide Logic
     const sessionBox = document.getElementById("sessionType");
     if (cnsVal >= 8) { sessionBox.innerText = "S-TIER: PEAK SKILL / MAX EFFORT"; sessionBox.style.color = "var(--potential)"; sessionBox.style.borderColor = "var(--potential)"; }
     else if (cnsVal >= 5) { sessionBox.innerText = "A-TIER: TECHNICAL VOLUME (75%)"; sessionBox.style.color = "var(--warning)"; sessionBox.style.borderColor = "var(--warning)"; }
     else { sessionBox.innerText = "RECOVERY: ISOLATION & MOBILITY"; sessionBox.style.color = "var(--danger)"; sessionBox.style.borderColor = "var(--danger)"; }
 
+    // Audit
     const integrity = (saRatio / pushRatio) * 100;
     document.getElementById("aiFeedback").innerHTML = `<h3>Audit</h3>
         <p><b>Torque:</b> ${torque.toFixed(2)}x</p>
-        <p><b>SA Integrity:</b> <span style="color:${integrity < 60 ? 'var(--danger)' : 'var(--potential)'}">${integrity.toFixed(0)}%</span></p>`;
+        <p><b>SA Integrity:</b> <span style="color:${integrity < 60 ? 'var(--danger)' : 'var(--potential)'}">${integrity.toFixed(0)}%</span></p>
+        <p style="font-size:0.7em;">${integrity < 60 ? "Warning: Connective tissue lagging. Focus on Straight Arm strength." : "Ready for isometric loading."}</p>`;
 
+    // Bars
     let barHtml = "<h3>Skill Status</h3>";
     const scores = skills.map(s => {
         let sc = [];
