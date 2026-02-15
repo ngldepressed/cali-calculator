@@ -108,11 +108,11 @@
             <h3>Weighted Matrix</h3>
             <div class="inline-quad"><div class="col-header">Weight</div><div class="col-header">Reps</div><div class="col-header">Sets</div><div class="col-header">RPE</div></div>
             <label id="pullLabel">Weighted Pull-up</label>
-            <div class="inline-quad"><input type="number" id="wpW" value="25" oninput="analyze(); saveToLocal();"><input type="number" id="wpR" value="5" oninput="analyze(); saveToLocal();"><input type="number" id="wpS" value="3"><input type="number" id="wpRPE" value="8" oninput="analyze(); saveToLocal();"></div>
+            <div class="inline-quad"><input type="number" id="wpW" value="25" oninput="analyze(); saveToLocal();"><input type="number" id="wpR" value="5" oninput="analyze(); saveToLocal();"><input type="number" id="wpS" value="3" oninput="analyze(); saveToLocal();"><input type="number" id="wpRPE" value="8" oninput="analyze(); saveToLocal();"></div>
             <label id="dipLabel">Weighted Dip</label>
-            <div class="inline-quad"><input type="number" id="wdW" value="35" oninput="analyze(); saveToLocal();"><input type="number" id="wdR" value="5" oninput="analyze(); saveToLocal();"><input type="number" id="wdS" value="3"><input type="number" id="wdRPE" value="8" oninput="analyze(); saveToLocal();"></div>
-            <label id="zanLabel">Zanetti Raise</label>
-            <div class="inline-quad" style="grid-template-columns: 2.2fr 1fr;"><input type="number" id="saW" value="12" oninput="analyze(); saveToLocal();"><input type="number" id="saRPE" value="9" oninput="analyze(); saveToLocal();"></div>
+            <div class="inline-quad"><input type="number" id="wdW" value="35" oninput="analyze(); saveToLocal();"><input type="number" id="wdR" value="5" oninput="analyze(); saveToLocal();"><input type="number" id="wdS" value="3" oninput="analyze(); saveToLocal();"><input type="number" id="wdRPE" value="8" oninput="analyze(); saveToLocal();"></div>
+            <label id="zanLabel">Zanetti Raise (SA)</label>
+            <div class="inline-quad"><input type="number" id="saW" value="12" oninput="analyze(); saveToLocal();"><input type="number" id="saR" value="8" oninput="analyze(); saveToLocal();"><input type="number" id="saS" value="3" oninput="analyze(); saveToLocal();"><input type="number" id="saRPE" value="9" oninput="analyze(); saveToLocal();"></div>
         </div>
     </div>
     <div class="dashboard-row">
@@ -208,7 +208,9 @@ function analyze() {
     
     const pull1RM = (bw + (parseFloat(document.getElementById("wpW").value)||0)*conv * (1 + (parseInt(document.getElementById("wpR").value)||0)/30) * (1+(10-parseInt(document.getElementById("wpRPE").value))/18)) / bw;
     const push1RM = (bw + (parseFloat(document.getElementById("wdW").value)||0)*conv * (1 + (parseInt(document.getElementById("wdR").value)||0)/30) * (1+(10-parseInt(document.getElementById("wdRPE").value))/18)) / bw;
-    const sa1RM = (bw + (parseFloat(document.getElementById("saW").value)||0)*conv * (1 + (10-parseInt(document.getElementById("saRPE").value))/15)) / bw;
+    
+    // Updated sa1RM calculation to include Reps and RPE
+    const sa1RM = (bw + (parseFloat(document.getElementById("saW").value)||0)*conv * (1 + (parseInt(document.getElementById("saR").value)||0)/30) * (1+(10-parseInt(document.getElementById("saRPE").value))/18)) / bw;
 
     const torqueFactor = Math.pow(h / 170, 2.3) * parseFloat(document.getElementById("legRatio").value);
     const cns = parseInt(document.getElementById("cns").value) / 10;
