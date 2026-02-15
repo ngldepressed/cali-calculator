@@ -43,10 +43,10 @@
     .insight-block { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #2a2a3a; }
     .col-header { font-size: 0.5em; color: var(--primary); text-align: center; }
 
-    .blog-section { width: 100%; max-width: 1300px; margin-top: 40px; padding: 20px; box-sizing: border-box; border-top: 1px solid var(--border); }
-    .blog-link { color: var(--potential); text-decoration: none; font-size: 0.8em; margin-right: 15px; }
+    .blog-section { width: 100%; max-width: 1300px; margin-top: 40px; padding: 20px; box-sizing: border-box; border-top: 1px solid var(--border); text-align: left; }
+    .blog-link { color: var(--potential); text-decoration: none; font-size: 0.8em; margin-right: 20px; transition: 0.3s; }
+    .blog-link:hover { color: white; text-decoration: underline; }
 
-    /* Logger Table Styles */
     table { width: 100%; font-size: 0.75em; border-collapse: collapse; margin-top: 10px; color: #bbb; }
     th { color: var(--primary); text-align: left; padding: 10px; border-bottom: 1px solid #333; text-transform: uppercase; font-size: 0.7em; }
     td { padding: 10px; border-bottom: 1px solid #222; }
@@ -58,6 +58,7 @@
         .main-grid { grid-template-columns: 1fr; }
         .container { border-radius: 0; }
         h1 { font-size: 1.1em !important; }
+        .blog-link { display: block; margin-bottom: 10px; }
     }
   </style>
 </head>
@@ -156,11 +157,12 @@
     </div>
 
     <div class="blog-section">
-        <h3 style="color:var(--primary); font-size:0.9em;">RESOURCES & GUIDES</h3>
+        <h3 style="color:var(--primary); font-size:0.9em; margin-bottom: 15px;">RESOURCES & GUIDES</h3>
         <a href="blog/pullup-guide.html" class="blog-link">First Pull-up Guide</a>
         <a href="blog/privacy.html" class="blog-link">Privacy Policy</a>
         <a href="blog/about.html" class="blog-link">About Cali-Biotech</a>
-        <p style="font-size: 0.6em; color: #444; margin-top: 20px;">© 2026 Cali-Biotech Command Systems.</p>
+        <a href="blog/contact.html" class="blog-link">Contact Us</a>
+        <p style="font-size: 0.6em; color: #444; margin-top: 25px;">© 2026 Cali-Biotech Command Systems.</p>
     </div>
 </div>
 
