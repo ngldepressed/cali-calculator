@@ -3,6 +3,15 @@
 <head>
   <title>Cali-Biotech: Production Command</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root { --primary: #4c6fff; --potential: #00ffcc; --bg: #0b0b12; --card: #161621; --border: #2a2a3a; --danger: #ff4c4c; --text: #e0e0e0; }
@@ -25,12 +34,10 @@
     
     .inline-quad { display: grid; grid-template-columns: 1.2fr 0.8fr 0.8fr 1fr; gap: 5px; }
     
-    /* Responsive Dashboard Row */
     .dashboard-row { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 20px; margin-top: 30px; }
     
     .analysis-panel { background:#1f1f2e; padding:20px; border-radius:20px; border: 1px solid #333; min-height: 450px; overflow-y: auto; }
     
-    /* Skill Bars */
     .skill-bar-container { margin-bottom: 12px; }
     .skill-label { display: flex; justify-content: space-between; font-size: 0.75em; margin-bottom: 4px; font-weight: bold; }
     .bar-bg { background: #0b0b12; height: 8px; border-radius: 4px; overflow: hidden; border: 1px solid #333; }
@@ -45,7 +52,14 @@
     .gear-item:hover { border-color: var(--potential); transform: translateY(-3px); }
     .gear-btn { display: inline-block; margin-top: 10px; padding: 10px 20px; background: var(--primary); color: white; text-decoration: none; border-radius: 8px; font-size: 0.8em; font-weight: bold; }
 
-    /* MOBILE OPTIMIZATION */
+    /* Switcher Buttons */
+    .sw-btn { padding: 8px 15px; cursor: pointer; border: 1px solid var(--primary); background: transparent; color: var(--primary); border-radius: 5px; font-size: 0.7em; margin: 0 5px; }
+    .sw-btn.active { background: var(--primary); color: white; }
+
+    /* Blog Section */
+    .blog-section { width: 100%; max-width: 1300px; margin-top: 40px; padding: 20px; box-sizing: border-box; border-top: 1px solid var(--border); }
+    .blog-link { color: var(--potential); text-decoration: none; font-size: 0.8em; margin-right: 15px; }
+
     @media (max-width: 1000px) {
         .dashboard-row { grid-template-columns: 1fr; }
         .main-grid { grid-template-columns: 1fr; }
@@ -57,17 +71,22 @@
 </head>
 <body onload="loadSavedData(); analyze();">
 
-    <div class="disclosure">ADVERTISEMENT: We may earn commissions from links on this page.</div>
-    <div class="ad-slot">ADSENSE TOP BANNER (PASTE CODE HERE)</div>
+    <div class="disclosure">As an Amazon Associate, I earn from qualifying purchases.</div>
+    <div class="ad-slot">ADSENSE TOP BANNER (Wait for approval to paste code)</div>
 
 <div class="container">
     <h1 style="text-align:center; color:var(--primary); font-size:1.4em; letter-spacing:4px; margin-bottom: 20px;">CALI-BIOTECH COMMAND</h1>
 
-    <div style="text-align: center; margin-bottom: 20px;">
+    <div style="text-align: center; margin-bottom: 20px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
         <select id="unitSystem" onchange="updateLabels(); analyze(); saveToLocal();" style="width: 220px; background: #1f1f2e; color: var(--primary); border: 1px solid var(--primary);">
             <option value="met">METRIC (KG / CM)</option>
             <option value="imp">IMPERIAL (LBS / FT-IN)</option>
         </select>
+        
+        <div style="background: #1f1f2e; padding: 5px; border-radius: 8px; border: 1px solid #333;">
+            <button id="btn-in" class="sw-btn active" onclick="setRegion('IN')">🇮🇳 INDIA</button>
+            <button id="btn-global" class="sw-btn" onclick="setRegion('US')">🌎 GLOBAL</button>
+        </div>
     </div>
 
     <div class="main-grid">
@@ -113,7 +132,6 @@
             <div class="inline-quad" style="grid-template-columns: 2.2fr 1fr;"><input type="number" id="saW" value="12" oninput="analyze(); saveToLocal();"><input type="number" id="saRPE" value="9" oninput="analyze(); saveToLocal();"></div>
         </div>
     </div>
-
     <div class="dashboard-row">
         <div style="background:var(--bg); border-radius:20px; padding:10px; border:1px solid var(--border); display: flex; align-items:center;"><canvas id="skillRadar"></canvas></div>
         <div class="analysis-panel" id="skillBars"></div>
@@ -121,21 +139,51 @@
     </div>
 </div>
 
-<h2 style="color:var(--primary); margin-top:40px; letter-spacing:2px; font-size:1em;">PRECISION GEAR RECOMMENDATIONS</h2>
+<h2 style="color:var(--primary); margin-top:40px; letter-spacing:2px; font-size:1em; text-align:center;">PRECISION GEAR RECOMMENDATIONS</h2>
 <div class="gear-grid">
     <div class="gear-item">
         <h4 style="margin:0; color:var(--potential);">Wooden Gymnastic Rings</h4>
         <p style="font-size:0.75em; color:#888;">Crucial for bicep tendon conditioning and ring statics.</p>
-        <a href="YOUR_LINK_HERE" class="gear-btn">VIEW ON AMAZON</a>
+        <a id="link-rings" href="#" target="_blank" class="gear-btn">VIEW ON AMAZON</a>
     </div>
     <div class="gear-item">
         <h4 style="margin:0; color:var(--potential);">Pro Steel Parallettes</h4>
         <p style="font-size:0.75em; color:#888;">Solid base for Planche and Handstand progression.</p>
-        <a href="YOUR_LINK_HERE" class="gear-btn">CHECK PRICE</a>
+        <a id="link-para" href="#" target="_blank" class="gear-btn">CHECK PRICE</a>
     </div>
 </div>
 
+<div class="blog-section">
+    <h3 style="color:var(--primary); font-size:0.9em;">RESOURCES & GUIDES</h3>
+    <a href="blog/pullup-guide.html" class="blog-link">First Pull-up Guide</a>
+    <a href="blog/privacy.html" class="blog-link">Privacy Policy</a>
+    <a href="blog/about.html" class="blog-link">About Cali-Biotech</a>
+    <p style="font-size: 0.6em; color: #444; margin-top: 20px;">© 2026 Cali-Biotech Command Systems.</p>
+</div>
+
 <script>
+// --- REGION LOGIC ---
+const gearLinks = {
+    'link-rings': {
+        IN: 'https://www.amazon.in/dp/YOUR_RINGS_ID_INDIA',
+        US: 'https://www.amazon.com/dp/YOUR_RINGS_ID_US'
+    },
+    'link-para': {
+        IN: 'https://www.amazon.in/dp/YOUR_PARA_ID_INDIA',
+        US: 'https://www.amazon.com/dp/YOUR_PARA_ID_US'
+    }
+};
+
+function setRegion(region) {
+    document.getElementById('btn-in').classList.toggle('active', region === 'IN');
+    document.getElementById('btn-global').classList.toggle('active', region === 'US');
+    for (let id in gearLinks) {
+        document.getElementById(id).href = gearLinks[id][region];
+    }
+}
+setRegion('IN');
+
+// --- YOUR ORIGINAL LOGIC START ---
 function updateLabels() {
     const isMet = document.getElementById("unitSystem").value === 'met';
     document.getElementById("wLabel").innerText = isMet ? "Weight (kg)" : "Weight (lbs)";
@@ -226,6 +274,7 @@ function analyze() {
         <div class="insight-block"><span class="insight-title">Torque Multiplier: ${torqueFactor.toFixed(2)}x</span><p style="font-size:0.7em;">Strength penalty for ${h.toFixed(0)}cm stature.</p></div>
         <div class="insight-block"><span class="insight-title">SA Integrity: ${((sa1RM/push1RM)*100).toFixed(0)}%</span><p style="font-size:0.7em;">${sa1RM/push1RM < 0.6 ? "WARNING: Tendons lagging." : "Safe for isometric loading."}</p></div>`;
 }
+// --- YOUR ORIGINAL LOGIC END ---
 </script>
 </body>
 </html>
