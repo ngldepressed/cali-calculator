@@ -18,9 +18,6 @@
     
     body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display:flex; flex-direction:column; align-items:center; padding:10px; margin:0; }
     
-    .disclosure { font-size: 0.65em; color: #666; width: 100%; max-width: 1300px; text-align: center; margin-bottom: 10px; }
-    .ad-slot { background: rgba(255,255,255,0.03); border: 1px dashed #444; margin: 15px 0; padding: 20px; text-align: center; color: #666; font-size: 0.8em; border-radius: 15px; width: 100%; max-width: 1300px; box-sizing: border-box; }
-
     .container { background:var(--card); padding:20px; border-radius:24px; width:100%; max-width:1300px; box-shadow:0 30px 60px rgba(0,0,0,0.8); border: 1px solid var(--border); box-sizing: border-box; }
     
     .main-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
@@ -49,18 +46,22 @@
     .blog-section { width: 100%; max-width: 1300px; margin-top: 40px; padding: 20px; box-sizing: border-box; border-top: 1px solid var(--border); }
     .blog-link { color: var(--potential); text-decoration: none; font-size: 0.8em; margin-right: 15px; }
 
+    /* Logger Styles */
+    table { width: 100%; font-size: 0.75em; border-collapse: collapse; margin-top: 10px; color: #bbb; }
+    th { color: var(--primary); text-align: left; padding: 10px; border-bottom: 1px solid #333; text-transform: uppercase; font-size: 0.7em; }
+    td { padding: 10px; border-bottom: 1px solid #222; }
+    .btn-log { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.7em; }
+    .btn-log:hover { filter: brightness(1.2); }
+
     @media (max-width: 1000px) {
         .dashboard-row { grid-template-columns: 1fr; }
         .main-grid { grid-template-columns: 1fr; }
         .container { border-radius: 0; }
         h1 { font-size: 1.1em !important; }
-        .analysis-panel { min-height: auto; }
     }
   </style>
 </head>
-<body onload="loadSavedData(); analyze();">
-
-    <div class="ad-slot">ADSENSE TOP BANNER</div>
+<body onload="loadSavedData(); analyze(); renderLogs();">
 
 <div class="container">
     <h1 style="text-align:center; color:var(--primary); font-size:1.4em; letter-spacing:4px; margin-bottom: 20px;">CALI-BIOTECH COMMAND</h1>
@@ -115,29 +116,35 @@
             <div class="inline-quad"><input type="number" id="saW" value="12" oninput="analyze(); saveToLocal();"><input type="number" id="saR" value="8" oninput="analyze(); saveToLocal();"><input type="number" id="saS" value="3" oninput="analyze(); saveToLocal();"><input type="number" id="saRPE" value="9" oninput="analyze(); saveToLocal();"></div>
         </div>
     </div>
+
     <div class="dashboard-row">
         <div style="background:var(--bg); border-radius:20px; padding:10px; border:1px solid var(--border); display: flex; align-items:center;"><canvas id="skillRadar"></canvas></div>
         <div class="analysis-panel" id="skillBars"></div>
         <div class="analysis-panel" id="aiFeedback"></div>
     </div>
-</div>
 
-<h2 style="color:var(--primary); margin-top:40px; letter-spacing:2px; font-size:1em; text-align:center;">SUPPORT THE GRIND</h2>
-<div style="text-align: center; padding: 30px; background: #1f1f2e; border-radius: 20px; border: 1px dashed var(--primary); width: 100%; max-width: 1300px; box-sizing: border-box; margin: 20px auto;">
-    <p style="font-size: 0.8em; color: #888; margin-bottom: 20px;">I'm refining these tools every day through my own training. If this data helps your progress, consider fueling the research.</p>
-    
-    <a href="https://www.buymeacoffee.com/CaliBiotech" target="_blank" style="display: inline-flex; align-items: center; background: #FFDD00; color: #000000; padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 0.9em; transition: 0.3s; box-shadow: 0 4px 15px rgba(255, 221, 0, 0.2);">
-        <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy me a coffee" style="height: 20px; margin-right: 10px;">
-        Buy me a protein shake
-    </a>
-</div>
-
-<div class="blog-section">
-    <h3 style="color:var(--primary); font-size:0.9em;">RESOURCES & GUIDES</h3>
-    <a href="blog/pullup-guide.html" class="blog-link">First Pull-up Guide</a>
-    <a href="blog/privacy.html" class="blog-link">Privacy Policy</a>
-    <a href="blog/about.html" class="blog-link">About Cali-Biotech</a>
-    <p style="font-size: 0.6em; color: #444; margin-top: 20px;">© 2026 Cali-Biotech Command Systems.</p>
+    <div class="card" style="margin-top: 25px; border-color: var(--border);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h3 style="border: none; margin: 0;">Training History Log</h3>
+            <button class="btn-log" onclick="logSession()">LOG CURRENT DATA</button>
+        </div>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>BW</th>
+                        <th>Pull Max</th>
+                        <th>Push Max</th>
+                        <th>SA Max</th>
+                        <th>Strongest Skill</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="logBody"></tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -199,6 +206,64 @@ function loadSavedData() {
     }
 }
 
+function logSession() {
+    const savedLogs = localStorage.getItem('caliLogs') ? JSON.parse(localStorage.getItem('caliLogs')) : [];
+    const sys = document.getElementById("unitSystem").value;
+    const u = sys === 'met' ? 'kg' : 'lbs';
+    
+    // Calculate current theoretical maxes for log
+    const get1RM = (idW, idR) => {
+        let w = parseFloat(document.getElementById(idW).value) || 0;
+        let r = parseInt(document.getElementById(idR).value) || 0;
+        let bw = parseFloat(document.getElementById("weight").value) || 0;
+        return (bw + w * (1 + r/30)).toFixed(1);
+    };
+
+    // Find highest % skill from the current UI
+    let topSkill = "None";
+    let maxVal = -1;
+    document.querySelectorAll('.skill-label').forEach(el => {
+        let val = parseInt(el.children[1].innerText);
+        if(val > maxVal) { maxVal = val; topSkill = el.children[0].innerText; }
+    });
+
+    const entry = {
+        date: new Date().toLocaleDateString(),
+        bw: document.getElementById("weight").value + u,
+        pull: get1RM("wpW", "wpR") + u,
+        push: get1RM("wdW", "wdR") + u,
+        sa: get1RM("saW", "saR") + u,
+        skill: topSkill + " (" + maxVal + "%)"
+    };
+
+    savedLogs.unshift(entry);
+    localStorage.setItem('caliLogs', JSON.stringify(savedLogs.slice(0, 8))); // Keep last 8 entries
+    renderLogs();
+}
+
+function renderLogs() {
+    const savedLogs = localStorage.getItem('caliLogs') ? JSON.parse(localStorage.getItem('caliLogs')) : [];
+    const container = document.getElementById("logBody");
+    container.innerHTML = savedLogs.map((l, i) => `
+        <tr>
+            <td>${l.date}</td>
+            <td>${l.bw}</td>
+            <td>${l.pull}</td>
+            <td>${l.push}</td>
+            <td>${l.sa}</td>
+            <td style="color:var(--potential)">${l.skill}</td>
+            <td><button onclick="deleteLog(${i})" style="background:none; border:none; color:var(--danger); cursor:pointer;">✕</button></td>
+        </tr>
+    `).join('');
+}
+
+function deleteLog(i) {
+    const savedLogs = JSON.parse(localStorage.getItem('caliLogs'));
+    savedLogs.splice(i, 1);
+    localStorage.setItem('caliLogs', JSON.stringify(savedLogs));
+    renderLogs();
+}
+
 function analyze() {
     if(!radarChart) initChart();
     const sys = document.getElementById("unitSystem").value;
@@ -208,8 +273,6 @@ function analyze() {
     
     const pull1RM = (bw + (parseFloat(document.getElementById("wpW").value)||0)*conv * (1 + (parseInt(document.getElementById("wpR").value)||0)/30) * (1+(10-parseInt(document.getElementById("wpRPE").value))/18)) / bw;
     const push1RM = (bw + (parseFloat(document.getElementById("wdW").value)||0)*conv * (1 + (parseInt(document.getElementById("wdR").value)||0)/30) * (1+(10-parseInt(document.getElementById("wdRPE").value))/18)) / bw;
-    
-    // Updated sa1RM calculation to include Reps and RPE
     const sa1RM = (bw + (parseFloat(document.getElementById("saW").value)||0)*conv * (1 + (parseInt(document.getElementById("saR").value)||0)/30) * (1+(10-parseInt(document.getElementById("saRPE").value))/18)) / bw;
 
     const torqueFactor = Math.pow(h / 170, 2.3) * parseFloat(document.getElementById("legRatio").value);
