@@ -493,7 +493,7 @@ function analyze() {
         const cnsVal = (parseInt(document.getElementById("cns").value) || 10) / 10;
         const form = parseFloat(document.getElementById("form").value) || 1.0;
 
-        // 2. SIM MODE / OPTIMIZER LOGIC
+        // 2. SIM MODE / OPTIMIZER
         if (isSimMode) {
             radarChart.data.datasets[0].label = 'SIMULATED TARGET';
             radarChart.data.datasets[0].borderColor = '#00ffcc';
@@ -503,7 +503,7 @@ function analyze() {
             if (typeof saveToLocal === 'function') saveToLocal(); 
         }
 
-        // 3. SKILL BARS SETUP
+        // 3. SKILL BARS & PROGRESS
         let skillPanel = document.getElementById("skillBars");
         if (!document.getElementById("goalSelect")) {
             skillPanel.innerHTML = `<div style="margin-bottom:20px;"><label style="color:var(--primary); font-size:0.7em; letter-spacing:2px;">MISSION_TARGET</label>
@@ -529,67 +529,81 @@ function analyze() {
             curScores.push(cur.toFixed(1));
             potScores.push(sig(Math.max(...vectors.map(v => v.val))).toFixed(1));
 
-            let recText = isTarget ? `TARGET: Increase ${vectors.reduce((a,b)=>a.val<b.val?a:b).name} to +${(((vectors.reduce((a,b)=>a.val<b.val?a:b).req * bw) - bw) / conv).toFixed(1)}${u}.` : "";
+            let recText = "";
+            if (isTarget) {
+                let weakest = vectors.reduce((prev, curr) => (prev.val < curr.val) ? prev : curr);
+                let neededPlate = ((weakest.req * bw) - bw) / conv;
+                recText = `CRITICAL PATH: Improve ${weakest.name}. Target 1RM: +${neededPlate.toFixed(1)}${u}.`;
+            }
 
-            barHtml += `<div class="skill-bar-container" style="opacity:${activeGoal!=="None"&&!isTarget?0.2:1}; margin-bottom:15px;">
-                <div class="skill-label" style="display:flex; justify-content:space-between; font-family:monospace; font-size:0.85em;">
-                    <span>${s.name.toUpperCase()}</span><span>${cur.toFixed(0)}%</span>
-                </div>
-                <div class="bar-bg" style="background:#111; height:6px; border-radius:10px; border:1px solid #333;">
-                    <div class="bar-fill" style="width:${cur}%; height:100%; background:${isTarget?'var(--potential)':'var(--primary)'}; border-radius:10px;"></div>
-                </div>
-                ${isTarget ? `<div style="font-size:0.7em; color:var(--potential); margin-top:5px; font-family:monospace;">> ${recText}</div>` : ''}
-            </div>`;
+            barHtml += `
+                <div class="skill-bar-container" style="opacity: ${activeGoal !== "None" && !isTarget ? '0.2' : '1'}; margin-bottom:15px;">
+                    <div class="skill-label" style="display:flex; justify-content:space-between; font-family:monospace; font-size:0.85em;">
+                        <span>${s.name.toUpperCase()}</span><span>${cur.toFixed(0)}%</span>
+                    </div>
+                    <div class="bar-bg" style="background:#111; height:6px; border-radius:10px; border:1px solid #333;">
+                        <div class="bar-fill" style="width: ${cur}%; height:100%; background: ${isTarget ? 'var(--potential)' : 'var(--primary)'}; border-radius:10px;"></div>
+                    </div>
+                    ${isTarget ? `<div style="font-size:0.7em; color:var(--potential); margin-top:5px; font-family:monospace;">> ${recText}</div>` : ''}
+                </div>`;
         });
 
-        // 4. AUDIT & HEATMAP LOGIC
+        // 4. DEEP DIAGNOSTIC AUDIT LOGIC
         const pullPushRatio = (pull1RM / push1RM).toFixed(2);
         const saIntegrity = (sa1RM / push1RM).toFixed(2);
-        
-        // Heatmap Processing
-        const joints = {
-            shoulders: document.querySelectorAll('#joint-shoulder-l, #joint-shoulder-r'),
-            elbows: document.querySelectorAll('#joint-elbow-l, #joint-elbow-r')
-        };
-        
-        let riskMsg = "SYSTEMS_NOMINAL";
-        let shoulderColor = "#00ffcc"; let elbowColor = "#00ffcc";
+        const relPower = push1RM.toFixed(2);
 
-        if (pullPushRatio < 0.85) { shoulderColor = "#ff4444"; riskMsg = "SHOULDER_IMPINGEMENT"; }
-        if (saIntegrity < 0.60) { elbowColor = "#ff4444"; riskMsg = "ELBOW_TENDON_LAG"; }
+        let tStatus = torqueFactor > 1.08 ? "PENALTY" : "OPTIMAL";
+        let tDesc = torqueFactor > 1.08 ? `Height (${h.toFixed(0)}cm) creates lever disadvantage.` : `Optimal leverages for statics.`;
+        let bStatus = pullPushRatio < 0.85 ? "DEFICIT" : "BALANCED";
+        let bDesc = pullPushRatio < 0.85 ? `Pull chain is ${((1-pullPushRatio)*100).toFixed(0)}% behind Push.` : `Scapular stabilizers are matched.`;
+        let sStatus = saIntegrity < 0.62 ? "TENDON LAG" : "NOMINAL";
+        let sDesc = saIntegrity < 0.62 ? `Muscle power outpaces connective tissue.` : `Density sufficient for SA loads.`;
 
-        joints.shoulders.forEach(s => s.style.fill = shoulderColor);
-        joints.elbows.forEach(e => e.style.fill = elbowColor);
+        let auditHtml = `<h3 style="font-size:0.7em; letter-spacing:3px; color:var(--primary); margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">BIOMECHANICAL_REPORT</h3>`;
         
-        const riskEl = document.getElementById("risk-msg");
-        if (riskEl) { riskEl.innerText = riskMsg; riskEl.style.color = (riskMsg === "SYSTEMS_NOMINAL") ? "#00ffcc" : "#ff4444"; }
-
-        // Audit Injection
-        document.getElementById("aiFeedback").innerHTML = `
-            <div class="insight-block" style="border-left:3px solid #888; padding-left:10px; margin-bottom:10px;">
-                <span style="font-size:0.8em; color:#fff;">TORQUE: ${torqueFactor.toFixed(2)}x</span>
-            </div>
-            <div class="insight-block" style="border-left:3px solid ${shoulderColor}; padding-left:10px; margin-bottom:10px;">
-                <span style="font-size:0.8em; color:${shoulderColor};">PUSH/PULL: ${pullPushRatio}</span>
-            </div>
-            <div class="insight-block" style="border-left:3px solid ${elbowColor}; padding-left:10px; margin-bottom:10px;">
-                <span style="font-size:0.8em; color:${elbowColor};">SA_INTEGRITY: ${saIntegrity}</span>
+        const createInsight = (title, status, val, desc, color) => `
+            <div class="insight-block" style="margin-bottom:15px; border-left:3px solid ${color}; padding-left:12px; background: rgba(255,255,255,0.02); padding-top:8px; padding-bottom:8px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:0.8em; font-weight:bold; color:${color};">${title}</span>
+                    <span style="font-size:0.6em; background:${color}; color:#000; padding:1px 4px; border-radius:2px; font-weight:bold;">${status}</span>
+                </div>
+                <div style="font-size:1em; color:#fff; font-family:monospace; margin:4px 0;">${val}</div>
+                <p style="font-size:0.65em; color:#bbb; margin:0; line-height:1.4;">${desc}</p>
             </div>`;
 
-        // 5. VOLUME TAX LOGIC
+        auditHtml += createInsight("TORQUE_LOAD", tStatus, torqueFactor.toFixed(2) + "x", tDesc, torqueFactor > 1.08 ? "#ff9900" : "#888");
+        auditHtml += createInsight("POSTERIOR_CHAIN", bStatus, pullPushRatio, bDesc, pullPushRatio < 0.85 ? "#ff4444" : "#00ffcc");
+        auditHtml += createInsight("CONNECTIVE_TISSUE", sStatus, saIntegrity, sDesc, saIntegrity < 0.62 ? "#ff4444" : "#00ffcc");
+        auditHtml += createInsight("RELATIVE_POWER", "FORCE", relPower + "x BW", "Force generation relative to mass.", "var(--primary)");
+
+        // 5. HEATMAP & VOLUME UPDATES
+        const shoulders = document.querySelectorAll('#joint-shoulder-l, #joint-shoulder-r');
+        const elbows = document.querySelectorAll('#joint-elbow-l, #joint-elbow-r');
+        let riskMsg = "SYSTEMS_NOMINAL";
+
+        if (pullPushRatio < 0.85) { shoulders.forEach(s => s.style.fill = "#ff4444"); riskMsg = "SHOULDER_RISK"; }
+        else { shoulders.forEach(s => s.style.fill = "#00ffcc"); }
+        if (saIntegrity < 0.60) { elbows.forEach(e => e.style.fill = "#ff4444"); riskMsg = "ELBOW_RISK"; }
+        else { elbows.forEach(e => e.style.fill = "#00ffcc"); }
+
+        const rMsg = document.getElementById("risk-msg");
+        if (rMsg) { rMsg.innerText = riskMsg; rMsg.style.color = (riskMsg === "SYSTEMS_NOMINAL") ? "#00ffcc" : "#ff4444"; }
+
         let totalTax = ((parseInt(document.getElementById("wpS").value)||0) * 1.5) + ((parseInt(document.getElementById("wdS").value)||0) * 1.5);
         const vFill = document.getElementById("volume-fill");
         if (vFill) vFill.style.width = Math.min((totalTax / 20) * 100, 100) + "%";
         const vTax = document.getElementById("volume-tax");
         if (vTax) vTax.innerText = totalTax.toFixed(1);
 
-        // 6. FINAL UI SYNC
+        // 6. FINAL INJECTION
+        document.getElementById("aiFeedback").innerHTML = auditHtml;
         document.getElementById("barContainer").innerHTML = barHtml;
         radarChart.data.datasets[0].data = curScores;
         radarChart.data.datasets[1].data = potScores;
         radarChart.update();
 
-    } catch (err) { console.error("System Failure: ", err); }
+    } catch (err) { console.error(err); }
 }
 </script>
 </body>
