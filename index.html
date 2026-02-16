@@ -13,6 +13,7 @@
       gtag('config', 'G-CDL3F645R2');
     </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     * {
     box-sizing: border-box; /* Makes padding not break width */
@@ -121,6 +122,7 @@ html, body {
     }
 }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body onload="loadSavedData(); renderLogs();"> 
 <div class="container" id="mainContainer">
@@ -197,14 +199,14 @@ html, body {
         <div class="analysis-panel" id="skillBars">
              <div style="text-align: center; color: #444; margin-top: 100px;">SYSTEM OFFLINE</div>
         </div>
-        <div class="analysis-panel" id="aiFeedback">
-            <div class="analysis-panel" id="aiFeedback">
-    <div style="background: rgba(255, 76, 76, 0.1); border: 1px solid var(--danger); padding: 10px; border-radius: 12px; margin-bottom: 15px;">
-        <p style="font-size: 0.65em; color: var(--danger); margin: 0; font-weight: bold; text-transform: uppercase; line-height: 1.4;">
-            ⚠️ SAFETY PROTOCOL: Ensure connective tissue readiness before attempting calculated 1RMs. Use a spotter for weighted dips. Stop immediately if you experience sharp joint pain.
-        </p>
+      <div class="analysis-panel" id="auditWrapper">
+    <div id="captureArea" style="background:#1f1f2e; padding:15px; border-radius:12px; border: 1px solid #333;">
+        <div id="aiFeedback">
+             <div style="text-align: center; color: #444; margin-top: 100px;">AWAITING AUDIT</div>
+        </div>
     </div>
-    
+    <button id="shareBtn" onclick="shareReport()" style="display:none; width:100%; margin-top:15px; background:transparent; border:1px solid var(--potential); color:var(--potential); cursor:pointer; padding:12px; font-family: monospace; border-radius:8px; font-size:0.7em; text-transform:uppercase;">Download_Report.png</button>
+</div>
     <div style="text-align: center; color: #444; margin-top: 80px;">AWAITING AUDIT</div>
 </div>
              <div style="text-align: center; color: #444; margin-top: 100px;">AWAITING AUDIT</div>
@@ -670,6 +672,40 @@ function analyze() {
 
     } catch (err) { console.error(err); }
 }
+// Function 1: The actual image saver
+function shareReport() {
+    const target = document.getElementById("captureArea");
+    const btn = document.getElementById("shareBtn");
+    btn.innerText = "GENERATING...";
+    
+    html2canvas(target, { 
+        backgroundColor: "#1f1f2e",
+        scale: 2 // Makes the image high quality
+    }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'CaliBiotech_Report.png';
+        link.href = canvas.toDataURL();
+        link.click();
+        btn.innerText = "DOWNLOAD_REPORT.PNG";
+    });
+}
+function shareReport() {
+    const target = document.getElementById("captureArea");
+    const btn = document.getElementById("shareBtn");
+    btn.innerText = "GENERATING...";
+    
+    html2canvas(target, { 
+        backgroundColor: "#1f1f2e",
+        scale: 2 
+    }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'CaliBiotech_Report.png';
+        link.href = canvas.toDataURL();
+        link.click();
+        btn.innerText = "DOWNLOAD_REPORT.PNG";
+    });
+}
+document.getElementById("shareBtn").style.display = "block";
 </script>
 </body>
 </html>
