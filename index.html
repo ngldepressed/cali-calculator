@@ -38,7 +38,7 @@
     .btn-prepare { background: transparent; color: var(--potential); border: 2px solid var(--potential); padding: 15px 30px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 0.8em; letter-spacing: 2px; transition: 0.3s; }
     .btn-prepare:hover { background: var(--potential); color: black; box-shadow: 0 0 20px rgba(0, 255, 204, 0.4); }
 
-    .skill-bar-container { margin-bottom: 12px; }
+    .skill-bar-container { margin-bottom: 12px; transition: 0.3s opacity; }
     .skill-label { display: flex; justify-content: space-between; font-size: 0.75em; margin-bottom: 4px; font-weight: bold; }
     .bar-bg { background: #0b0b12; height: 8px; border-radius: 4px; overflow: hidden; border: 1px solid #333; }
     .bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--potential)); transition: width 0.5s ease; }
@@ -383,6 +383,18 @@ function deleteLog(i) {
     renderLogs();
 }
 
+function generateGoalBrief(vectors, bw, conv, u) {
+    let bottlenecks = [...vectors].sort((a, b) => a.val - b.val).slice(0, 2);
+    let brief = `<div style="margin-top: 8px; font-size: 0.6em; color: var(--potential); font-weight: bold; text-transform: uppercase;">Primary Bottlenecks:</div>`;
+    
+    bottlenecks.forEach(b => {
+        let deficit = b.req - b.raw;
+        let deficitWeight = Math.max(0, (deficit * bw / conv)).toFixed(1);
+        brief += `<span class="rec-exercise" style="opacity:1">↑ Increase ${b.name} by +${deficitWeight}${u} 1RM</span>`;
+    });
+    return brief;
+}
+
 function analyze() {
     if(!isSystemReady) return; 
     if(!radarChart) initChart();
@@ -398,6 +410,7 @@ function analyze() {
 
     const sys = document.getElementById("unitSystem").value;
     const conv = sys === 'imp' ? 0.453592 : 1;
+    const u = sys === 'met' ? 'kg' : 'lbs';
     let bw = parseFloat(document.getElementById("weight").value) * conv;
     let h = sys === 'met' ? parseFloat(document.getElementById("hCm").value) : (parseFloat(document.getElementById("hFt").value)*30.48)+(parseFloat(document.getElementById("hIn").value)*2.54);
     
@@ -409,40 +422,56 @@ function analyze() {
     const cnsVal = parseInt(document.getElementById("cns").value) / 10;
     const form = parseFloat(document.getElementById("form").value);
     
-    let barHtml = `<h3 style="color:${isSimMode ? 'var(--potential)' : 'var(--primary)'}; font-size:0.8em; margin-bottom:15px;">${isSimMode ? 'SIMULATION PROJECTION' : 'Skill Status & Prerequisites'}</h3>`;
+    // Check if goal selector exists, if not create it
+    let skillPanel = document.getElementById("skillBars");
+    if (!document.getElementById("goalSelect")) {
+        skillPanel.innerHTML = `
+            <div style="margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px;">
+                <label style="color: var(--primary); margin-bottom: 5px;">Set Mission Target</label>
+                <select id="goalSelect" onchange="analyze()" style="border-color: var(--potential);">
+                    <option value="None">No Active Goal</option>
+                    ${skills.map(s => `<option value="${s.name}">${s.name}</option>`).join('')}
+                </select>
+            </div>
+            <div id="barContainer"></div>`;
+    }
+
+    const activeGoal = document.getElementById("goalSelect").value;
+    let barHtml = "";
     const curScores = []; const potScores = [];
 
     skills.forEach(s => {
-        let sc = [];
-        if (s.p > 0) sc.push((push1RM / (s.p * torqueFactor * parseFloat(document.getElementById("surface").value))) * 100);
-        if (s.l > 0) sc.push((pull1RM / (s.l * torqueFactor)) * 100);
-        if (s.s > 0) sc.push((sa1RM / (s.s * torqueFactor)) * 100);
+        let vectors = [];
+        if (s.p > 0) vectors.push({ name: "Push", val: (push1RM / (s.p * torqueFactor * parseFloat(document.getElementById("surface").value))) * 100, raw: push1RM, req: s.p * torqueFactor });
+        if (s.l > 0) vectors.push({ name: "Pull", val: (pull1RM / (s.l * torqueFactor)) * 100, raw: pull1RM, req: s.l * torqueFactor });
+        if (s.s > 0) vectors.push({ name: "SA Strength", val: (sa1RM / (s.s * torqueFactor)) * 100, raw: sa1RM, req: s.s * torqueFactor });
         
         const sig = (x) => 100 / (1 + Math.exp(-0.15 * (x - 58)));
-        let cur = sig(Math.min(...sc)) * cnsVal * form;
+        let cur = sig(Math.min(...vectors.map(v => v.val))) * cnsVal * form;
         
-        // Prerequisite Gating
+        const isTarget = s.name === activeGoal;
         const isLocked = cur < s.minEntry && !isSimMode;
         const statusIcon = isLocked ? "🔒" : "⚡";
-        const barColor = isLocked ? "#333" : (isSimMode ? 'var(--potential)' : 'linear-gradient(90deg, var(--primary), var(--potential))');
-        const opacity = isLocked ? "0.4" : "1";
-        const targetText = isLocked ? `Unlocks at ${s.minEntry}% Power-to-Weight` : `Target: ${recs[s.name]}`;
+        
+        // Highlight logic
+        const opacity = (activeGoal !== "None" && !isTarget) ? "0.2" : (isLocked ? "0.4" : "1");
+        const borderStyle = isTarget ? `border: 1px solid var(--potential); padding: 10px; border-radius: 10px; background: rgba(0, 255, 204, 0.05);` : "";
 
         curScores.push(cur.toFixed(1));
-        potScores.push(sig(Math.max(...sc)).toFixed(1));
+        potScores.push(sig(Math.max(...vectors.map(v => v.val))).toFixed(1));
 
         barHtml += `
-            <div class="skill-bar-container" style="opacity: ${opacity}">
+            <div class="skill-bar-container" style="opacity: ${opacity}; ${borderStyle}">
                 <div class="skill-label"><span>${statusIcon} ${s.name}</span><span>${isLocked ? 'LOCKED' : cur.toFixed(0) + '%'}</span></div>
-                <div class="bar-bg"><div class="bar-fill" style="width: ${cur}%; background: ${barColor}"></div></div>
-                <span class="rec-exercise" style="color: ${isLocked ? 'var(--danger)' : 'var(--potential)'}">${targetText}</span>
+                <div class="bar-bg"><div class="bar-fill" style="width: ${cur}%; background: ${isTarget ? 'var(--potential)' : (isLocked ? "#333" : 'linear-gradient(90deg, var(--primary), var(--potential))')}"></div></div>
+                ${isTarget ? generateGoalBrief(vectors, bw, conv, u) : `<span class="rec-exercise" style="color: ${isLocked ? 'var(--danger)' : 'var(--potential)'}">${isLocked ? `Unlocks at ${s.minEntry}%` : `Target: ${recs[s.name]}`}</span>`}
             </div>`;
     });
 
     radarChart.data.datasets[0].data = curScores;
     radarChart.data.datasets[1].data = potScores;
     radarChart.update();
-    document.getElementById("skillBars").innerHTML = barHtml;
+    document.getElementById("barContainer").innerHTML = barHtml;
 
     const pullPushRatio = (pull1RM / push1RM).toFixed(2);
     const saIntegrity = (sa1RM / push1RM).toFixed(2);
