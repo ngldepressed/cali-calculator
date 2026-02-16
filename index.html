@@ -45,9 +45,9 @@
     .rec-exercise { font-size: 0.6em; color: var(--potential); margin-top: 3px; display: block; font-style: italic; opacity: 0.8; }
     
     .insight-block { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #2a2a3a; }
+    .insight-title { font-weight: bold; color: var(--potential); font-size: 0.85em; display: block; margin-bottom: 4px; }
     .col-header { font-size: 0.5em; color: var(--primary); text-align: center; }
 
-    /* SIMULATION MODE STYLES */
     .sim-active input, .sim-active select { border-color: var(--potential) !important; box-shadow: 0 0 10px rgba(0, 255, 204, 0.1); }
     .sim-toggle-container { text-align: center; margin-bottom: 20px; padding: 10px; border-radius: 50px; background: rgba(0, 255, 204, 0.05); display: inline-block; border: 1px solid rgba(0, 255, 204, 0.1); }
 
@@ -203,7 +203,7 @@ function toggleSimMode() {
         container.classList.add('sim-active');
     } else {
         container.classList.remove('sim-active');
-        loadSavedData(); // Restore real values
+        loadSavedData(); 
     }
     analyze();
 }
@@ -262,7 +262,7 @@ function initChart() {
 }
 
 function saveToLocal() {
-    if (isSimMode) return; // Don't save simulation data over real data
+    if (isSimMode) return; 
     const inputs = document.querySelectorAll('input, select');
     const data = {};
     inputs.forEach(input => { data[input.id] = input.value; });
@@ -338,14 +338,13 @@ function analyze() {
     if(!isSystemReady) return; 
     if(!radarChart) initChart();
 
-    // Toggle radar appearance for simulation mode
     if (isSimMode) {
         radarChart.data.datasets[0].label = 'SIMULATED TARGET';
         radarChart.data.datasets[0].borderColor = '#00ffcc';
     } else {
         radarChart.data.datasets[0].label = 'REALITY';
         radarChart.data.datasets[0].borderColor = '#4c6fff';
-        saveToLocal(); // Only save when NOT in sim mode
+        saveToLocal(); 
     }
 
     const sys = document.getElementById("unitSystem").value;
@@ -386,9 +385,35 @@ function analyze() {
     radarChart.update();
     document.getElementById("skillBars").innerHTML = barHtml;
 
-    document.getElementById("aiFeedback").innerHTML = `<h3>Biomechanical Audit</h3>
-        <div class="insight-block"><span class="insight-title">Torque Multiplier: ${torqueFactor.toFixed(2)}x</span><p style="font-size:0.7em;">Strength penalty for ${h.toFixed(0)}cm stature.</p></div>
-        <div class="insight-block"><span class="insight-title">SA Integrity: ${((sa1RM/push1RM)*100).toFixed(0)}%</span><p style="font-size:0.7em;">${sa1RM/push1RM < 0.6 ? "WARNING: Tendons lagging." : "Safe for isometric loading."}</p></div>`;
+    // ENHANCED BIOMECHANICAL AUDIT (Plain English Integration)
+    const pullPushRatio = (pull1RM / push1RM).toFixed(2);
+    const saIntegrity = (sa1RM / push1RM).toFixed(2);
+    const relPower = push1RM.toFixed(2);
+
+    let auditHtml = `<h3>Biomechanical Audit</h3>`;
+
+    // 1. Torque
+    let tDesc = torqueFactor > 1.1 ? "High Leverage (Difficult)" : torqueFactor < 0.9 ? "Low Leverage (Advantaged)" : "Neutral Leverage";
+    auditHtml += `<div class="insight-block"><span class="insight-title">Torque: ${torqueFactor.toFixed(2)}x</span>
+                 <p style="font-size:0.7em; color:#888;">${tDesc}. Strength penalty based on your ${h.toFixed(0)}cm stature.</p></div>`;
+
+    // 2. Push/Pull
+    let pColor = pullPushRatio < 0.9 ? 'var(--danger)' : 'var(--potential)';
+    let pDesc = pullPushRatio < 0.9 ? "Push dominant. Strengthen back to save shoulders." : "Balanced structural strength.";
+    auditHtml += `<div class="insight-block" style="color:${pColor}"><span class="insight-title">Push/Pull Ratio: ${pullPushRatio}</span>
+                 <p style="font-size:0.7em; color:#888;">${pDesc}</p></div>`;
+
+    // 3. SA Integrity
+    let sColor = saIntegrity < 0.6 ? 'var(--danger)' : 'var(--potential)';
+    let sDesc = saIntegrity < 0.6 ? "DANGER: Bent-arm strength exceeds tendon capacity." : "Safe for isometric loading.";
+    auditHtml += `<div class="insight-block" style="color:${sColor}"><span class="insight-title">SA Integrity: ${saIntegrity}</span>
+                 <p style="font-size:0.7em; color:#888;">${sDesc}</p></div>`;
+
+    // 4. Relative Power
+    auditHtml += `<div class="insight-block"><span class="insight-title">Rel. Power: ${relPower}x BW</span>
+                 <p style="font-size:0.7em; color:#888;">Your total push capacity relative to your mass.</p></div>`;
+
+    document.getElementById("aiFeedback").innerHTML = auditHtml;
 }
 </script>
 </body>
