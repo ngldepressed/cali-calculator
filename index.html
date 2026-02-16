@@ -388,9 +388,22 @@ function generateGoalBrief(vectors, bw, conv, u) {
     let brief = `<div style="margin-top: 8px; font-size: 0.6em; color: var(--potential); font-weight: bold; text-transform: uppercase;">Primary Bottlenecks:</div>`;
     
     bottlenecks.forEach(b => {
-        let deficit = b.req - b.raw;
-        let deficitWeight = Math.max(0, (deficit * bw / conv)).toFixed(1);
-        brief += `<span class="rec-exercise" style="opacity:1">↑ Increase ${b.name} by +${deficitWeight}${u} 1RM</span>`;
+        // Formula: (Required_Ratio * Bodyweight) - Bodyweight = Target Added Weight
+        let targetAddedWeight = (b.req * bw) - bw;
+        let currentAddedWeight = (b.raw * bw) - bw;
+        let gap = (targetAddedWeight - currentAddedWeight) / conv;
+        
+        let displayGap = gap;
+        let suffix = "";
+        
+        if (b.name === "SA Strength") {
+            displayGap = gap / 2; // Split for dumbbells
+            suffix = " per dumbbell";
+        } else {
+            suffix = " to belt/bar";
+        }
+
+        brief += `<span class="rec-exercise" style="opacity:1">↑ Add **+${Math.max(0, displayGap).toFixed(1)}${u}** ${suffix}</span>`;
     });
     return brief;
 }
@@ -422,7 +435,6 @@ function analyze() {
     const cnsVal = parseInt(document.getElementById("cns").value) / 10;
     const form = parseFloat(document.getElementById("form").value);
     
-    // Check if goal selector exists, if not create it
     let skillPanel = document.getElementById("skillBars");
     if (!document.getElementById("goalSelect")) {
         skillPanel.innerHTML = `
@@ -453,7 +465,6 @@ function analyze() {
         const isLocked = cur < s.minEntry && !isSimMode;
         const statusIcon = isLocked ? "🔒" : "⚡";
         
-        // Highlight logic
         const opacity = (activeGoal !== "None" && !isTarget) ? "0.2" : (isLocked ? "0.4" : "1");
         const borderStyle = isTarget ? `border: 1px solid var(--potential); padding: 10px; border-radius: 10px; background: rgba(0, 255, 204, 0.05);` : "";
 
@@ -478,23 +489,22 @@ function analyze() {
     const relPower = push1RM.toFixed(2);
 
     let auditHtml = `<h3>Biomechanical Audit</h3>`;
-
     let tDesc = torqueFactor > 1.1 ? "High Leverage (Difficult)" : torqueFactor < 0.9 ? "Low Leverage (Advantaged)" : "Neutral Leverage";
     auditHtml += `<div class="insight-block"><span class="insight-title">Torque: ${torqueFactor.toFixed(2)}x</span>
-                 <p style="font-size:0.7em; color:#888;">${tDesc}. Strength penalty based on your ${h.toFixed(0)}cm stature.</p></div>`;
+                  <p style="font-size:0.7em; color:#888;">${tDesc}. Strength penalty based on your ${h.toFixed(0)}cm stature.</p></div>`;
 
     let pColor = pullPushRatio < 0.9 ? 'var(--danger)' : 'var(--potential)';
     let pDesc = pullPushRatio < 0.9 ? "Push dominant. Strengthen back to save shoulders." : "Balanced structural strength.";
     auditHtml += `<div class="insight-block" style="color:${pColor}"><span class="insight-title">Push/Pull Ratio: ${pullPushRatio}</span>
-                 <p style="font-size:0.7em; color:#888;">${pDesc}</p></div>`;
+                  <p style="font-size:0.7em; color:#888;">${pDesc}</p></div>`;
 
     let sColor = saIntegrity < 0.6 ? 'var(--danger)' : 'var(--potential)';
     let sDesc = saIntegrity < 0.6 ? "DANGER: Bent-arm strength exceeds tendon capacity." : "Safe for isometric loading.";
     auditHtml += `<div class="insight-block" style="color:${sColor}"><span class="insight-title">SA Integrity: ${saIntegrity}</span>
-                 <p style="font-size:0.7em; color:#888;">${sDesc}</p></div>`;
+                  <p style="font-size:0.7em; color:#888;">${sDesc}</p></div>`;
 
     auditHtml += `<div class="insight-block"><span class="insight-title">Rel. Power: ${relPower}x BW</span>
-                 <p style="font-size:0.7em; color:#888;">Your total push capacity relative to your mass.</p></div>`;
+                  <p style="font-size:0.7em; color:#888;">Your total push capacity relative to your mass.</p></div>`;
 
     document.getElementById("aiFeedback").innerHTML = auditHtml;
 
