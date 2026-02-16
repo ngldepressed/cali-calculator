@@ -577,7 +577,40 @@ function analyze() {
         auditHtml += createInsight("CONNECTIVE_TISSUE", sStatus, saIntegrity, sDesc, saIntegrity < 0.62 ? "#ff4444" : "#00ffcc");
         auditHtml += createInsight("RELATIVE_POWER", "FORCE", relPower + "x BW", "Force generation relative to mass.", "var(--primary)");
 
-        // 5. HEATMAP & VOLUME UPDATES
+        // 5. GENETIC CEILING AUTO-INJECTION
+        let ceilingDiv = document.getElementById("geneticCeiling");
+        if (!ceilingDiv) {
+            ceilingDiv = document.createElement("div");
+            ceilingDiv.id = "geneticCeiling";
+            document.getElementById("aiFeedback").parentNode.appendChild(ceilingDiv);
+        }
+
+        const bmi = (bw / (Math.pow(h/100, 2))).toFixed(1);
+        const idealWeightMin = (21 * Math.pow(h/100, 2)) / conv;
+        const idealWeightMax = (23.5 * Math.pow(h/100, 2)) / conv;
+        const strengthTax = ((torqueFactor - 1) * 100).toFixed(1);
+
+        let cMsg = ""; let cCol = "#00ffcc";
+        if (bmi > 26) { cMsg = "HEAVYWEIGHT PENALTY: High mass increases torque demands."; cCol = "#ff9900"; }
+        else if (bmi < 19) { cMsg = "UNDER-POWERED: Insufficient muscle cross-section for frame."; cCol = "#00ccff"; }
+        else { cMsg = "OPTIMAL FRAME: BMI is in the elite power-to-weight window."; }
+
+        ceilingDiv.innerHTML = `
+            <h3 style="font-size:0.7em; letter-spacing:3px; color:var(--primary); margin-top:25px; border-bottom:1px solid #333; padding-bottom:10px;">GENETIC_CEILING</h3>
+            <div class="insight-block" style="margin-bottom:15px; border-left:3px solid ${cCol}; padding-left:12px; background: rgba(255,255,255,0.02); padding:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:0.8em; font-weight:bold; color:${cCol};">FRAME_EFFICIENCY</span>
+                    <span style="font-size:0.7em; color:#fff;">BMI: ${bmi}</span>
+                </div>
+                <p style="font-size:0.65em; color:#bbb; margin:8px 0; line-height:1.4;">${cMsg}</p>
+                <div style="font-size:0.65em; color:#888;">Ideal Weight for ${h.toFixed(0)}cm: <span style="color:#fff;">${idealWeightMin.toFixed(0)}-${idealWeightMax.toFixed(0)}${u}</span></div>
+            </div>
+            <div class="insight-block" style="border-left:3px solid #ff4444; padding-left:12px; background: rgba(255,255,255,0.02); padding:10px;">
+                <span style="font-size:0.8em; font-weight:bold; color:#ff4444;">LEVERAGE_TAX: +${strengthTax}%</span>
+                <p style="font-size:0.65em; color:#bbb; margin:5px 0; line-height:1.4;">Based on height, you require ${strengthTax}% more raw force than a 170cm reference athlete.</p>
+            </div>`;
+
+        // 6. HEATMAP & VOLUME UPDATES
         const shoulders = document.querySelectorAll('#joint-shoulder-l, #joint-shoulder-r');
         const elbows = document.querySelectorAll('#joint-elbow-l, #joint-elbow-r');
         let riskMsg = "SYSTEMS_NOMINAL";
@@ -596,7 +629,7 @@ function analyze() {
         const vTax = document.getElementById("volume-tax");
         if (vTax) vTax.innerText = totalTax.toFixed(1);
 
-        // 6. FINAL INJECTION
+        // 7. FINAL INJECTION
         document.getElementById("aiFeedback").innerHTML = auditHtml;
         document.getElementById("barContainer").innerHTML = barHtml;
         radarChart.data.datasets[0].data = curScores;
