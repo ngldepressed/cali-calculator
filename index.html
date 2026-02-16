@@ -493,7 +493,19 @@ function analyze() {
     const pull1RM = (bw + (parseFloat(document.getElementById("wpW").value)||0)*conv * (1 + (parseInt(document.getElementById("wpR").value)||0)/30) * (1+(10-parseInt(document.getElementById("wpRPE").value))/18)) / bw;
     const push1RM = (bw + (parseFloat(document.getElementById("wdW").value)||0)*conv * (1 + (parseInt(document.getElementById("wdR").value)||0)/30) * (1+(10-parseInt(document.getElementById("wdRPE").value))/18)) / bw;
     const sa1RM = (bw + (parseFloat(document.getElementById("saW").value)||0)*conv * (1 + (parseInt(document.getElementById("saR").value)||0)/30) * (1+(10-parseInt(document.getElementById("saRPE").value))/18)) / bw;
+// --- CALI-BIOTECH ESTIMATION LOGIC ---
+// These coefficients predict static skill potential from weighted basics
+// If a user has a 40kg dip, we use it to estimate their Planche potential
+const estPlancheRatio = push1RM * 0.85; // Weighted Dip power carryover
+const estFLRatio = pull1RM * 0.90;      // Weighted Pull power carryover
+const estMalteseRatio = (push1RM * 0.5) + (sa1RM * 0.6); // Mixed push + Zanetti power
 
+// --- UPDATE THE SKILL VECTORS ---
+// This ensures that even if Zanetti is 0, Maltese still shows potential from Dips
+skills.forEach(s => {
+    if (s.name.includes("Planche")) s.minEntry = Math.max(s.minEntry, (estPlancheRatio * 20));
+    if (s.name.includes("Front Lever")) s.minEntry = Math.max(s.minEntry, (estFLRatio * 20));
+});
     const torqueFactor = Math.pow(h / 170, 2.3) * parseFloat(document.getElementById("legRatio").value);
     const cnsVal = parseInt(document.getElementById("cns").value) / 10;
     const form = parseFloat(document.getElementById("form").value);
