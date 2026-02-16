@@ -1,434 +1,278 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Cali-Biotech: Production Command</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
-  </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    :root { --primary: #4c6fff; --potential: #00ffcc; --bg: #0b0b12; --card: #161621; --border: #2a2a3a; --danger: #ff4c4c; --text: #e0e0e0; }
-    
-    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display:flex; flex-direction:column; align-items:center; padding:10px; margin:0; }
-    
-    .container { background:var(--card); padding:20px; border-radius:24px; width:100%; max-width:1300px; box-shadow:0 30px 60px rgba(0,0,0,0.8); border: 1px solid var(--border); box-sizing: border-box; transition: 0.3s; }
-    
-    .main-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
-    
-    .card { background: #1f1f2e; padding: 18px; border-radius: 16px; border: 1px solid #333; }
-    .card h3 { margin-top: 0; color: var(--primary); font-size: 0.75em; text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid #333; padding-bottom: 5px; }
-    
-    label { display:block; margin-top:8px; font-size: 0.65em; color: #888; text-transform: uppercase; font-weight: bold;}
-    input, select { width:100%; padding:10px; margin-top:4px; border-radius:8px; border:1px solid #333; background:var(--bg); color:white; font-size: 0.85em; box-sizing: border-box; transition: 0.3s; }
-    
-    .inline-quad { display: grid; grid-template-columns: 1.2fr 0.8fr 0.8fr 1fr; gap: 5px; }
-    
-    .dashboard-row { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 20px; margin-top: 30px; align-items: start; }
-    
-    .analysis-panel { background:#1f1f2e; padding:20px; border-radius:20px; border: 1px solid #333; min-height: 450px; overflow-y: auto; position: relative;}
-    
-    .prepare-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(22, 22, 33, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; border-radius: 20px; text-align: center; padding: 20px; box-sizing: border-box; }
-    .btn-prepare { background: transparent; color: var(--potential); border: 2px solid var(--potential); padding: 15px 30px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 0.8em; letter-spacing: 2px; transition: 0.3s; }
-    .btn-prepare:hover { background: var(--potential); color: black; box-shadow: 0 0 20px rgba(0, 255, 204, 0.4); }
-
-    .skill-bar-container { margin-bottom: 12px; }
-    .skill-label { display: flex; justify-content: space-between; font-size: 0.75em; margin-bottom: 4px; font-weight: bold; }
-    .bar-bg { background: #0b0b12; height: 8px; border-radius: 4px; overflow: hidden; border: 1px solid #333; }
-    .bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--potential)); transition: width 0.5s ease; }
-    .rec-exercise { font-size: 0.6em; color: var(--potential); margin-top: 3px; display: block; font-style: italic; opacity: 0.8; }
-    
-    .insight-block { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #2a2a3a; }
-    .col-header { font-size: 0.5em; color: var(--primary); text-align: center; }
-
-    .sim-active input, .sim-active select { border-color: var(--potential) !important; box-shadow: 0 0 10px rgba(0, 255, 204, 0.1); }
-    .sim-toggle-container { text-align: center; margin-bottom: 20px; padding: 10px; border-radius: 50px; background: rgba(0, 255, 204, 0.05); display: inline-block; border: 1px solid rgba(0, 255, 204, 0.1); }
-
-    .blog-section { width: 100%; max-width: 1300px; margin-top: 40px; padding: 20px; box-sizing: border-box; border-top: 1px solid var(--border); text-align: left; }
-    .blog-link { color: var(--potential); text-decoration: none; font-size: 0.8em; margin-right: 20px; transition: 0.3s; }
-    .blog-link:hover { color: white; text-decoration: underline; }
-
-    table { width: 100%; font-size: 0.75em; border-collapse: collapse; margin-top: 10px; color: #bbb; }
-    th { color: var(--primary); text-align: left; padding: 10px; border-bottom: 1px solid #333; text-transform: uppercase; font-size: 0.7em; }
-    td { padding: 10px; border-bottom: 1px solid #222; }
-    .btn-log { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.7em; transition: 0.3s; }
-    .btn-log:hover { filter: brightness(1.2); box-shadow: 0 0 10px var(--primary); }
-
-    @media (max-width: 1000px) {
-        .dashboard-row { grid-template-columns: 1fr; }
-        .main-grid { grid-template-columns: 1fr; }
-        .container { border-radius: 0; }
-        h1 { font-size: 1.1em !important; }
-        .blog-link { display: block; margin-bottom: 10px; }
-        .analysis-panel { min-height: auto; }
-        #chart-card { order: -1; width: 100%; }
-    }
-    @media print {
-        body { background: white; color: black; }
-        .container { box-shadow: none; border: none; }
-        .btn-log, .btn-prepare, .sim-toggle-container, .blog-section, .prepare-overlay { display: none !important; }
-        .card, .analysis-panel { border: 1px solid #ccc; background: white !important; color: black !important; }
-    }
-  </style>
+  <title>Cali-Biotech: Production Command</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root { --primary: #4c6fff; --potential: #00ffcc; --bg: #0b0b12; --card: #161621; --border: #2a2a3a; --danger: #ff4c4c; --text: #e0e0e0; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display:flex; flex-direction:column; align-items:center; padding:10px; margin:0; }
+    .container { background:var(--card); padding:20px; border-radius:24px; width:100%; max-width:1300px; box-shadow:0 30px 60px rgba(0,0,0,0.8); border: 1px solid var(--border); box-sizing: border-box; }
+    .main-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
+    .card { background: #1f1f2e; padding: 18px; border-radius: 16px; border: 1px solid #333; }
+    .card h3 { margin-top: 0; color: var(--primary); font-size: 0.75em; text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+    label { display:block; margin-top:8px; font-size: 0.65em; color: #888; text-transform: uppercase; font-weight: bold;}
+    input, select { width:100%; padding:10px; margin-top:4px; border-radius:8px; border:1px solid #333; background:var(--bg); color:white; font-size: 0.85em; box-sizing: border-box; }
+    .inline-quad { display: grid; grid-template-columns: 1.2fr 0.8fr 0.8fr 1fr; gap: 5px; }
+    .dashboard-row { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 20px; margin-top: 30px; align-items: start; }
+    .analysis-panel { background:#1f1f2e; padding:20px; border-radius:20px; border: 1px solid #333; min-height: 450px; overflow-y: auto; position: relative;}
+    .prepare-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(22, 22, 33, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; border-radius: 20px; text-align: center; }
+    .btn-prepare { background: transparent; color: var(--potential); border: 2px solid var(--potential); padding: 15px 30px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 0.8em; letter-spacing: 2px; }
+    .skill-bar-container { margin-bottom: 12px; }
+    .skill-label { display: flex; justify-content: space-between; font-size: 0.75em; margin-bottom: 4px; font-weight: bold; }
+    .bar-bg { background: #0b0b12; height: 8px; border-radius: 4px; overflow: hidden; border: 1px solid #333; }
+    .bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--potential)); transition: width 0.5s ease; }
+    .rec-exercise { font-size: 0.6em; color: var(--potential); margin-top: 3px; display: block; font-style: italic; opacity: 0.8; }
+    .insight-block { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #2a2a3a; }
+    .sim-active input, .sim-active select { border-color: var(--potential) !important; }
+    .sim-toggle-container { text-align: center; margin-bottom: 20px; padding: 10px; border-radius: 50px; background: rgba(0, 255, 204, 0.05); display: inline-block; border: 1px solid rgba(0, 255, 204, 0.1); }
+    table { width: 100%; font-size: 0.75em; border-collapse: collapse; margin-top: 10px; color: #bbb; }
+    th { color: var(--primary); text-align: left; padding: 10px; border-bottom: 1px solid #333; text-transform: uppercase; }
+    td { padding: 10px; border-bottom: 1px solid #222; }
+    .btn-log { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.7em; }
+    @media (max-width: 1000px) { .dashboard-row { grid-template-columns: 1fr; } .main-grid { grid-template-columns: 1fr; } }
+  </style>
 </head>
 <body onload="loadSavedData(); renderLogs();"> 
 <div class="container" id="mainContainer">
-    <h1 style="text-align:center; color:var(--primary); font-size:1.4em; letter-spacing:4px; margin-bottom: 20px;">CALI-BIOTECH COMMAND</h1>
+    <h1 style="text-align:center; color:var(--primary); font-size:1.4em; letter-spacing:4px; margin-bottom: 20px;">CALI-BIOTECH COMMAND</h1>
 
-    <div style="text-align: center; margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 15px;">
-        <select id="unitSystem" onchange="updateLabels(); analyze(); saveToLocal();" style="width: 220px; background: #1f1f2e; color: var(--primary); border: 1px solid var(--primary);">
-            <option value="met">METRIC (KG / CM)</option>
-            <option value="imp">IMPERIAL (LBS / FT-IN)</option>
-        </select>
-
-        <div class="sim-toggle-container">
-            <label style="cursor:pointer; display: flex; align-items: center; gap: 10px; padding: 0 15px;">
-                <input type="checkbox" id="simMode" onchange="toggleSimMode()" style="width: auto; margin: 0;">
-                <span style="color:var(--potential); font-size: 0.7em; letter-spacing: 2px; font-weight: bold;">ACTIVATE BIOTEST SIMULATION</span>
-            </label>
-        </div>
-    </div>
-
-    <div class="main-grid">
-        <div class="card">
-            <h3>Structure & Readiness</h3>
-            <div class="inline-quad" style="grid-template-columns: 1fr 1fr;">
-                <div><label id="wLabel">Weight (kg)</label><input type="number" id="weight" value="75" oninput="analyze();"></div>
-                <div id="hMetric"><label>Height (cm)</label><input type="number" id="hCm" value="175" oninput="analyze();"></div>
-                <div id="hImperial" style="display:none;"><label>Height (ft/in)</label>
-                    <div style="display:flex; gap:5px;"><input type="number" id="hFt" value="5" oninput="analyze();"><input type="number" id="hIn" value="9" oninput="analyze();"></div>
-                </div>
-            </div>
-            <label>Surface Stability</label>
-            <select id="surface" onchange="analyze();"><option value="1.0">Stable (Floor)</option><option value="1.25">Unstable (Rings)</option></select>
-            <label>CNS Readiness</label>
-            <input type="range" id="cns" min="1" max="10" value="9" oninput="analyze();">
-        </div>
-
-        <div class="card">
-            <h3>BW Basics & Skills</h3>
-            <div class="inline-quad" style="grid-template-columns: 1fr 1fr;">
-                <div><label>Max Pullups</label><input type="number" id="pullups" value="15" oninput="analyze();"></div>
-                <div><label>Max Pushups</label><input type="number" id="pushups" value="35" oninput="analyze();"></div>
-            </div>
-            <div class="inline-quad" style="grid-template-columns: 1fr 1fr;">
-                <div><label>Muscle-Ups</label><input type="number" id="mu" value="5" oninput="analyze();"></div>
-                <div><label>Dead Hang (s)</label><input type="number" id="hang" value="60" oninput="analyze();"></div>
-            </div>
-            <div class="inline-quad" style="grid-template-columns: 1.2fr 0.8fr;">
-                <div><label>Leg Inertia</label><select id="legRatio" onchange="analyze();"><option value="0.95">Short</option><option value="1.0" selected>Neutral</option><option value="1.1">Long/Heavy</option></select></div>
-                <div><label>Form</label><select id="form" onchange="analyze();"><option value="1.0">Elite</option><option value="0.7">Piked</option></select></div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h3>Weighted Matrix</h3>
-            <div class="inline-quad"><div class="col-header">Weight</div><div class="col-header">Reps</div><div class="col-header">Sets</div><div class="col-header">RPE</div></div>
-            <label id="pullLabel">Weighted Pull-up</label>
-            <div class="inline-quad"><input type="number" id="wpW" value="25" oninput="analyze();"><input type="number" id="wpR" value="5" oninput="analyze();"><input type="number" id="wpS" value="3" oninput="analyze();"><input type="number" id="wpRPE" value="8" oninput="analyze();"></div>
-            <label id="dipLabel">Weighted Dip</label>
-            <div class="inline-quad"><input type="number" id="wdW" value="35" oninput="analyze();"><input type="number" id="wdR" value="5" oninput="analyze();"><input type="number" id="wdS" value="3" oninput="analyze();"><input type="number" id="wdRPE" value="8" oninput="analyze();"></div>
-            <label id="zanLabel">Zanetti Raise (SA)</label>
-            <div class="inline-quad"><input type="number" id="saW" value="12" oninput="analyze();"><input type="number" id="saR" value="8" oninput="analyze();"><input type="number" id="saS" value="3" oninput="analyze();"><input type="number" id="saRPE" value="9" oninput="analyze();"></div>
-        </div>
-    </div>
-
-    <div class="dashboard-row">
-        <div id="chart-card" style="background:var(--bg); border-radius:20px; padding:10px; border:1px solid var(--border); display: flex; align-items:center; min-height: 300px; position: relative;">
-            <div id="radar-lock" class="prepare-overlay">
-                <button class="btn-prepare" onclick="prepareSystem()">PREPARE TRAINING MATRIX</button>
-            </div>
-            <canvas id="skillRadar"></canvas>
-        </div>
-        <div class="analysis-panel" id="skillBars">
-             <div style="text-align: center; color: #444; margin-top: 100px;">SYSTEM OFFLINE</div>
-        </div>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-            <div class="analysis-panel" id="aiFeedback">
-                 <div style="text-align: center; color: #444; margin-top: 100px;">AWAITING AUDIT</div>
-            </div>
-            <button class="btn-log" style="width:100%; padding: 15px; background:var(--potential); color:black;" onclick="exportAudit()">EXPORT BIOTECH AUDIT</button>
+    <div style="text-align: center; margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 15px;">
+        <select id="unitSystem" onchange="updateLabels(); analyze(); saveToLocal();" style="width: 220px; background: #1f1f2e; color: var(--primary); border: 1px solid var(--primary);">
+            <option value="met">METRIC (KG / CM)</option>
+            <option value="imp">IMPERIAL (LBS / FT-IN)</option>
+        </select>
+        <div class="sim-toggle-container">
+            <label style="cursor:pointer; display: flex; align-items: center; gap: 10px; padding: 0 15px;">
+                <input type="checkbox" id="simMode" onchange="toggleSimMode()" style="width: auto; margin: 0;">
+                <span style="color:var(--potential); font-size: 0.7em; letter-spacing: 2px; font-weight: bold;">ACTIVATE BIOTEST SIMULATION</span>
+            </label>
         </div>
-    </div>
+    </div>
 
-    <div class="card" style="margin-top: 25px; border-color: var(--border);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h3 style="border: none; margin: 0;">Training History Log</h3>
-            <button class="btn-log" onclick="logSession()">LOG CURRENT DATA</button>
-        </div>
-        <div style="overflow-x: auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>BW</th>
-                        <th>Pull Max</th>
-                        <th>Push Max</th>
-                        <th>SA Max</th>
-                        <th>Strongest Skill</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id="logBody"></tbody>
-            </table>
-        </div>
-    </div>
+    <div class="main-grid">
+        <div class="card">
+            <h3>Structure & Readiness</h3>
+            <div class="inline-quad" style="grid-template-columns: 1fr 1fr;">
+                <div><label id="wLabel">Weight (kg)</label><input type="number" id="weight" value="75" oninput="analyze();"></div>
+                <div id="hMetric"><label>Height (cm)</label><input type="number" id="hCm" value="175" oninput="analyze();"></div>
+                <div id="hImperial" style="display:none;"><label>Height (ft/in)</label>
+                    <div style="display:flex; gap:5px;"><input type="number" id="hFt" value="5" oninput="analyze();"><input type="number" id="hIn" value="9" oninput="analyze();"></div>
+                </div>
+            </div>
+            <label>Surface Stability</label>
+            <select id="surface" onchange="analyze();"><option value="1.0">Stable (Floor)</option><option value="1.25">Unstable (Rings)</option></select>
+            <label>CNS Readiness</label>
+            <input type="range" id="cns" min="1" max="10" value="9" oninput="analyze();">
+        </div>
 
-    <h2 style="color:var(--primary); margin-top:40px; letter-spacing:2px; font-size:1em; text-align:center;">SUPPORT THE GRIND</h2>
-    <div style="text-align: center; padding: 30px; background: #1f1f2e; border-radius: 20px; border: 1px dashed var(--primary); width: 100%; max-width: 1300px; box-sizing: border-box; margin: 20px auto;">
-        <p style="font-size: 0.8em; color: #888; margin-bottom: 20px;">I'm refining these tools every day through my own training. If this data helps your progress, consider fueling the research.</p>
-        <a href="https://www.buymeacoffee.com/CaliBiotech" target="_blank" style="display: inline-flex; align-items: center; background: #FFDD00; color: #000000; padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 0.9em; transition: 0.3s; box-shadow: 0 4px 15px rgba(255, 221, 0, 0.2);">
-            <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy me a coffee" style="height: 20px; margin-right: 10px;">
-            Buy me a protein shake
-        </a>
-    </div>
+        <div class="card">
+            <h3>BW Basics & Skills</h3>
+            <div class="inline-quad" style="grid-template-columns: 1fr 1fr;">
+                <div><label>Max Pullups</label><input type="number" id="pullups" value="15" oninput="analyze();"></div>
+                <div><label>Max Pushups</label><input type="number" id="pushups" value="35" oninput="analyze();"></div>
+            </div>
+            <div class="inline-quad" style="grid-template-columns: 1fr 1fr;">
+                <div><label>Muscle-Ups</label><input type="number" id="mu" value="5" oninput="analyze();"></div>
+                <div><label>Dead Hang (s)</label><input type="number" id="hang" value="60" oninput="analyze();"></div>
+            </div>
+            <div class="inline-quad" style="grid-template-columns: 1.2fr 0.8fr;">
+                <div><label>Leg Inertia</label><select id="legRatio" onchange="analyze();"><option value="0.95">Short</option><option value="1.0" selected>Neutral</option><option value="1.1">Long/Heavy</option></select></div>
+                <div><label>Form</label><select id="form" onchange="analyze();"><option value="1.0">Elite</option><option value="0.7">Piked</option></select></div>
+            </div>
+        </div>
 
-    <div class="blog-section">
-        <h3 style="color:var(--primary); font-size:0.9em; margin-bottom: 15px;">RESOURCES & GUIDES</h3>
-        <a href="blog/pullup-guide.html" class="blog-link">First Pull-up Guide</a>
-        <a href="blog/privacy.html" class="blog-link">Privacy Policy</a>
-        <a href="blog/about.html" class="blog-link">About Cali-Biotech</a>
-        <a href="blog/contact.html" class="blog-link">Contact Us</a>
-        <p style="font-size: 0.6em; color: #444; margin-top: 25px;">© 2026 Cali-Biotech Command Systems.</p>
-    </div>
+        <div class="card">
+            <h3>Weighted Matrix</h3>
+            <div class="inline-quad"><div style="font-size: 0.5em; color: var(--primary); text-align: center;">Weight</div><div style="font-size: 0.5em; color: var(--primary); text-align: center;">Reps</div><div style="font-size: 0.5em; color: var(--primary); text-align: center;">Sets</div><div style="font-size: 0.5em; color: var(--primary); text-align: center;">RPE</div></div>
+            <label id="pullLabel">Weighted Pull-up</label>
+            <div class="inline-quad"><input type="number" id="wpW" value="25" oninput="analyze();"><input type="number" id="wpR" value="5" oninput="analyze();"><input type="number" id="wpS" value="3" oninput="analyze();"><input type="number" id="wpRPE" value="8" oninput="analyze();"></div>
+            <label id="dipLabel">Weighted Dip</label>
+            <div class="inline-quad"><input type="number" id="wdW" value="35" oninput="analyze();"><input type="number" id="wdR" value="5" oninput="analyze();"><input type="number" id="wdS" value="3" oninput="analyze();"><input type="number" id="wdRPE" value="8" oninput="analyze();"></div>
+            <label id="zanLabel">Zanetti Raise (SA)</label>
+            <div class="inline-quad"><input type="number" id="saW" value="12" oninput="analyze();"><input type="number" id="saR" value="8" oninput="analyze();"><input type="number" id="saS" value="3" oninput="analyze();"><input type="number" id="saRPE" value="9" oninput="analyze();"></div>
+        </div>
+    </div>
+
+    <div class="dashboard-row">
+        <div id="chart-card" style="background:var(--bg); border-radius:20px; padding:10px; border:1px solid var(--border); display: flex; align-items:center; min-height: 300px; position: relative;">
+            <div id="radar-lock" class="prepare-overlay">
+                <button class="btn-prepare" onclick="prepareSystem()">PREPARE TRAINING MATRIX</button>
+            </div>
+            <canvas id="skillRadar"></canvas>
+        </div>
+        <div class="analysis-panel" id="skillBars">
+             <div style="text-align: center; color: #444; margin-top: 100px;">SYSTEM OFFLINE</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="analysis-panel" id="aiFeedback">
+                 <div style="text-align: center; color: #444; margin-top: 100px;">AWAITING AUDIT</div>
+            </div>
+            <button class="btn-log" style="width:100%; padding: 15px; background:var(--potential); color:black;" onclick="window.print()">EXPORT BIOTECH AUDIT</button>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 25px; border-color: var(--border);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h3 style="border: none; margin: 0;">Training History Log</h3>
+            <button class="btn-log" onclick="logSession()">LOG CURRENT DATA</button>
+        </div>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr><th>Date</th><th>BW</th><th>Pull Max</th><th>Push Max</th><th>SA Max</th><th>Skill</th><th></th></tr>
+                </thead>
+                <tbody id="logBody"></tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <script>
 let isSystemReady = false;
 let isSimMode = false;
-
-function toggleSimMode() {
-    isSimMode = document.getElementById("simMode").checked;
-    const container = document.getElementById("mainContainer");
-    
-    if (isSimMode) {
-        container.classList.add('sim-active');
-    } else {
-        container.classList.remove('sim-active');
-        loadSavedData();
-    }
-    analyze();
-}
-
-function prepareSystem() {
-    isSystemReady = true;
-    document.getElementById("radar-lock").style.display = "none";
-    analyze();
-}
-
-function updateLabels() {
-    const isMet = document.getElementById("unitSystem").value === 'met';
-    document.getElementById("wLabel").innerText = isMet ? "Weight (kg)" : "Weight (lbs)";
-    document.getElementById("hMetric").style.display = isMet ? "block" : "none";
-    document.getElementById("hImperial").style.display = isMet ? "none" : "block";
-}
+let radarChart;
 
 const skills = [
-    { name: "Full Planche", p: 3.4, l: 0, s: 2.5 },
-    { name: "Straddle Planche", p: 2.8, l: 0, s: 2.0 },
-    { name: "Front Lever", p: 0, l: 2.6, s: 1.8 },
-    { name: "Iron Cross", p: 0, l: 3.0, s: 4.0 },
-    { name: "Maltese", p: 4.5, l: 0, s: 3.5 },
-    { name: "Muscle-up", p: 1.5, l: 1.6, s: 0 }
+    { name: "Full Planche", p: 3.4, l: 0, s: 2.5 },
+    { name: "Straddle Planche", p: 2.8, l: 0, s: 2.0 },
+    { name: "Front Lever", p: 0, l: 2.6, s: 1.8 },
+    { name: "Iron Cross", p: 0, l: 3.0, s: 4.0 },
+    { name: "Maltese", p: 4.5, l: 0, s: 3.5 },
+    { name: "Muscle-up", p: 1.5, l: 1.6, s: 0 }
 ];
 
 const recs = {
-    "Full Planche": "Planche Leans / PPPU",
-    "Straddle Planche": "Tuck Planche Holds",
-    "Front Lever": "Scapular Pulls / Negatives",
-    "Iron Cross": "Rings Fly / Cross Pulls",
-    "Maltese": "Zanetti Press / Ring Fly",
-    "Muscle-up": "High Pull-ups / Explosive Row"
+    "Full Planche": "Planche Leans / PPPU",
+    "Straddle Planche": "Tuck Planche Holds",
+    "Front Lever": "Scapular Pulls / Negatives",
+    "Iron Cross": "Rings Fly / Cross Pulls",
+    "Maltese": "Zanetti Press / Ring Fly",
+    "Muscle-up": "High Pull-ups / Explosive Row"
 };
 
-let radarChart;
-const ctx = document.getElementById('skillRadar').getContext('2d');
+function toggleSimMode() {
+    isSimMode = document.getElementById("simMode").checked;
+    const container = document.getElementById("mainContainer");
+    if (isSimMode) container.classList.add('sim-active');
+    else { container.classList.remove('sim-active'); loadSavedData(); }
+    analyze();
+}
+
+function prepareSystem() {
+    isSystemReady = true;
+    document.getElementById("radar-lock").style.display = "none";
+    analyze();
+}
+
+function updateLabels() {
+    const isMet = document.getElementById("unitSystem").value === 'met';
+    document.getElementById("wLabel").innerText = isMet ? "Weight (kg)" : "Weight (lbs)";
+    document.getElementById("hMetric").style.display = isMet ? "block" : "none";
+    document.getElementById("hImperial").style.display = isMet ? "none" : "block";
+}
 
 function initChart() {
-    radarChart = new Chart(ctx, {
-        type: 'radar',
-        data: {
-            labels: skills.map(s => s.name),
-            datasets: [
-                { label: 'Reality', data: [], backgroundColor: 'rgba(76, 111, 255, 0.2)', borderColor: '#4c6fff', borderWidth: 2 },
-                { label: 'Potential', data: [], backgroundColor: 'rgba(0, 255, 204, 0.05)', borderColor: '#00ffcc', borderDash: [5, 5] }
-            ]
-        },
-        options: { 
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: { r: { beginAtZero: true, max: 100, ticks: { display: false }, grid: { color: '#2a2a3a' } } }, 
-            plugins: { legend: { display: false } } 
-        }
-    });
+    const canvas = document.getElementById('skillRadar');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    radarChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: skills.map(s => s.name),
+            datasets: [
+                { label: 'Reality', data: [], backgroundColor: 'rgba(76, 111, 255, 0.2)', borderColor: '#4c6fff', borderWidth: 2 },
+                { label: 'Potential', data: [], backgroundColor: 'rgba(0, 255, 204, 0.05)', borderColor: '#00ffcc', borderDash: [5, 5] }
+            ]
+        },
+        options: { 
+            responsive: true, maintainAspectRatio: false,
+            scales: { r: { beginAtZero: true, max: 100, ticks: { display: false }, grid: { color: '#2a2a3a' } } }, 
+            plugins: { legend: { display: false } } 
+        }
+    });
 }
 
 function saveToLocal() {
-    if (isSimMode) return;
-    const inputs = document.querySelectorAll('input, select');
-    const data = {};
-    inputs.forEach(input => { data[input.id] = input.value; });
-    localStorage.setItem('caliData', JSON.stringify(data));
+    if (isSimMode) return;
+    const inputs = document.querySelectorAll('input, select');
+    const data = {};
+    inputs.forEach(input => { data[input.id] = input.value; });
+    localStorage.setItem('caliData', JSON.stringify(data));
 }
 
 function loadSavedData() {
-    const saved = localStorage.getItem('caliData');
-    if (saved) {
-        const data = JSON.parse(saved);
-        Object.keys(data).forEach(id => { if(document.getElementById(id)) document.getElementById(id).value = data[id]; });
-        updateLabels();
-    }
+    const saved = localStorage.getItem('caliData');
+    if (saved) {
+        const data = JSON.parse(saved);
+        Object.keys(data).forEach(id => { if(document.getElementById(id)) document.getElementById(id).value = data[id]; });
+        updateLabels();
+    }
 }
 
 function logSession() {
-    const savedLogs = localStorage.getItem('caliLogs') ? JSON.parse(localStorage.getItem('caliLogs')) : [];
-    const sys = document.getElementById("unitSystem").value;
-    const u = sys === 'met' ? 'kg' : 'lbs';
-    
-    const get1RM = (idW, idR) => {
-        let w = parseFloat(document.getElementById(idW).value) || 0;
-        let r = parseInt(document.getElementById(idR).value) || 0;
-        let bw = parseFloat(document.getElementById("weight").value) || 0;
-        return (bw + w * (1 + r/30)).toFixed(1);
-    };
-
-    let topSkill = "None";
-    let maxVal = -1;
-    document.querySelectorAll('.skill-label').forEach(el => {
-        let val = parseInt(el.children[1].innerText);
-        if(val > maxVal) { maxVal = val; topSkill = el.children[0].innerText; }
-    });
-
-    const entry = {
-        date: new Date().toLocaleDateString(),
-        bw: document.getElementById("weight").value + u,
-        pull: get1RM("wpW", "wpR") + u,
-        push: get1RM("wdW", "wdR") + u,
-        sa: get1RM("saW", "saR") + u,
-        skill: topSkill + " (" + maxVal + "%)"
-    };
-
-    savedLogs.unshift(entry);
-    localStorage.setItem('caliLogs', JSON.stringify(savedLogs.slice(0, 8)));
-    renderLogs();
+    const savedLogs = localStorage.getItem('caliLogs') ? JSON.parse(localStorage.getItem('caliLogs')) : [];
+    const entry = {
+        date: new Date().toLocaleDateString(),
+        bw: document.getElementById("weight").value,
+        skill: "Audit Logged"
+    };
+    savedLogs.unshift(entry);
+    localStorage.setItem('caliLogs', JSON.stringify(savedLogs.slice(0, 5)));
+    renderLogs();
 }
 
 function renderLogs() {
-    const savedLogs = localStorage.getItem('caliLogs') ? JSON.parse(localStorage.getItem('caliLogs')) : [];
-    const container = document.getElementById("logBody");
-    container.innerHTML = savedLogs.map((l, i) => `
-        <tr>
-            <td>${l.date}</td>
-            <td>${l.bw}</td>
-            <td>${l.pull}</td>
-            <td>${l.push}</td>
-            <td>${l.sa}</td>
-            <td style="color:var(--potential)">${l.skill}</td>
-            <td><button onclick="deleteLog(${i})" style="background:none; border:none; color:var(--danger); cursor:pointer;">✕</button></td>
-        </tr>
-    `).join('');
-}
-
-function deleteLog(i) {
-    const savedLogs = JSON.parse(localStorage.getItem('caliLogs'));
-    savedLogs.splice(i, 1);
-    localStorage.setItem('caliLogs', JSON.stringify(savedLogs));
-    renderLogs();
-}
-
-function exportAudit() {
-    window.print();
+    const savedLogs = localStorage.getItem('caliLogs') ? JSON.parse(localStorage.getItem('caliLogs')) : [];
+    const container = document.getElementById("logBody");
+    container.innerHTML = savedLogs.map((l, i) => `<tr><td>${l.date}</td><td>${l.bw}</td><td>-</td><td>-</td><td>-</td><td>${l.skill}</td><td><button onclick="deleteLog(${i})">✕</button></td></tr>`).join('');
 }
 
 function analyze() {
-    if(!isSystemReady) return; 
-    if(!radarChart) initChart();
+    if(!isSystemReady) return; 
+    if(!radarChart) initChart();
 
-    if (isSimMode) {
-        radarChart.data.datasets[0].label = 'SIMULATED TARGET';
-        radarChart.data.datasets[0].borderColor = '#00ffcc';
-    } else {
-        radarChart.data.datasets[0].label = 'REALITY';
-        radarChart.data.datasets[0].borderColor = '#4c6fff';
-        saveToLocal();
-    }
-
-    const sys = document.getElementById("unitSystem").value;
-    const conv = sys === 'imp' ? 0.453592 : 1;
-    let bw = parseFloat(document.getElementById("weight").value) * conv;
-    let h = sys === 'met' ? parseFloat(document.getElementById("hCm").value) : (parseFloat(document.getElementById("hFt").value)*30.48)+(parseFloat(document.getElementById("hIn").value)*2.54);
-    
-    // Absolute 1RM Calculations
-    const pull1RM_abs = (bw + (parseFloat(document.getElementById("wpW").value)||0)*conv * (1 + (parseInt(document.getElementById("wpR").value)||0)/30) * (1+(10-parseInt(document.getElementById("wpRPE").value))/18));
-    const push1RM_abs = (bw + (parseFloat(document.getElementById("wdW").value)||0)*conv * (1 + (parseInt(document.getElementById("wdR").value)||0)/30) * (1+(10-parseInt(document.getElementById("wdRPE").value))/18));
-    const sa1RM_abs = (bw + (parseFloat(document.getElementById("saW").value)||0)*conv * (1 + (parseInt(document.getElementById("saR").value)||0)/30) * (1+(10-parseInt(document.getElementById("saRPE").value))/18));
+    const sys = document.getElementById("unitSystem").value;
+    const conv = sys === 'imp' ? 0.453592 : 1;
+    let bw = (parseFloat(document.getElementById("weight").value) || 70) * conv;
+    let h = sys === 'met' ? (parseFloat(document.getElementById("hCm").value) || 175) : (parseFloat(document.getElementById("hFt").value)*30.48)+(parseFloat(document.getElementById("hIn").value)*2.54);
+    
+    // Safety Fallbacks
+    const pull1RM_abs = (bw + (parseFloat(document.getElementById("wpW").value)||0)*conv * (1 + (parseInt(document.getElementById("wpR").value)||0)/30));
+    const push1RM_abs = (bw + (parseFloat(document.getElementById("wdW").value)||0)*conv * (1 + (parseInt(document.getElementById("wdR").value)||0)/30));
+    const sa1RM_abs = (bw + (parseFloat(document.getElementById("saW").value)||0)*conv * (1 + (parseInt(document.getElementById("saR").value)||0)/30));
 
     const pull1RM = pull1RM_abs / bw;
     const push1RM = push1RM_abs / bw;
     const sa1RM = sa1RM_abs / bw;
 
-    const torqueFactor = Math.pow(h / 170, 2.3) * parseFloat(document.getElementById("legRatio").value);
-    const cns = parseInt(document.getElementById("cns").value);
-    const form = parseFloat(document.getElementById("form").value);
-    
-    let barHtml = `<h3 style="color:${isSimMode ? 'var(--potential)' : 'var(--primary)'}; font-size:0.8em; margin-bottom:15px;">${isSimMode ? 'SIMULATION PROJECTION' : 'Skill Status & Training Targets'}</h3>`;
-    const curScores = []; const potScores = [];
-
-    skills.forEach(s => {
-        let sc = [];
-        if (s.p > 0) sc.push((push1RM / (s.p * torqueFactor * parseFloat(document.getElementById("surface").value))) * 100);
-        if (s.l > 0) sc.push((pull1RM / (s.l * torqueFactor)) * 100);
-        if (s.s > 0) sc.push((sa1RM / (s.s * torqueFactor)) * 100);
-        const sig = (x) => 100 / (1 + Math.exp(-0.15 * (x - 58)));
-        let cur = sig(Math.min(...sc)) * (cns/10) * form;
-        curScores.push(cur.toFixed(1));
-        potScores.push(sig(Math.max(...sc)).toFixed(1));
-        barHtml += `
-            <div class="skill-bar-container">
-                <div class="skill-label"><span>${s.name}</span><span>${cur.toFixed(0)}%</span></div>
-                <div class="bar-bg"><div class="bar-fill" style="width: ${cur}%; background: ${isSimMode ? 'var(--potential)' : 'linear-gradient(90deg, var(--primary), var(--potential))'}"></div></div>
-                <span class="rec-exercise">Target: ${recs[s.name]}</span>
-            </div>`;
-    });
-
-    radarChart.data.datasets[0].data = curScores;
-    radarChart.data.datasets[1].data = potScores;
-    radarChart.update();
-    document.getElementById("skillBars").innerHTML = barHtml;
-
-    // --- SMART INSIGHTS ENGINE ---
-    const pullPushRatio = (pull1RM_abs / push1RM_abs).toFixed(2);
-    const saIntegrity = (sa1RM_abs / push1RM_abs).toFixed(2);
-    const relPower = (push1RM_abs / bw).toFixed(2);
-
-    let feedback = `<h3>Biomechanical Audit</h3>`;
+    const torqueFactor = Math.pow(h / 170, 2.3) * (parseFloat(document.getElementById("legRatio").value) || 1);
+    const cns = parseInt(document.getElementById("cns").value) || 5;
+    const form = parseFloat(document.getElementById("form").value) || 1;
     
-    // 1. Leverage Efficiency
-    feedback += `<div class="insight-block"><span class="insight-title">Torque Multiplier: ${torqueFactor.toFixed(2)}x</span><p style="font-size:0.7em;">Efficiency coefficient for ${h.toFixed(0)}cm stature.</p></div>`;
+    let barHtml = `<h3 style="color:${isSimMode ? 'var(--potential)' : 'var(--primary)'}">${isSimMode ? 'SIMULATION' : 'SKILL STATUS'}</h3>`;
+    const curScores = []; const potScores = [];
 
-    // 2. Structural Integrity (Pull/Push)
-    let balanceMsg = pullPushRatio > 1.1 ? "Pull Dominant: Risk of shoulder internal rotation." : pullPushRatio < 0.9 ? "Push Dominant: Scapular retractors lagging." : "Optimal Balance: Structural symmetry detected.";
-    feedback += `<div class="insight-block"><span style="color:var(--potential)">Structural Ratio: ${pullPushRatio}</span><p style="font-size:0.7em;">${balanceMsg}</p></div>`;
+    skills.forEach(s => {
+        let sc = [];
+        if (s.p > 0) sc.push((push1RM / (s.p * torqueFactor)) * 100);
+        if (s.l > 0) sc.push((pull1RM / (s.l * torqueFactor)) * 100);
+        if (s.s > 0) sc.push((sa1RM / (s.s * torqueFactor)) * 100);
+        
+        let cur = Math.min(...sc) * (cns/10) * form;
+        curScores.push(cur.toFixed(1));
+        potScores.push(Math.max(...sc).toFixed(1));
+        barHtml += `
+            <div class="skill-bar-container">
+                <div class="skill-label"><span>${s.name}</span><span>${cur.toFixed(0)}%</span></div>
+                <div class="bar-bg"><div class="bar-fill" style="width: ${cur}%"></div></div>
+            </div>`;
+    });
 
-    // 3. Tendon Safety (SA vs Dip)
-    let danger = saIntegrity < 0.5;
-    let tendonMsg = danger ? "CRITICAL: Tendons cannot support current muscle output." : "Integrity Verified: Straight-arm base is solid.";
-    feedback += `<div class="insight-block"><span style="color:${danger ? 'var(--danger)' : 'var(--primary)'}">Tendon Load Cap: ${saIntegrity}</span><p style="font-size:0.7em;">${tendonMsg}</p></div>`;
-
-    // 4. Power Density
-    feedback += `<div class="insight-block"><span style="color:var(--primary)">Relative Power: ${relPower}x BW</span><p style="font-size:0.7em;">Absolute force output relative to total mass.</p></div>`;
-
-    // 5. CNS Recovery Advisory
-    let cnsStatus = cns < 6 ? "SYSTEM FATIGUE: Avoid isometric holds > 80% intensity." : "OPTIMAL CNS: Cleared for max effort attempts.";
-    feedback += `<div class="insight-block"><span style="color:var(--potential)">Neural Readiness: ${cns}/10</span><p style="font-size:0.7em;">${cnsStatus}</p></div>`;
-
-    document.getElementById("aiFeedback").innerHTML = feedback;
+    radarChart.data.datasets[0].data = curScores;
+    radarChart.update();
+    document.getElementById("skillBars").innerHTML = barHtml;
+    document.getElementById("aiFeedback").innerHTML = `<h3>Audit</h3><div class="insight-block">Ratio: ${(pull1RM_abs/push1RM_abs).toFixed(2)}</div>`;
 }
 </script>
 </body>
