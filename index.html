@@ -30,10 +30,16 @@
     
     .inline-quad { display: grid; grid-template-columns: 1.2fr 0.8fr 0.8fr 1fr; gap: 5px; }
     
-    .dashboard-row { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 20px; margin-top: 30px; }
+    /* UPDATED: Improved Responsive Dashboard Row */
+    .dashboard-row { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 20px; margin-top: 30px; align-items: start; }
     
-    .analysis-panel { background:#1f1f2e; padding:20px; border-radius:20px; border: 1px solid #333; min-height: 450px; overflow-y: auto; }
+    .analysis-panel { background:#1f1f2e; padding:20px; border-radius:20px; border: 1px solid #333; min-height: 450px; overflow-y: auto; position: relative;}
     
+    /* Prepare Button Styling */
+    .prepare-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(22, 22, 33, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; border-radius: 20px; text-align: center; padding: 20px; box-sizing: border-box; }
+    .btn-prepare { background: transparent; color: var(--potential); border: 2px solid var(--potential); padding: 15px 30px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 0.8em; letter-spacing: 2px; transition: 0.3s; }
+    .btn-prepare:hover { background: var(--potential); color: black; box-shadow: 0 0 20px rgba(0, 255, 204, 0.4); }
+
     .skill-bar-container { margin-bottom: 12px; }
     .skill-label { display: flex; justify-content: space-between; font-size: 0.75em; margin-bottom: 4px; font-weight: bold; }
     .bar-bg { background: #0b0b12; height: 8px; border-radius: 4px; overflow: hidden; border: 1px solid #333; }
@@ -53,18 +59,19 @@
     .btn-log { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.7em; transition: 0.3s; }
     .btn-log:hover { filter: brightness(1.2); box-shadow: 0 0 10px var(--primary); }
 
+    /* MOBILE FIX: Stacking layout correctly */
     @media (max-width: 1000px) {
         .dashboard-row { grid-template-columns: 1fr; }
         .main-grid { grid-template-columns: 1fr; }
         .container { border-radius: 0; }
         h1 { font-size: 1.1em !important; }
         .blog-link { display: block; margin-bottom: 10px; }
+        .analysis-panel { min-height: auto; }
+        #chart-card { order: -1; width: 100%; } /* Keep radar visible first on mobile */
     }
   </style>
 </head>
-<body onload="loadSavedData(); analyze(); renderLogs();">
-
-<div class="container">
+<body onload="loadSavedData(); renderLogs();"> <div class="container">
     <h1 style="text-align:center; color:var(--primary); font-size:1.4em; letter-spacing:4px; margin-bottom: 20px;">CALI-BIOTECH COMMAND</h1>
 
     <div style="text-align: center; margin-bottom: 20px;">
@@ -119,9 +126,20 @@
     </div>
 
     <div class="dashboard-row">
-        <div style="background:var(--bg); border-radius:20px; padding:10px; border:1px solid var(--border); display: flex; align-items:center;"><canvas id="skillRadar"></canvas></div>
-        <div class="analysis-panel" id="skillBars"></div>
-        <div class="analysis-panel" id="aiFeedback"></div>
+        <div id="chart-card" style="background:var(--bg); border-radius:20px; padding:10px; border:1px solid var(--border); display: flex; align-items:center; min-height: 300px; position: relative;">
+            <div id="radar-lock" class="prepare-overlay">
+                <button class="btn-prepare" onclick="prepareSystem()">PREPARE TRAINING MATRIX</button>
+            </div>
+            <canvas id="skillRadar"></canvas>
+        </div>
+        
+        <div class="analysis-panel" id="skillBars">
+             <div style="text-align: center; color: #444; margin-top: 100px;">SYSTEM OFFLINE</div>
+        </div>
+        
+        <div class="analysis-panel" id="aiFeedback">
+             <div style="text-align: center; color: #444; margin-top: 100px;">AWAITING AUDIT</div>
+        </div>
     </div>
 
     <div class="card" style="margin-top: 25px; border-color: var(--border);">
@@ -167,6 +185,14 @@
 </div>
 
 <script>
+// NEW FUNCTION: Handles the "Prepare" logic
+let isSystemReady = false;
+function prepareSystem() {
+    isSystemReady = true;
+    document.getElementById("radar-lock").style.display = "none";
+    analyze();
+}
+
 function updateLabels() {
     const isMet = document.getElementById("unitSystem").value === 'met';
     document.getElementById("wLabel").innerText = isMet ? "Weight (kg)" : "Weight (lbs)";
@@ -205,7 +231,12 @@ function initChart() {
                 { label: 'Potential', data: [], backgroundColor: 'rgba(0, 255, 204, 0.05)', borderColor: '#00ffcc', borderDash: [5, 5] }
             ]
         },
-        options: { scales: { r: { beginAtZero: true, max: 100, ticks: { display: false }, grid: { color: '#2a2a3a' } } }, plugins: { legend: { display: false } } }
+        options: { 
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { r: { beginAtZero: true, max: 100, ticks: { display: false }, grid: { color: '#2a2a3a' } } }, 
+            plugins: { legend: { display: false } } 
+        }
     });
 }
 
@@ -282,6 +313,8 @@ function deleteLog(i) {
 }
 
 function analyze() {
+    if(!isSystemReady) return; // Don't run logic until button clicked
+    
     if(!radarChart) initChart();
     const sys = document.getElementById("unitSystem").value;
     const conv = sys === 'imp' ? 0.453592 : 1;
