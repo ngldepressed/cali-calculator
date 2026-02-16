@@ -270,12 +270,12 @@ function updateLabels() {
 }
 
 const skills = [
-    { name: "Full Planche", p: 3.4, l: 0, s: 2.5 },
-    { name: "Straddle Planche", p: 2.8, l: 0, s: 2.0 },
-    { name: "Front Lever", p: 0, l: 2.6, s: 1.8 },
-    { name: "Iron Cross", p: 0, l: 3.0, s: 4.0 },
-    { name: "Maltese", p: 4.5, l: 0, s: 3.5 },
-    { name: "Muscle-up", p: 1.5, l: 1.6, s: 0 }
+    { name: "Full Planche", p: 3.4, l: 0, s: 2.5, minEntry: 45 },
+    { name: "Straddle Planche", p: 2.8, l: 0, s: 2.0, minEntry: 30 },
+    { name: "Front Lever", p: 0, l: 2.6, s: 1.8, minEntry: 30 },
+    { name: "Iron Cross", p: 0, l: 3.0, s: 4.0, minEntry: 50 },
+    { name: "Maltese", p: 4.5, l: 0, s: 3.5, minEntry: 55 },
+    { name: "Muscle-up", p: 1.5, l: 1.6, s: 0, minEntry: 15 }
 ];
 
 const recs = {
@@ -301,7 +301,7 @@ function initChart() {
             ]
         },
         options: { 
-            responsive: true,
+            responsive: true, 
             maintainAspectRatio: false,
             scales: { r: { beginAtZero: true, max: 100, ticks: { display: false }, grid: { color: '#2a2a3a' } } }, 
             plugins: { legend: { display: false } } 
@@ -341,8 +341,9 @@ function logSession() {
     let topSkill = "None";
     let maxVal = -1;
     document.querySelectorAll('.skill-label').forEach(el => {
-        let val = parseInt(el.children[1].innerText);
-        if(val > maxVal) { maxVal = val; topSkill = el.children[0].innerText; }
+        let valText = el.children[1].innerText;
+        let val = parseInt(valText);
+        if(!isNaN(val) && val > maxVal) { maxVal = val; topSkill = el.children[0].innerText.replace("⚡ ", "").replace("🔒 ", ""); }
     });
 
     const entry = {
@@ -351,7 +352,7 @@ function logSession() {
         pull: get1RM("wpW", "wpR") + u,
         push: get1RM("wdW", "wdR") + u,
         sa: get1RM("saW", "saR") + u,
-        skill: topSkill + " (" + maxVal + "%)"
+        skill: topSkill + " (" + (maxVal > 0 ? maxVal : 0) + "%)"
     };
 
     savedLogs.unshift(entry);
@@ -408,7 +409,7 @@ function analyze() {
     const cnsVal = parseInt(document.getElementById("cns").value) / 10;
     const form = parseFloat(document.getElementById("form").value);
     
-    let barHtml = `<h3 style="color:${isSimMode ? 'var(--potential)' : 'var(--primary)'}; font-size:0.8em; margin-bottom:15px;">${isSimMode ? 'SIMULATION PROJECTION' : 'Skill Status & Training Targets'}</h3>`;
+    let barHtml = `<h3 style="color:${isSimMode ? 'var(--potential)' : 'var(--primary)'}; font-size:0.8em; margin-bottom:15px;">${isSimMode ? 'SIMULATION PROJECTION' : 'Skill Status & Prerequisites'}</h3>`;
     const curScores = []; const potScores = [];
 
     skills.forEach(s => {
@@ -416,15 +417,25 @@ function analyze() {
         if (s.p > 0) sc.push((push1RM / (s.p * torqueFactor * parseFloat(document.getElementById("surface").value))) * 100);
         if (s.l > 0) sc.push((pull1RM / (s.l * torqueFactor)) * 100);
         if (s.s > 0) sc.push((sa1RM / (s.s * torqueFactor)) * 100);
+        
         const sig = (x) => 100 / (1 + Math.exp(-0.15 * (x - 58)));
         let cur = sig(Math.min(...sc)) * cnsVal * form;
+        
+        // Prerequisite Gating
+        const isLocked = cur < s.minEntry && !isSimMode;
+        const statusIcon = isLocked ? "🔒" : "⚡";
+        const barColor = isLocked ? "#333" : (isSimMode ? 'var(--potential)' : 'linear-gradient(90deg, var(--primary), var(--potential))');
+        const opacity = isLocked ? "0.4" : "1";
+        const targetText = isLocked ? `Unlocks at ${s.minEntry}% Power-to-Weight` : `Target: ${recs[s.name]}`;
+
         curScores.push(cur.toFixed(1));
         potScores.push(sig(Math.max(...sc)).toFixed(1));
+
         barHtml += `
-            <div class="skill-bar-container">
-                <div class="skill-label"><span>${s.name}</span><span>${cur.toFixed(0)}%</span></div>
-                <div class="bar-bg"><div class="bar-fill" style="width: ${cur}%; background: ${isSimMode ? 'var(--potential)' : 'linear-gradient(90deg, var(--primary), var(--potential))'}"></div></div>
-                <span class="rec-exercise">Target: ${recs[s.name]}</span>
+            <div class="skill-bar-container" style="opacity: ${opacity}">
+                <div class="skill-label"><span>${statusIcon} ${s.name}</span><span>${isLocked ? 'LOCKED' : cur.toFixed(0) + '%'}</span></div>
+                <div class="bar-bg"><div class="bar-fill" style="width: ${cur}%; background: ${barColor}"></div></div>
+                <span class="rec-exercise" style="color: ${isLocked ? 'var(--danger)' : 'var(--potential)'}">${targetText}</span>
             </div>`;
     });
 
@@ -439,30 +450,25 @@ function analyze() {
 
     let auditHtml = `<h3>Biomechanical Audit</h3>`;
 
-    // 1. Torque
     let tDesc = torqueFactor > 1.1 ? "High Leverage (Difficult)" : torqueFactor < 0.9 ? "Low Leverage (Advantaged)" : "Neutral Leverage";
     auditHtml += `<div class="insight-block"><span class="insight-title">Torque: ${torqueFactor.toFixed(2)}x</span>
                  <p style="font-size:0.7em; color:#888;">${tDesc}. Strength penalty based on your ${h.toFixed(0)}cm stature.</p></div>`;
 
-    // 2. Push/Pull
     let pColor = pullPushRatio < 0.9 ? 'var(--danger)' : 'var(--potential)';
     let pDesc = pullPushRatio < 0.9 ? "Push dominant. Strengthen back to save shoulders." : "Balanced structural strength.";
     auditHtml += `<div class="insight-block" style="color:${pColor}"><span class="insight-title">Push/Pull Ratio: ${pullPushRatio}</span>
                  <p style="font-size:0.7em; color:#888;">${pDesc}</p></div>`;
 
-    // 3. SA Integrity
     let sColor = saIntegrity < 0.6 ? 'var(--danger)' : 'var(--potential)';
     let sDesc = saIntegrity < 0.6 ? "DANGER: Bent-arm strength exceeds tendon capacity." : "Safe for isometric loading.";
     auditHtml += `<div class="insight-block" style="color:${sColor}"><span class="insight-title">SA Integrity: ${saIntegrity}</span>
                  <p style="font-size:0.7em; color:#888;">${sDesc}</p></div>`;
 
-    // 4. Relative Power
     auditHtml += `<div class="insight-block"><span class="insight-title">Rel. Power: ${relPower}x BW</span>
                  <p style="font-size:0.7em; color:#888;">Your total push capacity relative to your mass.</p></div>`;
 
     document.getElementById("aiFeedback").innerHTML = auditHtml;
 
-    // HEATMAP UPDATE LOGIC
     const shoulders = document.querySelectorAll('#joint-shoulder-l, #joint-shoulder-r');
     const elbows = document.querySelectorAll('#joint-elbow-l, #joint-elbow-r');
     const wrists = document.querySelectorAll('#joint-wrist-l, #joint-wrist-r');
@@ -485,7 +491,6 @@ function analyze() {
     document.getElementById("risk-msg").innerText = riskMsg;
     document.getElementById("risk-msg").style.color = (riskMsg === "SYSTEMS NOMINAL") ? "#888" : "var(--danger)";
 
-    // VOLUME CALCULATOR LOGIC
     const setsInput = [
         { s: parseInt(document.getElementById("wpS").value) || 0, rpe: parseInt(document.getElementById("wpRPE").value) || 0 },
         { s: parseInt(document.getElementById("wdS").value) || 0, rpe: parseInt(document.getElementById("wdRPE").value) || 0 },
