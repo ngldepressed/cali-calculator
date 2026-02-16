@@ -484,15 +484,62 @@ function analyze() {
         saveToLocal(); 
     }
 
+   function analyze() {
+    if(!isSystemReady) return; 
+    if(!radarChart) initChart();
+
     const sys = document.getElementById("unitSystem").value;
     const conv = sys === 'imp' ? 0.453592 : 1;
     const u = sys === 'met' ? 'kg' : 'lbs';
-    let bw = parseFloat(document.getElementById("weight").value) * conv;
-    let h = sys === 'met' ? parseFloat(document.getElementById("hCm").value) : (parseFloat(document.getElementById("hFt").value)*30.48)+(parseFloat(document.getElementById("hIn").value)*2.54);
     
-    const pull1RM = (bw + (parseFloat(document.getElementById("wpW").value)||0)*conv * (1 + (parseInt(document.getElementById("wpR").value)||0)/30) * (1+(10-parseInt(document.getElementById("wpRPE").value))/18)) / bw;
-    const push1RM = (bw + (parseFloat(document.getElementById("wdW").value)||0)*conv * (1 + (parseInt(document.getElementById("wdR").value)||0)/30) * (1+(10-parseInt(document.getElementById("wdRPE").value))/18)) / bw;
-    const sa1RM = (bw + (parseFloat(document.getElementById("saW").value)||0)*conv * (1 + (parseInt(document.getElementById("saR").value)||0)/30) * (1+(10-parseInt(document.getElementById("saRPE").value))/18)) / bw;
+    // 1. Get Base Values
+    let bw = parseFloat(document.getElementById("weight").value) || 75;
+    bw = bw * conv;
+    let h = sys === 'met' ? parseFloat(document.getElementById("hCm").value) : (parseFloat(document.getElementById("hFt").value)*30.48)+(parseFloat(document.getElementById("hIn").value)*2.54);
+
+    // 2. Calculate Ratios (The || 0 handles empty boxes)
+    const pull1RM = (bw + (parseFloat(document.getElementById("wpW").value)||0)*conv * (1 + (parseInt(document.getElementById("wpR").value)||0)/30)) / bw;
+    const push1RM = (bw + (parseFloat(document.getElementById("wdW").value)||0)*conv * (1 + (parseInt(document.getElementById("wdR").value)||0)/30)) / bw;
+    
+    // Check if Zanetti is empty; if so, project from Push power
+    let rawSa = (bw + (parseFloat(document.getElementById("saW").value)||0)*conv * (1 + (parseInt(document.getElementById("saR").value)||0)/30)) / bw;
+    const sa1RM = Math.max(rawSa, (push1RM * 0.8)); // Hard Projection: SA is at least 80% of Push
+
+    const torqueFactor = Math.pow(h / 170, 2.3) * parseFloat(document.getElementById("legRatio").value);
+    
+    // 3. Update Skill Bars
+    let barHtml = "";
+    const curScores = [];
+    const potScores = [];
+
+    skills.forEach(s => {
+        let vectors = [];
+        if (s.p > 0) vectors.push((push1RM / (s.p * torqueFactor)) * 100);
+        if (s.l > 0) vectors.push((pull1RM / (s.l * torqueFactor)) * 100);
+        if (s.s > 0) vectors.push((sa1RM / (s.s * torqueFactor)) * 100);
+        
+        // Use the WEAKEST link to determine the current percentage
+        let cur = Math.min(...vectors);
+        
+        // Limit to 100%
+        if (cur > 100) cur = 100;
+        if (cur < 0 || isNaN(cur)) cur = 0;
+
+        curScores.push(cur.toFixed(1));
+        potScores.push(Math.max(...vectors).toFixed(1)); // Potential is the strongest link
+
+        barHtml += `
+            <div class="skill-bar-container">
+                <div class="skill-label"><span>${s.name}</span><span>${cur.toFixed(0)}%</span></div>
+                <div class="bar-bg"><div class="bar-fill" style="width: ${cur}%;"></div></div>
+            </div>`;
+    });
+
+    radarChart.data.datasets[0].data = curScores;
+    radarChart.data.datasets[1].data = potScores;
+    radarChart.update();
+    document.getElementById("barContainer").innerHTML = barHtml;
+}
 // --- CALI-BIOTECH ESTIMATION LOGIC ---
 // These coefficients predict static skill potential from weighted basics
 // If a user has a 40kg dip, we use it to estimate their Planche potential
@@ -527,41 +574,40 @@ skills.forEach(s => {
     let barHtml = "";
     const curScores = []; const potScores = [];
 
-    skills.forEach(s => {
-    let vectors = [];
-    
-    // PUSH VECTOR: If user has Push power, it contributes to Planche/Maltese
-    if (s.p > 0) {
-        vectors.push({ 
-            name: "Push", 
-            val: (push1RM / (s.p * torqueFactor * parseFloat(document.getElementById("surface").value))) * 100 
-        });
-    }
-
-    // PULL VECTOR: If user has Pull power, it contributes to Front Lever
-    if (s.l > 0) {
-        vectors.push({ 
-            name: "Pull", 
-            val: (pull1RM / (s.l * torqueFactor)) * 100 
-        });
-    }
-
-    // SA STRENGTH VECTOR (The Fix): 
-    // If Zanetti is empty (sa1RM is base BW), we estimate 60% of their Push power as "Baseline SA"
-    if (s.s > 0) {
-        let actualSA = sa1RM;
-        let estimatedSA = push1RM * 0.7; // Assumption: SA is usually 70% of Bent-Arm power
-        let effectiveSA = Math.max(actualSA, estimatedSA);
-
-        vectors.push({ 
-            name: "SA Strength", 
-            val: (effectiveSA / (s.s * torqueFactor)) * 100 
-        });
-    }
-
-    // Rest of your bar drawing logic follows...
+skills.forEach(s => {
+        let vectors = [];
         
-        const sig = (x) => 100 / (1 + Math.exp(-0.15 * (x - 58)));
+        // 1. PUSH VECTOR
+        if (s.p > 0) {
+            vectors.push({ 
+                name: "Push", 
+                val: (push1RM / (s.p * torqueFactor * parseFloat(document.getElementById("surface").value))) * 100 
+            });
+        }
+
+        // 2. PULL VECTOR
+        if (s.l > 0) {
+            vectors.push({ 
+                name: "Pull", 
+                val: (pull1RM / (s.l * torqueFactor)) * 100 
+            });
+        }
+
+        // 3. SA STRENGTH VECTOR (The "Empty Box" Fix)
+        if (s.s > 0) {
+            // Logic: If sa1RM is empty (1.0), we use 70% of push1RM as a projection
+            let projectedSA = push1RM * 0.7; 
+            let effectiveSA = Math.max(sa1RM, projectedSA);
+
+            vectors.push({ 
+                name: "SA Strength", 
+                val: (effectiveSA / (s.s * torqueFactor)) * 100 
+            });
+        }
+
+        // --- CALCULATION LOGIC ---
+        // Midpoint moved to 50 for a smoother progress visual
+        const sig = (x) => 100 / (1 + Math.exp(-0.15 * (x - 50)));
         let cur = sig(Math.min(...vectors.map(v => v.val))) * cnsVal * form;
         
         const isTarget = s.name === activeGoal;
@@ -587,12 +633,16 @@ skills.forEach(s => {
     radarChart.update();
     document.getElementById("barContainer").innerHTML = barHtml;
 
+    // --- BIOMECHANICAL AUDIT ---
     const pullPushRatio = (pull1RM / push1RM).toFixed(2);
-    const saIntegrity = (sa1RM / push1RM).toFixed(2);
+    // Use effectiveSA here too so the audit reflects the projection
+    const effectiveSA_Audit = Math.max(sa1RM, (push1RM * 0.7));
+    const saIntegrity = (effectiveSA_Audit / push1RM).toFixed(2);
     const relPower = push1RM.toFixed(2);
 
     let auditHtml = `<h3>Biomechanical Audit</h3>`;
     let tDesc = torqueFactor > 1.1 ? "High Leverage (Difficult)" : torqueFactor < 0.9 ? "Low Leverage (Advantaged)" : "Neutral Leverage";
+    
     auditHtml += `<div class="insight-block"><span class="insight-title">Torque: ${torqueFactor.toFixed(2)}x</span>
                   <p style="font-size:0.7em; color:#888;">${tDesc}. Strength penalty based on your ${h.toFixed(0)}cm stature.</p></div>`;
 
@@ -602,12 +652,12 @@ skills.forEach(s => {
                   <p style="font-size:0.7em; color:#888;">${pDesc}</p></div>`;
 
     let sColor = saIntegrity < 0.6 ? 'var(--danger)' : 'var(--potential)';
-    let sDesc = saIntegrity < 0.6 ? "DANGER: Bent-arm strength exceeds tendon capacity." : "Safe for isometric loading.";
+    let sDesc = saIntegrity < 0.6 ? "DANGER: Bent-arm strength exceeds projected tendon capacity." : "Safe for isometric loading.";
     auditHtml += `<div class="insight-block" style="color:${sColor}"><span class="insight-title">SA Integrity: ${saIntegrity}</span>
                   <p style="font-size:0.7em; color:#888;">${sDesc}</p></div>`;
 
     auditHtml += `<div class="insight-block"><span class="insight-title">Rel. Power: ${relPower}x BW</span>
-                  <p style="font-size:0.7em; color:#888;">Your total push capacity relative to your mass.</p></div>`;
+                  <p style="font-size:0.7em; color:#888;">Total push capacity relative to mass.</p></div>`;
 
     document.getElementById("aiFeedback").innerHTML = auditHtml;
 
