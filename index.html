@@ -475,6 +475,7 @@ function analyze() {
     if(!isSystemReady) return; 
     if(!radarChart) initChart();
 
+    // 1. SET UI STATE
     if (isSimMode) {
         radarChart.data.datasets[0].label = 'SIMULATED TARGET';
         radarChart.data.datasets[0].borderColor = '#00ffcc';
@@ -484,79 +485,26 @@ function analyze() {
         saveToLocal(); 
     }
 
-   function analyze() {
-    if(!isSystemReady) return; 
-    if(!radarChart) initChart();
-
+    // 2. GET PHYSICAL CONSTANTS
     const sys = document.getElementById("unitSystem").value;
     const conv = sys === 'imp' ? 0.453592 : 1;
     const u = sys === 'met' ? 'kg' : 'lbs';
-    
-    // 1. Get Base Values
-    let bw = parseFloat(document.getElementById("weight").value) || 75;
-    bw = bw * conv;
+    let bw = (parseFloat(document.getElementById("weight").value) || 75) * conv;
     let h = sys === 'met' ? parseFloat(document.getElementById("hCm").value) : (parseFloat(document.getElementById("hFt").value)*30.48)+(parseFloat(document.getElementById("hIn").value)*2.54);
 
-    // 2. Calculate Ratios (The || 0 handles empty boxes)
+    // 3. CALCULATE 1RM RATIOS
     const pull1RM = (bw + (parseFloat(document.getElementById("wpW").value)||0)*conv * (1 + (parseInt(document.getElementById("wpR").value)||0)/30)) / bw;
     const push1RM = (bw + (parseFloat(document.getElementById("wdW").value)||0)*conv * (1 + (parseInt(document.getElementById("wdR").value)||0)/30)) / bw;
     
-    // Check if Zanetti is empty; if so, project from Push power
+    // THE FIX: If Zanetti is empty, sa1RM projects potential from Dips (Push power)
     let rawSa = (bw + (parseFloat(document.getElementById("saW").value)||0)*conv * (1 + (parseInt(document.getElementById("saR").value)||0)/30)) / bw;
-    const sa1RM = Math.max(rawSa, (push1RM * 0.8)); // Hard Projection: SA is at least 80% of Push
+    const sa1RM = Math.max(rawSa, (push1RM * 0.8)); 
 
-    const torqueFactor = Math.pow(h / 170, 2.3) * parseFloat(document.getElementById("legRatio").value);
+    const torqueFactor = Math.pow(h / 170, 2.3) * (parseFloat(document.getElementById("legRatio").value) || 1.0);
+    const cnsVal = (parseInt(document.getElementById("cns").value) || 10) / 10;
+    const form = parseFloat(document.getElementById("form").value) || 1.0;
     
-    // 3. Update Skill Bars
-    let barHtml = "";
-    const curScores = [];
-    const potScores = [];
-
-    skills.forEach(s => {
-        let vectors = [];
-        if (s.p > 0) vectors.push((push1RM / (s.p * torqueFactor)) * 100);
-        if (s.l > 0) vectors.push((pull1RM / (s.l * torqueFactor)) * 100);
-        if (s.s > 0) vectors.push((sa1RM / (s.s * torqueFactor)) * 100);
-        
-        // Use the WEAKEST link to determine the current percentage
-        let cur = Math.min(...vectors);
-        
-        // Limit to 100%
-        if (cur > 100) cur = 100;
-        if (cur < 0 || isNaN(cur)) cur = 0;
-
-        curScores.push(cur.toFixed(1));
-        potScores.push(Math.max(...vectors).toFixed(1)); // Potential is the strongest link
-
-        barHtml += `
-            <div class="skill-bar-container">
-                <div class="skill-label"><span>${s.name}</span><span>${cur.toFixed(0)}%</span></div>
-                <div class="bar-bg"><div class="bar-fill" style="width: ${cur}%;"></div></div>
-            </div>`;
-    });
-
-    radarChart.data.datasets[0].data = curScores;
-    radarChart.data.datasets[1].data = potScores;
-    radarChart.update();
-    document.getElementById("barContainer").innerHTML = barHtml;
-}
-// --- CALI-BIOTECH ESTIMATION LOGIC ---
-// These coefficients predict static skill potential from weighted basics
-// If a user has a 40kg dip, we use it to estimate their Planche potential
-const estPlancheRatio = push1RM * 0.85; // Weighted Dip power carryover
-const estFLRatio = pull1RM * 0.90;      // Weighted Pull power carryover
-const estMalteseRatio = (push1RM * 0.5) + (sa1RM * 0.6); // Mixed push + Zanetti power
-
-// --- UPDATE THE SKILL VECTORS ---
-// This ensures that even if Zanetti is 0, Maltese still shows potential from Dips
-skills.forEach(s => {
-    if (s.name.includes("Planche")) s.minEntry = Math.max(s.minEntry, (estPlancheRatio * 20));
-    if (s.name.includes("Front Lever")) s.minEntry = Math.max(s.minEntry, (estFLRatio * 20));
-});
-    const torqueFactor = Math.pow(h / 170, 2.3) * parseFloat(document.getElementById("legRatio").value);
-    const cnsVal = parseInt(document.getElementById("cns").value) / 10;
-    const form = parseFloat(document.getElementById("form").value);
-    
+    // 4. SETUP GOAL SELECTOR
     let skillPanel = document.getElementById("skillBars");
     if (!document.getElementById("goalSelect")) {
         skillPanel.innerHTML = `
@@ -570,6 +518,47 @@ skills.forEach(s => {
             <div id="barContainer"></div>`;
     }
 
+    const activeGoal = document.getElementById("goalSelect").value;
+    let barHtml = "";
+    const curScores = [];
+    const potScores = [];
+
+    // 5. UPDATE SKILL BARS
+    skills.forEach(s => {
+        let vectors = [];
+        // Add specific multipliers for push/pull/straight-arm
+        if (s.p > 0) vectors.push((push1RM / (s.p * torqueFactor)) * 100);
+        if (s.l > 0) vectors.push((pull1RM / (s.l * torqueFactor)) * 100);
+        if (s.s > 0) vectors.push((sa1RM / (s.s * torqueFactor)) * 100);
+        
+        // Calculate current progress using Sigmoid for realistic feel
+        const sig = (x) => 100 / (1 + Math.exp(-0.15 * (x - 50)));
+        let minVal = Math.min(...vectors);
+        let cur = sig(minVal) * cnsVal * form;
+        
+        // Safety bounds
+        if (cur > 100) cur = 100;
+        if (cur < 0 || isNaN(cur)) cur = 0;
+
+        curScores.push(cur.toFixed(1));
+        potScores.push(sig(Math.max(...vectors)).toFixed(1)); 
+
+        const isTarget = s.name === activeGoal;
+        const opacity = (activeGoal !== "None" && !isTarget) ? "0.3" : "1";
+
+        barHtml += `
+            <div class="skill-bar-container" style="opacity: ${opacity}">
+                <div class="skill-label"><span>${s.name}</span><span>${cur.toFixed(0)}%</span></div>
+                <div class="bar-bg"><div class="bar-fill" style="width: ${cur}%; background: ${isTarget ? 'var(--potential)' : 'var(--primary)'}"></div></div>
+            </div>`;
+    });
+
+    // 6. UPDATE OUTPUTS
+    radarChart.data.datasets[0].data = curScores;
+    radarChart.data.datasets[1].data = potScores;
+    radarChart.update();
+    document.getElementById("barContainer").innerHTML = barHtml;
+}
     const activeGoal = document.getElementById("goalSelect").value;
     let barHtml = "";
     const curScores = []; const potScores = [];
