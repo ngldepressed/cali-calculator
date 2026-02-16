@@ -65,6 +65,14 @@
     .heatmap-container { background: #1f1f2e; padding: 15px; border-radius: 20px; border: 1px solid #333; text-align: center; margin-top: 20px; }
     .joint { transition: fill 0.4s ease; fill: #444; }
 
+    /* VOLUME OPTIMIZER STYLES */
+    .volume-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+    .stat-box { background: #0b0b12; padding: 10px; border-radius: 12px; border: 1px solid #333; text-align: center; }
+    .stat-val { display: block; font-size: 1.1em; font-weight: bold; color: var(--potential); }
+    .stat-label { font-size: 0.55em; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+    .battery-bar { width: 100%; height: 8px; background: #333; border-radius: 4px; margin-top: 8px; overflow: hidden; }
+    .battery-fill { height: 100%; background: var(--potential); transition: width 0.5s; width: 0%; }
+
     @media (max-width: 1000px) {
         .dashboard-row { grid-template-columns: 1fr; }
         .main-grid { grid-template-columns: 1fr; }
@@ -171,6 +179,22 @@
             <circle id="joint-wrist-r" cx="90" cy="90" r="4" class="joint" />
         </svg>
         <p id="risk-msg" style="font-size:0.65em; color:#888; margin-top:10px; font-weight: bold;">SCANNINING BIOMETRICS...</p>
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+        <h3>Volume & Recovery Optimizer</h3>
+        <div class="volume-grid">
+            <div class="stat-box">
+                <span class="stat-label">Weekly Volume Tax</span>
+                <span id="volume-tax" class="stat-val">0</span>
+                <div class="battery-bar"><div id="volume-fill" class="battery-fill"></div></div>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">Recovery Window</span>
+                <span id="recovery-status" class="stat-val">OPTIMAL</span>
+            </div>
+        </div>
+        <p id="volume-advice" style="font-size: 0.65em; color: #888; margin-top: 10px; text-align: center;">Ready for high-intensity loading.</p>
     </div>
 
     <div class="card" style="margin-top: 25px; border-color: var(--border);">
@@ -381,7 +405,7 @@ function analyze() {
     const sa1RM = (bw + (parseFloat(document.getElementById("saW").value)||0)*conv * (1 + (parseInt(document.getElementById("saR").value)||0)/30) * (1+(10-parseInt(document.getElementById("saRPE").value))/18)) / bw;
 
     const torqueFactor = Math.pow(h / 170, 2.3) * parseFloat(document.getElementById("legRatio").value);
-    const cns = parseInt(document.getElementById("cns").value) / 10;
+    const cnsVal = parseInt(document.getElementById("cns").value) / 10;
     const form = parseFloat(document.getElementById("form").value);
     
     let barHtml = `<h3 style="color:${isSimMode ? 'var(--potential)' : 'var(--primary)'}; font-size:0.8em; margin-bottom:15px;">${isSimMode ? 'SIMULATION PROJECTION' : 'Skill Status & Training Targets'}</h3>`;
@@ -393,7 +417,7 @@ function analyze() {
         if (s.l > 0) sc.push((pull1RM / (s.l * torqueFactor)) * 100);
         if (s.s > 0) sc.push((sa1RM / (s.s * torqueFactor)) * 100);
         const sig = (x) => 100 / (1 + Math.exp(-0.15 * (x - 58)));
-        let cur = sig(Math.min(...sc)) * cns * form;
+        let cur = sig(Math.min(...sc)) * cnsVal * form;
         curScores.push(cur.toFixed(1));
         potScores.push(sig(Math.max(...sc)).toFixed(1));
         barHtml += `
@@ -444,17 +468,14 @@ function analyze() {
     const wrists = document.querySelectorAll('#joint-wrist-l, #joint-wrist-r');
     let riskMsg = "SYSTEMS NOMINAL";
 
-    // Shoulder logic
     if (pullPushRatio < 0.85) { shoulders.forEach(s => s.style.fill = "var(--danger)"); riskMsg = "SHOULDER IMPINGEMENT RISK"; }
     else if (pullPushRatio < 0.95) { shoulders.forEach(s => s.style.fill = "#ffcc00"); riskMsg = "MILD PUSH DOMINANCE"; }
     else { shoulders.forEach(s => s.style.fill = "var(--potential)"); }
 
-    // Elbow logic
     if (saIntegrity < 0.55) { elbows.forEach(e => e.style.fill = "var(--danger)"); riskMsg = "CRITICAL ELBOW OVERUSE"; }
     else if (saIntegrity < 0.65) { elbows.forEach(e => e.style.fill = "#ffcc00"); }
     else { elbows.forEach(e => e.style.fill = "var(--potential)"); }
 
-    // Wrist logic
     if (parseFloat(document.getElementById("surface").value) > 1.1 && torqueFactor > 1.05) {
         wrists.forEach(w => w.style.fill = "#ffcc00");
     } else {
@@ -463,6 +484,47 @@ function analyze() {
 
     document.getElementById("risk-msg").innerText = riskMsg;
     document.getElementById("risk-msg").style.color = (riskMsg === "SYSTEMS NOMINAL") ? "#888" : "var(--danger)";
+
+    // VOLUME CALCULATOR LOGIC
+    const setsInput = [
+        { s: parseInt(document.getElementById("wpS").value) || 0, rpe: parseInt(document.getElementById("wpRPE").value) || 0 },
+        { s: parseInt(document.getElementById("wdS").value) || 0, rpe: parseInt(document.getElementById("wdRPE").value) || 0 },
+        { s: parseInt(document.getElementById("saS").value) || 0, rpe: parseInt(document.getElementById("saRPE").value) || 0 }
+    ];
+
+    let totalTax = 0;
+    setsInput.forEach(entry => {
+        let multiplier = entry.rpe >= 10 ? 1.5 : entry.rpe >= 8 ? 1.2 : entry.rpe >= 7 ? 1.0 : 0.7;
+        totalTax += entry.s * multiplier;
+    });
+
+    const cnsBaseline = parseInt(document.getElementById("cns").value);
+    const volumeCeiling = cnsBaseline * 2.5; 
+    const volumePct = Math.min((totalTax / volumeCeiling) * 100, 100);
+
+    document.getElementById("volume-tax").innerText = totalTax.toFixed(1);
+    document.getElementById("volume-fill").style.width = volumePct + "%";
+
+    let vMsg = "Ready for high-intensity loading.";
+    let vColor = "var(--potential)";
+    let vStatus = "OPTIMAL";
+
+    if (volumePct > 85) {
+        vStatus = "OVERREACHING";
+        vColor = "#ffcc00";
+        vMsg = "CNS fatigue detected. Reduce RPE by 2 points next session.";
+    } 
+    if (volumePct >= 100 || (volumePct > 80 && saIntegrity < 0.6)) {
+        vStatus = "DANGER ZONE";
+        vColor = "var(--danger)";
+        vMsg = "IMMEDIATE DELOAD REQUIRED. Connective tissue at risk.";
+    }
+
+    const recStatus = document.getElementById("recovery-status");
+    recStatus.innerText = vStatus;
+    recStatus.style.color = vColor;
+    document.getElementById("volume-fill").style.background = vColor;
+    document.getElementById("volume-advice").innerText = vMsg;
 }
 </script>
 </body>
