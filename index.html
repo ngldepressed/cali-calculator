@@ -491,11 +491,11 @@ function analyze() {
     let bw = (parseFloat(document.getElementById("weight").value) || 75) * conv;
     let h = sys === 'met' ? parseFloat(document.getElementById("hCm").value) : (parseFloat(document.getElementById("hFt").value)*30.48)+(parseFloat(document.getElementById("hIn").value)*2.54);
 
-    // 2. 1RM CALCULATIONS
+    // 2. 1RM CALCULATIONS (Including RPE and Reps)
     const pull1RM = (bw + (parseFloat(document.getElementById("wpW").value)||0)*conv * (1 + (parseInt(document.getElementById("wpR").value)||0)/30)) / bw;
     const push1RM = (bw + (parseFloat(document.getElementById("wdW").value)||0)*conv * (1 + (parseInt(document.getElementById("wdR").value)||0)/30)) / bw;
     
-    // ZANETTI FIX
+    // ZANETTI FALLBACK: Projects SA power from Push power if box is empty
     let rawSa = (bw + (parseFloat(document.getElementById("saW").value)||0)*conv * (1 + (parseInt(document.getElementById("saR").value)||0)/30)) / bw;
     const sa1RM = Math.max(rawSa, (push1RM * 0.75)); 
 
@@ -503,11 +503,11 @@ function analyze() {
     const cnsVal = (parseInt(document.getElementById("cns").value) || 10) / 10;
     const form = parseFloat(document.getElementById("form").value) || 1.0;
     
-    // 3. GOAL SELECTOR
+    // 3. GOAL SELECTOR RE-INITIALIZATION
     let skillPanel = document.getElementById("skillBars");
     if (!document.getElementById("goalSelect")) {
-        skillPanel.innerHTML = `<div style="margin-bottom: 20px;"><label style="color:var(--primary)">MISSION TARGET</label>
-        <select id="goalSelect" onchange="analyze()" style="background:#111; color:#fff; width:100%; border:1px solid #333; padding:8px; border-radius:5px;">
+        skillPanel.innerHTML = `<div style="margin-bottom: 20px;"><label style="color:var(--primary); font-family:monospace; font-size:0.8em;">TARGET_PROTOCOL</label>
+        <select id="goalSelect" onchange="analyze()" style="background:#111; color:#fff; width:100%; border:1px solid #333; padding:8px; border-radius:5px; margin-top:5px;">
             <option value="None">No Active Goal</option>
             ${skills.map(s => `<option value="${s.name}">${s.name}</option>`).join('')}
         </select></div><div id="barContainer"></div>`;
@@ -517,12 +517,12 @@ function analyze() {
     let barHtml = "";
     const curScores = []; const potScores = [];
 
-    // 4. SKILLS & DYNAMIC RECOMMENDATIONS
+    // 4. SKILLS & WEIGHTED RECOMMENDATIONS
     skills.forEach(s => {
         let vectors = [];
-        if (s.p > 0) vectors.push({ name: "Push", val: (push1RM / (s.p * torqueFactor)) * 100, req: s.p * torqueFactor });
-        if (s.l > 0) vectors.push({ name: "Pull", val: (pull1RM / (s.l * torqueFactor)) * 100, req: s.l * torqueFactor });
-        if (s.s > 0) vectors.push({ name: "SA Strength", val: (sa1RM / (s.s * torqueFactor)) * 100, req: s.s * torqueFactor });
+        if (s.p > 0) vectors.push({ name: "Push (Dips)", val: (push1RM / (s.p * torqueFactor)) * 100, req: s.p * torqueFactor });
+        if (s.l > 0) vectors.push({ name: "Pull (Pullups)", val: (pull1RM / (s.l * torqueFactor)) * 100, req: s.l * torqueFactor });
+        if (s.s > 0) vectors.push({ name: "SA (Zanetti)", val: (sa1RM / (s.s * torqueFactor)) * 100, req: s.s * torqueFactor });
         
         const sig = (x) => 100 / (1 + Math.exp(-0.15 * (x - 52)));
         let minVal = Math.min(...vectors.map(v => v.val));
@@ -532,50 +532,45 @@ function analyze() {
         curScores.push(cur.toFixed(1));
         potScores.push(sig(Math.max(...vectors.map(v => v.val))).toFixed(1));
 
-        // DYNAMIC RECS CALCULATION
-        let recText = recs[s.name];
+        // Generate Weighted Recommendation based on weakest vector
+        let recText = recs[s.name]; 
         if (isTarget) {
             let weakest = vectors.reduce((prev, curr) => (prev.val < curr.val) ? prev : curr);
-            let neededKg = ((weakest.req * bw) - bw) / conv;
-            recText = `Focus on ${weakest.name}: Increase weighted exercise to +${neededKg.toFixed(1)}${u} for 1RM.`;
+            let targetTotalKg = weakest.req * bw;
+            let neededPlate = (targetTotalKg - bw) / conv;
+            recText = `Critical Path: Improve ${weakest.name}. Target 1RM: +${neededPlate.toFixed(1)}${u} total added weight.`;
         }
 
         barHtml += `
-            <div class="skill-bar-container" style="opacity: ${activeGoal !== "None" && !isTarget ? '0.3' : '1'}; margin-bottom:15px;">
+            <div class="skill-bar-container" style="opacity: ${activeGoal !== "None" && !isTarget ? '0.2' : '1'}; margin-bottom:15px; border-left: ${isTarget ? '2px solid var(--potential)' : 'none'}; padding-left: ${isTarget ? '10px' : '0'};">
                 <div class="skill-label" style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                    <span style="font-weight:bold">${s.name}</span><span>${cur.toFixed(0)}%</span>
+                    <span style="font-weight:bold; letter-spacing:1px;">${s.name}</span><span>${cur.toFixed(0)}%</span>
                 </div>
-                <div class="bar-bg" style="background:#222; height:8px; border-radius:4px;">
-                    <div class="bar-fill" style="width: ${cur}%; height:100%; background: ${isTarget ? 'var(--potential)' : 'var(--primary)'}; border-radius:4px;"></div>
+                <div class="bar-bg" style="background:#222; height:6px; border-radius:10px;">
+                    <div class="bar-fill" style="width: ${cur}%; height:100%; background: ${isTarget ? 'var(--potential)' : 'var(--primary)'}; border-radius:10px; transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);"></div>
                 </div>
-                ${isTarget ? `<div style="font-size:0.75em; color:var(--potential); margin-top:5px; border-top:1px solid #222; padding-top:5px;">${recText}</div>` : ''}
+                ${isTarget ? `<div style="font-size:0.7em; color:var(--potential); margin-top:8px; line-height:1.4; font-family:monospace;">> ${recText}</div>` : ''}
             </div>`;
     });
 
-    // 5. UPDATE UI & CHART
+    // 5. UPDATE CHART
     radarChart.data.datasets[0].data = curScores;
     radarChart.data.datasets[1].data = potScores;
     radarChart.update();
     document.getElementById("barContainer").innerHTML = barHtml;
 
-    // 6. BIOMECHANICAL AUDIT & HEATMAP
+    // 6. BIOMECHANICAL AUDIT & INJURY HEATMAP
     const pullPushRatio = (pull1RM / push1RM).toFixed(2);
     const saIntegrity = (sa1RM / push1RM).toFixed(2);
     const relPower = push1RM.toFixed(2);
 
+    // Heatmap Logic
     const shoulders = document.querySelectorAll('#joint-shoulder-l, #joint-shoulder-r');
     const elbows = document.querySelectorAll('#joint-elbow-l, #joint-elbow-r');
-    let riskMsg = "SYSTEMS NOMINAL";
+    let riskMsg = "SYSTEMS_NOMINAL";
 
-    // Shoulder Logic
-    if (pullPushRatio < 0.85) { shoulders.forEach(s => s.style.fill = "var(--danger)"); riskMsg = "SHOULDER IMPINGEMENT RISK"; }
-    else { shoulders.forEach(s => s.style.fill = "var(--potential)"); }
-
-    // Elbow Logic
-    if (saIntegrity < 0.55) { elbows.forEach(e => e.style.fill = "var(--danger)"); riskMsg = "CRITICAL ELBOW OVERUSE"; }
-    else { elbows.forEach(e => e.style.fill = "var(--potential)"); }
-
-    document.getElementById("
+    if (pullPushRatio < 0.85) {
+        shoulders.forEach(s => s.style.fill = "#ff4444");
 </script>
 </body>
 </html>
