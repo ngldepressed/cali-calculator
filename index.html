@@ -197,14 +197,15 @@ html, body {
     </div>
 
     <div class="dashboard-row">
-        <div id="chart-card" style="background:var(--bg); border-radius:20px; padding:10px; border:1px solid var(--border); display: flex; align-items:center; min-height: 300px; position: relative;">
+        <div class="analysis-panel" id="chart-card" style="min-height: 300px; position: relative; display: flex; align-items: center; justify-content: center;">
             <div id="radar-lock" class="prepare-overlay">
                 <button class="btn-prepare" onclick="prepareSystem()">PREPARE TRAINING MATRIX</button>
             </div>
             <canvas id="skillRadar"></canvas>
         </div>
-       <div class="analysis-panel" id="skillBars">
-            <div style="text-align: center; color: #444; margin-top: 100px;">SYSTEM OFFLINE</div>
+
+        <div class="analysis-panel" id="skillBars">
+             <div style="text-align: center; color: #444; margin-top: 100px;">SYSTEM OFFLINE</div>
         </div>
 
         <div class="analysis-panel" id="auditWrapper">
