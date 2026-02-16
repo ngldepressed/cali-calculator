@@ -577,7 +577,7 @@ function analyze() {
         auditHtml += createInsight("CONNECTIVE_TISSUE", sStatus, saIntegrity, sDesc, saIntegrity < 0.62 ? "#ff4444" : "#00ffcc");
         auditHtml += createInsight("RELATIVE_POWER", "FORCE", relPower + "x BW", "Force generation relative to mass.", "var(--primary)");
 
-        // 5. GENETIC CEILING AUTO-INJECTION
+        // 5. GENETIC CEILING & PROGRESSION TIER AUTO-INJECTION
         let ceilingDiv = document.getElementById("geneticCeiling");
         if (!ceilingDiv) {
             ceilingDiv = document.createElement("div");
@@ -592,7 +592,7 @@ function analyze() {
 
         let cMsg = ""; let cCol = "#00ffcc";
         if (bmi > 26) { cMsg = "HEAVYWEIGHT PENALTY: High mass increases torque demands."; cCol = "#ff9900"; }
-        else if (bmi < 19) { cMsg = "UNDER-POWERED: Insufficient muscle cross-section for frame."; cCol = "#00ccff"; }
+        else if (bmi < 19) { cMsg = "POWER_DEFICIT: Low muscle volume for frame."; cCol = "#00ccff"; }
         else { cMsg = "OPTIMAL FRAME: BMI is in the elite power-to-weight window."; }
 
         ceilingDiv.innerHTML = `
@@ -609,6 +609,38 @@ function analyze() {
                 <span style="font-size:0.8em; font-weight:bold; color:#ff4444;">LEVERAGE_TAX: +${strengthTax}%</span>
                 <p style="font-size:0.65em; color:#bbb; margin:5px 0; line-height:1.4;">Based on height, you require ${strengthTax}% more raw force than a 170cm reference athlete.</p>
             </div>`;
+
+        // PROGRESSION TIER LOGIC
+        let tierDiv = document.getElementById("progressionTier");
+        if (!tierDiv) {
+            tierDiv = document.createElement("div");
+            tierDiv.id = "progressionTier";
+            ceilingDiv.parentNode.appendChild(tierDiv);
+        }
+
+        let tierHtml = "";
+        if (activeGoal !== "None") {
+            const skillIdx = skills.findIndex(sk => sk.name === activeGoal);
+            const score = parseFloat(curScores[skillIdx]);
+            let tier = "NOVICE"; let milestone = "Tuck Progression"; let tCol = "#888";
+
+            if (score > 90) { tier = "MASTER (Weighted)"; milestone = "Added Load Statics"; tCol = "#ff00ff"; }
+            else if (score > 70) { tier = "ELITE (Full)"; milestone = "Full Static Mastery"; tCol = "#00ffcc"; }
+            else if (score > 45) { tier = "ADVANCED (Straddle)"; milestone = "Half-Lay / One Leg Out"; tCol = "#ffcc00"; }
+            else if (score > 20) { tier = "INTERMEDIATE (Tuck)"; milestone = "Advanced Tuck / Open Tuck"; tCol = "#00ccff"; }
+
+            tierHtml = `
+                <h3 style="font-size:0.7em; letter-spacing:3px; color:var(--primary); margin-top:25px; border-bottom:1px solid #333; padding-bottom:10px;">PROGRESSION_TIER</h3>
+                <div class="insight-block" style="border-left:3px solid ${tCol}; padding:12px; background: rgba(255,255,255,0.03);">
+                    <div style="font-size:0.65em; color:var(--primary); letter-spacing:1px; margin-bottom:5px;">CURRENT_BRACKET</div>
+                    <div style="font-size:1.1em; font-weight:bold; color:${tCol}; font-family:monospace;">${tier}</div>
+                    <div style="margin:10px 0; height:4px; background:#111; border-radius:2px; overflow:hidden;">
+                        <div style="width:${score}%; height:100%; background:${tCol}; box-shadow: 0 0 10px ${tCol}55;"></div>
+                    </div>
+                    <div style="font-size:0.65em; color:#bbb;">NEXT_OBJECTIVE: <span style="color:#fff;">${milestone}</span></div>
+                </div>`;
+        }
+        tierDiv.innerHTML = tierHtml;
 
         // 6. HEATMAP & VOLUME UPDATES
         const shoulders = document.querySelectorAll('#joint-shoulder-l, #joint-shoulder-r');
