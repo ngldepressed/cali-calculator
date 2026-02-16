@@ -475,7 +475,7 @@ function analyze() {
     if(!isSystemReady) return; 
     if(!radarChart) initChart();
 
-    // 1. UI State & Logic
+    // 1. UI State
     if (isSimMode) {
         radarChart.data.datasets[0].label = 'SIMULATED TARGET';
         radarChart.data.datasets[0].borderColor = '#00ffcc';
@@ -487,84 +487,87 @@ function analyze() {
 
     const sys = document.getElementById("unitSystem").value;
     const conv = sys === 'imp' ? 0.453592 : 1;
+    const u = sys === 'met' ? 'kg' : 'lbs';
     let bw = (parseFloat(document.getElementById("weight").value) || 75) * conv;
     let h = sys === 'met' ? parseFloat(document.getElementById("hCm").value) : (parseFloat(document.getElementById("hFt").value)*30.48)+(parseFloat(document.getElementById("hIn").value)*2.54);
 
-    // 2. 1RM Calculations
-    const pull1RM = (bw + (parseFloat(document.getElementById("wpW").value)||0)*conv * (1 + (parseInt(document.getElementById("wpR").value)||0)/30)) / bw;
-    const push1RM = (bw + (parseFloat(document.getElementById("wdW").value)||0)*conv * (1 + (parseInt(document.getElementById("wdR").value)||0)/30)) / bw;
+    // 2. 1RM Calculations (RPE Adjusted)
+    const pull1RM = (bw + (parseFloat(document.getElementById("wpW").value)||0)*conv * (1 + (parseInt(document.getElementById("wpR").value)||0)/30) * (1+(10-parseInt(document.getElementById("wpRPE").value)||10)/18)) / bw;
+    const push1RM = (bw + (parseFloat(document.getElementById("wdW").value)||0)*conv * (1 + (parseInt(document.getElementById("wdR").value)||0)/30) * (1+(10-parseInt(document.getElementById("wdRPE").value)||10)/18)) / bw;
     
-    // ZANETTI FIX: Estimate 80% carryover from Dips if Zanetti is empty
-    let rawSa = (bw + (parseFloat(document.getElementById("saW").value)||0)*conv * (1 + (parseInt(document.getElementById("saR").value)||0)/30)) / bw;
-    const sa1RM = Math.max(rawSa, (push1RM * 0.8)); 
+    // THE ZANETTI FIX: Estimate 75% carryover from Dips if empty
+    let rawSa = (bw + (parseFloat(document.getElementById("saW").value)||0)*conv * (1 + (parseInt(document.getElementById("saR").value)||0)/30) * (1+(10-parseInt(document.getElementById("saRPE").value)||10)/18)) / bw;
+    const sa1RM = Math.max(rawSa, (push1RM * 0.75)); 
 
     const torqueFactor = Math.pow(h / 170, 2.3) * (parseFloat(document.getElementById("legRatio").value) || 1.0);
     const cnsVal = (parseInt(document.getElementById("cns").value) || 10) / 10;
     const form = parseFloat(document.getElementById("form").value) || 1.0;
     
-    // 3. Goal Select Setup
+    // 3. Setup Goal UI
     let skillPanel = document.getElementById("skillBars");
     if (!document.getElementById("goalSelect")) {
-        skillPanel.innerHTML = `
-            <div style="margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px;">
-                <label style="color: var(--primary); margin-bottom: 5px;">Set Mission Target</label>
-                <select id="goalSelect" onchange="analyze()" style="background:#1a1a1a; color:white; border-color: var(--potential); width:100%; padding:5px;">
-                    <option value="None">No Active Goal</option>
-                    ${skills.map(s => `<option value="${s.name}">${s.name}</option>`).join('')}
-                </select>
-            </div>
-            <div id="barContainer"></div>`;
+        skillPanel.innerHTML = `<div style="margin-bottom: 20px;"><label style="color:var(--primary)">MISSION TARGET</label>
+        <select id="goalSelect" onchange="analyze()" style="background:#111; color:#fff; width:100%; border:1px solid #333; padding:8px; border-radius:5px;">
+            <option value="None">No Active Goal</option>
+            ${skills.map(s => `<option value="${s.name}">${s.name}</option>`).join('')}
+        </select></div><div id="barContainer"></div>`;
     }
 
     const activeGoal = document.getElementById("goalSelect").value;
     let barHtml = "";
-    const curScores = [];
-    const potScores = [];
+    const curScores = []; const potScores = [];
 
     // 4. Skills Processing
     skills.forEach(s => {
         let vectors = [];
-        if (s.p > 0) vectors.push((push1RM / (s.p * torqueFactor)) * 100);
-        if (s.l > 0) vectors.push((pull1RM / (s.l * torqueFactor)) * 100);
-        if (s.s > 0) vectors.push((sa1RM / (s.s * torqueFactor)) * 100);
+        if (s.p > 0) vectors.push({ name: "Push", val: (push1RM / (s.p * torqueFactor)) * 100 });
+        if (s.l > 0) vectors.push({ name: "Pull", val: (pull1RM / (s.l * torqueFactor)) * 100 });
+        if (s.s > 0) vectors.push({ name: "SA Strength", val: (sa1RM / (s.s * torqueFactor)) * 100 });
         
-        const sig = (x) => 100 / (1 + Math.exp(-0.15 * (x - 48)));
-        let minVal = Math.min(...vectors);
+        const sig = (x) => 100 / (1 + Math.exp(-0.15 * (x - 52)));
+        let minVal = Math.min(...vectors.map(v => v.val));
         let cur = sig(minVal) * cnsVal * form;
         
-        if (cur > 100) cur = 100;
-        if (cur < 0 || isNaN(cur)) cur = 0;
-
-        curScores.push(cur.toFixed(1));
-        potScores.push(sig(Math.max(...vectors)).toFixed(1)); 
-
         const isTarget = s.name === activeGoal;
-        const opacity = (activeGoal !== "None" && !isTarget) ? "0.3" : "1";
+        curScores.push(cur.toFixed(1));
+        potScores.push(sig(Math.max(...vectors.map(v => v.val))).toFixed(1));
 
         barHtml += `
-            <div class="skill-bar-container" style="opacity: ${opacity}; margin-bottom:12px;">
-                <div class="skill-label" style="display:flex; justify-content:space-between; font-size:0.9em; margin-bottom:4px;">
-                    <span>${s.name}</span><span>${cur.toFixed(0)}%</span>
+            <div class="skill-bar-container" style="opacity: ${activeGoal !== "None" && !isTarget ? '0.3' : '1'}; margin-bottom:15px; padding: ${isTarget ? '10px' : '0'}; border: ${isTarget ? '1px solid var(--potential)' : 'none'}; border-radius: 8px;">
+                <div class="skill-label" style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <span style="font-weight:bold">${s.name}</span><span>${cur.toFixed(0)}%</span>
                 </div>
-                <div class="bar-bg" style="background:#222; height:6px; border-radius:3px;">
-                    <div class="bar-fill" style="width: ${cur}%; height:100%; background: ${isTarget ? 'var(--potential)' : 'var(--primary)'}; border-radius:3px; transition: width 0.4s ease;"></div>
+                <div class="bar-bg" style="background:#222; height:8px; border-radius:4px;">
+                    <div class="bar-fill" style="width: ${cur}%; height:100%; background: ${isTarget ? 'var(--potential)' : 'var(--primary)'}; border-radius:4px;"></div>
                 </div>
+                ${isTarget ? `<div style="font-size:0.75em; color:var(--potential); margin-top:5px;">RECS: ${recs[s.name]}</div>` : ''}
             </div>`;
     });
 
-    // 5. Update UI Components
+    // 5. Detailed Biomechanical Audit (4-Point)
     radarChart.data.datasets[0].data = curScores;
     radarChart.data.datasets[1].data = potScores;
     radarChart.update();
     document.getElementById("barContainer").innerHTML = barHtml;
 
-    // Audit & Joint Stress Logic
     const pullPushRatio = (pull1RM / push1RM).toFixed(2);
     const saIntegrity = (sa1RM / push1RM).toFixed(2);
-    document.getElementById("aiFeedback").innerHTML = `
-        <div class="insight-block"><span>Push/Pull Ratio: ${pullPushRatio}</span></div>
-        <div class="insight-block"><span>SA Integrity: ${saIntegrity}</span></div>
-    `;
+    const relPower = push1RM.toFixed(2);
+
+    let auditHtml = `<h3>Biomechanical Audit</h3>`;
+    auditHtml += `<div class="insight-block"><span class="insight-title">Torque Multiplier: ${torqueFactor.toFixed(2)}x</span><p style="font-size:0.7em; color:#888;">Leverage based on height (${h.toFixed(0)}cm).</p></div>`;
+    auditHtml += `<div class="insight-block" style="color:${pullPushRatio < 0.9 ? 'var(--danger)' : 'var(--potential)'}"><span class="insight-title">Push/Pull Ratio: ${pullPushRatio}</span><p style="font-size:0.7em; color:#888;">Ideal is 1.0+ for shoulder health.</p></div>`;
+    auditHtml += `<div class="insight-block" style="color:${saIntegrity < 0.6 ? 'var(--danger)' : 'var(--potential)'}"><span class="insight-title">SA Integrity: ${saIntegrity}</span><p style="font-size:0.7em; color:#888;">Measures tendon readiness for statics.</p></div>`;
+    auditHtml += `<div class="insight-block"><span class="insight-title">Rel. Power: ${relPower}x BW</span><p style="font-size:0.7em; color:#888;">Total force output relative to mass.</p></div>`;
+
+    document.getElementById("aiFeedback").innerHTML = auditHtml;
+
+    // 6. CNS Volume Tax Logic
+    let totalTax = ((parseInt(document.getElementById("wpS").value)||0) * (parseInt(document.getElementById("wpRPE").value)||7)/10) + 
+                   ((parseInt(document.getElementById("wdS").value)||0) * (parseInt(document.getElementById("wdRPE").value)||7)/10);
+    document.getElementById("volume-tax").innerText = totalTax.toFixed(1);
+    const volumePct = Math.min((totalTax / 15) * 100, 100);
+    document.getElementById("volume-fill").style.width = volumePct + "%";
 }
 </script>
 </body>
