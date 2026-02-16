@@ -528,10 +528,38 @@ skills.forEach(s => {
     const curScores = []; const potScores = [];
 
     skills.forEach(s => {
-        let vectors = [];
-        if (s.p > 0) vectors.push({ name: "Push", val: (push1RM / (s.p * torqueFactor * parseFloat(document.getElementById("surface").value))) * 100, raw: push1RM, req: s.p * torqueFactor });
-        if (s.l > 0) vectors.push({ name: "Pull", val: (pull1RM / (s.l * torqueFactor)) * 100, raw: pull1RM, req: s.l * torqueFactor });
-        if (s.s > 0) vectors.push({ name: "SA Strength", val: (sa1RM / (s.s * torqueFactor)) * 100, raw: sa1RM, req: s.s * torqueFactor });
+    let vectors = [];
+    
+    // PUSH VECTOR: If user has Push power, it contributes to Planche/Maltese
+    if (s.p > 0) {
+        vectors.push({ 
+            name: "Push", 
+            val: (push1RM / (s.p * torqueFactor * parseFloat(document.getElementById("surface").value))) * 100 
+        });
+    }
+
+    // PULL VECTOR: If user has Pull power, it contributes to Front Lever
+    if (s.l > 0) {
+        vectors.push({ 
+            name: "Pull", 
+            val: (pull1RM / (s.l * torqueFactor)) * 100 
+        });
+    }
+
+    // SA STRENGTH VECTOR (The Fix): 
+    // If Zanetti is empty (sa1RM is base BW), we estimate 60% of their Push power as "Baseline SA"
+    if (s.s > 0) {
+        let actualSA = sa1RM;
+        let estimatedSA = push1RM * 0.7; // Assumption: SA is usually 70% of Bent-Arm power
+        let effectiveSA = Math.max(actualSA, estimatedSA);
+
+        vectors.push({ 
+            name: "SA Strength", 
+            val: (effectiveSA / (s.s * torqueFactor)) * 100 
+        });
+    }
+
+    // Rest of your bar drawing logic follows...
         
         const sig = (x) => 100 / (1 + Math.exp(-0.15 * (x - 58)));
         let cur = sig(Math.min(...vectors.map(v => v.val))) * cnsVal * form;
