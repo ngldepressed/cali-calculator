@@ -385,25 +385,29 @@ function deleteLog(i) {
 
 function generateGoalBrief(vectors, bw, conv, u) {
     let bottlenecks = [...vectors].sort((a, b) => a.val - b.val).slice(0, 2);
-    let brief = `<div style="margin-top: 8px; font-size: 0.6em; color: var(--potential); font-weight: bold; text-transform: uppercase;">Primary Bottlenecks:</div>`;
+    let brief = `<div style="margin-top: 8px; font-size: 0.6em; color: var(--potential); font-weight: bold; text-transform: uppercase;">Mission Requirements:</div>`;
     
     bottlenecks.forEach(b => {
-        // Formula: (Required_Ratio * Bodyweight) - Bodyweight = Target Added Weight
-        let targetAddedWeight = (b.req * bw) - bw;
-        let currentAddedWeight = (b.raw * bw) - bw;
-        let gap = (targetAddedWeight - currentAddedWeight) / conv;
+        // Calculate Target Total Weight (Ratio * BW)
+        let targetTotalWeight = b.req * bw;
+        // Calculate Current Total Weight (Current Ratio * BW)
+        let currentTotalWeight = b.raw * bw;
+        // The gap to close
+        let gap = (targetTotalWeight - currentTotalWeight) / conv;
         
-        let displayGap = gap;
-        let suffix = "";
-        
+        let exerciseName = "";
+        let equipment = "to belt/bar";
+
+        // Map vector names to actual exercises
+        if (b.name === "Push") exerciseName = "Weighted Dip";
+        if (b.name === "Pull") exerciseName = "Weighted Pull-up";
         if (b.name === "SA Strength") {
-            displayGap = gap / 2; // Split for dumbbells
-            suffix = " per dumbbell";
-        } else {
-            suffix = " to belt/bar";
+            exerciseName = "Zanetti Raise";
+            gap = gap / 2; // Divide by 2 for dumbbell per arm
+            equipment = "per dumbbell";
         }
 
-        brief += `<span class="rec-exercise" style="opacity:1">↑ Add **+${Math.max(0, displayGap).toFixed(1)}${u}** ${suffix}</span>`;
+        brief += `<span class="rec-exercise" style="opacity:1">↑ **${exerciseName}**: Add +${Math.max(0, displayGap).toFixed(1)}${u} ${equipment}</span>`;
     });
     return brief;
 }
