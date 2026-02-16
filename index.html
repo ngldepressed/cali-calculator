@@ -203,13 +203,17 @@ html, body {
             </div>
             <canvas id="skillRadar"></canvas>
         </div>
-        <div class="analysis-panel" id="skillBars">
-             <div style="text-align: center; color: #444; margin-top: 100px;">SYSTEM OFFLINE</div>
+       <div class="analysis-panel" id="skillBars">
+            <div style="text-align: center; color: #444; margin-top: 100px;">SYSTEM OFFLINE</div>
         </div>
-      <div class="analysis-panel" id="auditWrapper">
-    <div id="captureArea" style="background:#1f1f2e; padding:15px; border-radius:12px; border: 1px solid #333;">
-        <div id="aiFeedback">
-             <div style="text-align: center; color: #444; margin-top: 100px;">AWAITING AUDIT</div>
+
+        <div class="analysis-panel" id="auditWrapper">
+            <div id="captureArea" style="background:#1f1f2e; padding:15px; border-radius:12px; border: 1px solid #333;">
+                <div id="aiFeedback">
+                     <div style="text-align: center; color: #444; margin-top: 100px;">AWAITING AUDIT</div>
+                </div>
+            </div>
+            <button id="shareBtn" onclick="shareReport()" style="display:none; width:100%; margin-top:15px; background:transparent; border:1px solid var(--potential); color:var(--potential); cursor:pointer; padding:12px; font-family: monospace; border-radius:8px; font-size:0.7em; text-transform:uppercase;">Download_Report.png</button>
         </div>
     </div>
     <button id="shareBtn" onclick="shareReport()" style="display:none; width:100%; margin-top:15px; background:transparent; border:1px solid var(--potential); color:var(--potential); cursor:pointer; padding:12px; font-family: monospace; border-radius:8px; font-size:0.7em; text-transform:uppercase;">Download_Report.png</button>
