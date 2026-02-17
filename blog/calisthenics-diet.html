@@ -34,6 +34,27 @@
         .blog-link { color: #3498db; text-decoration: none; }
         ul { margin-bottom: 20px; }
         li { margin-bottom: 10px; }
+        /* Styling for the Fraction */
+.math-container {
+    text-align: center;
+    font-size: 1.4em;
+    background: #111;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+.fraction {
+    display: inline-flex;
+    flex-direction: column;
+    vertical-align: middle;
+    text-align: center;
+}
+.numerator { border-bottom: 2px solid #3498db; padding: 2px 10px; }
+.denominator { padding: 2px 10px; }
     </style>
 </head>
 <body>
@@ -66,12 +87,16 @@
             <li><strong>Fats for Hormones:</strong> Keep your healthy fats moderate. They are calorie-dense, and it's easy to accidentally "bulk" if you overdo them.</li>
         </ul>
 
-        <h2>Step 4: The Math of Relative Strength</h2>
+       <h2>Step 4: The Math of Relative Strength</h2>
         <p>In this sport, we want "compact" power. You need the strength of a gorilla but the weight of a gymnast. Strength in calisthenics is a simple fraction:</p>
         
-        <p style="text-align: center; font-size: 1.5em; background: #111; padding: 10px; border-radius: 10px;">
-            $\text{Relative Strength} = \frac{\text{Absolute Strength}}{\text{Bodyweight}}$
-        </p>
+        <div class="math-container">
+            <span>Relative Strength =</span>
+            <div class="fraction">
+                <span class="numerator">Absolute Strength</span>
+                <span class="denominator">Bodyweight</span>
+            </div>
+        </div>
 
         <p>If you increase your strength by 10% but also increase your bodyweight by 10% through a "dirty bulk," your relative strength remains the <strong>exact same</strong>. You haven't actually gotten any better at moving your body; you've just gotten heavier. This is why the slow recomp is the only logical choice for skill-based athletes.</p>
 
