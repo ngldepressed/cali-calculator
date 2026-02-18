@@ -425,44 +425,48 @@ function logSession() {
     
     const rawBwInput = document.getElementById("weight").value;
     const hasBw = rawBwInput && parseFloat(rawBwInput) > 0;
-    
-    // 1. Improved 1RM helper
-    const get1RMData = (idW, idR) => {
-        const addedW = parseFloat(document.getElementById(idW).value) || 0;
+    const bwForCalc = hasBw ? parseFloat(rawBwInput) : 75;
+
+    // 1. Data Helper: Separates what you did vs what you are capable of (1RM)
+    const getLiftData = (idW, idR) => {
+        const plate = parseFloat(document.getElementById(idW).value) || 0;
         const reps = parseInt(document.getElementById(idR).value) || 0;
-        if (addedW === 0 && reps === 0) return { total: "0.0", added: "0" };
-        const bwForCalc = hasBw ? parseFloat(rawBwInput) : 75;
-        const totalMax = (bwForCalc + addedW * (1 + reps/30)).toFixed(1);
-        const plateOnly = (totalMax - bwForCalc).toFixed(1);
-        return { total: totalMax, added: plateOnly };
+        
+        // If no work done, show dashes
+        if (plate === 0 && reps === 0) return { display: "---" };
+        
+        // Total 1RM Calculation (Matches the Stats section)
+        const total1RM = (bwForCalc + plate * (1 + reps/30)).toFixed(1);
+        
+        // Format: "25kg x 3 (104.5kg)" 
+        // This shows: [Plate] x [Reps] ([Total 1RM Strength])
+        return { display: `${plate}${u} x ${reps} (${total1RM}${u})` };
     };
 
-    const pullData = get1RMData("wpW", "wpR");
-    const pushData = get1RMData("wdW", "wdR");
-    const saData = get1RMData("saW", "saR");
+    const pull = getLiftData("wpW", "wpR");
+    const push = getLiftData("wdW", "wdR");
+    const sa = getLiftData("saW", "saR");
 
-    // 2. FIXED SKILL LOGIC: Get data directly from the Radar Chart instead of HTML labels
+    // 2. Skill Logic (Kept identical to your last working version)
     let topSkill = "None";
     let maxVal = -1;
-    
     if (radarChart && radarChart.data.datasets[0].data.length > 0) {
         radarChart.data.datasets[0].data.forEach((score, index) => {
             let numericScore = parseFloat(score);
             if (numericScore > maxVal) {
                 maxVal = numericScore;
-                // Get the name from your skills array using the same index
                 topSkill = skills[index].name;
             }
         });
     }
 
-    // 3. Create the Entry
+    // 3. Create Entry
     const entry = {
         date: new Date().toLocaleDateString(),
         bw: hasBw ? rawBwInput + u : "---",
-        pull: `${pullData.total}${u} (+${pullData.added}${u})`,
-        push: `${pushData.total}${u} (+${pushData.added}${u})`,
-        sa: `${saData.total}${u} (+${saData.added}${u})`,
+        pull: pull.display,
+        push: push.display,
+        sa: sa.display,
         skill: topSkill + " (" + (maxVal > 0 ? Math.round(maxVal) : 0) + "%)"
     };
 
@@ -474,18 +478,16 @@ function renderLogs() {
     const savedLogs = localStorage.getItem('caliLogs') ? JSON.parse(localStorage.getItem('caliLogs')) : [];
     const container = document.getElementById("logBody");
     
-    // Ensure the table headers in your HTML say "PULL 1RM", "PUSH 1RM", etc.
-    // This JS handles the rows:
     container.innerHTML = savedLogs.map((l, i) => `
-        <tr style="border-bottom: 1px solid #222;">
-            <td style="padding: 8px 5px; color: #888;">${l.date}</td>
-            <td style="padding: 8px 5px;">${l.bw}</td>
-            <td style="padding: 8px 5px; color: #00ffcc;">${l.pull}</td>
-            <td style="padding: 8px 5px; color: #00ffcc;">${l.push}</td>
-            <td style="padding: 8px 5px; color: #00ffcc;">${l.sa}</td>
-            <td style="padding: 8px 5px; color: var(--potential); font-weight: bold;">${l.skill}</td>
-            <td style="padding: 8px 5px;">
-                <button onclick="deleteLog(${i})" style="background:none; border:none; color:#ff4444; cursor:pointer; font-weight:bold;">✕</button>
+        <tr style="border-bottom: 1px solid #222; font-size: 0.85em;">
+            <td style="padding: 10px 5px; color: #888;">${l.date}</td>
+            <td style="padding: 10px 5px; color: #fff;">${l.bw}</td>
+            <td style="padding: 10px 5px; color: #00ffcc; font-family: monospace;">${l.pull}</td>
+            <td style="padding: 10px 5px; color: #00ffcc; font-family: monospace;">${l.push}</td>
+            <td style="padding: 10px 5px; color: #00ffcc; font-family: monospace;">${l.sa}</td>
+            <td style="padding: 10px 5px; color: var(--potential); font-weight: bold;">${l.skill}</td>
+            <td style="padding: 10px 5px; text-align: center;">
+                <button onclick="deleteLog(${i})" style="background:none; border:none; color:#ff4444; cursor:pointer; font-weight:bold; font-size: 1.2em;">✕</button>
             </td>
         </tr>
     `).join('');
