@@ -688,25 +688,49 @@ function analyze() {
         }
         tierDiv.innerHTML = tierHtml;
 
-        // 6. HEATMAP & VOLUME UPDATES
-        const shoulders = document.querySelectorAll('#joint-shoulder-l, #joint-shoulder-r');
-        const elbows = document.querySelectorAll('#joint-elbow-l, #joint-elbow-r');
-        let riskMsg = "SYSTEMS_NOMINAL";
+       // 6. HEATMAP & VOLUME UPDATES
+const shoulders = document.querySelectorAll('#joint-shoulder-l, #joint-shoulder-r');
+const elbows = document.querySelectorAll('#joint-elbow-l, #joint-elbow-r');
+let riskMsg = "SYSTEMS_NOMINAL";
 
-        if (pullPushRatio < 0.85) { shoulders.forEach(s => s.style.fill = "#ff4444"); riskMsg = "SHOULDER_RISK"; }
-        else { shoulders.forEach(s => s.style.fill = "#00ffcc"); }
-        if (saIntegrity < 0.60) { elbows.forEach(e => e.style.fill = "#ff4444"); riskMsg = "ELBOW_RISK"; }
-        else { elbows.forEach(e => e.style.fill = "#00ffcc"); }
+// Apply logic: If in Sim Mode, we force the heatmap to stay green (Nominal)
+// unless you want the simulation to show risks too.
+if (pullPushRatio < 0.85) { 
+    shoulders.forEach(s => s.style.fill = "#ff4444"); 
+    riskMsg = "SHOULDER_RISK"; 
+} else { 
+    shoulders.forEach(s => s.style.fill = "var(--potential)"); 
+}
 
-        const rMsg = document.getElementById("risk-msg");
-        if (rMsg) { rMsg.innerText = riskMsg; rMsg.style.color = (riskMsg === "SYSTEMS_NOMINAL") ? "#00ffcc" : "#ff4444"; }
+if (saIntegrity < 0.60) { 
+    elbows.forEach(e => e.style.fill = "#ff4444"); 
+    riskMsg = (riskMsg === "SHOULDER_RISK") ? "MULTI_JOINT_ADVISORY" : "ELBOW_RISK"; 
+} else { 
+    elbows.forEach(e => e.style.fill = "var(--potential)"); 
+}
 
-        let totalTax = ((parseInt(document.getElementById("wpS").value)||0) * 1.5) + ((parseInt(document.getElementById("wdS").value)||0) * 1.5);
-        const vFill = document.getElementById("volume-fill");
-        if (vFill) vFill.style.width = Math.min((totalTax / 20) * 100, 100) + "%";
-        const vTax = document.getElementById("volume-tax");
-        if (vTax) vTax.innerText = totalTax.toFixed(1);
+const rMsg = document.getElementById("risk-msg");
+if (rMsg) { 
+    rMsg.innerText = riskMsg; 
+    rMsg.style.color = (riskMsg === "SYSTEMS_NOMINAL") ? "var(--potential)" : "var(--danger)"; 
+}
 
+// VOLUME CALCULATION
+// Added Math.max to prevent negative tax and ensures 0 on empty inputs
+let pullSets = parseInt(document.getElementById("wpS").value) || 0;
+let pushSets = parseInt(document.getElementById("wdS").value) || 0;
+let totalTax = (pullSets * 1.5) + (pushSets * 1.5);
+
+const vFill = document.getElementById("volume-fill");
+if (vFill) {
+    // We cap it at 100% so the bar doesn't fly off the screen
+    vFill.style.width = Math.min((totalTax / 20) * 100, 100) + "%";
+    // Change color of volume bar if overtraining (Tax > 15)
+    vFill.style.background = totalTax > 15 ? "var(--danger)" : "var(--primary)";
+}
+
+const vTax = document.getElementById("volume-tax");
+if (vTax) vTax.innerText = totalTax.toFixed(1);
         // 7. FINAL INJECTION
         document.getElementById("aiFeedback").innerHTML = auditHtml;
         document.getElementById("barContainer").innerHTML = barHtml;
