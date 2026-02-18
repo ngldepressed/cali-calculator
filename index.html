@@ -391,22 +391,25 @@ function toggleSimMode() {
 }
 
 function prepareSystem() {
-    // 1. Physically remove the red disclaimer box
+    // 1. Target the elements
     const disclaimer = document.getElementById("safetyDisclaimer");
-    if (disclaimer) {
-        disclaimer.remove();
-    }
-
-    // 2. Existing logic to unlock the system
-    isSystemReady = true;
-    
-    // Physically remove the lock overlay to prevent layout glitches
     const lock = document.getElementById("radar-lock");
-    if (lock) {
-        lock.remove();
+
+    // 2. Hide Disclaimer (The Red Box)
+    if (disclaimer) {
+        disclaimer.style.display = "none";
     }
 
-    // 3. Run the analysis
+    // 3. Hide Lock Overlay (The Ghost Box)
+    if (lock) {
+        // We use !important to override the flex display in your CSS
+        lock.style.setProperty('display', 'none', 'important');
+        lock.style.opacity = "0";
+        lock.style.pointerEvents = "none";
+    }
+
+    // 4. Initialize system
+    isSystemReady = true;
     analyze();
 }
 function updateLabels() {
