@@ -200,6 +200,31 @@ grid-template-columns: 1fr 1fr;
 
     <div class="dashboard-row" id="captureArea">
         <div class="analysis-panel" id="chart-card" style="min-height: 300px; position: relative; display: flex; align-items: center; justify-content: center;">
+
+            <div id="safetyDisclaimer" style="
+    position: absolute; 
+    top: 15px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    width: 92%; 
+    z-index: 20; 
+    color: #ff4444; 
+    background: rgba(20, 10, 10, 0.95); 
+    border: 1px solid #ff4444; 
+    padding: 12px; 
+    border-radius: 8px; 
+    font-family: monospace; 
+    border-left: 4px solid #ff4444;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    pointer-events: none;
+">
+    <div style="font-weight: bold; margin-bottom: 4px; letter-spacing: 1px; font-size: 0.85em;">⚠️ TENDON_INTEGRITY_WARNING</div>
+    <p style="margin: 0; font-size: 0.75em; line-height: 1.4; color: #ddd;">
+        Straight-arm loads detected. Connective tissue adaptation is 10x slower than muscle. 
+        <span style="color: #ff4444; font-weight: bold;">Perform wrist and scapular prep</span> before initializing.
+    </p>
+</div>
+<button onclick="analyze()" class="...">PREPARE TRAINING MATRIX</button>
             <div id="radar-lock" class="prepare-overlay">
                 <button class="btn-prepare" onclick="prepareSystem()">PREPARE TRAINING MATRIX</button>
             </div>
@@ -349,11 +374,23 @@ function toggleSimMode() {
 }
 
 function prepareSystem() {
+    // 1. Find and hide the red disclaimer box
+    const disclaimer = document.getElementById("safetyDisclaimer");
+    if (disclaimer) {
+        disclaimer.style.display = "none";
+    }
+
+    // 2. Existing logic to unlock the system
     isSystemReady = true;
-    document.getElementById("radar-lock").style.display = "none";
+    
+    const lock = document.getElementById("radar-lock");
+    if (lock) {
+        lock.style.display = "none";
+    }
+
+    // 3. Run the analysis
     analyze();
 }
-
 function updateLabels() {
     const isMet = document.getElementById("unitSystem").value === 'met';
     document.getElementById("wLabel").innerText = isMet ? "Weight (kg)" : "Weight (lbs)";
@@ -529,7 +566,6 @@ function generateGoalBrief(vectors, bw, conv, u) {
 function analyze() {
     if(!isSystemReady) return; 
     if(!radarChart) initChart();
-
     try {
         const sys = document.getElementById("unitSystem").value;
         const conv = sys === 'imp' ? 0.453592 : 1;
