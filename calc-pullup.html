@@ -3,52 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weighted Pull-Up 1RM Calculator | CaliCalculator</title>
-    <link rel="icon" type="image/png" href="favicon.png">
+    <title>Strength Matrix | Cali-Biotech</title>
     <style>
-        body { background-color: #121212; color: white; font-family: sans-serif; text-align: center; padding: 50px; }
-        .calc-card { background: #1e1e1e; padding: 30px; border-radius: 15px; border-top: 4px solid #3498db; display: inline-block; max-width: 400px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        input { width: 80%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #333; background: #2c2c2c; color: white; }
-        button { background: #3498db; color: white; border: none; padding: 12px 25px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; }
-        #result { margin-top: 20px; font-size: 1.5rem; color: #3498db; font-weight: bold; }
-        .back-link { display: block; margin-top: 20px; color: #777; text-decoration: none; font-size: 0.9rem; }
+        :root { --primary: #4c6fff; --bg: #0f0f17; --card: #1f1f2e; }
+        body { background-color: var(--bg); color: white; font-family: monospace; text-align: center; padding: 20px; }
+        .unit-toggle { margin-bottom: 30px; }
+        select { background: #1f1f2e; color: var(--primary); border: 1px solid var(--primary); padding: 5px 15px; font-family: monospace; }
+        .calc-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+        .card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid #333; width: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.3s; }
+        .card:hover { border-color: var(--primary); }
+        h2 { color: var(--primary); font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        label { display: block; font-size: 0.7rem; color: #888; margin-top: 10px; text-align: left; text-transform: uppercase; }
+        input { width: 100%; padding: 12px; margin: 5px 0; border-radius: 5px; border: 1px solid #444; background: #12121c; color: white; box-sizing: border-box; font-family: monospace; }
+        .result-box { margin-top: 20px; padding: 15px; background: rgba(76, 111, 255, 0.1); border-radius: 8px; border-left: 3px solid var(--primary); min-height: 60px; }
+        .val { font-size: 1.1rem; color: var(--primary); font-weight: bold; display: block; }
+        .sub-val { font-size: 0.65rem; color: #666; display: block; margin-top: 5px; letter-spacing: 1px; }
+        .back-btn { display: inline-block; margin-top: 40px; color: #555; text-decoration: none; font-size: 0.8rem; letter-spacing: 1px; border: 1px solid #333; padding: 10px 20px; border-radius: 5px; }
+        .back-btn:hover { color: var(--primary); border-color: var(--primary); }
     </style>
 </head>
 <body>
 
-<div class="calc-card">
-    <h2>1RM Calculator</h2>
-    <p>Weighted Pull-Up / Dip</p>
+    <h1 style="letter-spacing: 4px; font-size: 1.2em; margin-bottom: 10px;">STRENGTH_MATRIX_V1.0</h1>
     
-    <input type="number" id="bodyweight" placeholder="Your Bodyweight (kg)">
-    <input type="number" id="addedweight" placeholder="Added Weight (kg)">
-    <input type="number" id="reps" placeholder="Reps Done">
-    
-    <button onclick="calculate1RM()">Calculate Max</button>
-    
-    <div id="result">---</div>
-    <a href="index.html" class="back-link">← Back to Home</a>
-</div>
+    <div class="unit-toggle">
+        <select id="unitSystem" onchange="calcAll()">
+            <option value="kg">UNIT: METRIC (KG)</option>
+            <option value="lb">UNIT: IMPERIAL (LBS)</option>
+        </select>
+    </div>
 
-<script>
-function calculate1RM() {
-    let bw = parseFloat(document.getElementById('bodyweight').value) || 0;
-    let added = parseFloat(document.getElementById('addedweight').value) || 0;
-    let reps = parseInt(document.getElementById('reps').value) || 0;
-    
-    if (reps > 0) {
-        let totalWeight = bw + added;
-        // Brzycki Formula
-        let oneRM = totalWeight / (1.0278 - (0.0278 * reps));
-        let addedOnlyMax = oneRM - bw;
+    <div class="calc-container">
+        <div class="card">
+            <h2>WEIGHTED PULL-UP</h2>
+            <label class="u-label">Bodyweight</label>
+            <input type="number" id="pbw" value="75" oninput="calcAll()">
+            <label class="u-label">Added Weight</label>
+            <input type="number" id="padd" placeholder="0" oninput="calcAll()">
+            <label>Reps</label>
+            <input type="number" id="prep" placeholder="0" oninput="calcAll()">
+            <div class="result-box">
+                <span class="val" id="pRes">---</span>
+                <span class="sub-val" id="pTotal">SYSTEM_LOAD: ---</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>WEIGHTED DIP</h2>
+            <label class="u-label">Bodyweight</label>
+            <input type="number" id="dbw" value="75" oninput="calcAll()">
+            <label class="u-label">Added Weight</label>
+            <input type="number" id="dadd" placeholder="0" oninput="calcAll()">
+            <label>Reps</label>
+            <input type="number" id="drep" placeholder="0" oninput="calcAll()">
+            <div class="result-box">
+                <span class="val" id="dRes">---</span>
+                <span class="sub-val" id="dTotal">SYSTEM_LOAD: ---</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>PLANCHE LEAN TORQUE</h2>
+            <label class="u-label">Bodyweight</label>
+            <input type="number" id="lbw" value="75" oninput="calcAll()">
+            <label>Lean Angle (Estimated °)</label>
+            <input type="number" id="langle" placeholder="e.g. 45" oninput="calcAll()">
+            <div class="result-box">
+                <span class="val" id="lRes">---</span>
+                <span class="sub-val">EFFECTIVE_LOAD_ON_WRISTS</span>
+            </div>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-btn">[ RETURN_TO_COMMAND ]</a>
+
+    <script>
+        function calcAll() {
+            const unit = document.getElementById('unitSystem').value;
+            const labels = document.querySelectorAll('.u-label');
+            labels.forEach(l => l.innerText = l.innerText.split('(')[0] + " (" + unit + ")");
+
+            runLogic('p', unit);
+            runLogic('d', unit);
+            
+            // Planche Lean Logic (Force = BW * sin(angle))
+            let lbw = parseFloat(document.getElementById('lbw').value) || 0;
+            let ang = parseFloat(document.getElementById('langle').value) || 0;
+            if (ang > 0) {
+                let load = lbw * Math.sin(ang * Math.PI / 180);
+                document.getElementById('lRes').innerText = load.toFixed(1) + " " + unit;
+            }
+        }
+
+        function runLogic(type, unit) {
+            let bw = parseFloat(document.getElementById(type + 'bw').value) || 0;
+            let add = parseFloat(document.getElementById(type + 'add').value) || 0;
+            let reps = parseInt(document.getElementById(type + 'rep').value) || 0;
+            
+            if (reps > 0) {
+                let total = bw + add;
+                let oneRM = total / (1.0278 - (0.0278 * reps));
+                let addedOnly = oneRM - bw;
+
+                document.getElementById(type + 'Res').innerText = addedOnly.toFixed(1) + " " + unit + " added";
+                document.getElementById(type + 'Total').innerText = "SYSTEM_LOAD: " + oneRM.toFixed(1) + " " + unit;
+            } else {
+                document.getElementById(type + 'Res').innerText = "---";
+                document.getElementById(type + 'Total').innerText = "SYSTEM_LOAD: ---";
+            }
+        }
         
-        document.getElementById('result').innerHTML = 
-            "Your 1RM is: " + addedOnlyMax.toFixed(1) + " kg added";
-    } else {
-        document.getElementById('result').innerHTML = "Enter valid reps";
-    }
-}
-</script>
-
+        // Run once on load
+        calcAll();
+    </script>
 </body>
 </html>
