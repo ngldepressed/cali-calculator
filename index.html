@@ -705,43 +705,81 @@ function analyze() {
 
         let tierHtml = "";
        if (activeGoal !== "None") {
-            const skillIdx = skills.findIndex(sk => sk.name === activeGoal);
-            const score = parseFloat(curScores[skillIdx]);
-            
-            let tier = "NOVICE"; 
-            let milestone = "Tuck Progression"; 
-            let tCol = "#888";
+    const skillIdx = skills.findIndex(sk => sk.name === activeGoal);
+    const score = parseFloat(curScores[skillIdx]);
+    
+    let tier = "NOVICE"; 
+    let tCol = "#888";
+    let milestone = "";
 
-            // STRICT HIERARCHY: Checks highest score first
-            if (score >= 80) { 
-                tier = "MASTERED"; 
-                milestone = "Add Weighted Resistance"; 
-                tCol = "#ff00ff"; 
-            } else if (score >= 65) { 
-                tier = "ELITE (Full)"; 
-                milestone = "Perfect Form Holds"; 
-                tCol = "#00ffcc"; 
-            } else if (score >= 40) { 
-                tier = "ADVANCED (Straddle)"; 
-                milestone = "Half-Lay / One Leg Out"; 
-                tCol = "#ffcc00"; 
-            } else if (score >= 15) { 
-                tier = "INTERMEDIATE (Tuck)"; 
-                milestone = "Advanced Tuck / Open Tuck"; 
-                tCol = "#00ccff"; 
-            }
+    // 1. Determine Tier
+    if (score >= 80) { tier = "MASTERED"; tCol = "#ff00ff"; }
+    else if (score >= 65) { tier = "ELITE (Full)"; tCol = "#00ffcc"; }
+    else if (score >= 40) { tier = "ADVANCED"; tCol = "#ffcc00"; }
+    else if (score >= 15) { tier = "INTERMEDIATE"; tCol = "#00ccff"; }
 
-            tierHtml = `
-                <h3 style="font-size:0.7em; letter-spacing:3px; color:var(--primary); margin-top:25px; border-bottom:1px solid #333; padding-bottom:10px;">PROGRESSION_TIER</h3>
-                <div class="insight-block" style="border-left:3px solid ${tCol}; padding:12px; background: rgba(255,255,255,0.03);">
-                    <div style="font-size:0.65em; color:var(--primary); letter-spacing:1px; margin-bottom:5px;">CURRENT_BRACKET</div>
-                    <div style="font-size:1.1em; font-weight:bold; color:${tCol}; font-family:monospace;">${tier}</div>
-                    <div style="margin:10px 0; height:4px; background:#111; border-radius:2px; overflow:hidden;">
-                        <div style="width:${score}%; height:100%; background:${tCol}; box-shadow: 0 0 10px ${tCol}55;"></div>
-                    </div>
-                    <div style="font-size:0.65em; color:#bbb;">NEXT_OBJECTIVE: <span style="color:#fff;">${milestone}</span></div>
-                </div>`;
-        }
+    // 2. Elite Skill Specific Mapping
+    const progressions = {
+        "Maltese": [
+            "Planche Lean (Deep) / Zanetti Press", 
+            "Banded Maltese / Dumbbell Flyes",
+            "Maltese ISO (Dream Machine)",
+            "Full Maltese Holds",
+            "Maltese to Planche Transitions"
+        ],
+        "Iron Cross": [
+            "Support Holds & Skin the Cat",
+            "L-Sit Ring Pulls (Wide)",
+            "Assisted Cross (Dream Machine/Bands)",
+            "Full Cross ISO Holds",
+            "Cross Pull-outs / Weighted"
+        ],
+        "Full Planche": [
+            "Planche Leans / Frog Stand",
+            "Tuck / Advanced Tuck",
+            "Straddle Planche Holds",
+            "Full Planche (Clean Form)",
+            "Planche Pushups / Maltese Prep"
+        ],
+        "Straddle Planche": [
+            "Planche Leans / Tuck Holds",
+            "Advanced Tuck Planche",
+            "Straddle (Low Angle)",
+            "Full Straddle Planche",
+            "Straddle Planche Pushups"
+        ],
+        "Front Lever": [
+            "Scapula Pulls / Skin the Cat",
+            "Tuck / Adv. Tuck Lever",
+            "Straddle / One-Leg Lever",
+            "Full Front Lever",
+            "Front Lever Pullups"
+        ],
+        "Muscle Ups": [
+            "High Pullups & Straight Bar Dips",
+            "Transition Negatives / Banded",
+            "Clean Explosive Reps",
+            "Strict / Slow Form",
+            "Weighted / Ring Muscle Ups"
+        ]
+    };
+
+    // Get the correct milestone based on score
+    const skillPath = progressions[activeGoal] || ["Basics", "Intermediate", "Advanced", "Full", "Mastery"];
+    const mIdx = score >= 80 ? 4 : score >= 65 ? 3 : score >= 40 ? 2 : score >= 15 ? 1 : 0;
+    milestone = skillPath[mIdx];
+
+    tierHtml = `
+        <h3 style="font-size:0.7em; letter-spacing:3px; color:var(--primary); margin-top:25px; border-bottom:1px solid #333; padding-bottom:10px;">PROGRESSION_TIER</h3>
+        <div class="insight-block" style="border-left:3px solid ${tCol}; padding:12px; background: rgba(255,255,255,0.03);">
+            <div style="font-size:0.65em; color:var(--primary); letter-spacing:1px; margin-bottom:5px;">CURRENT_BRACKET</div>
+            <div style="font-size:1.1em; font-weight:bold; color:${tCol}; font-family:monospace;">${tier}</div>
+            <div style="margin:10px 0; height:4px; background:#111; border-radius:2px; overflow:hidden;">
+                <div style="width:${score}%; height:100%; background:${tCol}; box-shadow: 0 0 10px ${tCol}55;"></div>
+            </div>
+            <div style="font-size:0.65em; color:#bbb;">NEXT_OBJECTIVE: <span style="color:#fff;">${milestone}</span></div>
+        </div>`;
+}
         tierDiv.innerHTML = tierHtml;
 
        // 6. HEATMAP & VOLUME UPDATES
