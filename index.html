@@ -423,30 +423,49 @@ function logSession() {
     const sys = document.getElementById("unitSystem").value;
     const u = sys === 'met' ? 'kg' : 'lbs';
     
+    // 1. Capture the raw input to check if it's actually empty
+    const rawBwInput = document.getElementById("weight").value;
+    const hasWeight = rawBwInput && parseFloat(rawBwInput) > 0;
+    
+    // 2. Improved 1RM helper to prevent "75kg" ghosting
     const get1RM = (idW, idR) => {
-        let w = parseFloat(document.getElementById(idW).value) || 0;
-        let r = parseInt(document.getElementById(idR).value) || 0;
-        let bw = parseFloat(document.getElementById("weight").value) || 0;
-        return (bw + w * (1 + r/30)).toFixed(1);
+        const addedW = parseFloat(document.getElementById(idW).value) || 0;
+        const reps = parseInt(document.getElementById(idR).value) || 0;
+        
+        // If no bodyweight entered AND no weight added to exercise, return 0.0
+        if (!hasWeight && addedW === 0) return "0.0";
+        
+        // Use actual weight if it exists, otherwise use 75 ONLY for the math
+        const bwForCalc = hasWeight ? parseFloat(rawBwInput) : 75;
+        
+        // Calculate: (BW + Added Weight) * (1 + reps/30)
+        return (bwForCalc + addedW * (1 + reps/30)).toFixed(1);
     };
 
+    // 3. Find Strongest Skill from the UI Bars
     let topSkill = "None";
     let maxVal = -1;
     document.querySelectorAll('.skill-label').forEach(el => {
-        let valText = el.children[1].innerText;
-        let val = parseInt(valText);
-        if(!isNaN(val) && val > maxVal) { maxVal = val; topSkill = el.children[0].innerText.replace("⚡ ", "").replace("🔒 ", ""); }
+        const valText = el.children[1].innerText;
+        const val = parseInt(valText);
+        if(!isNaN(val) && val > maxVal) { 
+            maxVal = val; 
+            // Clean emojis/labels from the name
+            topSkill = el.children[0].innerText.replace("⚡ ", "").replace("🔒 ", ""); 
+        }
     });
 
+    // 4. Create Log Entry
     const entry = {
         date: new Date().toLocaleDateString(),
-        bw: document.getElementById("weight").value + u,
+        bw: hasWeight ? rawBwInput + u : "---", // Shows dashes if weight is missing
         pull: get1RM("wpW", "wpR") + u,
         push: get1RM("wdW", "wdR") + u,
         sa: get1RM("saW", "saR") + u,
         skill: topSkill + " (" + (maxVal > 0 ? maxVal : 0) + "%)"
     };
 
+    // 5. Save and Refresh
     savedLogs.unshift(entry);
     localStorage.setItem('caliLogs', JSON.stringify(savedLogs.slice(0, 8)));
     renderLogs();
