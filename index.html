@@ -138,31 +138,31 @@
     </div>
 
     <div class="dashboard-row" id="captureArea">
-        <div class="analysis-panel" id="chart-card">
-            <div id="safetyDisclaimer" style="position: absolute; top: 15px; left: 50%; transform: translateX(-50%); width: 92%; z-index: 20; color: #ff4444; background: rgba(20, 10, 10, 0.95); border: 1px solid #ff4444; padding: 12px; border-radius: 8px; font-family: monospace; border-left: 4px solid #ff4444; box-shadow: 0 4px 15px rgba(0,0,0,0.5); pointer-events: none;">
-                <div style="font-weight: bold; margin-bottom: 4px; letter-spacing: 1px; font-size: 0.85em;">⚠️ TENDON_INTEGRITY_WARNING</div>
-                <p style="margin: 0; font-size: 0.75em; line-height: 1.4; color: #ddd;">
-                    Straight-arm loads detected. Connective tissue adaptation is 10x slower than muscle. 
-                    <span style="color: #ff4444; font-weight: bold;">Perform wrist and scapular prep</span>.
-                </p>
-            </div>
-            
-            <div id="radar-lock" class="prepare-overlay">
-                <button class="btn-prepare" onclick="prepareSystem()">PREPARE TRAINING MATRIX</button>
-            </div>
-            <canvas id="skillRadar"></canvas>
+       <div class="dashboard-row" id="captureArea">
+    <div class="analysis-panel" id="chart-card" style="min-height: 450px; display: grid; place-items: center; position: relative; background: #1f1f2e;">
+        
+        <div id="safetyDisclaimer" style="position: absolute; top: 15px; width: 92%; z-index: 20; color: #ff4444; background: rgba(20, 10, 10, 0.95); border: 1px solid #ff4444; padding: 12px; border-radius: 8px; font-family: monospace; pointer-events: none;">
+            <div style="font-weight: bold; margin-bottom: 4px; font-size: 0.85em;">⚠️ TENDON_INTEGRITY_WARNING</div>
+            <p style="margin: 0; font-size: 0.75em; line-height: 1.4; color: #ddd;">Perform wrist and scapular prep.</p>
+        </div>
+        
+        <div id="radar-lock" class="prepare-overlay" style="grid-area: 1/1; z-index: 10; display: flex; align-items: center; justify-content: center; background: rgba(22, 22, 33, 0.9);">
+            <button class="btn-prepare" onclick="prepareSystem()">PREPARE TRAINING MATRIX</button>
         </div>
 
-        <div class="analysis-panel" id="auditWrapper" style="display: flex; flex-direction: column; gap: 20px;">
-            <div id="skillBars">
-                <div style="text-align: center; color: #444; margin-top: 100px;">SYSTEM OFFLINE</div>
-            </div>
-            <div id="aiFeedback" style="border-top: 1px solid #333; padding-top: 15px;">
-                <div style="text-align: center; color: #444;">AWAITING AUDIT</div>
-            </div>
-            <button id="shareBtn" onclick="shareReport()" style="display:none; width:100%; margin-top:auto; background:transparent; border:1px solid var(--potential); color:var(--potential); cursor:pointer; padding:12px; font-family: monospace; border-radius:8px; font-size:0.7em; text-transform:uppercase;">Download_Report.png</button>
-        </div>
+        <canvas id="skillRadar" style="grid-area: 1/1; width: 100% !important; height: auto !important; max-height: 400px;"></canvas>
     </div>
+
+    <div class="analysis-panel" id="auditWrapper" style="display: flex; flex-direction: column; gap: 20px;">
+        <div id="skillBars">
+            <div style="text-align: center; color: #444; margin-top: 100px;">SYSTEM OFFLINE</div>
+        </div>
+        <div id="aiFeedback" style="border-top: 1px solid #333; padding-top: 15px;">
+            <div style="text-align: center; color: #444;">AWAITING AUDIT</div>
+        </div>
+        <button id="shareBtn" onclick="shareReport()" style="display:none; width:100%; margin-top:auto; background:transparent; border:1px solid var(--potential); color:var(--potential); cursor:pointer; padding:12px; font-family: monospace; border-radius:8px; font-size:0.7em; text-transform:uppercase;">Download_Report.png</button>
+    </div>
+</div>
 
     <div class="heatmap-container">
         <h3 style="font-size:0.7em; color:var(--primary); margin-bottom:10px; letter-spacing: 1px;">INJURY RISK HEATMAP</h3>
