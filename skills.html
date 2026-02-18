@@ -4,150 +4,176 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evolution Matrix | Cali-Biotech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #4c6fff; --bg: #050508; --card: #11111a; --elite: #ff3e3e; }
-        body { background-color: var(--bg); color: #fff; font-family: 'Courier New', monospace; margin: 0; padding: 40px; }
+        :root { 
+            --primary: #4c6fff; 
+            --bg: #0a0a0c; 
+            --card: #14141a; 
+            --elite: #ff3e3e; 
+            --text: #e0e0e0;
+            --border: #22222a;
+        }
         
-        .header { text-align: center; margin-bottom: 60px; }
-        .header h1 { letter-spacing: 10px; font-size: 1.5rem; color: var(--primary); text-shadow: 0 0 10px rgba(76,111,255,0.3); }
+        body { 
+            background-color: var(--bg); 
+            color: var(--text); 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            padding: 40px; 
+            line-height: 1.5;
+        }
+        
+        .header { text-align: center; margin-bottom: 80px; }
+        .header h1 { 
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 8px; 
+            font-size: 1.8rem; 
+            color: var(--primary); 
+            text-transform: uppercase;
+        }
 
         .matrix-container { 
-            display: flex; 
-            justify-content: space-around; 
-            gap: 20px; 
-            max-width: 1400px; 
-            margin: 0 auto; 
-            overflow-x: auto; 
-            padding-bottom: 50px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            max-width: 1600px;
+            margin: 0 auto;
         }
 
-        .lane { display: flex; flex-direction: column; align-items: center; gap: 0; min-width: 250px; }
-        .lane-title { color: #444; font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 30px; border-bottom: 1px solid #222; width: 100%; text-align: center; padding-bottom: 10px; }
+        .lane { display: flex; flex-direction: column; align-items: center; }
+        .lane-title { 
+            font-family: 'JetBrains Mono', monospace;
+            color: #555; 
+            font-size: 0.75rem; 
+            letter-spacing: 4px; 
+            margin-bottom: 40px; 
+            border-bottom: 1px solid var(--border); 
+            width: 100%; 
+            text-align: center; 
+            padding-bottom: 15px; 
+        }
 
-        /* The Nodes */
         .node {
             background: var(--card);
-            border: 1px solid #222;
-            padding: 12px;
-            width: 180px;
-            margin: 15px 0;
+            border: 1px solid var(--border);
+            padding: 16px;
+            width: 100%;
+            max-width: 200px;
+            margin-bottom: 20px;
             text-align: center;
             position: relative;
-            transition: 0.3s;
-            cursor: crosshair;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border-radius: 4px;
         }
 
-        /* The Tree Connectors (Lazy CSS lines) */
+        /* Connecting Lines */
         .node::after {
             content: '';
             position: absolute;
-            bottom: -16px;
+            bottom: -21px;
             left: 50%;
             width: 1px;
-            height: 15px;
-            background: #222;
+            height: 20px;
+            background: var(--border);
         }
         .node:last-child::after { display: none; }
 
         .node:hover {
             border-color: var(--primary);
-            box-shadow: 0 0 20px rgba(76, 111, 255, 0.4);
-            background: #161625;
-            z-index: 10;
+            background: #1a1a25;
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
         }
 
-        .node h3 { font-size: 0.7rem; margin: 0; color: #ddd; text-transform: uppercase; }
-        .node span { font-size: 0.5rem; color: #555; display: block; margin-top: 5px; }
+        .node h3 { 
+            font-size: 0.8rem; 
+            margin: 0; 
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .node span { 
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem; 
+            color: #555; 
+            display: block; 
+            margin-top: 6px; 
+        }
 
-        /* Tier Styling */
-        .tier-advanced { border-color: #444; }
-        .tier-master { border-left: 3px solid var(--primary); }
-        .tier-elite { border: 1px solid var(--elite); color: var(--elite); }
+        .tier-master { border-left: 4px solid var(--primary); }
+        .tier-elite { border: 1px solid var(--elite); }
         .tier-elite h3 { color: var(--elite); }
 
-        .back-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); }
-        .back-btn { text-decoration: none; color: #444; border: 1px solid #222; padding: 10px 30px; font-size: 0.7rem; transition: 0.3s; background: var(--bg); }
-        .back-btn:hover { color: var(--primary); border-color: var(--primary); }
+        .back-nav { margin-top: 100px; text-align: center; }
+        .back-btn { 
+            font-family: 'JetBrains Mono', monospace;
+            text-decoration: none; 
+            color: #666; 
+            border: 1px solid var(--border); 
+            padding: 12px 40px; 
+            font-size: 0.75rem; 
+            transition: 0.3s;
+        }
+        .back-btn:hover { color: var(--primary); border-color: var(--primary); background: rgba(76,111,255,0.05); }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>SKILL_EVOLUTION_MATRIX</h1>
-        <p style="color: #444; font-size: 0.6rem;">EVOLVE_THROUGH_LEVERAGE_AND_TORQUE</p>
     </div>
 
     <div class="matrix-container">
         
         <div class="lane">
-            <div class="lane-title">PUSH_EVOLUTION</div>
-            <div class="node"><h3>Push-up</h3><span>Level 0</span></div>
-            <div class="node"><h3>Diamond Push-up</h3><span>Level 1</span></div>
-            <div class="node"><h3>Pseudo Planche</h3><span>Level 2</span></div>
-            <div class="node tier-master"><h3>Tuck Planche</h3><span>Level 3</span></div>
-            <div class="node tier-master"><h3>Adv Tuck Planche</h3><span>Level 4</span></div>
-            <div class="node tier-master"><h3>Straddle Planche</h3><span>Level 5</span></div>
-            <div class="node tier-master"><h3>Full Planche</h3><span>Level 6</span></div>
-            <div class="node tier-elite"><h3>Supinated Planche</h3><span>Rank: Elite</span></div>
-            <div class="node tier-elite"><h3>Maltese</h3><span>Rank: Master</span></div>
-            <div class="node tier-elite"><h3>Victorian (Push)</h3><span>Rank: Zenith</span></div>
+            <div class="lane-title">PLANCHE_CHAIN</div>
+            <div class="node"><h3>Planche Lean</h3><span>BASE</span></div>
+            <div class="node"><h3>Tuck Planche</h3><span>LVL 1</span></div>
+            <div class="node"><h3>Adv Tuck Planche</h3><span>LVL 2</span></div>
+            <div class="node tier-master"><h3>Straddle Planche</h3><span>LVL 3</span></div>
+            <div class="node tier-master"><h3>Full Planche</h3><span>LVL 4</span></div>
+            <div class="node tier-elite"><h3>Supinated Planche</h3><span>ELITE</span></div>
+            <div class="node tier-elite"><h3>Maltese</h3><span>ZENITH</span></div>
         </div>
 
         <div class="lane">
-            <div class="lane-title">PULL_EVOLUTION</div>
-            <div class="node"><h3>Scapula Pull</h3><span>Level 0</span></div>
-            <div class="node"><h3>Pull-up</h3><span>Level 1</span></div>
-            <div class="node"><h3>L-Sit Pull-up</h3><span>Level 2</span></div>
-            <div class="node tier-master"><h3>Tuck Front Lever</h3><span>Level 3</span></div>
-            <div class="node tier-master"><h3>Adv Tuck Lever</h3><span>Level 4</span></div>
-            <div class="node tier-master"><h3>Straddle Lever</h3><span>Level 5</span></div>
-            <div class="node tier-master"><h3>Full Front Lever</h3><span>Level 6</span></div>
-            <div class="node tier-elite"><h3>Supinated Lever</h3><span>Rank: Elite</span></div>
-            <div class="node tier-elite"><h3>Front Lever Touch</h3><span>Rank: Master</span></div>
-            <div class="node tier-elite"><h3>Victorian Cross</h3><span>Rank: Zenith</span></div>
+            <div class="lane-title">LEVER_CHAIN</div>
+            <div class="node"><h3>Skin the Cat</h3><span>BASE</span></div>
+            <div class="node"><h3>Tuck Front Lever</h3><span>LVL 1</span></div>
+            <div class="node"><h3>Adv Tuck Lever</h3><span>LVL 2</span></div>
+            <div class="node tier-master"><h3>Straddle Lever</h3><span>LVL 3</span></div>
+            <div class="node tier-master"><h3>Full Front Lever</h3><span>LVL 4</span></div>
+            <div class="node tier-elite"><h3>Front Lever Touch</h3><span>ELITE</span></div>
+            <div class="node tier-elite"><h3>Victorian Cross</h3><span>ZENITH</span></div>
         </div>
 
         <div class="lane">
-            <div class="lane-title">VERTICAL_PRESS</div>
-            <div class="node"><h3>Pike Push-up</h3><span>Level 1</span></div>
-            <div class="node"><h3>Elevated Pike</h3><span>Level 2</span></div>
-            <div class="node"><h3>Wall Handstand</h3><span>Level 3</span></div>
-            <div class="node tier-master"><h3>Freestanding HS</h3><span>Level 4</span></div>
-            <div class="node tier-master"><h3>HS Push-up</h3><span>Level 5</span></div>
-            <div class="node tier-master"><h3>90° Push-up</h3><span>Level 6</span></div>
-            <div class="node tier-elite"><h3>Hollowback Press</h3><span>Rank: Elite</span></div>
-            <div class="node tier-elite"><h3>Tigerbend HS</h3><span>Rank: Master</span></div>
-            <div class="node tier-elite"><h3>One-Arm HS</h3><span>Rank: Zenith</span></div>
+            <div class="lane-title">HANDSTAND_PRESS</div>
+            <div class="node"><h3>Crow Pose</h3><span>BASE</span></div>
+            <div class="node"><h3>Wall Handstand</h3><span>LVL 1</span></div>
+            <div class="node"><h3>Freestanding HS</h3><span>LVL 2</span></div>
+            <div class="node tier-master"><h3>HS Push-up</h3><span>LVL 3</span></div>
+            <div class="node tier-master"><h3>90° Push-up</h3><span>LVL 4</span></div>
+            <div class="node tier-elite"><h3>Hollowback Press</h3><span>ELITE</span></div>
+            <div class="node tier-elite"><h3>One-Arm HS</h3><span>ZENITH</span></div>
         </div>
 
         <div class="lane">
-            <div class="lane-title">RING_STATICS</div>
-            <div class="node"><h3>Ring Support</h3><span>Level 1</span></div>
-            <div class="node"><h3>Ring Dips</h3><span>Level 2</span></div>
-            <div class="node"><h3>False Grip Hang</h3><span>Level 3</span></div>
-            <div class="node tier-master"><h3>Muscle-up</h3><span>Level 4</span></div>
-            <div class="node tier-master"><h3>Back Lever</h3><span>Level 5</span></div>
-            <div class="node tier-master"><h3>Iron Cross (Tuck)</h3><span>Level 6</span></div>
-            <div class="node tier-elite"><h3>Iron Cross (Full)</h3><span>Rank: Elite</span></div>
-            <div class="node tier-elite"><h3>Inverted Cross</h3><span>Rank: Master</span></div>
-            <div class="node tier-elite"><h3>Butterfly Mount</h3><span>Rank: Zenith</span></div>
-        </div>
-
-        <div class="lane">
-            <div class="lane-title">COMPRESSION</div>
-            <div class="node"><h3>Leg Raises</h3><span>Level 1</span></div>
-            <div class="node"><h3>L-Sit</h3><span>Level 2</span></div>
-            <div class="node"><h3>V-Sit</h3><span>Level 3</span></div>
-            <div class="node tier-master"><h3>Dragon Flag</h3><span>Level 4</span></div>
-            <div class="node tier-master"><h3>High V-Sit</h3><span>Level 5</span></div>
-            <div class="node tier-master"><h3>The Manna</h3><span>Level 6</span></div>
-            <div class="node tier-elite"><h3>Manna Push-up</h3><span>Rank: Elite</span></div>
+            <div class="lane-title">SPECIAL_STATICS</div>
+            <div class="node"><h3>L-Sit</h3><span>BASE</span></div>
+            <div class="node"><h3>V-Sit</h3><span>LVL 1</span></div>
+            <div class="node"><h3>Back Lever</h3><span>LVL 2</span></div>
+            <div class="node tier-master"><h3>Iron Cross</h3><span>LVL 3</span></div>
+            <div class="node tier-master"><h3>The Manna</h3><span>LVL 4</span></div>
+            <div class="node tier-elite"><h3>Hefesto</h3><span>ELITE</span></div>
+            <div class="node tier-elite"><h3>Zanetti (Full)</h3><span>ZENITH</span></div>
         </div>
 
     </div>
 
     <div class="back-nav">
-        <a href="index.html" class="back-btn">← RETURN_TO_BASE</a>
+        <a href="index.html" class="back-btn">RETURN_TO_COMMAND_CENTER</a>
     </div>
 
 </body>
