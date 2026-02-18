@@ -200,9 +200,7 @@ grid-template-columns: 1fr 1fr;
 
 <div class="dashboard-row" id="captureArea">
     <div class="analysis-panel" id="chart-card" style="min-height: 400px; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #1f1f2e;">
-
          <div class="dashboard-row" id="captureArea">
-
         <div class="analysis-panel" id="chart-card" style="min-height: 300px; position: relative; display: flex; align-items: center; justify-content: center;">
  <div id="safetyDisclaimer" style="
     position: absolute; 
@@ -377,25 +375,22 @@ function toggleSimMode() {
 }
 
 function prepareSystem() {
-    // 1. Target the elements
+    // 1. Physically remove the red disclaimer box
     const disclaimer = document.getElementById("safetyDisclaimer");
-    const lock = document.getElementById("radar-lock");
-
-    // 2. Hide Disclaimer (The Red Box)
     if (disclaimer) {
-        disclaimer.style.display = "none";
+        disclaimer.remove();
     }
 
-    // 3. Hide Lock Overlay (The Ghost Box)
-    if (lock) {
-        // We use !important to override the flex display in your CSS
-        lock.style.setProperty('display', 'none', 'important');
-        lock.style.opacity = "0";
-        lock.style.pointerEvents = "none";
-    }
-
-    // 4. Initialize system
+    // 2. Existing logic to unlock the system
     isSystemReady = true;
+    
+    // Physically remove the lock overlay to prevent layout glitches
+    const lock = document.getElementById("radar-lock");
+    if (lock) {
+        lock.remove();
+    }
+
+    // 3. Run the analysis
     analyze();
 }
 function updateLabels() {
