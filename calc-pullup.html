@@ -42,7 +42,7 @@
             <input type="number" id="prep" placeholder="0" oninput="calcAll()">
             <div class="result-box">
                 <span class="val" id="pRes">---</span>
-                <span id="pTotal" class="sub-val">SYSTEM_LOAD: ---</span>
+                <span id="pTotal" class="sub-val">TOTAL 1RM: ---</span>
             </div>
         </div>
 
@@ -56,7 +56,7 @@
             <input type="number" id="drep" placeholder="0" oninput="calcAll()">
             <div class="result-box">
                 <span class="val" id="dRes">---</span>
-                <span id="dTotal" class="sub-val">SYSTEM_LOAD: ---</span>
+                <span id="dTotal" class="sub-val">TOTAL 1RM: ---</span>
             </div>
         </div>
 
@@ -68,29 +68,29 @@
             <input type="number" id="zar" placeholder="0" oninput="calcAll()">
             <div class="result-box">
                 <span class="val" id="zaRes">---</span>
-                <span class="sub-val">ESTIMATED_SA_1RM_CAPACITY</span>
+                <span class="sub-val">ESTIMATED 1RM</span>
             </div>
         </div>
     </div>
 
     <div style="text-align: center; margin-top: 40px;">
     <a href="index.html" 
-       style="
-        display: inline-block;
-        text-decoration: none; 
-        color: #555; 
-        border: 1px solid #333; 
-        padding: 10px 20px; 
-        border-radius: 4px; 
-        font-size: 0.75em; 
-        letter-spacing: 2px; 
-        font-weight: bold; 
-        text-transform: uppercase;
-        transition: all 0.3s ease;
-        background: transparent;
-       "
-       onmouseover="this.style.color='#4c6fff'; this.style.borderColor='#4c6fff'; this.style.background='rgba(76, 111, 255, 0.05)';"
-       onmouseout="this.style.color='#555'; this.style.borderColor='#333'; this.style.background='transparent';"
+        style="
+         display: inline-block;
+         text-decoration: none; 
+         color: #555; 
+         border: 1px solid #333; 
+         padding: 10px 20px; 
+         border-radius: 4px; 
+         font-size: 0.75em; 
+         letter-spacing: 2px; 
+         font-weight: bold; 
+         text-transform: uppercase;
+         transition: all 0.3s ease;
+         background: transparent;
+        "
+        onmouseover="this.style.color='#4c6fff'; this.style.borderColor='#4c6fff'; this.style.background='rgba(76, 111, 255, 0.05)';"
+        onmouseout="this.style.color='#555'; this.style.borderColor='#333'; this.style.background='transparent';"
     >
         ← BACK TO HOME
     </a>
@@ -125,16 +125,15 @@
                     let oneRM = total / (1.0278 - (0.0278 * reps));
                     let addedOnly = oneRM - bw;
                     resElement.innerText = addedOnly.toFixed(1) + " " + unit + " added";
-                    totalElement.innerText = "SYSTEM_LOAD: " + oneRM.toFixed(1) + " " + unit;
+                    totalElement.innerText = "TOTAL 1RM: " + oneRM.toFixed(1) + " " + unit;
                 } else {
                     // Specific SA Math (More conservative for tendon safety)
-                    // 15kg for 5 reps results in ~16.5kg with this formula
                     let oneRM = add * (1 + (reps * 0.02)); 
                     resElement.innerText = oneRM.toFixed(1) + " " + unit + " MAX";
                 }
             } else {
                 resElement.innerText = "---";
-                if(totalElement) totalElement.innerText = "SYSTEM_LOAD: ---";
+                if(totalElement) totalElement.innerText = "TOTAL 1RM: ---";
             }
         }
         calcAll();
