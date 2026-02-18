@@ -704,15 +704,32 @@ function analyze() {
         }
 
         let tierHtml = "";
-        if (activeGoal !== "None") {
+       if (activeGoal !== "None") {
             const skillIdx = skills.findIndex(sk => sk.name === activeGoal);
             const score = parseFloat(curScores[skillIdx]);
-            let tier = "NOVICE"; let milestone = "Tuck Progression"; let tCol = "#888";
+            
+            let tier = "NOVICE"; 
+            let milestone = "Tuck Progression"; 
+            let tCol = "#888";
 
-            if (score > 90) { tier = "MASTER (Weighted)"; milestone = "Added Load Statics"; tCol = "#ff00ff"; }
-            else if (score > 70) { tier = "ELITE (Full)"; milestone = "Full Static Mastery"; tCol = "#00ffcc"; }
-            else if (score > 45) { tier = "ADVANCED (Straddle)"; milestone = "Half-Lay / One Leg Out"; tCol = "#ffcc00"; }
-            else if (score > 20) { tier = "INTERMEDIATE (Tuck)"; milestone = "Advanced Tuck / Open Tuck"; tCol = "#00ccff"; }
+            // STRICT HIERARCHY: Checks highest score first
+            if (score >= 80) { 
+                tier = "MASTERED"; 
+                milestone = "Add Weighted Resistance"; 
+                tCol = "#ff00ff"; 
+            } else if (score >= 65) { 
+                tier = "ELITE (Full)"; 
+                milestone = "Perfect Form Holds"; 
+                tCol = "#00ffcc"; 
+            } else if (score >= 40) { 
+                tier = "ADVANCED (Straddle)"; 
+                milestone = "Half-Lay / One Leg Out"; 
+                tCol = "#ffcc00"; 
+            } else if (score >= 15) { 
+                tier = "INTERMEDIATE (Tuck)"; 
+                milestone = "Advanced Tuck / Open Tuck"; 
+                tCol = "#00ccff"; 
+            }
 
             tierHtml = `
                 <h3 style="font-size:0.7em; letter-spacing:3px; color:var(--primary); margin-top:25px; border-bottom:1px solid #333; padding-bottom:10px;">PROGRESSION_TIER</h3>
