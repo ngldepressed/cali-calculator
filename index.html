@@ -423,49 +423,47 @@ function logSession() {
     const sys = document.getElementById("unitSystem").value;
     const u = sys === 'met' ? 'kg' : 'lbs';
     
-    // 1. Capture the raw weight input
     const rawBwInput = document.getElementById("weight").value;
     const hasBw = rawBwInput && parseFloat(rawBwInput) > 0;
     
-    // 2. The Fixed 1RM Helper
-    const get1RM = (idW, idR) => {
+    const get1RMData = (idW, idR) => {
         const addedW = parseFloat(document.getElementById(idW).value) || 0;
         const reps = parseInt(document.getElementById(idR).value) || 0;
         
-        // --- THE FIX: If no added weight is entered, show 0 immediately ---
-        if (addedW === 0 && reps === 0) return "0.0";
-        if (addedW === 0 && reps > 0 && !hasBw) return "0.0"; 
+        if (addedW === 0 && reps === 0) return { total: "0.0", added: "0" };
         
-        // Use actual BW if available, else use 75 for math
         const bwForCalc = hasBw ? parseFloat(rawBwInput) : 75;
+        // Total 1RM Calculation
+        const totalMax = (bwForCalc + addedW * (1 + reps/30)).toFixed(1);
+        // Estimated Plate-only 1RM (Total Max minus Bodyweight)
+        const plateOnly = (totalMax - bwForCalc).toFixed(1);
         
-        // Standard formula: (BW + Added) * (1 + R/30)
-        return (bwForCalc + addedW * (1 + reps/30)).toFixed(1);
+        return { total: totalMax, added: plateOnly };
     };
 
-    // 3. Find Strongest Skill from the UI Bars (reads what analyze() created)
+    const pullData = get1RMData("wpW", "wpR");
+    const pushData = get1RMData("wdW", "wdR");
+    const saData = get1RMData("saW", "saR");
+
     let topSkill = "None";
     let maxVal = -1;
     document.querySelectorAll('.skill-label').forEach(el => {
-        const valText = el.children[1].innerText;
-        const val = parseInt(valText);
+        const val = parseInt(el.children[1].innerText);
         if(!isNaN(val) && val > maxVal) { 
             maxVal = val; 
             topSkill = el.children[0].innerText.replace("⚡ ", "").replace("🔒 ", ""); 
         }
     });
 
-    // 4. Create Entry
     const entry = {
         date: new Date().toLocaleDateString(),
-        bw: hasBw ? rawBwInput + u : "---", 
-        pull: get1RM("wpW", "wpR") + u,
-        push: get1RM("wdW", "wdR") + u,
-        sa: get1RM("saW", "saR") + u, // This will now be 0.0 if inputs are empty
+        bw: hasBw ? rawBwInput + u : "---",
+        pull: `${pullData.total}${u} (+${pullData.added}${u})`,
+        push: `${pushData.total}${u} (+${pushData.added}${u})`,
+        sa: `${saData.total}${u} (+${saData.added}${u})`,
         skill: topSkill + " (" + (maxVal > 0 ? maxVal : 0) + "%)"
     };
 
-    // 5. Save and Render
     savedLogs.unshift(entry);
     localStorage.setItem('caliLogs', JSON.stringify(savedLogs.slice(0, 8)));
     renderLogs();
@@ -473,19 +471,23 @@ function logSession() {
 function renderLogs() {
     const savedLogs = localStorage.getItem('caliLogs') ? JSON.parse(localStorage.getItem('caliLogs')) : [];
     const container = document.getElementById("logBody");
+    
+    // Ensure the table headers in your HTML say "PULL 1RM", "PUSH 1RM", etc.
+    // This JS handles the rows:
     container.innerHTML = savedLogs.map((l, i) => `
-        <tr>
-            <td>${l.date}</td>
-            <td>${l.bw}</td>
-            <td>${l.pull}</td>
-            <td>${l.push}</td>
-            <td>${l.sa}</td>
-            <td style="color:var(--potential)">${l.skill}</td>
-            <td><button onclick="deleteLog(${i})" style="background:none; border:none; color:var(--danger); cursor:pointer;">✕</button></td>
+        <tr style="border-bottom: 1px solid #222;">
+            <td style="padding: 8px 5px; color: #888;">${l.date}</td>
+            <td style="padding: 8px 5px;">${l.bw}</td>
+            <td style="padding: 8px 5px; color: #00ffcc;">${l.pull}</td>
+            <td style="padding: 8px 5px; color: #00ffcc;">${l.push}</td>
+            <td style="padding: 8px 5px; color: #00ffcc;">${l.sa}</td>
+            <td style="padding: 8px 5px; color: var(--potential); font-weight: bold;">${l.skill}</td>
+            <td style="padding: 8px 5px;">
+                <button onclick="deleteLog(${i})" style="background:none; border:none; color:#ff4444; cursor:pointer; font-weight:bold;">✕</button>
+            </td>
         </tr>
     `).join('');
 }
-
 function deleteLog(i) {
     const savedLogs = JSON.parse(localStorage.getItem('caliLogs'));
     savedLogs.splice(i, 1);
