@@ -92,19 +92,45 @@
     <h1 style="text-align:center; color:var(--primary); font-size:1.4em; letter-spacing:4px; margin-bottom: 20px;">CALI-BIOTECH COMMAND</h1>
 
     <div style="text-align: center; margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 15px;">
-        <a href="calc-pullup.html" class="button">Check your 1RM Strength</a>
-        <select id="unitSystem" onchange="updateLabels(); analyze(); saveToLocal();" style="width: 220px; background: #1f1f2e; color: var(--primary); border: 1px solid var(--primary);">
-            <option value="met">METRIC (KG / CM)</option>
-            <option value="imp">IMPERIAL (LBS / FT-IN)</option>
-        </select>
+    
+    <a href="calc-pullup.html" 
+       style="
+        display: inline-block;
+        text-decoration: none !important; 
+        color: #4c6fff; 
+        background: rgba(76, 111, 255, 0.05);
+        border: 1px solid #4c6fff; 
+        padding: 12px 24px; 
+        font-family: monospace;
+        font-size: 0.75em; 
+        letter-spacing: 3px; 
+        font-weight: bold; 
+        border-radius: 4px;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 15px rgba(76, 111, 255, 0.1);
+        width: 220px;
+        box-sizing: border-box;
+       "
+       onmouseover="this.style.background='rgba(76, 111, 255, 0.15)'; this.style.boxShadow='0 0 25px rgba(76, 111, 255, 0.4)'; this.style.color='#fff';"
+       onmouseout="this.style.background='rgba(76, 111, 255, 0.05)'; this.style.boxShadow='0 0 15px rgba(76, 111, 255, 0.1)'; this.style.color='#4c6fff';"
+    >
+        [ ACCESS_MATRIX ]
+    </a>
 
-        <div class="sim-toggle-container">
-            <label style="cursor:pointer; display: flex; align-items: center; gap: 10px; padding: 0 15px;">
-                <input type="checkbox" id="simMode" onchange="toggleSimMode()" style="width: auto; margin: 0;">
-                <span style="color:var(--potential); font-size: 0.7em; letter-spacing: 2px; font-weight: bold;">ACTIVATE BIOTEST SIMULATION</span>
-            </label>
-        </div>
+    <select id="unitSystem" onchange="updateLabels(); analyze(); saveToLocal();" style="width: 220px; background: #1f1f2e; color: var(--primary); border: 1px solid var(--primary); padding: 5px; font-family: monospace;">
+        <option value="met">METRIC (KG / CM)</option>
+        <option value="imp">IMPERIAL (LBS / FT-IN)</option>
+    </select>
+
+    <div class="sim-toggle-container">
+        <label style="cursor:pointer; display: flex; align-items: center; gap: 10px; padding: 0 15px;">
+            <input type="checkbox" id="simMode" onchange="toggleSimMode()" style="width: auto; margin: 0;">
+            <span style="color:var(--potential); font-size: 0.7em; letter-spacing: 2px; font-weight: bold;">ACTIVATE BIOTEST SIMULATION</span>
+        </label>
     </div>
+
+</div>
 
     <div class="main-grid">
         <div class="card">
