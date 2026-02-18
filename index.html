@@ -16,6 +16,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
+        /* ADD THIS INSIDE THE <style> TAG */
+.sim-active input, .sim-active select { 
+    border-color: var(--potential) !important; 
+    box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+    color: var(--potential) !important;
+}
+
+.sim-active .card h3 {
+    color: var(--potential) !important;
+    border-bottom: 1px solid var(--potential) !important;
+}
         * { box-sizing: border-box; }
         :root { --primary: #4c6fff; --potential: #00ffcc; --bg: #0b0b12; --card: #161621; --border: #2a2a3a; --danger: #ff4c4c; --text: #e0e0e0; }
         
@@ -246,6 +257,7 @@ let isSystemReady = false;
 let isSimMode = false;
 
 function toggleSimMode() {
+    // 1. Update the global variable so other functions know we are simulating
     isSimMode = document.getElementById("simMode").checked;
     const container = document.getElementById("mainContainer");
     
@@ -253,9 +265,14 @@ function toggleSimMode() {
         container.classList.add('sim-active');
     } else {
         container.classList.remove('sim-active');
-        loadSavedData(); 
+        loadSavedData(); // Returns to your real data
     }
-    analyze();
+
+    // 2. ONLY run analyze if the system is actually "Unlocked/Prepared"
+    // This prevents errors if you flip the switch before clicking the big button
+    if (isSystemReady) {
+        analyze();
+    }
 }
 
 function prepareSystem() {
@@ -468,6 +485,29 @@ function analyze() {
         let h = sys === 'met' ? (parseFloat(document.getElementById("hCm").value) || 170) : ((parseFloat(document.getElementById("hFt").value)||5)*30.48)+((parseFloat(document.getElementById("hIn").value)||7)*2.54);
 
         // 1. CALCULATIONS
+        // --- START SIMULATION LOGIC ---
+        if (isSimMode) {
+            // Force values into the input fields so the math functions use them
+            document.getElementById("weight").value = 75;
+            document.getElementById("pullups").value = 28;
+            document.getElementById("pushups").value = 55;
+            document.getElementById("mu").value = 12;
+            document.getElementById("hang").value = 120;
+            
+            // Weighted Matrix (Elite numbers)
+            document.getElementById("wpW").value = 45; // +45kg pullup
+            document.getElementById("wpR").value = 5;
+            document.getElementById("wdW").value = 65; // +65kg dip
+            document.getElementById("wdR").value = 5;
+            document.getElementById("saW").value = 25; // +25kg Zanetti
+            document.getElementById("saR").value = 5;
+            
+            // Force optimal form for the simulation
+            document.getElementById("legRatio").value = "1.0";
+            document.getElementById("form").value = "1.0";
+            document.getElementById("cns").value = 10;
+        }
+        // --- END SIMULATION LOGIC ---
         const pull1RM = (bw + (parseFloat(document.getElementById("wpW").value)||0)*conv * (1 + (parseInt(document.getElementById("wpR").value)||0)/30)) / bw;
         const push1RM = (bw + (parseFloat(document.getElementById("wdW").value)||0)*conv * (1 + (parseInt(document.getElementById("wdR").value)||0)/30)) / bw;
         let rawSa = (bw + (parseFloat(document.getElementById("saW").value)||0)*conv * (1 + (parseInt(document.getElementById("saR").value)||0)/30)) / bw;
