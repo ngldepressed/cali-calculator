@@ -504,19 +504,6 @@ function generateGoalBrief(vectors, bw, conv, u) {
 }
 function analyze() {
     if(!isSystemReady) return; 
-
-    // 1. Check if weight is actually entered
-    const weightVal = document.getElementById("weight").value;
-    if (!weightVal || parseFloat(weightVal) <= 0) {
-        // If empty, clear the chart/bars and stop
-        if(radarChart) {
-            radarChart.data.datasets[0].data = [];
-            radarChart.update();
-        }
-        document.getElementById("barContainer").innerHTML = "<p style='color:#666; font-size:0.8em;'>Enter weight to begin analysis...</p>";
-        return; 
-    }
-
     if(!radarChart) initChart();
 
     try {
@@ -524,8 +511,14 @@ function analyze() {
         const conv = sys === 'imp' ? 0.453592 : 1;
         const u = sys === 'met' ? 'kg' : 'lbs';
         
-        // Use the validated weight here
-        let bw = parseFloat(weightVal) * conv;
+        // --- THE FIX ---
+        // We get the weight, but if it's empty, we use 75 ONLY for the math
+        // This allows the bars to render so "Strongest Skill" is detected.
+        const weightInput = document.getElementById("weight").value;
+        const isWeightEmpty = !weightInput || parseFloat(weightInput) <= 0;
+        let bw = (parseFloat(weightInput) || 75) * conv; 
+        // ---------------
+
         let h = sys === 'met' ? (parseFloat(document.getElementById("hCm").value) || 170) : ((parseFloat(document.getElementById("hFt").value)||5)*30.48)+((parseFloat(document.getElementById("hIn").value)||7)*2.54);
 
         // 1. CALCULATIONS
@@ -622,7 +615,7 @@ function analyze() {
         auditHtml += createInsight("CONNECTIVE_TISSUE", sStatus, saIntegrity, sDesc, saIntegrity < 0.62 ? "#ff4444" : "#00ffcc");
         auditHtml += createInsight("RELATIVE_POWER", "FORCE", relPower + "x BW", "Force generation relative to mass.", "var(--primary)");
 
-        // 5. GENETIC CEILING & PROGRESSION TIER AUTO-INJECTION
+        // 5. GENETIC CEILING & PROGRESSION TIER
         let ceilingDiv = document.getElementById("geneticCeiling");
         if (!ceilingDiv) {
             ceilingDiv = document.createElement("div");
@@ -640,12 +633,15 @@ function analyze() {
         else if (bmi < 19) { cMsg = "POWER_DEFICIT: Low muscle volume for frame."; cCol = "#00ccff"; }
         else { cMsg = "OPTIMAL FRAME: BMI is in the elite power-to-weight window."; }
 
+        // Alert user if weight is missing in the report
+        const weightLabel = isWeightEmpty ? "BMI: (NO DATA)" : `BMI: ${bmi}`;
+
         ceilingDiv.innerHTML = `
             <h3 style="font-size:0.7em; letter-spacing:3px; color:var(--primary); margin-top:25px; border-bottom:1px solid #333; padding-bottom:10px;">GENETIC_CEILING</h3>
             <div class="insight-block" style="margin-bottom:15px; border-left:3px solid ${cCol}; padding-left:12px; background: rgba(255,255,255,0.02); padding:10px;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <span style="font-size:0.8em; font-weight:bold; color:${cCol};">FRAME_EFFICIENCY</span>
-                    <span style="font-size:0.7em; color:#fff;">BMI: ${bmi}</span>
+                    <span style="font-size:0.7em; color:#fff;">${weightLabel}</span>
                 </div>
                 <p style="font-size:0.65em; color:#bbb; margin:8px 0; line-height:1.4;">${cMsg}</p>
                 <div style="font-size:0.65em; color:#888;">Ideal Weight for ${h.toFixed(0)}cm: <span style="color:#fff;">${idealWeightMin.toFixed(0)}-${idealWeightMax.toFixed(0)}${u}</span></div>
