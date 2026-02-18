@@ -426,18 +426,14 @@ function logSession() {
     const rawBwInput = document.getElementById("weight").value;
     const hasBw = rawBwInput && parseFloat(rawBwInput) > 0;
     
+    // 1. Improved 1RM helper
     const get1RMData = (idW, idR) => {
         const addedW = parseFloat(document.getElementById(idW).value) || 0;
         const reps = parseInt(document.getElementById(idR).value) || 0;
-        
         if (addedW === 0 && reps === 0) return { total: "0.0", added: "0" };
-        
         const bwForCalc = hasBw ? parseFloat(rawBwInput) : 75;
-        // Total 1RM Calculation
         const totalMax = (bwForCalc + addedW * (1 + reps/30)).toFixed(1);
-        // Estimated Plate-only 1RM (Total Max minus Bodyweight)
         const plateOnly = (totalMax - bwForCalc).toFixed(1);
-        
         return { total: totalMax, added: plateOnly };
     };
 
@@ -445,23 +441,29 @@ function logSession() {
     const pushData = get1RMData("wdW", "wdR");
     const saData = get1RMData("saW", "saR");
 
+    // 2. FIXED SKILL LOGIC: Get data directly from the Radar Chart instead of HTML labels
     let topSkill = "None";
     let maxVal = -1;
-    document.querySelectorAll('.skill-label').forEach(el => {
-        const val = parseInt(el.children[1].innerText);
-        if(!isNaN(val) && val > maxVal) { 
-            maxVal = val; 
-            topSkill = el.children[0].innerText.replace("⚡ ", "").replace("🔒 ", ""); 
-        }
-    });
+    
+    if (radarChart && radarChart.data.datasets[0].data.length > 0) {
+        radarChart.data.datasets[0].data.forEach((score, index) => {
+            let numericScore = parseFloat(score);
+            if (numericScore > maxVal) {
+                maxVal = numericScore;
+                // Get the name from your skills array using the same index
+                topSkill = skills[index].name;
+            }
+        });
+    }
 
+    // 3. Create the Entry
     const entry = {
         date: new Date().toLocaleDateString(),
         bw: hasBw ? rawBwInput + u : "---",
         pull: `${pullData.total}${u} (+${pullData.added}${u})`,
         push: `${pushData.total}${u} (+${pushData.added}${u})`,
         sa: `${saData.total}${u} (+${saData.added}${u})`,
-        skill: topSkill + " (" + (maxVal > 0 ? maxVal : 0) + "%)"
+        skill: topSkill + " (" + (maxVal > 0 ? Math.round(maxVal) : 0) + "%)"
     };
 
     savedLogs.unshift(entry);
