@@ -776,26 +776,28 @@ if (vTax) vTax.innerText = totalTax.toFixed(1);
 
     } catch (err) { console.error(err); }
 }
-// Function 1: The actual image saver
-function shareReport() {
-    const target = document.getElementById("captureArea");
-    const btn = document.getElementById("shareBtn");
-    btn.innerText = "GENERATING...";
-    
-    html2canvas(target, { 
-        backgroundColor: "#1f1f2e",
-        scale: 2 // Makes the image high quality
-    }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = 'CaliBiotech_Report.png';
-        link.href = canvas.toDataURL();
-        link.click();
-        btn.innerText = "DOWNLOAD_REPORT.PNG";
-    });
+// 7. FINAL INJECTION
+        auditHtml += `
+            <div style="margin-top:25px; padding:15px; background:rgba(255,221,0,0.05); border-radius:8px; text-align:center; border: 1px solid rgba(255,221,0,0.2);">
+                <p style="font-size:0.75em; color:#fff; margin-bottom:10px;">PROCESSED_SUCCESSFULLY. SUPPORT THE GRIND?</p>
+                <a href="https://buymeacoffee.com/CaliBiotech" target="_blank" style="color:#ffdd00; font-weight:bold; text-decoration:none; font-size:0.8em; letter-spacing:1px;">[ > BUY ME A PROTEIN SHAKE ]</a>
+            </div>`;
+
+        document.getElementById("aiFeedback").innerHTML = auditHtml;
+        document.getElementById("barContainer").innerHTML = barHtml;
+        radarChart.data.datasets[0].data = curScores;
+        radarChart.data.datasets[1].data = potScores;
+        radarChart.update();
+
+    } catch (err) { console.error("Analysis Error:", err); }
 }
+
+// SINGLE VERSION OF SHARE FUNCTION
 function shareReport() {
     const target = document.getElementById("captureArea");
     const btn = document.getElementById("shareBtn");
+    if (!target) return;
+    
     btn.innerText = "GENERATING...";
     
     html2canvas(target, { 
@@ -807,9 +809,16 @@ function shareReport() {
         link.href = canvas.toDataURL();
         link.click();
         btn.innerText = "DOWNLOAD_REPORT.PNG";
+    }).catch(err => {
+        console.error("Screenshot failed:", err);
+        btn.innerText = "ERROR_RETRY";
     });
 }
-document.getElementById("shareBtn").style.display = "block";
+
+// INITIALIZE UI
+if (document.getElementById("shareBtn")) {
+    document.getElementById("shareBtn").style.display = "block";
+}
 </script>
 </body>
 </html>
