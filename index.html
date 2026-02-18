@@ -456,7 +456,7 @@ function renderLogs() {
     const savedLogs = localStorage.getItem('caliLogs') ? JSON.parse(localStorage.getItem('caliLogs')) : [];
     const container = document.getElementById("logBody");
     container.innerHTML = savedLogs.map((l, i) => `
-        ctr>
+        <tr>
             <td>${l.date}</td>
             <td>${l.bw}</td>
             <td>${l.pull}</td>
@@ -504,6 +504,19 @@ function generateGoalBrief(vectors, bw, conv, u) {
 }
 function analyze() {
     if(!isSystemReady) return; 
+
+    // 1. Check if weight is actually entered
+    const weightVal = document.getElementById("weight").value;
+    if (!weightVal || parseFloat(weightVal) <= 0) {
+        // If empty, clear the chart/bars and stop
+        if(radarChart) {
+            radarChart.data.datasets[0].data = [];
+            radarChart.update();
+        }
+        document.getElementById("barContainer").innerHTML = "<p style='color:#666; font-size:0.8em;'>Enter weight to begin analysis...</p>";
+        return; 
+    }
+
     if(!radarChart) initChart();
 
     try {
@@ -511,7 +524,8 @@ function analyze() {
         const conv = sys === 'imp' ? 0.453592 : 1;
         const u = sys === 'met' ? 'kg' : 'lbs';
         
-        let bw = (parseFloat(document.getElementById("weight").value) || 75) * conv;
+        // Use the validated weight here
+        let bw = parseFloat(weightVal) * conv;
         let h = sys === 'met' ? (parseFloat(document.getElementById("hCm").value) || 170) : ((parseFloat(document.getElementById("hFt").value)||5)*30.48)+((parseFloat(document.getElementById("hIn").value)||7)*2.54);
 
         // 1. CALCULATIONS
