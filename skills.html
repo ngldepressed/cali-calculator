@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Tree | Cali-Biotech</title>
+    <style>
+        :root { --primary: #4c6fff; --bg: #0f0f17; --card: #1f1f2e; --locked: #333; }
+        body { background-color: var(--bg); color: white; font-family: monospace; padding: 20px; }
+        
+        .tree-container { display: flex; flex-direction: column; align-items: center; gap: 40px; margin-top: 30px; }
+        
+        .branch { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; max-width: 1000px; position: relative; }
+        .branch::before { content: attr(data-label); position: absolute; top: -25px; left: 10px; font-size: 0.7rem; color: var(--primary); letter-spacing: 2px; }
+
+        .skill-node {
+            background: var(--card);
+            border: 1px solid var(--locked);
+            padding: 15px;
+            width: 180px;
+            border-radius: 4px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: help;
+        }
+
+        .skill-node:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(76, 111, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .skill-node h3 { font-size: 0.75rem; margin: 0; letter-spacing: 1px; }
+        .skill-node p { font-size: 0.6rem; color: #666; margin-top: 8px; text-transform: uppercase; }
+
+        .tier-elite { border-color: #ff4c4c; } /* Red border for elite skills */
+        .tier-elite:hover { box-shadow: 0 0 15px rgba(255, 76, 76, 0.3); border-color: #ff4c4c; }
+
+        .back-btn { display: block; width: 180px; margin: 50px auto; text-align: center; text-decoration: none; color: #555; border: 1px solid #333; padding: 10px; font-size: 0.7rem; border-radius: 4px; }
+        .back-btn:hover { color: var(--primary); border-color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <h1 style="text-align:center; font-size: 1.2em; letter-spacing: 5px; color: var(--primary);">BIOTECH_SKILL_TREE</h1>
+
+    <div class="tree-container">
+        
+        <div class="branch" data-label="[ HORIZONTAL_PUSH ]">
+            <div class="skill-node"><h3>Tuck Planche</h3><p>Level 1</p></div>
+            <div class="skill-node"><h3>Full Planche</h3><p>Level 2</p></div>
+            <div class="skill-node"><h3>Supinated Planche</h3><p>Level 3</p></div>
+            <div class="skill-node tier-elite"><h3>Maltese Planche</h3><p>Level 4 (Elite)</p></div>
+        </div>
+
+        <div class="branch" data-label="[ STATIC_PULL ]">
+            <div class="skill-node"><h3>Front Lever</h3><p>Level 1</p></div>
+            <div class="skill-node"><h3>Supinated Lever</h3><p>Level 2</p></div>
+            <div class="skill-node"><h3>Lever Touch</h3><p>Level 3</p></div>
+            <div class="skill-node tier-elite"><h3>Victorian Cross</h3><p>Level 4 (Elite)</p></div>
+        </div>
+
+        <div class="branch" data-label="[ SUPREME_STATICS ]">
+            <div class="skill-node"><h3>L-Sit / V-Sit</h3><p>Core Base</p></div>
+            <div class="skill-node"><h3>Iron Cross</h3><p>Ring Mastery</p></div>
+            <div class="skill-node tier-elite"><h3>The Manna</h3><p>Ultimate Compression</p></div>
+        </div>
+
+    </div>
+
+    <a href="index.html" class="back-btn">← RETURN TO COMMAND</a>
+
+</body>
+</html>
