@@ -91,46 +91,134 @@
 
     <h1 style="text-align:center; color:var(--primary); font-size:1.4em; letter-spacing:4px; margin-bottom: 20px;">CALI-BIOTECH COMMAND</h1>
 
-   <div style="text-align: center; margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 15px;">
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strength Matrix | Cali-Biotech</title>
+    <style>
+        :root { --primary: #4c6fff; --bg: #0f0f17; --card: #1f1f2e; }
+        body { background-color: var(--bg); color: white; font-family: monospace; text-align: center; padding: 20px; }
+        .unit-toggle { margin-bottom: 30px; }
+        select { background: #1f1f2e; color: var(--primary); border: 1px solid var(--primary); padding: 5px 15px; font-family: monospace; cursor: pointer; }
+        .calc-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+        .card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid #333; width: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.3s; }
+        .card:hover { border-color: var(--primary); }
+        h2 { color: var(--primary); font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        label { display: block; font-size: 0.7rem; color: #888; margin-top: 10px; text-align: left; text-transform: uppercase; }
+        input { width: 100%; padding: 12px; margin: 5px 0; border-radius: 5px; border: 1px solid #444; background: #12121c; color: white; box-sizing: border-box; font-family: monospace; }
+        .result-box { margin-top: 20px; padding: 15px; background: rgba(76, 111, 255, 0.1); border-radius: 8px; border-left: 3px solid var(--primary); min-height: 60px; }
+        .val { font-size: 1.1rem; color: var(--primary); font-weight: bold; display: block; }
+        .sub-val { font-size: 0.65rem; color: #666; display: block; margin-top: 5px; letter-spacing: 1px; }
+        .back-btn { display: inline-block; margin-top: 40px; color: #555; text-decoration: none; font-size: 0.8rem; letter-spacing: 1px; border: 1px solid #333; padding: 10px 20px; border-radius: 5px; transition: 0.3s; }
+        .back-btn:hover { color: var(--primary); border-color: var(--primary); background: rgba(76,111,255,0.05); }
+    </style>
+</head>
+<body>
+
+    <h1 style="letter-spacing: 4px; font-size: 1.2em; margin-bottom: 10px;">STRENGTH_MATRIX_V1.0</h1>
     
-    <a href="calc-pullup.html" 
-       style="
-        display: inline-block;
-        text-decoration: none !important; 
-        color: #4c6fff; 
-        background: rgba(76, 111, 255, 0.05);
-        border: 1px solid #4c6fff; 
-        padding: 12px 24px; 
-        font-family: monospace;
-        font-size: 0.75em; 
-        letter-spacing: 3px; 
-        font-weight: bold; 
-        border-radius: 4px;
-        text-transform: uppercase;
-        transition: all 0.3s ease;
-        box-shadow: 0 0 15px rgba(76, 111, 255, 0.1);
-        width: 220px;
-        box-sizing: border-box;
-       "
-       onmouseover="this.style.background='rgba(76, 111, 255, 0.15)'; this.style.boxShadow='0 0 25px rgba(76, 111, 255, 0.4)'; this.style.color='#fff';"
-       onmouseout="this.style.background='rgba(76, 111, 255, 0.05)'; this.style.boxShadow='0 0 15px rgba(76, 111, 255, 0.1)'; this.style.color='#4c6fff';"
-    >
-        1 REP MAX CALCULATOR
-    </a>
-
-    <select id="unitSystem" onchange="updateLabels(); analyze(); saveToLocal();" style="width: 220px; background: #1f1f2e; color: var(--primary); border: 1px solid var(--primary); padding: 5px; font-family: monospace;">
-        <option value="met">METRIC (KG / CM)</option>
-        <option value="imp">IMPERIAL (LBS / FT-IN)</option>
-    </select>
-
-    <div class="sim-toggle-container">
-        <label style="cursor:pointer; display: flex; align-items: center; gap: 10px; padding: 0 15px;">
-            <input type="checkbox" id="simMode" onchange="toggleSimMode()" style="width: auto; margin: 0;">
-            <span style="color:var(--potential); font-size: 0.7em; letter-spacing: 2px; font-weight: bold;">ACTIVATE BIOTEST SIMULATION</span>
-        </label>
+    <div class="unit-toggle">
+        <select id="unitSystem" onchange="calcAll()">
+            <option value="kg">UNIT: METRIC (KG)</option>
+            <option value="lb">UNIT: IMPERIAL (LBS)</option>
+        </select>
     </div>
 
-</div>
+    <div class="calc-container">
+        <div class="card">
+            <h2>WEIGHTED PULL-UP</h2>
+            <label class="u-label">Bodyweight</label>
+            <input type="number" id="pbw" value="75" oninput="calcAll()">
+            <label class="u-label">Added Weight</label>
+            <input type="number" id="padd" placeholder="0" oninput="calcAll()">
+            <label>Reps</label>
+            <input type="number" id="prep" placeholder="0" oninput="calcAll()">
+            <div class="result-box">
+                <span class="val" id="pRes">---</span>
+                <span id="pTotal" class="sub-val">SYSTEM_LOAD: ---</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>WEIGHTED DIP</h2>
+            <label class="u-label">Bodyweight</label>
+            <input type="number" id="dbw" value="75" oninput="calcAll()">
+            <label class="u-label">Added Weight</label>
+            <input type="number" id="dadd" placeholder="0" oninput="calcAll()">
+            <label>Reps</label>
+            <input type="number" id="drep" placeholder="0" oninput="calcAll()">
+            <div class="result-box">
+                <span class="val" id="dRes">---</span>
+                <span id="dTotal" class="sub-val">SYSTEM_LOAD: ---</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>ZANETTI / SA RAISE</h2>
+            <label class="u-label">Dumbbell Weight</label>
+            <input type="number" id="zaw" placeholder="0" oninput="calcAll()">
+            <label>Reps (Straight Arm)</label>
+            <input type="number" id="zar" placeholder="0" oninput="calcAll()">
+            <div class="result-box">
+                <span class="val" id="zaRes">---</span>
+                <span class="sub-val">ESTIMATED_SA_1RM_CAPACITY</span>
+            </div>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-btn">[ RETURN_TO_COMMAND ]</a>
+
+    <script>
+        function calcAll() {
+            const unit = document.getElementById('unitSystem').value;
+            const labels = document.querySelectorAll('.u-label');
+            labels.forEach(l => {
+                let text = l.innerText.split('(')[0].trim();
+                l.innerText = text + " (" + unit + ")";
+            });
+
+            // Standard Compound Lifts (BW + Added)
+            runLogic('p', unit, true);
+            runLogic('d', unit, true);
+            
+            // SA / Zanetti Logic (Weight Only)
+            runLogic('za', unit, false);
+        }
+
+        function runLogic(type, unit, includeBW) {
+            let add = parseFloat(document.getElementById(type + 'w')?.value || document.getElementById(type + 'add')?.value) || 0;
+            let reps = parseInt(document.getElementById(type + 'r')?.value || document.getElementById(type + 'rep')?.value) || 0;
+            
+            let resElement = document.getElementById(type + 'Res');
+            let totalElement = document.getElementById(type + 'Total');
+
+            if (reps > 0 && add > 0) {
+                let weightToCalc = add;
+                
+                if (includeBW) {
+                    let bw = parseFloat(document.getElementById(type + 'bw').value) || 0;
+                    weightToCalc = bw + add;
+                    let oneRM = weightToCalc / (1.0278 - (0.0278 * reps));
+                    let addedOnly = oneRM - bw;
+                    resElement.innerText = addedOnly.toFixed(1) + " " + unit + " added";
+                    totalElement.innerText = "SYSTEM_LOAD: " + oneRM.toFixed(1) + " " + unit;
+                } else {
+                    // Isolation/SA Math
+                    let oneRM = add / (1.0278 - (0.0278 * reps));
+                    resElement.innerText = oneRM.toFixed(1) + " " + unit + " MAX";
+                }
+            } else {
+                resElement.innerText = "---";
+                if(totalElement) totalElement.innerText = "SYSTEM_LOAD: ---";
+            }
+        }
+        
+        calcAll(); // Init
+    </script>
+</body>
+</html>
 
     <div class="main-grid">
         <div class="card">
