@@ -199,31 +199,32 @@ grid-template-columns: 1fr 1fr;
     </div>
 
 <div class="dashboard-row" id="captureArea">
-    <div class="analysis-panel" id="chart-card" style="min-height: 400px; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #1f1f2e;">
-         <div class="dashboard-row" id="captureArea">
-        <div class="analysis-panel" id="chart-card" style="min-height: 300px; position: relative; display: flex; align-items: center; justify-content: center;">
- <div id="safetyDisclaimer" style="
-    position: absolute; 
-    top: 15px; 
-    left: 50%; 
-    transform: translateX(-50%); 
-    width: 92%; 
-    z-index: 20; 
-    color: #ff4444; 
-    background: rgba(20, 10, 10, 0.95); 
-    border: 1px solid #ff4444; 
-    padding: 12px; 
-    border-radius: 8px; 
-    font-family: monospace; 
-    border-left: 4px solid #ff4444;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    pointer-events: none;
-">
-    <div style="font-weight: bold; margin-bottom: 4px; letter-spacing: 1px; font-size: 0.85em;">⚠️ TENDON_INTEGRITY_WARNING</div>
-    <p style="margin: 0; font-size: 0.75em; line-height: 1.4; color: #ddd;">
-        Straight-arm loads detected. Connective tissue adaptation is 10x slower than muscle. 
-        <span style="color: #ff4444; font-weight: bold;">Perform wrist and scapular prep</span> before initializing.
-    </p>
+    <div class="analysis-panel" id="chart-card" style="min-height: 450px; position: relative; overflow: hidden; background: #1f1f2e;">
+        
+        <div id="safetyDisclaimer" style="position: absolute; top: 15px; left: 50%; transform: translateX(-50%); width: 92%; z-index: 20; color: #ff4444; background: rgba(20, 10, 10, 0.95); border: 1px solid #ff4444; padding: 12px; border-radius: 8px; font-family: monospace; border-left: 4px solid #ff4444; box-shadow: 0 4px 15px rgba(0,0,0,0.5); pointer-events: none;">
+            <div style="font-weight: bold; margin-bottom: 4px; letter-spacing: 1px; font-size: 0.85em;">⚠️ TENDON_INTEGRITY_WARNING</div>
+            <p style="margin: 0; font-size: 0.75em; line-height: 1.4; color: #ddd;">
+                Straight-arm loads detected. Connective tissue adaptation is 10x slower than muscle. 
+                <span style="color: #ff4444; font-weight: bold;">Perform wrist and scapular prep</span> before initializing.
+            </p>
+        </div>
+
+        <div id="radar-lock" class="prepare-overlay">
+            <button class="btn-prepare" onclick="prepareSystem()">PREPARE TRAINING MATRIX</button>
+        </div>
+
+        <canvas id="skillRadar"></canvas>
+    </div>
+
+    <div class="analysis-panel" id="stats-panel" style="min-height: 450px;">
+        <div id="skillBars">
+            <div style="text-align: center; color: #444; margin-top: 100px;">SYSTEM OFFLINE</div>
+        </div>
+        <div id="aiFeedback" style="margin-top: 20px; border-top: 1px solid #333; padding-top: 15px;">
+            <div style="text-align: center; color: #444;">AWAITING AUDIT</div>
+        </div>
+        <button id="shareBtn" onclick="shareReport()" style="display:none; width:100%; margin-top:15px; background:transparent; border:1px solid var(--potential); color:var(--potential); cursor:pointer; padding:12px; font-family: monospace; border-radius:8px; font-size:0.7em; text-transform:uppercase;">Download_Report.png</button>
+    </div>
 </div>
 <button onclick="analyze()" class="...">PREPARE TRAINING MATRIX</button>
             <div id="radar-lock" class="prepare-overlay">
