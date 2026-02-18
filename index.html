@@ -374,18 +374,19 @@ function toggleSimMode() {
 }
 
 function prepareSystem() {
-    // 1. Find and hide the red disclaimer box
+    // 1. Physically remove the red disclaimer box
     const disclaimer = document.getElementById("safetyDisclaimer");
     if (disclaimer) {
-        disclaimer.style.display = "none";
+        disclaimer.remove();
     }
 
     // 2. Existing logic to unlock the system
     isSystemReady = true;
     
+    // Physically remove the lock overlay to prevent layout glitches
     const lock = document.getElementById("radar-lock");
     if (lock) {
-        lock.style.display = "none";
+        lock.remove();
     }
 
     // 3. Run the analysis
