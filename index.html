@@ -374,24 +374,22 @@ function toggleSimMode() {
 }
 
 function prepareSystem() {
-    // 1. Physically remove the elements
+    // 1. Physically remove the red disclaimer box
     const disclaimer = document.getElementById("safetyDisclaimer");
-    if (disclaimer) disclaimer.remove();
-
-    const lock = document.getElementById("radar-lock");
-    if (lock) lock.remove();
-
-    // 2. FIX THE GLITCH: Reset the panel styling
-    // This stops the "Flex" behavior that causes white columns
-    const chartCard = document.getElementById("chart-card");
-    if (chartCard) {
-        chartCard.style.display = "block"; 
-        chartCard.style.minHeight = "auto";
-        chartCard.style.width = "100%";
+    if (disclaimer) {
+        disclaimer.remove();
     }
 
-    // 3. Unlock and Run
+    // 2. Existing logic to unlock the system
     isSystemReady = true;
+    
+    // Physically remove the lock overlay to prevent layout glitches
+    const lock = document.getElementById("radar-lock");
+    if (lock) {
+        lock.remove();
+    }
+
+    // 3. Run the analysis
     analyze();
 }
 function updateLabels() {
