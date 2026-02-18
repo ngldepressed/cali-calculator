@@ -596,12 +596,34 @@ function analyze() {
         const saIntegrity = (sa1RM / push1RM).toFixed(2);
         const relPower = push1RM.toFixed(2);
 
+       // --- CLEAN AUDIT LOGIC ---
+        // Safety Check: Do we have enough data to even run an audit?
+        const hasWeightedData = (parseFloat(document.getElementById("wdW").value) > 0 || parseFloat(document.getElementById("saW").value) > 0);
+        const hasRepData = (parseInt(document.getElementById("pullups").value) > 0);
+
+        // 1. Torque/Height Logic (This stays mostly the same)
         let tStatus = torqueFactor > 1.08 ? "PENALTY" : "OPTIMAL";
         let tDesc = torqueFactor > 1.08 ? `Height (${h.toFixed(0)}cm) creates lever disadvantage.` : `Optimal leverages for statics.`;
-        let bStatus = pullPushRatio < 0.85 ? "DEFICIT" : "BALANCED";
-        let bDesc = pullPushRatio < 0.85 ? `Pull chain is ${((1-pullPushRatio)*100).toFixed(0)}% behind Push.` : `Scapular stabilizers are matched.`;
-        let sStatus = saIntegrity < 0.62 ? "TENDON LAG" : "NOMINAL";
-        let sDesc = saIntegrity < 0.62 ? `Muscle power outpaces connective tissue.` : `Density sufficient for SA loads.`;
+
+        // 2. Pull/Push Balance Logic (Only alerts if data exists)
+        let bStatus = "STABLE";
+        let bDesc = "Enter rep data to analyze scapular balance.";
+        if (hasRepData) {
+            bStatus = pullPushRatio < 0.85 ? "DEFICIT" : "BALANCED";
+            bDesc = pullPushRatio < 0.85 ? `Pull chain is ${((1-pullPushRatio)*100).toFixed(0)}% behind Push.` : `Scapular stabilizers are matched.`;
+        }
+
+        // 3. Tendon/SA Integrity Logic (The Fix for the "Red Box" bug)
+        let sStatus = "NOMINAL";
+        let sDesc = "Density sufficient for current loads.";
+        if (!hasWeightedData) {
+            sStatus = "INACTIVE";
+            sDesc = "Enter weighted matrix data for tendon audit.";
+        } else if (saIntegrity < 0.62) {
+            sStatus = "TENDON LAG";
+            sDesc = "Muscle power outpaces connective tissue. High injury risk.";
+        }
+        // --- END CLEAN AUDIT ---
 
         let auditHtml = `<h3 style="font-size:0.7em; letter-spacing:3px; color:var(--primary); margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">BIOMECHANICAL_REPORT</h3>`;
         
