@@ -14,6 +14,7 @@
             --adv-inter: #00a2ff;
             --advanced: #bc62ff;
             --gold: #ffcc00;
+            --warning: #ffaa00;
         }
         
         body { 
@@ -24,6 +25,17 @@
             padding: 20px;
             background-image: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #0a0a0f 100%);
         }
+
+        /* Power Score Header */
+        .power-score-container {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed #333;
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+        #globalRank { font-size: 1.8rem; font-weight: 900; color: var(--accent); text-shadow: 0 0 10px rgba(0,242,255,0.3); }
 
         .calc-container { 
             display: flex; 
@@ -73,6 +85,14 @@
             background: #222; color: #fff; letter-spacing: 1px;
         }
 
+        .neural-warning { font-size: 0.55rem; color: var(--warning); display: none; margin-top: 5px; font-weight: bold; }
+
+        .analysis-box {
+            max-width: 800px; margin: 40px auto; padding: 25px;
+            background: #11111d; border-radius: 15px; border-left: 5px solid var(--primary);
+            text-align: left; display: none;
+        }
+
         .lvl-INTERMEDIATE { background: var(--inter); color: #000; }
         .lvl-ADVANCED-INTERMEDIATE { background: var(--adv-inter); }
         .lvl-ADVANCED { background: var(--advanced); }
@@ -80,6 +100,11 @@
     </style>
 </head>
 <body>
+
+    <div class="power-score-container">
+        <div style="font-size: 0.7rem; color: #888; letter-spacing: 2px;">GLOBAL STRENGTH MATRIX INDEX</div>
+        <div id="globalRank">RANK: PENDING</div>
+    </div>
 
     <div style="margin-bottom: 30px;">
         <select id="unitSystem" onchange="calcAll()" style="background: var(--card); color: var(--accent); border: 1px solid #333; padding: 10px 20px; border-radius: 50px; cursor: pointer; outline: none;">
@@ -100,6 +125,7 @@
             <div class="result-box">
                 <span class="val-label">Performance 1RM</span>
                 <span class="val" id="pRes">READY</span>
+                <div id="pWarn" class="neural-warning">! NEURAL FATIGUE: LOW CONFIDENCE</div>
                 <div class="breakdown-row">
                     <div>
                         <span class="b-label">Total System 1RM</span>
@@ -121,6 +147,7 @@
             <div class="result-box">
                 <span class="val-label">Performance 1RM</span>
                 <span class="val" id="dRes">READY</span>
+                <div id="dWarn" class="neural-warning">! NEURAL FATIGUE: LOW CONFIDENCE</div>
                 <div class="breakdown-row">
                     <div>
                         <span class="b-label">Total System 1RM</span>
@@ -157,6 +184,7 @@
             <div class="result-box">
                 <span class="val-label">Estimated 1RM</span>
                 <span class="val" id="cpRes">READY</span>
+                <div id="cpWarn" class="neural-warning">! NEURAL FATIGUE: LOW CONFIDENCE</div>
                 <div id="cpLvl" class="lvl-badge">LEVEL: PENDING</div>
             </div>
         </div>
@@ -172,12 +200,21 @@
             <div class="result-box">
                 <span class="val-label">Estimated 1RM</span>
                 <span class="val" id="spRes">READY</span>
+                <div id="spWarn" class="neural-warning">! NEURAL FATIGUE: LOW CONFIDENCE</div>
                 <div id="spLvl" class="lvl-badge">LEVEL: PENDING</div>
             </div>
         </div>
     </div>
 
+    <div id="analysisBox" class="analysis-box">
+        <h3 style="color:var(--accent); margin-top:0; font-size:0.8rem; letter-spacing:2px;">BIOTECH ANALYSIS</h3>
+        <div id="analysisContent" style="font-size: 0.8rem; line-height: 1.6; color:#bbb;"></div>
+    </div>
+
     <script>
+        const levelsOrder = ["BEGINNER", "INTERMEDIATE", "ADVANCED INTERMEDIATE", "ADVANCED", "ELITE"];
+        const movementWeights = { p: 0.30, d: 0.30, cp: 0.15, sp: 0.15, za: 0.10 };
+
         function getLevel(ratio, type) {
             const scales = {
                 pull: [0.15, 0.30, 0.45, 0.65], 
@@ -198,61 +235,98 @@
             return r === 1 ? w : w / (1.0278 - (0.0278 * r));
         }
 
+        function saveToStorage() {
+            const data = {};
+            document.querySelectorAll('input').forEach(i => data[i.id] = i.value);
+            localStorage.setItem('caliBiotechData', JSON.stringify(data));
+        }
+
+        function loadFromStorage() {
+            const data = JSON.parse(localStorage.getItem('caliBiotechData'));
+            if (data) Object.keys(data).forEach(id => {
+                if(document.getElementById(id)) document.getElementById(id).value = data[id];
+            });
+        }
+
         function calcAll() {
             const unit = document.getElementById('unitSystem').value;
+            let weightedScore = 0;
+            let totalWeightUsed = 0;
+            let strengthMap = {};
+
             document.querySelectorAll('.u-label').forEach(l => {
                 l.innerText = l.innerText.split('(')[0].trim() + " (" + unit + ")";
             });
 
-            // Pull/Dip Logic (With Dual Classification)
+            // Pull/Dip Logic (Dual-1RM)
             ['p', 'd'].forEach(id => {
                 let bw = parseFloat(document.getElementById(id + 'bw').value) || 0;
                 let add = parseFloat(document.getElementById(id + 'add').value) || 0;
                 let reps = parseInt(document.getElementById(id + 'rep').value) || 0;
                 
+                document.getElementById(id + 'Warn').style.display = reps > 10 ? 'block' : 'none';
+
                 if (reps > 0 && bw > 0) {
                     let total1RM = brzycki(bw + add, reps);
                     let performance1RM = total1RM - bw;
-                    
                     document.getElementById(id + 'Res').innerText = "+" + performance1RM.toFixed(1) + " " + unit;
                     document.getElementById(id + 'Total').innerText = total1RM.toFixed(1) + " " + unit;
                     
                     let level = getLevel(performance1RM / bw, id === 'p' ? 'pull' : 'dip');
+                    strengthMap[id] = performance1RM / bw;
+                    weightedScore += levelsOrder.indexOf(level) * movementWeights[id];
+                    totalWeightUsed += movementWeights[id];
+
                     let lBox = document.getElementById(id + 'Lvl');
                     lBox.innerText = "LEVEL: " + level;
                     lBox.className = "lvl-badge lvl-" + level.replace(/ /g, '-');
                 }
             });
 
-            // Chest/Shoulder Logic
-            [['cp', 'chest'], ['sp', 'shoulder']].forEach(([id, type]) => {
-                let bw = parseFloat(document.getElementById(id + 'bw').value) || 0;
-                let w = parseFloat(document.getElementById(id + 'w').value) || 0;
-                let r = parseInt(document.getElementById(id + 'r').value) || 0;
+            // Chest/Shoulder/Zanetti
+            [['cp', 'chest', 'cpr', 'cpw', 'cpbw'], ['sp', 'shoulder', 'spr', 'spw', 'spbw'], ['za', 'za', 'zar', 'zaw', 'zabw']].forEach(([id, type, rId, wId, bId]) => {
+                let bw = parseFloat(document.getElementById(bId).value) || 0;
+                let w = parseFloat(document.getElementById(wId).value) || 0;
+                let r = parseInt(document.getElementById(rId).value) || 0;
+                
+                if(document.getElementById(id + 'Warn')) 
+                    document.getElementById(id + 'Warn').style.display = r > 10 ? 'block' : 'none';
+
                 if (r > 0 && w > 0 && bw > 0) {
-                    let oneRM = brzycki(w, r);
+                    let oneRM = (id === 'za') ? w * (1 + (r * 0.02)) : brzycki(w, r);
                     document.getElementById(id + 'Res').innerText = oneRM.toFixed(1) + " " + unit;
                     let level = getLevel(oneRM / bw, type);
+                    strengthMap[id] = oneRM / bw;
+                    weightedScore += levelsOrder.indexOf(level) * movementWeights[id];
+                    totalWeightUsed += movementWeights[id];
+
                     let lBox = document.getElementById(id + 'Lvl');
                     lBox.innerText = "LEVEL: " + level;
                     lBox.className = "lvl-badge lvl-" + level.replace(/ /g, '-');
                 }
             });
 
-            // Zanetti Logic
-            let zbw = parseFloat(document.getElementById('zabw').value) || 75;
-            let zw = parseFloat(document.getElementById('zaw').value) || 0;
-            let zr = parseInt(document.getElementById('zar').value) || 0;
-            if(zw > 0 && zr > 0) {
-                let oneRM = zw * (1 + (zr * 0.02));
-                document.getElementById('zaRes').innerText = oneRM.toFixed(1) + " " + unit;
-                let level = getLevel(oneRM / zbw, 'za');
-                let lBox = document.getElementById('zaLvl');
-                lBox.innerText = "LEVEL: " + level;
-                lBox.className = "lvl-badge lvl-" + level.replace(/ /g, '-');
+            // Global Weighted Rank
+            if (totalWeightUsed > 0) {
+                let finalIndex = Math.round(weightedScore / totalWeightUsed);
+                document.getElementById('globalRank').innerText = "RANK: " + levelsOrder[finalIndex];
             }
+
+            // Biotech Analysis
+            const aBox = document.getElementById('analysisBox');
+            if (strengthMap.p && strengthMap.d) {
+                aBox.style.display = 'block';
+                let ratio = strengthMap.p / strengthMap.d;
+                document.getElementById('analysisContent').innerText = ratio < 0.7 ? "Push strength significantly exceeds pull. Balance is critical for shoulder health." : ratio > 1.1 ? "Pull strength dominant. Increase dip intensity." : "Matrix Balanced: Your antagonist ratios are optimal.";
+            }
+
+            saveToStorage();
         }
-        calcAll();
+
+        window.onload = () => {
+            loadFromStorage();
+            calcAll();
+        };
     </script>
 </body>
 </html>
