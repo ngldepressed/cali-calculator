@@ -523,33 +523,12 @@ function logSession() {
         return { display: `${plate}${u} x ${reps} (${total1RM}${u})` };
     };
 
-    const pull = getLiftData("wpW", "wpR");
-    const push = getLiftData("wdW", "wdR");
-    const sa = getLiftData("saW", "saR");
-
-    // --- FIXED SKILL LOGIC ---
-    let topSkillName = "None"; 
-    let maxVal = 0; 
-
-    if (radarChart && radarChart.data.datasets[0].data.length > 0) {
-        radarChart.data.datasets[0].data.forEach((score, index) => {
-            let numericScore = parseFloat(score);
-            // ONLY triggers if score is HIGHER than 0
-            if (numericScore > maxVal) {
-                maxVal = numericScore;
-                topSkillName = skills[index].name;
-            }
-        });
-    }
-
     const entry = {
         date: new Date().toLocaleDateString(),
         bw: hasBw ? rawBwInput + u : "---",
-        pull: pull.display,
-        push: push.display,
-        sa: sa.display,
-        // If maxVal is 0, it forces "None" - no exceptions.
-        skill: maxVal > 0 ? `${topSkillName} (${Math.round(maxVal)}%)` : "None (0%)"
+        pull: getLiftData("wpW", "wpR").display,
+        push: getLiftData("wdW", "wdR").display,
+        sa: getLiftData("saW", "saR").display
     };
 
     savedLogs.unshift(entry);
@@ -567,7 +546,6 @@ function renderLogs() {
             <td style="padding: 10px 5px; color: #00ffcc; font-family: monospace;">${l.pull}</td>
             <td style="padding: 10px 5px; color: #00ffcc; font-family: monospace;">${l.push}</td>
             <td style="padding: 10px 5px; color: #00ffcc; font-family: monospace;">${l.sa}</td>
-            <td style="padding: 10px 5px; color: var(--potential); font-weight: bold;">${l.skill}</td>
             <td style="padding: 10px 5px; text-align: center;">
                 <button onclick="deleteLog(${i})" style="background:none; border:none; color:#ff4444; cursor:pointer; font-weight:bold; font-size: 1.2em;">✕</button>
             </td>
