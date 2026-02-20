@@ -404,6 +404,9 @@ let radarChart;
 const ctx = document.getElementById('skillRadar').getContext('2d');
 
 function initChart() {
+    // Check if screen is small to adjust font size dynamically
+    const isMobile = window.innerWidth < 600;
+
     radarChart = new Chart(ctx, {
         type: 'radar',
         data: {
@@ -412,10 +415,10 @@ function initChart() {
                 { 
                     label: 'Reality', 
                     data: [], 
-                    backgroundColor: 'rgba(76, 111, 255, 0.3)', // Slightly more opaque
+                    backgroundColor: 'rgba(76, 111, 255, 0.3)', 
                     borderColor: '#4c6fff', 
-                    borderWidth: 4, // BOLDER LINE (Increased from 2)
-                    pointRadius: 5  // Larger points
+                    borderWidth: 4, 
+                    pointRadius: isMobile ? 3 : 5 // Smaller points on mobile
                 },
                 { 
                     label: 'Potential', 
@@ -430,20 +433,32 @@ function initChart() {
         options: { 
             responsive: true, 
             maintainAspectRatio: false,
+            // ADDED PADDING: This prevents labels from touching the edge
+            layout: {
+                padding: {
+                    left: 20,
+                    right: 20,
+                    top: 20,
+                    bottom: 20
+                }
+            },
             scales: { 
                 r: { 
                     beginAtZero: true, 
                     max: 100, 
                     ticks: { display: false }, 
-                    grid: { color: '#333', lineWidth: 1.5 }, // Bolder grid lines
+                    grid: { color: '#333', lineWidth: 1.5 },
                     angleLines: { color: '#333' },
                     pointLabels: {
                         color: '#fff',
+                        // RESPONSIVE FONT: Smaller on mobile, Bold on PC
                         font: {
-                            size: 14,       // LARGER TEXT
-                            weight: 'bold', // BOLD TEXT
+                            size: isMobile ? 10 : 14, 
+                            weight: 'bold',
                             family: 'monospace'
-                        }
+                        },
+                        // Helps wrap text or prevent clipping
+                        padding: 10 
                     }
                 } 
             }, 
