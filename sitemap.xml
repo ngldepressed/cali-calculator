@@ -5,6 +5,23 @@
     <lastmod>2026-02-18</lastmod>
     <priority>1.0</priority>
   </url>
+  <?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.calicalculator.com/</loc>
+    <priority>1.00</priority>
+  </url>
+
+  <url>
+    <loc>https://www.calicalculator.com/strength-matrix.html</loc>
+    <priority>0.90</priority>
+  </url>
+
+  <url>
+    <loc>https://www.calicalculator.com/skill-tree.html</loc>
+    <priority>0.90</priority>
+  </url>
+</urlset>
 
   <url><loc>https://www.calicalculator.com/blog/chest-guide.html</loc><priority>0.8</priority></url>
   <url><loc>https://www.calicalculator.com/blog/planche-guide.html</loc><priority>0.8</priority></url>
