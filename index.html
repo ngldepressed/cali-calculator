@@ -694,7 +694,55 @@ function analyze() {
                 let neededPlate = ((weakest.req * bw) - bw) / conv;
                 recText = `CRITICAL PATH: Improve ${weakest.name}. Target 1RM: +${neededPlate.toFixed(1)}${u}.`;
             }
+// --- NEW: AUTOMATED WEAK-LINK PROGRAMMING ---
+let protocolHtml = "";
+if (activeGoal !== "None") {
+    // Re-calculating weakest for the selected goal to ensure accuracy
+    const skillData = skills.find(s => s.name === activeGoal);
+    let vectors = [];
+    if (skillData.p > 0) vectors.push({ name: "Push (Dips)", cur: push1RM, req: skillData.p * torqueFactor });
+    if (skillData.l > 0) vectors.push({ name: "Pull (Pullups)", cur: pull1RM, req: skillData.l * torqueFactor });
+    if (skillData.s > 0) vectors.push({ name: "SA (Zanetti)", cur: sa1RM, req: skillData.s * torqueFactor });
 
+    let weakest = vectors.reduce((prev, curr) => (prev.cur/prev.req < curr.cur/curr.req) ? prev : curr);
+    let strengthGap = (weakest.cur / weakest.req); // Percentage of requirement met
+
+    let sets, reps, intensity, focus;
+
+    if (strengthGap < 0.75) {
+        focus = "STRUCTURAL_ADAPTATION";
+        sets = 4; reps = "8-10"; intensity = "70%";
+    } else if (strengthGap < 0.90) {
+        focus = "NEURAL_DRIVE";
+        sets = 5; reps = "3-5"; intensity = "85%";
+    } else {
+        focus = "PEAK_SPECIFICITY";
+        sets = 6; reps = "1-2"; intensity = "95%";
+    }
+
+    // Calculate the actual weight to put on the belt/barbell based on 1RM math
+    let targetLoad = (weakest.req * bw) - bw; 
+    let trainingLoad = ((weakest.cur * intensity.replace('%','')/100) * bw) - bw;
+
+    protocolHtml = `
+        <h3 style="font-size:0.7em; letter-spacing:3px; color:var(--potential); margin-top:25px; border-bottom:1px solid #333; padding-bottom:10px;">CORRECTION_PROTOCOL</h3>
+        <div class="insight-block" style="border-left:3px solid var(--potential); padding:12px; background: rgba(0,255,204,0.03);">
+            <div style="font-size:0.65em; color:var(--potential); font-weight:bold;">PHASE: ${focus}</div>
+            <div style="font-size:1.1em; color:#fff; font-family:monospace; margin:10px 0;">
+                ${weakest.name}: ${sets}x${reps} @ ${trainingLoad.toFixed(1)}${u}
+            </div>
+            <div style="font-size:0.6em; color:#888; line-height:1.4;">
+                * Rest 3-5 mins. Focus on perfect ${form < 1 ? 'FORM_CORRECTION' : 'locked-out'} execution. 
+                Your target 1RM for ${activeGoal} is +${targetLoad.toFixed(1)}${u}.
+            </div>
+        </div>`;
+}
+
+// Update your final injection to include this:
+const protocolDiv = document.getElementById("protocolSection") || document.createElement("div");
+protocolDiv.id = "protocolSection";
+protocolDiv.innerHTML = protocolHtml;
+document.getElementById("aiFeedback").appendChild(protocolDiv);
             barHtml += `<div class="skill-bar-container" style="opacity: ${activeGoal !== "None" && !isTarget ? '0.2' : '1'}; margin-bottom:15px;">
                     <div class="skill-label" style="display:flex; justify-content:space-between; font-family:monospace; font-size:0.85em;">
                         <span>${s.name.toUpperCase()}</span><span>${cur.toFixed(0)}%</span>
