@@ -857,61 +857,80 @@ function shareReport() {
 
 document.getElementById("shareBtn").style.display = "block";
 
+// Function to wipe the entire history
+function clearAllNotes() {
+    if (confirm("PROCEED? This will permanently erase all archived feedback data.")) {
+        localStorage.removeItem('cali_biotech_history');
+        displayNotes();
+    }
+}
+
+// Updated saveNotes to handle your specific naming
 function saveNotes() {
     const noteText = document.getElementById("sessionNotes").value;
-    if (!noteText.trim()) return; // Don't save empty notes
+    if (!noteText.trim()) return; 
 
-    const timestamp = new Date().toLocaleString(); // Gets current date and time
+    const timestamp = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
     
-    // 1. Get existing logs or start a new list
     let history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
-
-    // 2. Add the new note to the top of the list
     history.unshift({ date: timestamp, text: noteText });
-
-    // 3. Save back to localStorage
     localStorage.setItem('cali_biotech_history', JSON.stringify(history));
 
-    // 4. Clear the input and refresh the list
     document.getElementById("sessionNotes").value = "";
     displayNotes();
 
-    // Visual feedback
-    const btn = event.target;
-    btn.innerText = "LOG_ARCHIVED";
-    setTimeout(() => btn.innerText = "COMMIT_TO_CHRONOS", 2000);
+    // Feedback for the button
+    const btn = event.currentTarget;
+    const originalText = "COMMIT_DATA";
+    btn.innerText = "DATA_COMMITTED";
+    btn.style.background = "#00ffcc";
+    setTimeout(() => {
+        btn.innerText = originalText;
+        btn.style.background = "var(--primary)";
+    }, 2000);
 }
 
+// This function builds the visual list on the screen
 function displayNotes() {
     const history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
     const container = document.getElementById("notesHistory");
+    if (!container) return;
     
     if (history.length === 0) {
-        container.innerHTML = `<div style="font-size: 0.6em; color: #666; letter-spacing: 2px;">LOG_HISTORY_EMPTY</div>`;
+        container.innerHTML = `<div style="font-size: 0.6em; color: #666; letter-spacing: 2px;">NO_FEEDBACK_ENTRIES</div>`;
         return;
     }
 
-    container.innerHTML = history.map(item => `
-        <div style="margin-bottom: 12px; padding: 8px; background: rgba(255,255,255,0.03); border-left: 2px solid var(--primary); font-family: monospace;">
+    container.innerHTML = history.map((item, index) => `
+        <div style="margin-bottom: 12px; padding: 10px; background: rgba(255,255,255,0.03); border-left: 2px solid var(--primary); font-family: monospace; position: relative;">
             <div style="font-size: 0.6em; color: var(--primary); margin-bottom: 4px;">[${item.date}]</div>
-            <div style="font-size: 0.8em; color: #ddd;">${item.text}</div>
+            <div style="font-size: 0.8em; color: #ddd; padding-right: 20px;">${item.text}</div>
+            <span onclick="deleteSingleNote(${index})" style="position: absolute; top: 5px; right: 8px; color: #444; cursor: pointer; font-size: 0.8em;">&times;</span>
         </div>
     `).join('');
 }
 
-// Add this line to your loadSavedData function
-// displayNotes();
+// New: Allows deleting just one entry
+function deleteSingleNote(index) {
+    let history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
+    history.splice(index, 1);
+    localStorage.setItem('cali_biotech_history', JSON.stringify(history));
+    displayNotes();
+}
 
 </script>
 <div class="card" style="margin-top: 20px;">
-    <h3>Session Intelligence / Archive</h3>
-    <textarea id="sessionNotes" placeholder="Log fatigue, pain, or set details..." 
+    <h3>Biotic Feedback / Archive</h3>
+    <textarea id="sessionNotes" placeholder="Log physiological feedback, RPE, or joint status..." 
               style="width: 100%; height: 80px; background: #111; color: #fff; border: 1px solid #333; padding: 10px; font-family: monospace; border-radius: 5px;"></textarea>
     
-    <button onclick="saveNotes()" style="margin-top: 10px; width: 100%; background: var(--primary); color: #000; border: none; padding: 8px; font-family: monospace; font-weight: bold; cursor: pointer;">COMMIT_TO_CHRONOS</button>
+    <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <button onclick="saveNotes()" style="flex: 3; background: var(--primary); color: #000; border: none; padding: 10px; font-family: monospace; font-weight: bold; cursor: pointer; border-radius: 4px;">COMMIT_DATA</button>
+        <button onclick="clearAllNotes()" style="flex: 1; background: rgba(255, 68, 68, 0.1); color: #ff4444; border: 1px solid #ff4444; padding: 10px; font-family: monospace; font-size: 0.7em; cursor: pointer; border-radius: 4px;">DELETE_ALL</button>
+    </div>
 
-    <div id="notesHistory" style="margin-top: 20px; max-height: 200px; overflow-y: auto; border-top: 1px solid #333; padding-top: 10px;">
-        <div style="font-size: 0.6em; color: #666; letter-spacing: 2px;">LOG_HISTORY_EMPTY</div>
+    <div id="notesHistory" style="margin-top: 20px; max-height: 250px; overflow-y: auto; border-top: 1px solid #333; padding-top: 10px;">
+        <div style="font-size: 0.6em; color: #666; letter-spacing: 2px;">NO_FEEDBACK_ENTRIES</div>
     </div>
 </div>
 </body>
