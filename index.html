@@ -91,6 +91,18 @@
             .dashboard-row { grid-template-columns: 1fr; }
             .container { border-radius: 0; width: 100% !important; }
         }
+        @media (max-width: 600px) {
+    #chart-card {
+        padding: 5px !important;
+        margin-left: -10px;
+        margin-right: -10px;
+        width: calc(100% + 20px); /* Forces chart to stretch to phone edges */
+    }
+    canvas#skillRadar {
+        width: 100% !important;
+        height: 400px !important; /* Fixed height for mobile stability */
+    }
+}
     </style>
 </head>
 
@@ -417,7 +429,7 @@ function initChart() {
                     backgroundColor: 'rgba(76, 111, 255, 0.3)', 
                     borderColor: '#4c6fff', 
                     borderWidth: 4, 
-                    pointRadius: isMobile ? 4 : 6 
+                    pointRadius: isMobile ? 3 : 5 
                 },
                 { 
                     label: 'Potential', 
@@ -432,42 +444,36 @@ function initChart() {
         options: { 
             responsive: true, 
             maintainAspectRatio: false,
-            // We reduce padding to 5 to push the chart as close to the edge as possible
-            layout: {
-                padding: {
-                    left: 5,
-                    right: 5,
-                    top: 5,
-                    bottom: 5
-                }
-            },
+            layout: { padding: isMobile ? 10 : 30 }, // More padding on PC, tight on mobile
             scales: { 
                 r: { 
                     beginAtZero: true, 
                     max: 100, 
                     ticks: { display: false }, 
-                    grid: { color: '#333', lineWidth: 1.5 },
+                    grid: { color: '#333', lineWidth: 1 },
                     angleLines: { color: '#444' },
                     pointLabels: {
                         color: '#fff',
-                        // This forces the labels to stay visible even when the chart is huge
-                        overflow: 'none', 
+                        centerPointLabels: true,
                         font: {
-                            size: isMobile ? 11 : 15, // Increased font size
+                            size: isMobile ? 10 : 15, 
                             weight: 'bold',
                             family: 'monospace'
                         },
-                        padding: isMobile ? 8 : 15 
+                        // THIS BIT FIXES THE MOBILE WRAPPING WITHOUT CHANGING YOUR DATA
+                        callback: function(label) {
+                            if (isMobile && /\s/.test(label)) {
+                                return label.split(/\s/); // Splits "Full Planche" into ["Full", "Planche"]
+                            }
+                            return label;
+                        }
                     }
                 } 
             }, 
-            plugins: { 
-                legend: { display: false }
-            }
+            plugins: { legend: { display: false } } 
         }
     });
 }
-
 function saveToLocal() {
     if (isSimMode) return; 
     const inputs = document.querySelectorAll('input, select');
