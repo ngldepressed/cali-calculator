@@ -673,10 +673,6 @@ function analyze() {
 
         const activeGoal = document.getElementById("goalSelect").value;
         let barHtml = ""; const curScores = []; const potScores = [];
-        
-        // Safety trackers for logging
-        let maxFoundScore = 0;
-        let strongestSkillLabel = "N/A";
 
         skills.forEach(s => {
             let vectors = [];
@@ -687,20 +683,22 @@ function analyze() {
             const sig = (x) => 100 / (1 + Math.exp(-0.15 * (x - 52)));
             let minVal = Math.min(...vectors.map(v => v.val));
             let cur = sig(minVal) * cnsVal * form;
+
+            // --- THE FIX ---
+            // Explicitly check the specific input for Muscle Ups (or any skill)
+            // If the user input for that movement is 0, the score MUST be 0.
+            const rawPull = parseFloat(document.getElementById("pullups").value) || 0;
+            const rawPush = parseFloat(document.getElementById("pushups").value) || 0;
+            const rawMu = parseFloat(document.getElementById("mu").value) || 0;
             
-            // Check if user has entered real data for this skill
-            const hasData = (parseFloat(document.getElementById("pullups").value) > 0 || parseFloat(document.getElementById("wpW").value) > 0 || parseFloat(document.getElementById("wdW").value) > 0);
-            if(!hasData && !isSimMode) cur = 0;
+            if (s.name === "Muscle Ups" && rawMu === 0) cur = 0;
+            if (s.name === "Pullups" && rawPull === 0) cur = 0;
+            if (s.name === "Dips" && rawPush === 0) cur = 0;
+            // ----------------
 
             const isTarget = s.name === activeGoal;
             curScores.push(cur.toFixed(1));
             potScores.push(sig(Math.max(...vectors.map(v => v.val))).toFixed(1));
-
-            // Update strongest tracker
-            if (cur > maxFoundScore) {
-                maxFoundScore = cur;
-                strongestSkillLabel = s.name;
-            }
 
             let recText = "";
             if (isTarget) {
@@ -720,7 +718,7 @@ function analyze() {
                 </div>`;
         });
 
-        // Protocol Logic
+        // --- AUTOMATED WEAK-LINK PROGRAMMING (Preserved) ---
         let protocolHtml = "";
         if (activeGoal !== "None") {
             const skillData = skills.find(s => s.name === activeGoal);
@@ -736,12 +734,11 @@ function analyze() {
             else { focus = "PEAK_SPECIFICITY"; sets = 6; reps = "1-2"; intensity = "95%"; }
             let targetLoad = (weakest.req * bw) - bw;
             let trainingLoad = ((weakest.cur * intensity.replace('%','')/100) * bw) - bw;
-
             protocolHtml = `<h3 style="font-size:0.7em; letter-spacing:3px; color:var(--potential); margin-top:25px; border-bottom:1px solid #333; padding-bottom:10px;">CORRECTION_PROTOCOL</h3>
                 <div class="insight-block" style="border-left:3px solid var(--potential); padding:12px; background: rgba(0,255,204,0.03);">
                     <div style="font-size:0.65em; color:var(--potential); font-weight:bold;">PHASE: ${focus}</div>
                     <div style="font-size:1.1em; color:#fff; font-family:monospace; margin:10px 0;">${weakest.name}: ${sets}x${reps} @ ${trainingLoad.toFixed(1)}${u}</div>
-                    <div style="font-size:0.6em; color:#888; line-height:1.4;">* Rest 3-5 mins. Focus on perfect ${form < 1 ? 'FORM_CORRECTION' : 'locked-out'} execution. Target 1RM: +${targetLoad.toFixed(1)}${u}.</div>
+                    <div style="font-size:0.6em; color:#888; line-height:1.4;">* Rest 3-5 mins. Target 1RM: +${targetLoad.toFixed(1)}${u}.</div>
                 </div>`;
         }
 
@@ -759,9 +756,9 @@ function analyze() {
         let tStatus = torqueFactor > 1.08 ? "PENALTY" : "OPTIMAL";
         let tDesc = torqueFactor > 1.08 ? `Height (${h.toFixed(0)}cm) creates lever disadvantage.` : `Optimal leverages for statics.`;
         let bStatus = hasRepData ? (pullPushRatio < 0.85 ? "DEFICIT" : "BALANCED") : "STABLE";
-        let bDesc = hasRepData ? (pullPushRatio < 0.85 ? `Pull chain is ${((1-pullPushRatio)*100).toFixed(0)}% behind Push.` : `Scapular stabilizers are matched.`) : "Enter rep data to analyze scapular balance.";
+        let bDesc = hasRepData ? (pullPushRatio < 0.85 ? `Pull chain is ${((1-pullPushRatio)*100).toFixed(0)}% behind Push.` : `Scapular stabilizers are matched.`) : "Enter rep data.";
         let sStatus = !hasWeightedData ? "INACTIVE" : (saIntegrity < 0.62 ? "TENDON LAG" : "NOMINAL");
-        let sDesc = !hasWeightedData ? "Enter weighted matrix data for tendon audit." : (saIntegrity < 0.62 ? "Muscle power outpaces connective tissue. High injury risk." : "Density sufficient for current loads.");
+        let sDesc = !hasWeightedData ? "Enter data." : (saIntegrity < 0.62 ? "High injury risk." : "Density sufficient.");
 
         let auditHtml = `<h3 style="font-size:0.7em; letter-spacing:3px; color:var(--primary); margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">BIOMECHANICAL_REPORT</h3>`;
         const createInsight = (title, status, val, desc, color) => `<div class="insight-block" style="margin-bottom:15px; border-left:3px solid ${color}; padding-left:12px; background: rgba(255,255,255,0.02); padding-top:8px; padding-bottom:8px;">
@@ -776,7 +773,7 @@ function analyze() {
         auditHtml += createInsight("TORQUE_LOAD", tStatus, torqueFactor.toFixed(2) + "x", tDesc, torqueFactor > 1.08 ? "#ff9900" : "#888");
         auditHtml += createInsight("POSTERIOR_CHAIN", bStatus, pullPushRatio, bDesc, pullPushRatio < 0.85 ? "#ff4444" : "#00ffcc");
         auditHtml += createInsight("CONNECTIVE_TISSUE", sStatus, saIntegrity, sDesc, saIntegrity < 0.62 ? "#ff4444" : "#00ffcc");
-        auditHtml += createInsight("RELATIVE_POWER", "FORCE", relPower + "x BW", "Force generation relative to mass.", "var(--primary)");
+        auditHtml += createInsight("RELATIVE_POWER", "FORCE", relPower + "x BW", "Force gen.", "var(--primary)");
 
         const shoulders = document.querySelectorAll('#joint-shoulder-l, #joint-shoulder-r');
         const elbows = document.querySelectorAll('#joint-elbow-l, #joint-elbow-r');
@@ -793,11 +790,10 @@ function analyze() {
         if (vFill) { vFill.style.width = Math.min((totalTax / 20) * 100, 100) + "%"; vFill.style.background = totalTax > 15 ? "var(--danger)" : "var(--primary)"; }
         if (document.getElementById("volume-tax")) document.getElementById("volume-tax").innerText = totalTax.toFixed(1);
 
-        document.getElementById("aiFeedback").innerHTML = (typeof protocolHtml !== 'undefined' ? protocolHtml : "") + auditHtml;
+        document.getElementById("aiFeedback").innerHTML = protocolHtml + auditHtml;
         document.getElementById("barContainer").innerHTML = barHtml;
         radarChart.data.datasets[0].data = curScores;
         radarChart.data.datasets[1].data = potScores;
-        if (window.innerWidth < 600) { radarChart.options.plugins.legend.display = false; radarChart.options.scales.r.pointLabels.font.size = 10; }
         radarChart.update('none');
 
     } catch (err) { console.error("Injection Error:", err); }
