@@ -109,7 +109,7 @@
             display: flex;
             justify-content: space-between; 
             align-items: center;
-            text-decoration: none; /* In case you add links later */
+            text-decoration: none; 
         }
 
         .node:hover { 
@@ -119,6 +119,12 @@
             box-shadow: -4px 0 10px rgba(0, 255, 136, 0.1);
         }
 
+        /* Mastery State */
+        .node.mastered {
+            border-color: var(--primary);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
         .node h3 { font-size: 0.7rem; margin: 0; font-weight: 400; color: #ccc; }
         .node span { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; color: var(--primary); opacity: 0.4; }
         
@@ -126,6 +132,38 @@
         .elite:hover { border-color: var(--elite); box-shadow: 4px 0 10px rgba(255, 62, 62, 0.1); }
         .elite h3 { color: #ff8080; }
         .elite span { color: var(--elite); opacity: 0.6; }
+
+        /* Protocol Box Styling */
+        .protocol-box {
+            grid-column: 1 / -1;
+            margin-top: 40px;
+            background: rgba(22, 27, 34, 0.7);
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--elite);
+        }
+
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .protocol-item h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .protocol-item p, .protocol-item li {
+            font-size: 0.75rem;
+            line-height: 1.6;
+            color: #bbb;
+        }
 
         .footer-nav { margin: 60px 0; text-align: center; }
         .back-btn { 
@@ -140,7 +178,6 @@
         }
         .back-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(0, 255, 136, 0.05); }
 
-        /* Responsive Grid for Tablets/Phones */
         @media (max-width: 1100px) {
             .tree-grid { grid-template-columns: 1fr; }
             .node-subgrid { grid-template-columns: 1fr; }
@@ -248,6 +285,26 @@
             <div class="node elite"><h3>OA HS Push-up</h3><span>ZENITH</span></div>
         </div>
 
+        <div class="branch">
+            <div class="branch-header">Lower Body (Neural Drive)</div>
+            <div class="tier-label">Foundations</div>
+            <div class="node"><h3>Assisted Pistol</h3><span>BASE</span></div>
+            <div class="node"><h3>Deep Sissy Squat</h3><span>LVL 1</span></div>
+            <div class="node"><h3>Cossack Squat</h3><span>LVL 2</span></div>
+            <div class="tier-label">Intermediate</div>
+            <div class="node"><h3>Pistol Squat</h3><span>LVL 3</span></div>
+            <div class="node"><h3>Shrimp Squat</h3><span>LVL 3</span></div>
+            <div class="node"><h3>Harop Curl (Partial)</h3><span>LVL 4</span></div>
+            <div class="tier-label">Advanced</div>
+            <div class="node"><h3>Nordic Curls</h3><span>LVL 5</span></div>
+            <div class="node"><h3>Dragon Pistol</h3><span>LVL 6</span></div>
+            <div class="node"><h3>Weighted Pistol (0.5x BW)</h3><span>LVL 6</span></div>
+            <div class="tier-label">Elite Mastery</div>
+            <div class="node elite"><h3>Full Nordic (Slow)</h3><span>RANK A</span></div>
+            <div class="node elite"><h3>Explosive Nordic</h3><span>RANK S</span></div>
+            <div class="node elite"><h3>Weighted Pistol (1x BW)</h3><span>RANK SS</span></div>
+        </div>
+
         <div class="statics-container">
             <div class="branch">
                 <div class="branch-header">Statics</div>
@@ -285,8 +342,57 @@
                 </div>
             </div>
         </div>
+
+        <div class="protocol-box">
+            <div class="branch-header" style="border:none;">System Architecture & Protocols</div>
+            <div class="protocol-grid">
+                <div class="protocol-item">
+                    <h4>Progression Logic</h4>
+                    <p>Adaptation follows a 3-tier pipeline: Neural (Brain/Nerves), Structural (Muscle), and Connective (Tendons). Muscles adapt in weeks; tendons adapt in months.</p>
+                </div>
+                <div class="protocol-item">
+                    <h4>Time Expectations</h4>
+                    <ul>
+                        <li><strong>Basics:</strong> 1-3 Months</li>
+                        <li><strong>Intermediate:</strong> 6-12 Months</li>
+                        <li><strong>Elite:</strong> 3-10 Years of specific focus.</li>
+                    </ul>
+                </div>
+                <div class="protocol-item">
+                    <h4>Mobility Keys</h4>
+                    <p><strong>Planche:</strong> 15°+ Wrist Extension.<br><strong>Handstand:</strong> 180° Shoulder Flexion.<br><strong>Victorian:</strong> Elite Scapular Depression.</p>
+                </div>
+                <div class="protocol-item" style="border-left: 2px solid var(--elite); padding-left: 15px;">
+                    <h4>Injury Fail-Safe</h4>
+                    <p>Avoid "System Shutdown." Never increase intensity by >10% monthly. Sharp joint pain requires immediate 40% load reduction for 14 days.</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="footer-nav"><a href="index.html" class="back-btn">← BACK_HOME</a></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const nodes = document.querySelectorAll('.node');
+            const masteredSkills = JSON.parse(localStorage.getItem('caliMasteredSkills')) || [];
+            
+            nodes.forEach(node => {
+                const skillName = node.querySelector('h3').innerText;
+                if (masteredSkills.includes(skillName)) node.classList.add('mastered');
+
+                node.addEventListener('click', () => {
+                    node.classList.toggle('mastered');
+                    updateStorage();
+                });
+            });
+
+            function updateStorage() {
+                const mastered = Array.from(document.querySelectorAll('.node.mastered'))
+                                     .map(n => n.querySelector('h3').innerText);
+                localStorage.setItem('caliMasteredSkills', JSON.stringify(mastered));
+            }
+        });
+    </script>
 </body>
 </html>
