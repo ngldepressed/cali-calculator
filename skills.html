@@ -7,63 +7,143 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --primary: #4c6fff; --bg: #0a0a0c; --card: #14141a; 
-            --elite: #ff3e3e; --text: #e0e0e0; --border: #22222a;
+            /* Matches the Specificity is King neon theme */
+            --primary: #00ff88; 
+            --bg: #0d1117; 
+            --card: #161b22; 
+            --elite: #ff3e3e; 
+            --text: #e6edf3; 
+            --border: #30363d;
         }
         
-        body { background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; padding: 20px; }
+        body { 
+            background-color: var(--bg); 
+            color: var(--text); 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            /* Subtle grid background */
+            background-image: radial-gradient(var(--border) 0.5px, transparent 0.5px);
+            background-size: 30px 30px;
+        }
+
+        /* Biotech Scanning Line */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 255, 136, 0.08);
+            z-index: 9999;
+            animation: scan 10s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
         
         .header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
         .header h1 { 
-            font-family: 'JetBrains Mono', monospace; letter-spacing: 10px; 
-            font-size: 1.6rem; color: var(--primary); text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace; 
+            letter-spacing: 10px; 
+            font-size: 1.6rem; 
+            color: var(--primary); 
+            text-transform: uppercase;
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
         }
 
         .tree-grid { 
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; 
-            max-width: 1600px; margin: 0 auto;
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px; 
+            max-width: 1600px; 
+            margin: 0 auto;
         }
 
         .statics-container { grid-column: 1 / -1; margin-top: 20px; }
 
         .branch { 
-            background: rgba(255,255,255,0.01); padding: 20px; 
-            border-radius: 8px; border: 1px solid var(--border);
+            background: rgba(22, 27, 34, 0.7); 
+            padding: 20px; 
+            border-radius: 8px; 
+            border: 1px solid var(--border);
+            backdrop-filter: blur(5px);
         }
 
         .branch-header { 
-            font-family: 'JetBrains Mono', monospace; color: var(--primary); 
-            font-size: 0.85rem; letter-spacing: 3px; margin-bottom: 25px; 
-            text-align: center; border-bottom: 1px solid var(--border);
-            padding-bottom: 12px; text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace; 
+            color: var(--primary); 
+            font-size: 0.85rem; 
+            letter-spacing: 3px; 
+            margin-bottom: 25px; 
+            text-align: center; 
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px; 
+            text-transform: uppercase;
         }
 
         .tier-label {
-            font-size: 0.6rem; color: #555; text-transform: uppercase;
-            margin: 20px 0 10px 5px; letter-spacing: 2px; font-weight: bold;
-            border-left: 2px solid #333; padding-left: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem; 
+            color: var(--primary); 
+            text-transform: uppercase;
+            margin: 20px 0 10px 5px; 
+            letter-spacing: 2px; 
+            font-weight: bold;
+            border-left: 2px solid var(--primary); 
+            padding-left: 10px;
+            opacity: 0.8;
         }
 
         .node-subgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
 
         .node {
-            background: var(--card); border: 1px solid var(--border);
-            padding: 8px 12px; margin-bottom: 6px; transition: 0.2s;
-            cursor: pointer; border-radius: 3px; display: flex;
-            justify-content: space-between; align-items: center;
+            background: var(--card); 
+            border: 1px solid var(--border);
+            padding: 8px 12px; 
+            margin-bottom: 6px; 
+            transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer; 
+            border-radius: 3px; 
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            text-decoration: none; /* In case you add links later */
         }
 
-        .node:hover { border-color: var(--primary); background: #1a1a25; transform: translateY(-2px); }
+        .node:hover { 
+            border-color: var(--primary); 
+            background: #1a1a25; 
+            transform: translateX(4px); 
+            box-shadow: -4px 0 10px rgba(0, 255, 136, 0.1);
+        }
+
         .node h3 { font-size: 0.7rem; margin: 0; font-weight: 400; color: #ccc; }
-        .node span { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; color: #444; }
-        .elite { border-left: 3px solid var(--elite); }
+        .node span { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; color: var(--primary); opacity: 0.4; }
+        
+        .elite { border-right: 3px solid var(--elite); }
+        .elite:hover { border-color: var(--elite); box-shadow: 4px 0 10px rgba(255, 62, 62, 0.1); }
         .elite h3 { color: #ff8080; }
+        .elite span { color: var(--elite); opacity: 0.6; }
 
         .footer-nav { margin: 60px 0; text-align: center; }
         .back-btn { 
-            font-family: 'JetBrains Mono', monospace; text-decoration: none; 
-            color: #666; border: 1px solid var(--border); padding: 12px 40px; 
-            font-size: 0.75rem; border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace; 
+            text-decoration: none; 
+            color: var(--text); 
+            border: 1px solid var(--border); 
+            padding: 12px 40px; 
+            font-size: 0.75rem; 
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+        .back-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(0, 255, 136, 0.05); }
+
+        /* Responsive Grid for Tablets/Phones */
+        @media (max-width: 1100px) {
+            .tree-grid { grid-template-columns: 1fr; }
+            .node-subgrid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -207,6 +287,6 @@
         </div>
     </div>
 
-    <div class="footer-nav"><a href="index.html" class="back-btn">← BACK HOME</a></div>
+    <div class="footer-nav"><a href="index.html" class="back-btn">← BACK_HOME</a></div>
 </body>
 </html>
