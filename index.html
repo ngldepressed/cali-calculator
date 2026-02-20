@@ -820,22 +820,36 @@ document.getElementById("aiFeedback").appendChild(protocolDiv);
         }
         if (document.getElementById("volume-tax")) document.getElementById("volume-tax").innerText = totalTax.toFixed(1);
 
-        // FINAL INJECTION
-        // Combined protocolHtml + auditHtml ensures both sections render in the side panel
-        document.getElementById("aiFeedback").innerHTML = protocolHtml + auditHtml;
+       // FINAL INJECTION
+
+        document.getElementById("aiFeedback").innerHTML = auditHtml;
+
         document.getElementById("barContainer").innerHTML = barHtml;
-        
+
+       
+
         radarChart.data.datasets[0].data = curScores;
+
         radarChart.data.datasets[1].data = potScores;
-        
+
+       
+
         // Mobile Fix (Crucial for display but doesn't touch math)
+
         if (window.innerWidth < 600) {
+
             radarChart.options.plugins.legend.display = false;
+
             radarChart.options.scales.r.pointLabels.font.size = 10;
+
         }
-        radarChart.update('none'); 
+
+        radarChart.update('none');
+
+
 
     } catch (err) { console.error(err); }
+
 }
 // Function 1: The actual image saver
 
