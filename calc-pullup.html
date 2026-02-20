@@ -57,12 +57,15 @@
 
         .result-box { 
             margin-top: 25px; padding: 20px; background: rgba(0, 0, 0, 0.4); 
-            border-radius: 12px; border: 1px solid #2a2a3a; min-height: 100px;
+            border-radius: 12px; border: 1px solid #2a2a3a; min-height: 120px;
         }
 
-        .val { font-size: 1.4rem; color: #fff; font-weight: 800; display: block; margin-top: 5px; }
+        .val-label { font-size: 0.65rem; color: var(--accent); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+        .val { font-size: 1.6rem; color: #fff; font-weight: 800; display: block; margin-top: 5px; }
         
-        .sub-val { font-size: 0.7rem; color: var(--accent); font-weight: bold; text-transform: uppercase; }
+        .breakdown-row { display: flex; justify-content: center; border-top: 1px solid #2a2a3a; padding-top: 10px; margin-top: 10px; }
+        .b-label { font-size: 0.55rem; color: #777; display: block; text-transform: uppercase; }
+        .b-val { font-size: 0.85rem; color: #ccc; font-weight: bold; }
 
         .lvl-badge { 
             display: inline-block; margin-top: 15px; padding: 6px 12px; 
@@ -70,7 +73,6 @@
             background: #222; color: #fff; letter-spacing: 1px;
         }
 
-        /* Dynamic Colors */
         .lvl-INTERMEDIATE { background: var(--inter); color: #000; }
         .lvl-ADVANCED-INTERMEDIATE { background: var(--adv-inter); }
         .lvl-ADVANCED { background: var(--advanced); }
@@ -96,8 +98,14 @@
             <label>Reps</label>
             <input type="number" id="prep" placeholder="0" oninput="calcAll()">
             <div class="result-box">
-                <span id="pTotal" class="sub-val">Waiting for data</span>
-                <span class="val" id="pRes">0.0</span>
+                <span class="val-label">Performance 1RM</span>
+                <span class="val" id="pRes">READY</span>
+                <div class="breakdown-row">
+                    <div>
+                        <span class="b-label">Total System 1RM</span>
+                        <span class="b-val" id="pTotal">READY</span>
+                    </div>
+                </div>
                 <div id="pLvl" class="lvl-badge">LEVEL: PENDING</div>
             </div>
         </div>
@@ -111,8 +119,14 @@
             <label>Reps</label>
             <input type="number" id="drep" placeholder="0" oninput="calcAll()">
             <div class="result-box">
-                <span id="dTotal" class="sub-val">Waiting for data</span>
-                <span class="val" id="dRes">0.0</span>
+                <span class="val-label">Performance 1RM</span>
+                <span class="val" id="dRes">READY</span>
+                <div class="breakdown-row">
+                    <div>
+                        <span class="b-label">Total System 1RM</span>
+                        <span class="b-val" id="dTotal">READY</span>
+                    </div>
+                </div>
                 <div id="dLvl" class="lvl-badge">LEVEL: PENDING</div>
             </div>
         </div>
@@ -126,8 +140,8 @@
             <label>Reps</label>
             <input type="number" id="zar" placeholder="0" oninput="calcAll()">
             <div class="result-box">
-                <span id="zaTotal" class="sub-val">ESTIMATED 1RM</span>
-                <span class="val" id="zaRes">0.0</span>
+                <span class="val-label">Estimated 1RM</span>
+                <span class="val" id="zaRes">READY</span>
                 <div id="zaLvl" class="lvl-badge">LEVEL: PENDING</div>
             </div>
         </div>
@@ -141,8 +155,8 @@
             <label>Reps</label>
             <input type="number" id="cpr" placeholder="0" oninput="calcAll()">
             <div class="result-box">
-                <span id="cpTotal" class="sub-val">ESTIMATED 1RM</span>
-                <span class="val" id="cpRes">0.0</span>
+                <span class="val-label">Estimated 1RM</span>
+                <span class="val" id="cpRes">READY</span>
                 <div id="cpLvl" class="lvl-badge">LEVEL: PENDING</div>
             </div>
         </div>
@@ -156,8 +170,8 @@
             <label>Reps</label>
             <input type="number" id="spr" placeholder="0" oninput="calcAll()">
             <div class="result-box">
-                <span id="spTotal" class="sub-val">ESTIMATED 1RM</span>
-                <span class="val" id="spRes">0.0</span>
+                <span class="val-label">Estimated 1RM</span>
+                <span class="val" id="spRes">READY</span>
                 <div id="spLvl" class="lvl-badge">LEVEL: PENDING</div>
             </div>
         </div>
@@ -190,27 +204,27 @@
                 l.innerText = l.innerText.split('(')[0].trim() + " (" + unit + ")";
             });
 
-            // Logic for Pull/Dip
+            // Pull/Dip Logic (With Dual Classification)
             ['p', 'd'].forEach(id => {
                 let bw = parseFloat(document.getElementById(id + 'bw').value) || 0;
                 let add = parseFloat(document.getElementById(id + 'add').value) || 0;
                 let reps = parseInt(document.getElementById(id + 'rep').value) || 0;
-                let resDisp = document.getElementById(id + 'Res');
-                let totalDisp = document.getElementById(id + 'pTotal' || id + 'dTotal'); // Target spans
-                let lvlDisp = document.getElementById(id + 'Lvl');
-
+                
                 if (reps > 0 && bw > 0) {
                     let total1RM = brzycki(bw + add, reps);
-                    let addedOnly = total1RM - bw;
-                    document.getElementById(id + 'Total').innerText = "TOTAL 1RM: " + total1RM.toFixed(1) + " " + unit;
-                    resDisp.innerText = addedOnly.toFixed(1) + " " + unit;
-                    let level = getLevel(addedOnly / bw, id === 'p' ? 'pull' : 'dip');
-                    lvlDisp.innerText = "LEVEL: " + level;
-                    lvlDisp.className = "lvl-badge lvl-" + level.replace(/ /g, '-');
+                    let performance1RM = total1RM - bw;
+                    
+                    document.getElementById(id + 'Res').innerText = "+" + performance1RM.toFixed(1) + " " + unit;
+                    document.getElementById(id + 'Total').innerText = total1RM.toFixed(1) + " " + unit;
+                    
+                    let level = getLevel(performance1RM / bw, id === 'p' ? 'pull' : 'dip');
+                    let lBox = document.getElementById(id + 'Lvl');
+                    lBox.innerText = "LEVEL: " + level;
+                    lBox.className = "lvl-badge lvl-" + level.replace(/ /g, '-');
                 }
             });
 
-            // Logic for Chest/Shoulder
+            // Chest/Shoulder Logic
             [['cp', 'chest'], ['sp', 'shoulder']].forEach(([id, type]) => {
                 let bw = parseFloat(document.getElementById(id + 'bw').value) || 0;
                 let w = parseFloat(document.getElementById(id + 'w').value) || 0;
@@ -225,7 +239,7 @@
                 }
             });
 
-            // Logic for Zanetti
+            // Zanetti Logic
             let zbw = parseFloat(document.getElementById('zabw').value) || 75;
             let zw = parseFloat(document.getElementById('zaw').value) || 0;
             let zr = parseInt(document.getElementById('zar').value) || 0;
