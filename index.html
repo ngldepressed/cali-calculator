@@ -725,13 +725,38 @@ if (s.s > 0 && sa1RM <= 1.0) cur = 0;   // If skill needs straight arm and sa is
         const rMsg = document.getElementById("risk-msg");
         if (rMsg) { rMsg.innerText = riskMsg; rMsg.style.color = (riskMsg === "SYSTEMS_NOMINAL") ? "var(--potential)" : "var(--danger)"; }
 
+       // --- HIGH-SENSITIVITY VOLUME & CNS AUDIT ---
         let pullSets = parseInt(document.getElementById("wpS").value) || 0;
         let pushSets = parseInt(document.getElementById("wdS").value) || 0;
-        let totalTax = (pullSets * 1.5) + (pushSets * 1.5);
-        const vFill = document.getElementById("volume-fill");
-        if (vFill) { vFill.style.width = Math.min((totalTax / 20) * 100, 100) + "%"; vFill.style.background = totalTax > 15 ? "var(--danger)" : "var(--primary)"; }
-        if (document.getElementById("volume-tax")) document.getElementById("volume-tax").innerText = totalTax.toFixed(1);
+        let saSets = parseInt(document.getElementById("saW").value ? 1 : 0); // Detects if SA work was done
 
+        // Intensity Weighting: Sets * (1RM Squared)
+        // This makes 30kg dips cost significantly more than bodyweight dips
+        let pullTax = pullSets * Math.pow(pull1RM, 2);
+        let pushTax = pushSets * Math.pow(push1RM, 2);
+        let saTax = saSets * Math.pow(sa1RM, 2) * 2.0; // SA is 2x more taxing on tendons
+        
+        let totalTax = pullTax + pushTax + saTax;
+        
+        const vFill = document.getElementById("volume-fill");
+        if (vFill) {
+            // Updated Thresholds: 60 is the new 'Extreme' ceiling
+            let volumePct = Math.min((totalTax / 60) * 100, 100);
+            vFill.style.width = volumePct + "%";
+            
+            // Color logic: <25 Optimal (Cyan), 25-45 High (Orange), 45+ Danger (Red)
+            if (totalTax > 45) {
+                vFill.style.background = "#ff4444"; // System Overload
+            } else if (totalTax > 25) {
+                vFill.style.background = "#ff9900"; // High Strain
+            } else {
+                vFill.style.background = "#00ffcc"; // Optimal
+            }
+        }
+
+        if (document.getElementById("volume-tax")) {
+            document.getElementById("volume-tax").innerText = totalTax.toFixed(1);
+        }
         // Injects ONLY the Biomechanical Report
         document.getElementById("aiFeedback").innerHTML = auditHtml;
         document.getElementById("barContainer").innerHTML = barHtml;
