@@ -5,21 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strength Matrix | Cali-Biotech</title>
     <style>
-        :root { --primary: #4c6fff; --bg: #0f0f17; --card: #1f1f2e; }
+        :root { --primary: #00ff88; --bg: #0d1117; --card: #161b22; --elite: #ff3e3e; }
         body { background-color: var(--bg); color: white; font-family: monospace; text-align: center; padding: 20px; }
+        
         .unit-toggle { margin-top: 20px; margin-bottom: 30px; }
-        select { background: #1f1f2e; color: var(--primary); border: 1px solid var(--primary); padding: 8px 15px; font-family: monospace; cursor: pointer; border-radius: 4px; }
-        .calc-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
-        .card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid #333; width: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.3s; }
-        .card:hover { border-color: var(--primary); }
-        h2 { color: var(--primary); font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        label { display: block; font-size: 0.7rem; color: #888; margin-top: 10px; text-align: left; text-transform: uppercase; }
-        input { width: 100%; padding: 12px; margin: 5px 0; border-radius: 5px; border: 1px solid #444; background: #12121c; color: white; box-sizing: border-box; font-family: monospace; }
-        .result-box { margin-top: 20px; padding: 15px; background: rgba(76, 111, 255, 0.1); border-radius: 8px; border-left: 3px solid var(--primary); min-height: 60px; }
+        select { background: #161b22; color: var(--primary); border: 1px solid var(--primary); padding: 8px 15px; font-family: monospace; cursor: pointer; border-radius: 4px; }
+        
+        .calc-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; max-width: 1400px; margin: 0 auto; }
+        
+        .card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid #30363d; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.3s; position: relative; overflow: hidden; }
+        .card:hover { border-color: var(--primary); transform: translateY(-5px); }
+        
+        h2 { color: var(--primary); font-size: 0.85rem; letter-spacing: 2px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; text-transform: uppercase; }
+        label { display: block; font-size: 0.65rem; color: #8b949e; margin-top: 10px; text-align: left; text-transform: uppercase; }
+        
+        input { width: 100%; padding: 12px; margin: 5px 0; border-radius: 5px; border: 1px solid #30363d; background: #0d1117; color: white; box-sizing: border-box; font-family: monospace; outline: none; }
+        input:focus { border-color: var(--primary); }
+        
+        .result-box { margin-top: 20px; padding: 15px; background: rgba(0, 255, 136, 0.05); border-radius: 8px; border-left: 3px solid var(--primary); min-height: 80px; text-align: left; }
+        
         .val { font-size: 1.1rem; color: var(--primary); font-weight: bold; display: block; }
-        .sub-val { font-size: 0.65rem; color: #666; display: block; margin-top: 5px; letter-spacing: 1px; }
-        .back-btn { display: inline-block; margin-top: 40px; color: #555; text-decoration: none; font-size: 0.8rem; letter-spacing: 1px; border: 1px solid #333; padding: 10px 20px; border-radius: 5px; transition: 0.3s; }
-        .back-btn:hover { color: var(--primary); border-color: var(--primary); background: rgba(76,111,255,0.05); }
+        .sub-val { font-size: 0.65rem; color: #8b949e; display: block; margin-top: 5px; letter-spacing: 1px; }
+        
+        /* Power-to-Weight Badge */
+        .rank-badge { font-size: 0.7rem; display: inline-block; margin-top: 10px; padding: 4px 8px; border-radius: 3px; background: #21262d; color: var(--primary); border: 1px solid var(--primary); font-weight: bold; }
+        .rank-elite { border-color: var(--elite); color: var(--elite); }
     </style>
 </head>
 <body>
@@ -43,6 +53,7 @@
             <div class="result-box">
                 <span class="val" id="pRes">---</span>
                 <span id="pTotal" class="sub-val">TOTAL 1RM: ---</span>
+                <div id="pRank" class="rank-badge">CLASS: PENDING</div>
             </div>
         </div>
 
@@ -57,6 +68,37 @@
             <div class="result-box">
                 <span class="val" id="dRes">---</span>
                 <span id="dTotal" class="sub-val">TOTAL 1RM: ---</span>
+                <div id="dRank" class="rank-badge">CLASS: PENDING</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>CHEST PRESS (1RM)</h2>
+            <label class="u-label">Bodyweight</label>
+            <input type="number" id="cpbw" value="75" oninput="calcAll()">
+            <label class="u-label">Lifted Weight</label>
+            <input type="number" id="cpw" placeholder="0" oninput="calcAll()">
+            <label>Reps</label>
+            <input type="number" id="cpr" placeholder="0" oninput="calcAll()">
+            <div class="result-box">
+                <span class="val" id="cpRes">---</span>
+                <span class="sub-val">ESTIMATED 1RM</span>
+                <div id="cpRank" class="rank-badge">CLASS: PENDING</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>SHOULDER PRESS (1RM)</h2>
+            <label class="u-label">Bodyweight</label>
+            <input type="number" id="spbw" value="75" oninput="calcAll()">
+            <label class="u-label">Lifted Weight</label>
+            <input type="number" id="spw" placeholder="0" oninput="calcAll()">
+            <label>Reps</label>
+            <input type="number" id="spr" placeholder="0" oninput="calcAll()">
+            <div class="result-box">
+                <span class="val" id="spRes">---</span>
+                <span class="sub-val">ESTIMATED 1RM</span>
+                <div id="spRank" class="rank-badge">CLASS: PENDING</div>
             </div>
         </div>
 
@@ -64,39 +106,35 @@
             <h2>ZANETTI / SA RAISE</h2>
             <label class="u-label">Dumbbell Weight</label>
             <input type="number" id="zaw" placeholder="0" oninput="calcAll()">
-            <label>Reps (Straight Arm)</label>
+            <label>Reps</label>
             <input type="number" id="zar" placeholder="0" oninput="calcAll()">
             <div class="result-box">
                 <span class="val" id="zaRes">---</span>
                 <span class="sub-val">ESTIMATED 1RM</span>
+                <div id="zaRank" class="rank-badge">CLASS: PENDING</div>
             </div>
         </div>
     </div>
 
-    <div style="text-align: center; margin-top: 40px;">
-    <a href="index.html" 
-        style="
-         display: inline-block;
-         text-decoration: none; 
-         color: #555; 
-         border: 1px solid #333; 
-         padding: 10px 20px; 
-         border-radius: 4px; 
-         font-size: 0.75em; 
-         letter-spacing: 2px; 
-         font-weight: bold; 
-         text-transform: uppercase;
-         transition: all 0.3s ease;
-         background: transparent;
-        "
-        onmouseover="this.style.color='#4c6fff'; this.style.borderColor='#4c6fff'; this.style.background='rgba(76, 111, 255, 0.05)';"
-        onmouseout="this.style.color='#555'; this.style.borderColor='#333'; this.style.background='transparent';"
-    >
-        ← BACK TO HOME
-    </a>
-</div>
-
     <script>
+        function getRank(ratio, type) {
+            // Strength standards vary by lift type (1RM / BW)
+            const scales = {
+                pull: [1.2, 1.5, 1.8], // Added weight only
+                dip: [1.4, 1.7, 2.0],  // Added weight only
+                chest: [1.0, 1.25, 1.5],
+                shoulder: [0.6, 0.8, 1.0],
+                za: [0.15, 0.25, 0.35]
+            };
+            
+            const [recruit, operative, elite] = scales[type] || [1, 1.5, 2];
+            
+            if (ratio >= elite) return { text: "ZENITH", class: "rank-elite" };
+            if (ratio >= operative) return { text: "ELITE", class: "rank-elite" };
+            if (ratio >= recruit) return { text: "OPERATIVE", class: "" };
+            return { text: "RECRUIT", class: "" };
+        }
+
         function calcAll() {
             const unit = document.getElementById('unitSystem').value;
             const labels = document.querySelectorAll('.u-label');
@@ -105,35 +143,62 @@
                 l.innerText = text + " (" + unit + ")";
             });
 
-            runLogic('p', unit, true);
-            runLogic('d', unit, true);
-            runLogic('za', unit, false);
-        }
+            // Logic for Pull (p) and Dip (d)
+            ['p', 'd'].forEach(id => {
+                let bw = parseFloat(document.getElementById(id + 'bw').value) || 0;
+                let add = parseFloat(document.getElementById(id + 'add').value) || 0;
+                let reps = parseInt(document.getElementById(id + 'rep').value) || 0;
+                let res = document.getElementById(id + 'Res');
+                let total = document.getElementById(id + 'Total');
+                let rank = document.getElementById(id + 'Rank');
 
-        function runLogic(type, unit, includeBW) {
-            let add = parseFloat(document.getElementById(type + 'w')?.value || document.getElementById(type + 'add')?.value) || 0;
-            let reps = parseInt(document.getElementById(type + 'r')?.value || document.getElementById(type + 'rep')?.value) || 0;
-            
-            let resElement = document.getElementById(type + 'Res');
-            let totalElement = document.getElementById(type + 'Total');
-
-            if (reps > 0 && add > 0) {
-                if (includeBW) {
-                    // Compound Brzycki
-                    let bw = parseFloat(document.getElementById(type + 'bw').value) || 0;
-                    let total = bw + add;
-                    let oneRM = total / (1.0278 - (0.0278 * reps));
-                    let addedOnly = oneRM - bw;
-                    resElement.innerText = addedOnly.toFixed(1) + " " + unit + " added";
-                    totalElement.innerText = "TOTAL 1RM: " + oneRM.toFixed(1) + " " + unit;
+                if (reps > 0 && add > 0) {
+                    let oneRMTotal = (bw + add) / (1.0278 - (0.0278 * reps));
+                    let addedOnly = oneRMTotal - bw;
+                    res.innerText = addedOnly.toFixed(1) + " " + unit + " added";
+                    total.innerText = "TOTAL 1RM: " + oneRMTotal.toFixed(1) + " " + unit;
+                    
+                    let rData = getRank(addedOnly / bw, id === 'p' ? 'pull' : 'dip');
+                    rank.innerText = "CLASS: " + rData.text;
+                    rank.className = "rank-badge " + rData.class;
                 } else {
-                    // Specific SA Math (More conservative for tendon safety)
-                    let oneRM = add * (1 + (reps * 0.02)); 
-                    resElement.innerText = oneRM.toFixed(1) + " " + unit + " MAX";
+                    res.innerText = "---";
+                    total.innerText = "TOTAL 1RM: ---";
+                    rank.innerText = "CLASS: PENDING";
                 }
-            } else {
-                resElement.innerText = "---";
-                if(totalElement) totalElement.innerText = "TOTAL 1RM: ---";
+            });
+
+            // Logic for Chest (cp) and Shoulder (sp)
+            ['cp', 'sp'].forEach(id => {
+                let bw = parseFloat(document.getElementById(id + 'bw').value) || 0;
+                let weight = parseFloat(document.getElementById(id + 'w').value) || 0;
+                let reps = parseInt(document.getElementById(id + 'r').value) || 0;
+                let res = document.getElementById(id + 'Res');
+                let rank = document.getElementById(id + 'Rank');
+
+                if (reps > 0 && weight > 0) {
+                    let oneRM = weight / (1.0278 - (0.0278 * reps));
+                    res.innerText = oneRM.toFixed(1) + " " + unit;
+                    
+                    let rData = getRank(oneRM / bw, id === 'cp' ? 'chest' : 'shoulder');
+                    rank.innerText = "CLASS: " + rData.text;
+                    rank.className = "rank-badge " + rData.class;
+                } else {
+                    res.innerText = "---";
+                    rank.innerText = "CLASS: PENDING";
+                }
+            });
+
+            // Zanetti specific logic
+            let zw = parseFloat(document.getElementById('zaw').value) || 0;
+            let zr = parseInt(document.getElementById('zar').value) || 0;
+            let zRes = document.getElementById('zaRes');
+            let zRank = document.getElementById('zaRank');
+            if(zw > 0 && zr > 0) {
+                let oneRM = zw * (1 + (zr * 0.02));
+                zRes.innerText = oneRM.toFixed(1) + " " + unit + " MAX";
+                let rData = getRank(oneRM / 75, 'za'); // Approx default weight for ratio
+                zRank.innerText = "CLASS: " + rData.text;
             }
         }
         calcAll();
