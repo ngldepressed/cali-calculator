@@ -520,14 +520,10 @@ function logSession() {
         const plate = parseFloat(document.getElementById(idW).value) || 0;
         const reps = parseInt(document.getElementById(idR).value) || 0;
         
-        // If no work done, show dashes
         if (plate === 0 && reps === 0) return { display: "---" };
         
-        // Total 1RM Calculation (Matches the Stats section)
         const total1RM = (bwForCalc + plate * (1 + reps/30)).toFixed(1);
         
-        // Format: "25kg x 3 (104.5kg)" 
-        // This shows: [Plate] x [Reps] ([Total 1RM Strength])
         return { display: `${plate}${u} x ${reps} (${total1RM}${u})` };
     };
 
@@ -535,12 +531,13 @@ function logSession() {
     const push = getLiftData("wdW", "wdR");
     const sa = getLiftData("saW", "saR");
 
-    // 2. Skill Logic (Kept identical to your last working version)
+    // 2. Skill Logic (FIXED: No more Ghost Muscle Ups)
     let topSkill = "None";
-    let maxVal = -1;
+    let maxVal = 0; // Changed from -1 to 0
     if (radarChart && radarChart.data.datasets[0].data.length > 0) {
         radarChart.data.datasets[0].data.forEach((score, index) => {
             let numericScore = parseFloat(score);
+            // Only update if score is actually BETTER than 0
             if (numericScore > maxVal) {
                 maxVal = numericScore;
                 topSkill = skills[index].name;
@@ -555,7 +552,7 @@ function logSession() {
         pull: pull.display,
         push: push.display,
         sa: sa.display,
-        skill: topSkill + " (" + (maxVal > 0 ? Math.round(maxVal) : 0) + "%)"
+        skill: maxVal > 0 ? topSkill + " (" + Math.round(maxVal) + "%)" : "None (0%)"
     };
 
     savedLogs.unshift(entry);
