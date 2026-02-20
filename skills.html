@@ -7,162 +7,65 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --primary: #00ff88; 
-            --bg: #0d1117; 
-            --card: #161b22; 
-            --elite: #ff3e3e; 
-            --text: #e6edf3; 
-            --border: #30363d;
+            --primary: #00ff88; --bg: #0d1117; --card: #161b22; 
+            --elite: #ff3e3e; --text: #e6edf3; --border: #30363d;
         }
         
         body { 
-            background-color: var(--bg); 
-            color: var(--text); 
-            font-family: 'Inter', sans-serif; 
-            margin: 0; 
-            padding: 20px; 
+            background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; 
+            margin: 0; padding: 20px; 
             background-image: radial-gradient(var(--border) 0.5px, transparent 0.5px);
             background-size: 30px 30px;
-            overflow-x: hidden;
         }
 
-        /* Live HUD Overlay */
+        /* Fixed HUD Monitor */
         #hud-monitor {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 280px;
-            background: rgba(22, 27, 34, 0.9);
-            border: 1px solid var(--primary);
-            padding: 15px;
-            border-radius: 8px;
-            font-family: 'JetBrains Mono', monospace;
-            z-index: 10000;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
-            pointer-events: none;
+            position: fixed; bottom: 30px; right: 30px; width: 300px;
+            background: rgba(13, 17, 23, 0.95); border: 1px solid var(--primary);
+            padding: 20px; border-radius: 4px; font-family: 'JetBrains Mono', monospace;
+            z-index: 1000; backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.1); pointer-events: none;
         }
 
-        .hud-label { font-size: 0.6rem; color: var(--primary); opacity: 0.7; }
-        #skill-name { font-size: 0.9rem; color: #fff; margin: 5px 0; text-transform: uppercase; }
-        #skill-stats { font-size: 0.65rem; color: var(--primary); }
+        .hud-header { font-size: 0.6rem; color: var(--primary); margin-bottom: 10px; border-bottom: 1px solid rgba(0,255,136,0.2); }
+        #skill-name { font-size: 1rem; color: #fff; margin-bottom: 8px; text-transform: uppercase; }
+        #skill-stats { font-size: 0.7rem; color: var(--primary); line-height: 1.4; }
 
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: rgba(0, 255, 136, 0.08);
-            z-index: 9999;
-            animation: scan 10s linear infinite;
-            pointer-events: none;
-        }
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { font-family: 'JetBrains Mono', monospace; letter-spacing: 10px; font-size: 1.6rem; color: var(--primary); text-transform: uppercase; }
 
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-        
-        .header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
-        .header h1 { 
-            font-family: 'JetBrains Mono', monospace; 
-            letter-spacing: 10px; 
-            font-size: 1.6rem; 
-            color: var(--primary); 
-            text-transform: uppercase;
-        }
-
-        .tree-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 20px; 
-            max-width: 1400px; 
-            margin: 0 auto 100px auto;
-        }
-
-        .branch { 
-            background: rgba(22, 27, 34, 0.7); 
-            padding: 20px; 
-            border-radius: 8px; 
-            border: 1px solid var(--border);
-        }
-
-        .branch-header { 
-            font-family: 'JetBrains Mono', monospace; 
-            color: var(--primary); 
-            font-size: 0.85rem; 
-            letter-spacing: 3px; 
-            margin-bottom: 25px; 
-            text-align: center; 
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 12px; 
-            text-transform: uppercase;
-        }
-
-        .tier-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem; 
-            color: var(--primary); 
-            text-transform: uppercase;
-            margin: 20px 0 10px 5px; 
-            letter-spacing: 2px; 
-            font-weight: bold;
-            border-left: 2px solid var(--primary); 
-            padding-left: 10px;
-        }
-
-        .node {
-            background: var(--card); 
-            border: 1px solid var(--border);
-            padding: 8px 12px; 
-            margin-bottom: 6px; 
-            transition: 0.2s;
-            cursor: crosshair; 
-            border-radius: 3px; 
-            display: flex;
-            justify-content: space-between; 
-            align-items: center;
-        }
-
-        .node:hover { 
-            border-color: var(--primary); 
-            background: #1a1a25; 
-            transform: translateX(4px); 
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.1);
-        }
-
-        .node h3 { font-size: 0.7rem; margin: 0; font-weight: 400; color: #ccc; }
-        .node span { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; color: var(--primary); opacity: 0.4; }
-        
-        .elite { border-right: 3px solid var(--elite); }
-        .elite h3 { color: #ff8080; }
-
+        .tree-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1600px; margin: 0 auto; }
         .statics-container { grid-column: 1 / -1; margin-top: 20px; }
+        .branch { background: rgba(22, 27, 34, 0.5); padding: 20px; border-radius: 8px; border: 1px solid var(--border); }
+        .branch-header { font-family: 'JetBrains Mono', monospace; color: var(--primary); font-size: 0.85rem; letter-spacing: 3px; margin-bottom: 25px; text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; text-transform: uppercase; }
+        .tier-label { font-size: 0.6rem; color: var(--primary); text-transform: uppercase; margin: 20px 0 10px 5px; letter-spacing: 2px; font-weight: bold; border-left: 2px solid var(--primary); padding-left: 10px; }
         .node-subgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
 
-        .footer-nav { margin: 60px 0; text-align: center; }
-        .back-btn { 
-            font-family: 'JetBrains Mono', monospace; 
-            text-decoration: none; 
-            color: var(--text); 
-            border: 1px solid var(--border); 
-            padding: 12px 40px; 
-            font-size: 0.75rem; 
-            border-radius: 4px;
+        .node {
+            background: var(--card); border: 1px solid var(--border);
+            padding: 8px 12px; margin-bottom: 6px; transition: 0.2s;
+            cursor: crosshair; border-radius: 3px; display: flex;
+            justify-content: space-between; align-items: center;
         }
 
-        @media (max-width: 1100px) {
-            .tree-grid { grid-template-columns: 1fr; }
-            .node-subgrid { grid-template-columns: 1fr; }
-            #hud-monitor { display: none; }
-        }
+        .node:hover { border-color: var(--primary); background: #1a1a25; transform: translateX(5px); }
+        .node h3 { font-size: 0.7rem; margin: 0; font-weight: 400; color: #ccc; }
+        .node span { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; color: #444; }
+        .elite { border-left: 3px solid var(--elite); }
+        .elite h3 { color: #ff8080; }
+
+        .footer-nav { margin: 60px 0; text-align: center; }
+        .back-btn { font-family: 'JetBrains Mono', monospace; text-decoration: none; color: #666; border: 1px solid var(--border); padding: 12px 40px; font-size: 0.75rem; border-radius: 4px; }
+
+        @media (max-width: 1100px) { .tree-grid { grid-template-columns: 1fr; } .node-subgrid { grid-template-columns: 1fr; } #hud-monitor { display: none; } }
     </style>
 </head>
 <body>
 
     <div id="hud-monitor">
-        <div class="hud-label">ANALYSIS_MODE: ACTIVE</div>
+        <div class="hud-header">BIOTECH_SCANNER_V2.0</div>
         <div id="skill-name">SYSTEM_IDLE</div>
-        <div id="skill-stats">READY TO SCAN NODE...</div>
+        <div id="skill-stats">MOVE_CURSOR_OVER_NODE</div>
     </div>
 
     <div class="header"><h1>SKILL TREE</h1></div>
@@ -171,66 +74,162 @@
         <div class="branch">
             <div class="branch-header">Push Skills</div>
             <div class="tier-label">Basics</div>
-            <div class="node" data-skill="Planche Lean" data-info="Level: Base | Focus: Lean & Protraction"><h3>Planche Lean</h3><span>BASE</span></div>
-            <div class="node" data-skill="Pseudo Planche PU" data-info="Level: 1 | Focus: Dynamic Push Strength"><h3>Pseudo Planche PU</h3><span>LVL 1</span></div>
-            <div class="node" data-skill="Planche Parallettes" data-info="Level: 1 | Focus: Wrist Support"><h3>Planche Parallettes</h3><span>LVL 1</span></div>
-            <div class="node" data-skill="L-Sit to Planche" data-info="Level: 2 | Focus: Compression Transition"><h3>L-Sit to Planche</h3><span>LVL 2</span></div>
-            <div class="node" data-skill="Press to Planche" data-info="Level: 2 | Focus: Scapular Force"><h3>Press to Planche</h3><span>LVL 2</span></div>
+            <div class="node"><h3>Planche Lean</h3><span>BASE</span></div>
+            <div class="node"><h3>Pseudo Planche PU</h3><span>LVL 1</span></div>
+            <div class="node"><h3>Planche Parallettes</h3><span>LVL 1</span></div>
+            <div class="node"><h3>L-Sit to Planche</h3><span>LVL 2</span></div>
+            <div class="node"><h3>Press to Planche</h3><span>LVL 2</span></div>
             <div class="tier-label">Intermediate</div>
-            <div class="node" data-skill="Tuck Planche" data-info="Level: 3 | Focus: Core & Protraction"><h3>Tuck Planche</h3><span>LVL 3</span></div>
-            <div class="node" data-skill="Planche PU (Tuck)" data-info="Level: 3 | Focus: Horizontal Push"><h3>Planche PU (Tuck)</h3><span>LVL 3</span></div>
-            <div class="node" data-skill="Adv Tuck Planche" data-info="Level: 4 | Focus: Lever Lengthening"><h3>Adv Tuck Planche</h3><span>LVL 4</span></div>
-            <div class="node" data-skill="90° Planche Hold" data-info="Level: 4 | Focus: Shoulder Torque"><h3>90° Planche Hold</h3><span>LVL 4</span></div>
+            <div class="node"><h3>Tuck Planche</h3><span>LVL 3</span></div>
+            <div class="node"><h3>Planche PU (Tuck)</h3><span>LVL 3</span></div>
+            <div class="node"><h3>Adv Tuck Planche</h3><span>LVL 4</span></div>
+            <div class="node"><h3>90° Planche Hold</h3><span>LVL 4</span></div>
             <div class="tier-label">Advanced</div>
-            <div class="node" data-skill="Straddle Planche" data-info="Level: 5 | Focus: Glute/Lower Back Tension"><h3>Straddle Planche</h3><span>LVL 5</span></div>
-            <div class="node" data-skill="Full Planche" data-info="Level: 6 | Focus: Maximum Structural Load"><h3>Full Planche</h3><span>LVL 6</span></div>
+            <div class="node"><h3>Straddle Planche</h3><span>LVL 5</span></div>
+            <div class="node"><h3>Planche PU (Straddle)</h3><span>LVL 5</span></div>
+            <div class="node"><h3>Full Planche</h3><span>LVL 6</span></div>
+            <div class="node"><h3>Planche PU (Full)</h3><span>LVL 6</span></div>
+            <div class="node"><h3>Ring Planche</h3><span>LVL 6</span></div>
+            <div class="node"><h3>Wide Planche</h3><span>LVL 6</span></div>
             <div class="tier-label">Elite Mastery</div>
-            <div class="node elite" data-skill="Maltese Lean" data-info="Rank: A | Focus: Pec/Bicep Strain"><h3>Maltese Lean</h3><span>RANK A</span></div>
-            <div class="node elite" data-skill="Zanetti Press" data-info="Rank: SS | Focus: Ultimate Compression"><h3>Zanetti Press</h3><span>RANK SS</span></div>
+            <div class="node elite"><h3>Maltese Lean</h3><span>RANK A</span></div>
+            <div class="node elite"><h3>Tuck Maltese</h3><span>RANK A</span></div>
+            <div class="node elite"><h3>Straddle Maltese</h3><span>RANK S</span></div>
+            <div class="node elite"><h3>Maltese (Rings)</h3><span>RANK S</span></div>
+            <div class="node elite"><h3>Inverted Cross</h3><span>RANK S</span></div>
+            <div class="node elite"><h3>Supinated Planche</h3><span>RANK SS</span></div>
+            <div class="node elite"><h3>Zanetti Press</h3><span>RANK SS</span></div>
+            <div class="node elite"><h3>One Arm Planche (Ast)</h3><span>RANK SS</span></div>
+            <div class="node elite"><h3>Reverse Planche</h3><span>ZENITH</span></div>
         </div>
 
         <div class="branch">
             <div class="branch-header">Pull Skills</div>
             <div class="tier-label">Basics</div>
-            <div class="node" data-skill="Skin the Cat" data-info="Level: Base | Focus: Mobility/Shoulder Extension"><h3>Skin the Cat</h3><span>BASE</span></div>
-            <div class="node" data-skill="German Hang" data-info="Level: Base | Focus: Passive Tendon Strength"><h3>German Hang</h3><span>BASE</span></div>
+            <div class="node"><h3>Skin the Cat</h3><span>BASE</span></div>
+            <div class="node"><h3>German Hang</h3><span>BASE</span></div>
+            <div class="node"><h3>Back Lever</h3><span>LVL 1</span></div>
+            <div class="node"><h3>Straddle Back Lever</h3><span>LVL 1</span></div>
+            <div class="node"><h3>Ice Cream Makers</h3><span>LVL 2</span></div>
             <div class="tier-label">Intermediate</div>
-            <div class="node" data-skill="Tuck Front Lever" data-info="Level: 3 | Focus: Scapular Retraction"><h3>Tuck Front Lever</h3><span>LVL 3</span></div>
+            <div class="node"><h3>Tuck Front Lever</h3><span>LVL 3</span></div>
+            <div class="node"><h3>Adv Tuck FL</h3><span>LVL 3</span></div>
+            <div class="node"><h3>Archer Pull-up</h3><span>LVL 3</span></div>
+            <div class="node"><h3>Muscle-up (Strict)</h3><span>LVL 4</span></div>
+            <div class="node"><h3>FL Raises</h3><span>LVL 4</span></div>
+            <div class="tier-label">Advanced</div>
+            <div class="node"><h3>Straddle Front Lever</h3><span>LVL 5</span></div>
+            <div class="node"><h3>Full Front Lever</h3><span>LVL 6</span></div>
+            <div class="node"><h3>Supinated FL</h3><span>LVL 6</span></div>
+            <div class="node"><h3>Front Lever Pull</h3><span>LVL 6</span></div>
+            <div class="node"><h3>One Arm Pull-up</h3><span>LVL 6</span></div>
+            <div class="node"><h3>Slow Muscle-up</h3><span>LVL 6</span></div>
             <div class="tier-label">Elite Mastery</div>
-            <div class="node elite" data-skill="Victorian Cross" data-info="Rank: Zenith | Focus: Beyond Human Limit"><h3>Victorian Cross</h3><span>ZENITH</span></div>
+            <div class="node elite"><h3>Front Lever Touch</h3><span>RANK A</span></div>
+            <div class="node elite"><h3>Supinated FL Touch</h3><span>RANK A</span></div>
+            <div class="node elite"><h3>OA FL (Assisted)</h3><span>RANK S</span></div>
+            <div class="node elite"><h3>Hefesto (Tuck)</h3><span>RANK S</span></div>
+            <div class="node elite"><h3>Hefesto (Full)</h3><span>RANK SS</span></div>
+            <div class="node elite"><h3>One Arm FL</h3><span>RANK SS</span></div>
+            <div class="node elite"><h3>Victorian Cross</h3><span>ZENITH</span></div>
         </div>
 
         <div class="branch">
             <div class="branch-header">Vertical Presses</div>
             <div class="tier-label">Basics</div>
-            <div class="node" data-skill="Wall Handstand" data-info="Level: Base | Focus: Vertical Alignment"><h3>Wall Handstand</h3><span>BASE</span></div>
-            <div class="node" data-skill="One Arm Handstand" data-info="Rank: SS | Focus: Pure CNS Balance"><h3>One Arm Handstand</h3><span>RANK SS</span></div>
+            <div class="node"><h3>Wall Handstand</h3><span>BASE</span></div>
+            <div class="node"><h3>Pike Press</h3><span>BASE</span></div>
+            <div class="node"><h3>Shoulder Stand</h3><span>LVL 1</span></div>
+            <div class="node"><h3>Bent Arm HS</h3><span>LVL 2</span></div>
+            <div class="node"><h3>HS Shoulder Taps</h3><span>LVL 2</span></div>
+            <div class="tier-label">Intermediate</div>
+            <div class="node"><h3>Freestanding HS</h3><span>LVL 3</span></div>
+            <div class="node"><h3>Tuck Handstand</h3><span>LVL 3</span></div>
+            <div class="node"><h3>Straddle HS</h3><span>LVL 3</span></div>
+            <div class="node"><h3>HS Push-up (Wall)</h3><span>LVL 4</span></div>
+            <div class="node"><h3>Straddle Press to HS</h3><span>LVL 4</span></div>
+            <div class="tier-label">Advanced</div>
+            <div class="node"><h3>Strict HS Push-up</h3><span>LVL 5</span></div>
+            <div class="node"><h3>Deficit HS PU</h3><span>LVL 5</span></div>
+            <div class="node"><h3>Stalder Press</h3><span>LVL 6</span></div>
+            <div class="node"><h3>90° Hold</h3><span>LVL 6</span></div>
+            <div class="node"><h3>90° Push-up</h3><span>LVL 6</span></div>
+            <div class="node"><h3>Hollowback HS</h3><span>LVL 6</span></div>
+            <div class="tier-label">Elite Mastery</div>
+            <div class="node elite"><h3>Tiger Bend</h3><span>RANK A</span></div>
+            <div class="node elite"><h3>Hollowback Press</h3><span>RANK A</span></div>
+            <div class="node elite"><h3>OA HS (Wall Ast)</h3><span>RANK S</span></div>
+            <div class="node elite"><h3>Mexican HS</h3><span>RANK S</span></div>
+            <div class="node elite"><h3>One Arm Handstand</h3><span>RANK SS</span></div>
+            <div class="node elite"><h3>Butterfly Mount</h3><span>RANK SS</span></div>
+            <div class="node elite"><h3>OA HS Push-up (Part)</h3><span>RANK SS</span></div>
+            <div class="node elite"><h3>OA HS Push-up</h3><span>ZENITH</span></div>
+        </div>
+
+        <div class="statics-container">
+            <div class="branch">
+                <div class="branch-header">Statics</div>
+                <div class="node-subgrid">
+                    <div>
+                        <div class="tier-label">Support</div>
+                        <div class="node"><h3>Dead Hang</h3><span>BASE</span></div>
+                        <div class="node"><h3>Support Hold</h3><span>BASE</span></div>
+                        <div class="node"><h3>Inverted Hang</h3><span>BASE</span></div>
+                        <div class="node"><h3>Arch Hang</h3><span>LVL 1</span></div>
+                        <div class="node"><h3>Elbow Lever</h3><span>LVL 1</span></div>
+                        <div class="node"><h3>Reverse Support</h3><span>LVL 2</span></div>
+                        <div class="node"><h3>L-Sit</h3><span>LVL 2</span></div>
+                    </div>
+                    <div>
+                        <div class="tier-label">Levers & Flags</div>
+                        <div class="node"><h3>Dragon Flag</h3><span>LVL 3</span></div>
+                        <div class="node"><h3>Side Lever (Flag)</h3><span>LVL 3</span></div>
+                        <div class="node"><h3>Straddle Flag</h3><span>LVL 3</span></div>
+                        <div class="node"><h3>Full Human Flag</h3><span>LVL 4</span></div>
+                        <div class="node"><h3>V-Sit</h3><span>LVL 4</span></div>
+                        <div class="node"><h3>Tuck Manna</h3><span>LVL 5</span></div>
+                        <div class="node"><h3>Tuck Victorian</h3><span>LVL 5</span></div>
+                    </div>
+                    <div>
+                        <div class="tier-label">Elite Holds</div>
+                        <div class="node elite"><h3>Iron Cross (Ast)</h3><span>RANK A</span></div>
+                        <div class="node elite"><h3>Iron Cross</h3><span>RANK A</span></div>
+                        <div class="node elite"><h3>Manna</h3><span>RANK S</span></div>
+                        <div class="node elite"><h3>Zanetti Hold</h3><span>RANK S</span></div>
+                        <div class="node elite"><h3>Straddle Victorian</h3><span>RANK SS</span></div>
+                        <div class="node elite"><h3>Victorian (Floor)</h3><span>RANK SS</span></div>
+                        <div class="node elite"><h3>Victorian (Rings)</h3><span>ZENITH</span></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="footer-nav"><a href="index.html" class="back-btn">← BACK_HOME</a></div>
+    <div class="footer-nav"><a href="index.html" class="back-btn">← BACK HOME</a></div>
 
     <script>
-        // THE INTERACTIVE LOGIC
         const nodes = document.querySelectorAll('.node');
         const nameDisplay = document.getElementById('skill-name');
         const statsDisplay = document.getElementById('skill-stats');
 
         nodes.forEach(node => {
             node.addEventListener('mouseenter', () => {
-                const name = node.getAttribute('data-skill');
-                const info = node.getAttribute('data-info');
-                
-                // Visual scan effect in the HUD
-                nameDisplay.innerText = `> ${name}`;
-                statsDisplay.innerHTML = `STATUS: ANALYZING...<br>${info}`;
-                
-                // Optional: Play a tiny beep sound logic could go here
+                const name = node.querySelector('h3').innerText;
+                const level = node.querySelector('span').innerText;
+                const branch = node.closest('.branch').querySelector('.branch-header').innerText;
+
+                nameDisplay.innerText = name;
+                statsDisplay.innerHTML = `
+                    BRANCH: ${branch}<br>
+                    RANKING: ${level}<br>
+                    STATUS: UNLOCKED_FOR_TRAINING<br>
+                    NEURAL_REQ: HIGH
+                `;
             });
 
             node.addEventListener('mouseleave', () => {
                 nameDisplay.innerText = 'SYSTEM_IDLE';
-                statsDisplay.innerText = 'READY TO SCAN NODE...';
+                statsDisplay.innerText = 'MOVE_CURSOR_OVER_NODE';
             });
         });
     </script>
