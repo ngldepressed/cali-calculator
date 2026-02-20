@@ -615,197 +615,457 @@ function generateGoalBrief(vectors, bw, conv, u) {
     return brief;
 }
 function analyze() {
-    if(!isSystemReady) return; 
+
+    if(!isSystemReady) return;
+
     if(!radarChart) initChart();
+
     try {
+
         const sys = document.getElementById("unitSystem").value;
+
         const conv = sys === 'imp' ? 0.453592 : 1;
+
         const u = sys === 'met' ? 'kg' : 'lbs';
-        
+
+       
+
         const weightInput = document.getElementById("weight").value;
+
         const isWeightEmpty = !weightInput || parseFloat(weightInput) <= 0;
-        let bw = (parseFloat(weightInput) || 75) * conv; 
+
+        let bw = (parseFloat(weightInput) || 75) * conv;
+
+
 
         let h = sys === 'met' ? (parseFloat(document.getElementById("hCm").value) || 170) : ((parseFloat(document.getElementById("hFt").value)||5)*30.48)+((parseFloat(document.getElementById("hIn").value)||7)*2.54);
 
+
+
         if (isSimMode) {
+
             document.getElementById("weight").value = 75;
+
             document.getElementById("pullups").value = 28;
+
             document.getElementById("pushups").value = 55;
+
             document.getElementById("mu").value = 12;
+
             document.getElementById("hang").value = 120;
+
             document.getElementById("wpW").value = 45;
+
             document.getElementById("wpR").value = 5;
+
             document.getElementById("wdW").value = 65;
+
             document.getElementById("wdR").value = 5;
+
             document.getElementById("saW").value = 25;
+
             document.getElementById("saR").value = 5;
+
             document.getElementById("legRatio").value = "1.0";
+
             document.getElementById("form").value = "1.0";
+
             document.getElementById("cns").value = 10;
+
         }
+
+
 
         const pull1RM = (bw + (parseFloat(document.getElementById("wpW").value)||0)*conv * (1 + (parseInt(document.getElementById("wpR").value)||0)/30)) / bw;
+
         const push1RM = (bw + (parseFloat(document.getElementById("wdW").value)||0)*conv * (1 + (parseInt(document.getElementById("wdR").value)||0)/30)) / bw;
+
         let rawSa = (bw + (parseFloat(document.getElementById("saW").value)||0)*conv * (1 + (parseInt(document.getElementById("saR").value)||0)/30)) / bw;
-        const sa1RM = Math.max(rawSa, (push1RM * 0.75)); 
+
+        const sa1RM = Math.max(rawSa, (push1RM * 0.75));
+
+
 
         const torqueFactor = Math.pow(h / 170, 2.3) * (parseFloat(document.getElementById("legRatio").value) || 1.0);
+
         const cnsVal = (parseInt(document.getElementById("cns").value) || 10) / 10;
+
         const form = parseFloat(document.getElementById("form").value) || 1.0;
 
+
+
         if (isSimMode) {
+
             radarChart.data.datasets[0].label = 'SIMULATED TARGET';
+
             radarChart.data.datasets[0].borderColor = '#00ffcc';
+
         } else {
+
             radarChart.data.datasets[0].label = 'REALITY';
+
             radarChart.data.datasets[0].borderColor = '#4c6fff';
-            if (typeof saveToLocal === 'function') saveToLocal(); 
+
+            if (typeof saveToLocal === 'function') saveToLocal();
+
         }
+
+
 
         let skillPanel = document.getElementById("skillBars");
+
         if (!document.getElementById("goalSelect")) {
+
             skillPanel.innerHTML = `<div style="margin-bottom:20px;"><label style="color:var(--primary); font-size:0.7em; letter-spacing:2px;">MISSION_TARGET</label>
+
             <select id="goalSelect" onchange="analyze()" style="background:#111; color:#fff; width:100%; border:1px solid #333; padding:10px; border-radius:5px; margin-top:5px;">
+
                 <option value="None">No Active Goal</option>${skills.map(s => `<option value="${s.name}">${s.name}</option>`).join('')}
+
             </select></div><div id="barContainer"></div>`;
+
         }
+
+
 
         const activeGoal = document.getElementById("goalSelect").value;
+
         let barHtml = ""; const curScores = []; const potScores = [];
-        let protocolHtml = ""; // Defined safely at this scope
+
+
 
         skills.forEach(s => {
+
             let vectors = [];
+
             if (s.p > 0) vectors.push({ name: "Push (Dips)", val: (push1RM / (s.p * torqueFactor)) * 100, req: s.p * torqueFactor });
+
             if (s.l > 0) vectors.push({ name: "Pull (Pullups)", val: (pull1RM / (s.l * torqueFactor)) * 100, req: s.l * torqueFactor });
+
             if (s.s > 0) vectors.push({ name: "SA (Zanetti)", val: (sa1RM / (s.s * torqueFactor)) * 100, req: s.s * torqueFactor });
-            
+
+           
+
             const sig = (x) => 100 / (1 + Math.exp(-0.15 * (x - 52)));
+
             let minVal = Math.min(...vectors.map(v => v.val));
+
             let cur = sig(minVal) * cnsVal * form;
-            
+
+           
+
             const isTarget = s.name === activeGoal;
+
             curScores.push(cur.toFixed(1));
+
             potScores.push(sig(Math.max(...vectors.map(v => v.val))).toFixed(1));
 
+
+
             let recText = "";
+
             if (isTarget) {
+
                 let weakest = vectors.reduce((prev, curr) => (prev.val < curr.val) ? prev : curr);
+
                 let neededPlate = ((weakest.req * bw) - bw) / conv;
+
                 recText = `CRITICAL PATH: Improve ${weakest.name}. Target 1RM: +${neededPlate.toFixed(1)}${u}.`;
-                
-                // INTERNAL PROTOCOL CALC (Inside loop where 'isTarget' is known)
-                let strengthGap = (weakest.val / 100); 
-                let sets, reps, intensityPerc, focus;
-                if (strengthGap < 0.75) { focus = "STRUCTURAL_ADAPTATION"; sets = 4; reps = "8-10"; intensityPerc = 0.70; } 
-                else if (strengthGap < 0.90) { focus = "NEURAL_DRIVE"; sets = 5; reps = "3-5"; intensityPerc = 0.85; } 
-                else { focus = "PEAK_SPECIFICITY"; sets = 6; reps = "1-2"; intensityPerc = 0.95; }
 
-                let current1RM = (weakest.name.includes("Push") ? push1RM : weakest.name.includes("Pull") ? pull1RM : sa1RM);
-                let trainingLoad = ((current1RM * intensityPerc * bw) - bw) / conv;
-                let targetLoad = ((weakest.req * bw) - bw) / conv;
-
-                protocolHtml = `
-                    <h3 style="font-size:0.7em; letter-spacing:3px; color:var(--potential); margin-top:25px; border-bottom:1px solid #333; padding-bottom:10px;">CORRECTION_PROTOCOL</h3>
-                    <div class="insight-block" style="border-left:3px solid var(--potential); padding:12px; background: rgba(0,255,204,0.03); margin-bottom:20px;">
-                        <div style="font-size:0.65em; color:var(--potential); font-weight:bold;">PHASE: ${focus}</div>
-                        <div style="font-size:1.1em; color:#fff; font-family:monospace; margin:10px 0;">
-                            ${weakest.name.toUpperCase()}: ${sets}x${reps} @ +${Math.max(0, trainingLoad).toFixed(1)}${u}
-                        </div>
-                        <div style="font-size:0.6em; color:#888; line-height:1.4;">
-                            * Rest 3-5 mins. Focus on perfect ${form < 1 ? 'FORM_CORRECTION' : 'locked-out'} execution.
-                            Your target 1RM for ${activeGoal} is +${targetLoad.toFixed(1)}${u}.
-                        </div>
-                    </div>`;
             }
 
+// --- NEW: AUTOMATED WEAK-LINK PROGRAMMING ---
+
+let protocolHtml = "";
+
+if (activeGoal !== "None") {
+
+    // Re-calculating weakest for the selected goal to ensure accuracy
+
+    const skillData = skills.find(s => s.name === activeGoal);
+
+    let vectors = [];
+
+    if (skillData.p > 0) vectors.push({ name: "Push (Dips)", cur: push1RM, req: skillData.p * torqueFactor });
+
+    if (skillData.l > 0) vectors.push({ name: "Pull (Pullups)", cur: pull1RM, req: skillData.l * torqueFactor });
+
+    if (skillData.s > 0) vectors.push({ name: "SA (Zanetti)", cur: sa1RM, req: skillData.s * torqueFactor });
+
+
+
+    let weakest = vectors.reduce((prev, curr) => (prev.cur/prev.req < curr.cur/curr.req) ? prev : curr);
+
+    let strengthGap = (weakest.cur / weakest.req); // Percentage of requirement met
+
+
+
+    let sets, reps, intensity, focus;
+
+
+
+    if (strengthGap < 0.75) {
+
+        focus = "STRUCTURAL_ADAPTATION";
+
+        sets = 4; reps = "8-10"; intensity = "70%";
+
+    } else if (strengthGap < 0.90) {
+
+        focus = "NEURAL_DRIVE";
+
+        sets = 5; reps = "3-5"; intensity = "85%";
+
+    } else {
+
+        focus = "PEAK_SPECIFICITY";
+
+        sets = 6; reps = "1-2"; intensity = "95%";
+
+    }
+
+
+
+    // Calculate the actual weight to put on the belt/barbell based on 1RM math
+
+    let targetLoad = (weakest.req * bw) - bw;
+
+    let trainingLoad = ((weakest.cur * intensity.replace('%','')/100) * bw) - bw;
+
+
+
+    protocolHtml = `
+
+        <h3 style="font-size:0.7em; letter-spacing:3px; color:var(--potential); margin-top:25px; border-bottom:1px solid #333; padding-bottom:10px;">CORRECTION_PROTOCOL</h3>
+
+        <div class="insight-block" style="border-left:3px solid var(--potential); padding:12px; background: rgba(0,255,204,0.03);">
+
+            <div style="font-size:0.65em; color:var(--potential); font-weight:bold;">PHASE: ${focus}</div>
+
+            <div style="font-size:1.1em; color:#fff; font-family:monospace; margin:10px 0;">
+
+                ${weakest.name}: ${sets}x${reps} @ ${trainingLoad.toFixed(1)}${u}
+
+            </div>
+
+            <div style="font-size:0.6em; color:#888; line-height:1.4;">
+
+                * Rest 3-5 mins. Focus on perfect ${form < 1 ? 'FORM_CORRECTION' : 'locked-out'} execution.
+
+                Your target 1RM for ${activeGoal} is +${targetLoad.toFixed(1)}${u}.
+
+            </div>
+
+        </div>`;
+
+}
+
+
+
+// Update your final injection to include this:
+
+const protocolDiv = document.getElementById("protocolSection") || document.createElement("div");
+
+protocolDiv.id = "protocolSection";
+
+protocolDiv.innerHTML = protocolHtml;
+
+document.getElementById("aiFeedback").appendChild(protocolDiv);
+
             barHtml += `<div class="skill-bar-container" style="opacity: ${activeGoal !== "None" && !isTarget ? '0.2' : '1'}; margin-bottom:15px;">
+
                     <div class="skill-label" style="display:flex; justify-content:space-between; font-family:monospace; font-size:0.85em;">
+
                         <span>${s.name.toUpperCase()}</span><span>${cur.toFixed(0)}%</span>
+
                     </div>
+
                     <div class="bar-bg" style="background:#111; height:6px; border-radius:10px; border:1px solid #333;">
+
                         <div class="bar-fill" style="width: ${cur}%; height:100%; background: ${isTarget ? 'var(--potential)' : 'var(--primary)'}; border-radius:10px;"></div>
+
                     </div>
+
                     ${isTarget ? `<div style="font-size:0.7em; color:var(--potential); margin-top:5px; font-family:monospace;">> ${recText}</div>` : ''}
+
                 </div>`;
+
         });
 
+
+
         const pullPushRatio = (pull1RM / push1RM).toFixed(2);
+
         const saIntegrity = (sa1RM / push1RM).toFixed(2);
+
         const relPower = push1RM.toFixed(2);
 
+
+
         const hasWeightedData = (parseFloat(document.getElementById("wdW").value) > 0 || parseFloat(document.getElementById("saW").value) > 0);
+
         const hasRepData = (parseInt(document.getElementById("pullups").value) > 0);
 
+
+
         let tStatus = torqueFactor > 1.08 ? "PENALTY" : "OPTIMAL";
+
         let tDesc = torqueFactor > 1.08 ? `Height (${h.toFixed(0)}cm) creates lever disadvantage.` : `Optimal leverages for statics.`;
 
+
+
         let bStatus = "STABLE";
+
         let bDesc = "Enter rep data to analyze scapular balance.";
+
         if (hasRepData) {
+
             bStatus = pullPushRatio < 0.85 ? "DEFICIT" : "BALANCED";
+
             bDesc = pullPushRatio < 0.85 ? `Pull chain is ${((1-pullPushRatio)*100).toFixed(0)}% behind Push.` : `Scapular stabilizers are matched.`;
+
         }
+
+
 
         let sStatus = "NOMINAL";
+
         let sDesc = "Density sufficient for current loads.";
+
         if (!hasWeightedData) {
+
             sStatus = "INACTIVE";
+
             sDesc = "Enter weighted matrix data for tendon audit.";
+
         } else if (saIntegrity < 0.62) {
+
             sStatus = "TENDON LAG";
+
             sDesc = "Muscle power outpaces connective tissue. High injury risk.";
+
         }
+
+
 
         let auditHtml = `<h3 style="font-size:0.7em; letter-spacing:3px; color:var(--primary); margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">BIOMECHANICAL_REPORT</h3>`;
+
         const createInsight = (title, status, val, desc, color) => `<div class="insight-block" style="margin-bottom:15px; border-left:3px solid ${color}; padding-left:12px; background: rgba(255,255,255,0.02); padding-top:8px; padding-bottom:8px;">
+
                 <div style="display:flex; justify-content:space-between; align-items:center;">
+
                     <span style="font-size:0.8em; font-weight:bold; color:${color};">${title}</span>
+
                     <span style="font-size:0.6em; background:${color}; color:#000; padding:1px 4px; border-radius:2px; font-weight:bold;">${status}</span>
+
                 </div>
+
                 <div style="font-size:1em; color:#fff; font-family:monospace; margin:4px 0;">${val}</div>
+
                 <p style="font-size:0.65em; color:#bbb; margin:0; line-height:1.4;">${desc}</p>
+
             </div>`;
 
+
+
         auditHtml += createInsight("TORQUE_LOAD", tStatus, torqueFactor.toFixed(2) + "x", tDesc, torqueFactor > 1.08 ? "#ff9900" : "#888");
+
         auditHtml += createInsight("POSTERIOR_CHAIN", bStatus, pullPushRatio, bDesc, pullPushRatio < 0.85 ? "#ff4444" : "#00ffcc");
+
         auditHtml += createInsight("CONNECTIVE_TISSUE", sStatus, saIntegrity, sDesc, saIntegrity < 0.62 ? "#ff4444" : "#00ffcc");
+
         auditHtml += createInsight("RELATIVE_POWER", "FORCE", relPower + "x BW", "Force generation relative to mass.", "var(--primary)");
 
+
+
+        // RESTORED HEATMAP & VOLUME LOGIC
+
         const shoulders = document.querySelectorAll('#joint-shoulder-l, #joint-shoulder-r');
+
         const elbows = document.querySelectorAll('#joint-elbow-l, #joint-elbow-r');
+
         let riskMsg = "SYSTEMS_NOMINAL";
 
-        if (pullPushRatio < 0.85) { shoulders.forEach(s => s.style.fill = "#ff4444"); riskMsg = "SHOULDER_RISK"; } 
+
+
+        if (pullPushRatio < 0.85) { shoulders.forEach(s => s.style.fill = "#ff4444"); riskMsg = "SHOULDER_RISK"; }
+
         else { shoulders.forEach(s => s.style.fill = "var(--potential)"); }
-        if (saIntegrity < 0.60) { elbows.forEach(e => e.style.fill = "#ff4444"); riskMsg = (riskMsg === "SHOULDER_RISK") ? "MULTI_JOINT_ADVISORY" : "ELBOW_RISK"; } 
+
+
+
+        if (saIntegrity < 0.60) { elbows.forEach(e => e.style.fill = "#ff4444"); riskMsg = (riskMsg === "SHOULDER_RISK") ? "MULTI_JOINT_ADVISORY" : "ELBOW_RISK"; }
+
         else { elbows.forEach(e => e.style.fill = "var(--potential)"); }
 
+
+
         const rMsg = document.getElementById("risk-msg");
+
         if (rMsg) { rMsg.innerText = riskMsg; rMsg.style.color = (riskMsg === "SYSTEMS_NOMINAL") ? "var(--potential)" : "var(--danger)"; }
 
+
+
         let pullSets = parseInt(document.getElementById("wpS").value) || 0;
+
         let pushSets = parseInt(document.getElementById("wdS").value) || 0;
+
         let totalTax = (pullSets * 1.5) + (pushSets * 1.5);
+
         const vFill = document.getElementById("volume-fill");
+
         if (vFill) {
+
             vFill.style.width = Math.min((totalTax / 20) * 100, 100) + "%";
+
             vFill.style.background = totalTax > 15 ? "var(--danger)" : "var(--primary)";
+
         }
+
         if (document.getElementById("volume-tax")) document.getElementById("volume-tax").innerText = totalTax.toFixed(1);
 
-        document.getElementById("aiFeedback").innerHTML = protocolHtml + auditHtml;
-        document.getElementById("barContainer").innerHTML = barHtml;
-        radarChart.data.datasets[0].data = curScores;
-        radarChart.data.datasets[1].data = potScores;
-        if (window.innerWidth < 600) {
-            radarChart.options.plugins.legend.display = false;
-            radarChart.options.scales.r.pointLabels.font.size = 10;
-        }
-        radarChart.update('none'); 
 
-    } catch (err) { console.error("Injection Error:", err); }
+
+    // FINAL INJECTION
+
+        // We check if protocolHtml exists; if not, we use an empty string so it doesn't crash
+
+        const finalOutput = (typeof protocolHtml !== 'undefined' ? protocolHtml : "") + auditHtml;
+
+       
+
+        document.getElementById("aiFeedback").innerHTML = finalOutput;
+
+        document.getElementById("barContainer").innerHTML = barHtml;
+
+       
+
+        radarChart.data.datasets[0].data = curScores;
+
+        radarChart.data.datasets[1].data = potScores;
+
+       
+
+        // Mobile Fix (Crucial for display but doesn't touch math)
+
+        if (window.innerWidth < 600) {
+
+            radarChart.options.plugins.legend.display = false;
+
+            radarChart.options.scales.r.pointLabels.font.size = 10;
+
+        }
+
+        radarChart.update('none');
+
+
+
+    } catch (err) {
+
+        console.error("Injection Error:", err);
+
+    }
+
 }
 // Function 1: The actual image saver
 
