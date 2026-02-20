@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { 
-            /* Matches the Specificity is King neon theme */
             --primary: #00ff88; 
             --bg: #0d1117; 
             --card: #161b22; 
@@ -22,12 +21,10 @@
             font-family: 'Inter', sans-serif; 
             margin: 0; 
             padding: 20px; 
-            /* Subtle grid background */
             background-image: radial-gradient(var(--border) 0.5px, transparent 0.5px);
             background-size: 30px 30px;
         }
 
-        /* Biotech Scanning Line */
         body::before {
             content: "";
             position: fixed;
@@ -109,74 +106,67 @@
             display: flex;
             justify-content: space-between; 
             align-items: center;
-            text-decoration: none; 
         }
 
         .node:hover { 
             border-color: var(--primary); 
             background: #1a1a25; 
             transform: translateX(4px); 
-            box-shadow: -4px 0 10px rgba(0, 255, 136, 0.1);
         }
 
-        /* Mastery State */
         .node.mastered {
             border-color: var(--primary);
-            background: rgba(0, 255, 136, 0.1);
+            background: rgba(0, 255, 136, 0.15);
+            box-shadow: inset 0 0 10px rgba(0, 255, 136, 0.1);
         }
 
         .node h3 { font-size: 0.7rem; margin: 0; font-weight: 400; color: #ccc; }
         .node span { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; color: var(--primary); opacity: 0.4; }
         
         .elite { border-right: 3px solid var(--elite); }
-        .elite:hover { border-color: var(--elite); box-shadow: 4px 0 10px rgba(255, 62, 62, 0.1); }
         .elite h3 { color: #ff8080; }
         .elite span { color: var(--elite); opacity: 0.6; }
 
-        /* Protocol Box Styling */
         .protocol-box {
             grid-column: 1 / -1;
             margin-top: 40px;
             background: rgba(22, 27, 34, 0.7);
             padding: 30px;
             border-radius: 8px;
-            border: 1px solid var(--border);
             border-left: 5px solid var(--elite);
         }
 
         .protocol-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 25px;
-            margin-top: 20px;
         }
 
-        .protocol-item h4 {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--primary);
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
+        .protocol-item h4 { font-size: 0.7rem; color: var(--primary); text-transform: uppercase; margin-bottom: 10px; }
+        .protocol-item p, .protocol-item li { font-size: 0.7rem; color: #bbb; line-height: 1.5; }
 
-        .protocol-item p, .protocol-item li {
-            font-size: 0.75rem;
-            line-height: 1.6;
-            color: #bbb;
-        }
-
-        .footer-nav { margin: 60px 0; text-align: center; }
+        .footer-nav { margin: 60px 0; text-align: center; display: flex; justify-content: center; gap: 20px; }
         .back-btn { 
             font-family: 'JetBrains Mono', monospace; 
             text-decoration: none; 
             color: var(--text); 
             border: 1px solid var(--border); 
-            padding: 12px 40px; 
-            font-size: 0.75rem; 
+            padding: 12px 30px; 
+            font-size: 0.7rem; 
             border-radius: 4px;
-            transition: 0.3s;
+            background: none;
+            cursor: pointer;
         }
-        .back-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(0, 255, 136, 0.05); }
+        .back-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+        @media print {
+            body { background: white !important; color: black !important; }
+            body::before, .footer-nav, .protocol-box { display: none; }
+            .branch { border: 1px solid black !important; background: white !important; break-inside: avoid; }
+            .node { border: 1px solid #ddd !important; background: white !important; }
+            .node.mastered { border: 2px solid black !important; background: #f0f0f0 !important; }
+            .node h3, .node span, .branch-header, .tier-label { color: black !important; opacity: 1 !important; }
+        }
 
         @media (max-width: 1100px) {
             .tree-grid { grid-template-columns: 1fr; }
@@ -189,7 +179,6 @@
     <div class="header"><h1>SKILL TREE</h1></div>
 
     <div class="tree-grid">
-        
         <div class="branch">
             <div class="branch-header">Push Skills</div>
             <div class="tier-label">Basics</div>
@@ -207,19 +196,12 @@
             <div class="node"><h3>Straddle Planche</h3><span>LVL 5</span></div>
             <div class="node"><h3>Planche PU (Straddle)</h3><span>LVL 5</span></div>
             <div class="node"><h3>Full Planche</h3><span>LVL 6</span></div>
-            <div class="node"><h3>Planche PU (Full)</h3><span>LVL 6</span></div>
             <div class="node"><h3>Ring Planche</h3><span>LVL 6</span></div>
-            <div class="node"><h3>Wide Planche</h3><span>LVL 6</span></div>
             <div class="tier-label">Elite Mastery</div>
             <div class="node elite"><h3>Maltese Lean</h3><span>RANK A</span></div>
-            <div class="node elite"><h3>Tuck Maltese</h3><span>RANK A</span></div>
             <div class="node elite"><h3>Straddle Maltese</h3><span>RANK S</span></div>
-            <div class="node elite"><h3>Maltese (Rings)</h3><span>RANK S</span></div>
             <div class="node elite"><h3>Inverted Cross</h3><span>RANK S</span></div>
-            <div class="node elite"><h3>Supinated Planche</h3><span>RANK SS</span></div>
             <div class="node elite"><h3>Zanetti Press</h3><span>RANK SS</span></div>
-            <div class="node elite"><h3>One Arm Planche (Ast)</h3><span>RANK SS</span></div>
-            <div class="node elite"><h3>Reverse Planche</h3><span>ZENITH</span></div>
         </div>
 
         <div class="branch">
@@ -228,26 +210,19 @@
             <div class="node"><h3>Skin the Cat</h3><span>BASE</span></div>
             <div class="node"><h3>German Hang</h3><span>BASE</span></div>
             <div class="node"><h3>Back Lever</h3><span>LVL 1</span></div>
-            <div class="node"><h3>Straddle Back Lever</h3><span>LVL 1</span></div>
             <div class="node"><h3>Ice Cream Makers</h3><span>LVL 2</span></div>
             <div class="tier-label">Intermediate</div>
             <div class="node"><h3>Tuck Front Lever</h3><span>LVL 3</span></div>
             <div class="node"><h3>Adv Tuck FL</h3><span>LVL 3</span></div>
-            <div class="node"><h3>Archer Pull-up</h3><span>LVL 3</span></div>
             <div class="node"><h3>Muscle-up (Strict)</h3><span>LVL 4</span></div>
             <div class="node"><h3>FL Raises</h3><span>LVL 4</span></div>
             <div class="tier-label">Advanced</div>
             <div class="node"><h3>Straddle Front Lever</h3><span>LVL 5</span></div>
             <div class="node"><h3>Full Front Lever</h3><span>LVL 6</span></div>
-            <div class="node"><h3>Supinated FL</h3><span>LVL 6</span></div>
-            <div class="node"><h3>Front Lever Pull</h3><span>LVL 6</span></div>
             <div class="node"><h3>One Arm Pull-up</h3><span>LVL 6</span></div>
             <div class="node"><h3>Slow Muscle-up</h3><span>LVL 6</span></div>
             <div class="tier-label">Elite Mastery</div>
             <div class="node elite"><h3>Front Lever Touch</h3><span>RANK A</span></div>
-            <div class="node elite"><h3>Supinated FL Touch</h3><span>RANK A</span></div>
-            <div class="node elite"><h3>OA FL (Assisted)</h3><span>RANK S</span></div>
-            <div class="node elite"><h3>Hefesto (Tuck)</h3><span>RANK S</span></div>
             <div class="node elite"><h3>Hefesto (Full)</h3><span>RANK SS</span></div>
             <div class="node elite"><h3>One Arm FL</h3><span>RANK SS</span></div>
             <div class="node elite"><h3>Victorian Cross</h3><span>ZENITH</span></div>
@@ -258,30 +233,18 @@
             <div class="tier-label">Basics</div>
             <div class="node"><h3>Wall Handstand</h3><span>BASE</span></div>
             <div class="node"><h3>Pike Press</h3><span>BASE</span></div>
-            <div class="node"><h3>Shoulder Stand</h3><span>LVL 1</span></div>
             <div class="node"><h3>Bent Arm HS</h3><span>LVL 2</span></div>
-            <div class="node"><h3>HS Shoulder Taps</h3><span>LVL 2</span></div>
             <div class="tier-label">Intermediate</div>
             <div class="node"><h3>Freestanding HS</h3><span>LVL 3</span></div>
-            <div class="node"><h3>Tuck Handstand</h3><span>LVL 3</span></div>
-            <div class="node"><h3>Straddle HS</h3><span>LVL 3</span></div>
             <div class="node"><h3>HS Push-up (Wall)</h3><span>LVL 4</span></div>
             <div class="node"><h3>Straddle Press to HS</h3><span>LVL 4</span></div>
             <div class="tier-label">Advanced</div>
             <div class="node"><h3>Strict HS Push-up</h3><span>LVL 5</span></div>
-            <div class="node"><h3>Deficit HS PU</h3><span>LVL 5</span></div>
             <div class="node"><h3>Stalder Press</h3><span>LVL 6</span></div>
-            <div class="node"><h3>90° Hold</h3><span>LVL 6</span></div>
             <div class="node"><h3>90° Push-up</h3><span>LVL 6</span></div>
-            <div class="node"><h3>Hollowback HS</h3><span>LVL 6</span></div>
             <div class="tier-label">Elite Mastery</div>
             <div class="node elite"><h3>Tiger Bend</h3><span>RANK A</span></div>
-            <div class="node elite"><h3>Hollowback Press</h3><span>RANK A</span></div>
-            <div class="node elite"><h3>OA HS (Wall Ast)</h3><span>RANK S</span></div>
-            <div class="node elite"><h3>Mexican HS</h3><span>RANK S</span></div>
             <div class="node elite"><h3>One Arm Handstand</h3><span>RANK SS</span></div>
-            <div class="node elite"><h3>Butterfly Mount</h3><span>RANK SS</span></div>
-            <div class="node elite"><h3>OA HS Push-up (Part)</h3><span>RANK SS</span></div>
             <div class="node elite"><h3>OA HS Push-up</h3><span>ZENITH</span></div>
         </div>
 
@@ -299,15 +262,13 @@
                         <div class="tier-label">Intermediate</div>
                         <div class="node"><h3>Pistol Squat</h3><span>LVL 3</span></div>
                         <div class="node"><h3>Shrimp Squat</h3><span>LVL 3</span></div>
-                        <div class="node"><h3>Harop Curl (Partial)</h3><span>LVL 4</span></div>
+                        <div class="node"><h3>Harop Curl</h3><span>LVL 4</span></div>
                     </div>
                     <div>
                         <div class="tier-label">Advanced & Elite</div>
                         <div class="node"><h3>Nordic Curls</h3><span>LVL 5</span></div>
                         <div class="node"><h3>Dragon Pistol</h3><span>LVL 6</span></div>
-                        <div class="node elite"><h3>Full Nordic</h3><span>RANK A</span></div>
-                        <div class="node elite"><h3>Explosive Nordic</h3><span>RANK S</span></div>
-                        <div class="node elite"><h3>Weighted Pistol</h3><span>RANK SS</span></div>
+                        <div class="node elite"><h3>Full Nordic</h3><span>RANK S</span></div>
                     </div>
                 </div>
             </div>
@@ -319,32 +280,18 @@
                 <div class="node-subgrid">
                     <div>
                         <div class="tier-label">Support</div>
-                        <div class="node"><h3>Dead Hang</h3><span>BASE</span></div>
-                        <div class="node"><h3>Support Hold</h3><span>BASE</span></div>
-                        <div class="node"><h3>Inverted Hang</h3><span>BASE</span></div>
-                        <div class="node"><h3>Arch Hang</h3><span>LVL 1</span></div>
-                        <div class="node"><h3>Elbow Lever</h3><span>LVL 1</span></div>
-                        <div class="node"><h3>Reverse Support</h3><span>LVL 2</span></div>
                         <div class="node"><h3>L-Sit</h3><span>LVL 2</span></div>
+                        <div class="node"><h3>Elbow Lever</h3><span>LVL 1</span></div>
                     </div>
                     <div>
                         <div class="tier-label">Levers & Flags</div>
+                        <div class="node"><h3>Human Flag</h3><span>LVL 4</span></div>
                         <div class="node"><h3>Dragon Flag</h3><span>LVL 3</span></div>
-                        <div class="node"><h3>Side Lever (Flag)</h3><span>LVL 3</span></div>
-                        <div class="node"><h3>Straddle Flag</h3><span>LVL 3</span></div>
-                        <div class="node"><h3>Full Human Flag</h3><span>LVL 4</span></div>
-                        <div class="node"><h3>V-Sit</h3><span>LVL 4</span></div>
-                        <div class="node"><h3>Tuck Manna</h3><span>LVL 5</span></div>
-                        <div class="node"><h3>Tuck Victorian</h3><span>LVL 5</span></div>
                     </div>
                     <div>
                         <div class="tier-label">Elite Holds</div>
-                        <div class="node elite"><h3>Iron Cross (Ast)</h3><span>RANK A</span></div>
                         <div class="node elite"><h3>Iron Cross</h3><span>RANK A</span></div>
                         <div class="node elite"><h3>Manna</h3><span>RANK S</span></div>
-                        <div class="node elite"><h3>Zanetti Hold</h3><span>RANK S</span></div>
-                        <div class="node elite"><h3>Straddle Victorian</h3><span>RANK SS</span></div>
-                        <div class="node elite"><h3>Victorian (Floor)</h3><span>RANK SS</span></div>
                         <div class="node elite"><h3>Victorian (Rings)</h3><span>ZENITH</span></div>
                     </div>
                 </div>
@@ -352,33 +299,32 @@
         </div>
 
         <div class="protocol-box">
-            <div class="branch-header" style="border:none;">System Architecture & Protocols</div>
+            <div class="branch-header" style="border:none; margin-bottom:10px;">Maintenance Protocols</div>
             <div class="protocol-grid">
                 <div class="protocol-item">
-                    <h4>Progression Logic</h4>
-                    <p>Adaptation follows a 3-tier pipeline: Neural (Brain/Nerves), Structural (Muscle), and Connective (Tendons). Muscles adapt in weeks; tendons adapt in months.</p>
+                    <h4>Progression</h4>
+                    <p>Neural adaptation (1-4 weeks), Structural (1-6 months), Connective (6-24 months).</p>
                 </div>
                 <div class="protocol-item">
-                    <h4>Time Expectations</h4>
-                    <ul>
-                        <li><strong>Basics:</strong> 1-3 Months</li>
-                        <li><strong>Intermediate:</strong> 6-12 Months</li>
-                        <li><strong>Elite:</strong> 3-10 Years of specific focus.</li>
-                    </ul>
+                    <h4>Timeframes</h4>
+                    <p>Basics: 3mo. Intermediate: 1yr. Advanced: 2-5yrs. Elite: 5-10yrs.</p>
                 </div>
                 <div class="protocol-item">
-                    <h4>Mobility Keys</h4>
-                    <p><strong>Planche:</strong> 15°+ Wrist Extension.<br><strong>Handstand:</strong> 180° Shoulder Flexion.<br><strong>Victorian:</strong> Elite Scapular Depression.</p>
+                    <h4>Mobility Pre-reqs</h4>
+                    <p>Planche: 90°+ Wrist. HS: 180° Shoulder. Front Lever: Thoracic extension.</p>
                 </div>
-                <div class="protocol-item" style="border-left: 2px solid var(--elite); padding-left: 15px;">
-                    <h4>Injury Fail-Safe</h4>
-                    <p>Avoid "System Shutdown." Never increase intensity by >10% monthly. Sharp joint pain requires immediate 40% load reduction for 14 days.</p>
+                <div class="protocol-item">
+                    <h4>Injury Prevention</h4>
+                    <p>Antagonist balance (Push/Pull ratio 1:1). 20% max volume increase monthly.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="footer-nav"><a href="index.html" class="back-btn">← BACK_HOME</a></div>
+    <div class="footer-nav">
+        <a href="index.html" class="back-btn">← BACK_HOME</a>
+        <button onclick="window.print()" class="back-btn">⎙ PRINT_FIELD_REPORT</button>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -391,15 +337,11 @@
 
                 node.addEventListener('click', () => {
                     node.classList.toggle('mastered');
-                    updateStorage();
+                    const mastered = Array.from(document.querySelectorAll('.node.mastered'))
+                                         .map(n => n.querySelector('h3').innerText);
+                    localStorage.setItem('caliMasteredSkills', JSON.stringify(mastered));
                 });
             });
-
-            function updateStorage() {
-                const mastered = Array.from(document.querySelectorAll('.node.mastered'))
-                                     .map(n => n.querySelector('h3').innerText);
-                localStorage.setItem('caliMasteredSkills', JSON.stringify(mastered));
-            }
         });
     </script>
 </body>
