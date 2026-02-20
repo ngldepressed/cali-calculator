@@ -725,38 +725,52 @@ if (s.s > 0 && sa1RM <= 1.0) cur = 0;   // If skill needs straight arm and sa is
         const rMsg = document.getElementById("risk-msg");
         if (rMsg) { rMsg.innerText = riskMsg; rMsg.style.color = (riskMsg === "SYSTEMS_NOMINAL") ? "var(--potential)" : "var(--danger)"; }
 
-       // --- HIGH-SENSITIVITY VOLUME & CNS AUDIT ---
-        let pullSets = parseInt(document.getElementById("wpS").value) || 0;
-        let pushSets = parseInt(document.getElementById("wdS").value) || 0;
-        let saSets = parseInt(document.getElementById("saW").value ? 1 : 0); // Detects if SA work was done
+// --- RELENTLESS VOLUME AUDIT ---
+let pullSets = parseInt(document.getElementById("wpS").value) || 0;
+let pushSets = parseInt(document.getElementById("wdS").value) || 0;
+let saSets = parseInt(document.getElementById("saS")?.value) || 0;
 
-        // Intensity Weighting: Sets * (1RM Squared)
-        // This makes 30kg dips cost significantly more than bodyweight dips
-        let pullTax = pullSets * Math.pow(pull1RM, 2);
-        let pushTax = pushSets * Math.pow(push1RM, 2);
-        let saTax = saSets * Math.pow(sa1RM, 2) * 2.0; // SA is 2x more taxing on tendons
-        
-        let totalTax = pullTax + pushTax + saTax;
-        
-        const vFill = document.getElementById("volume-fill");
-        if (vFill) {
-            // Updated Thresholds: 60 is the new 'Extreme' ceiling
-            let volumePct = Math.min((totalTax / 60) * 100, 100);
-            vFill.style.width = volumePct + "%";
-            
-            // Color logic: <25 Optimal (Cyan), 25-45 High (Orange), 45+ Danger (Red)
-            if (totalTax > 45) {
-                vFill.style.background = "#ff4444"; // System Overload
-            } else if (totalTax > 25) {
-                vFill.style.background = "#ff9900"; // High Strain
-            } else {
-                vFill.style.background = "#00ffcc"; // Optimal
-            }
-        }
+// Intensity Scaling (e.g., +30kg on a 75kg athlete = 1.4)
+const pullInt = pull1RM; 
+const pushInt = push1RM;
 
-        if (document.getElementById("volume-tax")) {
-            document.getElementById("volume-tax").innerText = totalTax.toFixed(1);
-        }
+// Math: Sets * (Intensity Squared)
+let pullLoad = pullSets * (pullInt * pullInt);
+let pushLoad = pushSets * (pushInt * pushInt);
+let totalTax = pullLoad + pushLoad + (saSets * 3);
+
+// 1. Determine Status and Color
+let vStatus = "OPTIMAL";
+let vColor = "#00ffcc";
+
+// Trigger DANGER if tax is high OR if total sets exceed 25
+if (totalTax > 40 || (pullSets + pushSets) > 25) {
+    vStatus = "OVERREACHING";
+    vColor = "#ff4444";
+} else if (totalTax > 25) {
+    vStatus = "HIGH LOAD";
+    vColor = "#ff9900";
+}
+
+// 2. Update the Bar Color and Width
+const vFill = document.getElementById("volume-fill");
+if (vFill) {
+    let volumePct = Math.min((totalTax / 45) * 100, 100); 
+    vFill.style.width = volumePct + "%";
+    vFill.style.background = vColor;
+}
+
+// 3. Update the Text (Fixes the "Still says Optimal" bug)
+const vStatusLabel = document.getElementById("recovery-status"); 
+if (vStatusLabel) {
+    vStatusLabel.innerText = vStatus;
+    vStatusLabel.style.color = vColor;
+}
+
+// 4. Update the Numeric Tax Display
+if (document.getElementById("volume-tax")) {
+    document.getElementById("volume-tax").innerText = totalTax.toFixed(1);
+}
         // Injects ONLY the Biomechanical Report
         document.getElementById("aiFeedback").innerHTML = auditHtml;
         document.getElementById("barContainer").innerHTML = barHtml;
