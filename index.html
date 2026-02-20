@@ -654,6 +654,10 @@ function analyze() {
             const sig = (x) => 100 / (1 + Math.exp(-0.15 * (x - 52)));
             let minVal = Math.min(...vectors.map(v => v.val));
             let cur = sig(minVal) * cnsVal * form;
+            // FORCE ZERO if base requirements are not met
+if (s.l > 0 && pull1RM <= 1.0) cur = 0; // If skill needs pull and pull is 0
+if (s.p > 0 && push1RM <= 1.0) cur = 0; // If skill needs push and push is 0
+if (s.s > 0 && sa1RM <= 1.0) cur = 0;   // If skill needs straight arm and sa is 0
 
             const rawPull = parseFloat(document.getElementById("pullups").value) || 0;
             const rawPush = parseFloat(document.getElementById("pushups").value) || 0;
