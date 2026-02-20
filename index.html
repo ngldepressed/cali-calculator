@@ -622,14 +622,12 @@ function analyze() {
         const conv = sys === 'imp' ? 0.453592 : 1;
         const u = sys === 'met' ? 'kg' : 'lbs';
         
-        // --- THE FIX ---
         const weightInput = document.getElementById("weight").value;
         const isWeightEmpty = !weightInput || parseFloat(weightInput) <= 0;
         let bw = (parseFloat(weightInput) || 75) * conv; 
 
         let h = sys === 'met' ? (parseFloat(document.getElementById("hCm").value) || 170) : ((parseFloat(document.getElementById("hFt").value)||5)*30.48)+((parseFloat(document.getElementById("hIn").value)||7)*2.54);
 
-        // 1. CALCULATIONS
         if (isSimMode) {
             document.getElementById("weight").value = 75;
             document.getElementById("pullups").value = 28;
@@ -656,7 +654,6 @@ function analyze() {
         const cnsVal = (parseInt(document.getElementById("cns").value) || 10) / 10;
         const form = parseFloat(document.getElementById("form").value) || 1.0;
 
-        // 2. SIM MODE / OPTIMIZER
         if (isSimMode) {
             radarChart.data.datasets[0].label = 'SIMULATED TARGET';
             radarChart.data.datasets[0].borderColor = '#00ffcc';
@@ -666,7 +663,6 @@ function analyze() {
             if (typeof saveToLocal === 'function') saveToLocal(); 
         }
 
-        // 3. SKILL BARS & PROGRESS
         let skillPanel = document.getElementById("skillBars");
         if (!document.getElementById("goalSelect")) {
             skillPanel.innerHTML = `<div style="margin-bottom:20px;"><label style="color:var(--primary); font-size:0.7em; letter-spacing:2px;">MISSION_TARGET</label>
@@ -699,8 +695,7 @@ function analyze() {
                 recText = `CRITICAL PATH: Improve ${weakest.name}. Target 1RM: +${neededPlate.toFixed(1)}${u}.`;
             }
 
-            barHtml += `
-                <div class="skill-bar-container" style="opacity: ${activeGoal !== "None" && !isTarget ? '0.2' : '1'}; margin-bottom:15px;">
+            barHtml += `<div class="skill-bar-container" style="opacity: ${activeGoal !== "None" && !isTarget ? '0.2' : '1'}; margin-bottom:15px;">
                     <div class="skill-label" style="display:flex; justify-content:space-between; font-family:monospace; font-size:0.85em;">
                         <span>${s.name.toUpperCase()}</span><span>${cur.toFixed(0)}%</span>
                     </div>
@@ -711,7 +706,6 @@ function analyze() {
                 </div>`;
         });
 
-        // 4. DEEP DIAGNOSTIC AUDIT LOGIC
         const pullPushRatio = (pull1RM / push1RM).toFixed(2);
         const saIntegrity = (sa1RM / push1RM).toFixed(2);
         const relPower = push1RM.toFixed(2);
@@ -740,9 +734,7 @@ function analyze() {
         }
 
         let auditHtml = `<h3 style="font-size:0.7em; letter-spacing:3px; color:var(--primary); margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">BIOMECHANICAL_REPORT</h3>`;
-        
-        const createInsight = (title, status, val, desc, color) => `
-            <div class="insight-block" style="margin-bottom:15px; border-left:3px solid ${color}; padding-left:12px; background: rgba(255,255,255,0.02); padding-top:8px; padding-bottom:8px;">
+        const createInsight = (title, status, val, desc, color) => `<div class="insight-block" style="margin-bottom:15px; border-left:3px solid ${color}; padding-left:12px; background: rgba(255,255,255,0.02); padding-top:8px; padding-bottom:8px;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <span style="font-size:0.8em; font-weight:bold; color:${color};">${title}</span>
                     <span style="font-size:0.6em; background:${color}; color:#000; padding:1px 4px; border-radius:2px; font-weight:bold;">${status}</span>
@@ -756,125 +748,20 @@ function analyze() {
         auditHtml += createInsight("CONNECTIVE_TISSUE", sStatus, saIntegrity, sDesc, saIntegrity < 0.62 ? "#ff4444" : "#00ffcc");
         auditHtml += createInsight("RELATIVE_POWER", "FORCE", relPower + "x BW", "Force generation relative to mass.", "var(--primary)");
 
-        // 5. GENETIC CEILING & PROGRESSION TIER
-        let ceilingDiv = document.getElementById("geneticCeiling");
-        if (!ceilingDiv) {
-            ceilingDiv = document.createElement("div");
-            ceilingDiv.id = "geneticCeiling";
-            document.getElementById("aiFeedback").parentNode.appendChild(ceilingDiv);
-        }
-
-        const bmi = (bw / (Math.pow(h/100, 2))).toFixed(1);
-        const idealWeightMin = (21 * Math.pow(h/100, 2)) / conv;
-        const idealWeightMax = (23.5 * Math.pow(h/100, 2)) / conv;
-        const strengthTax = ((torqueFactor - 1) * 100).toFixed(1);
-
-        let cMsg = ""; let cCol = "#00ffcc";
-        if (bmi > 26) { cMsg = "HEAVYWEIGHT PENALTY: High mass increases torque demands."; cCol = "#ff9900"; }
-        else if (bmi < 19) { cMsg = "POWER_DEFICIT: Low muscle volume for frame."; cCol = "#00ccff"; }
-        else { cMsg = "OPTIMAL FRAME: BMI is in the elite power-to-weight window."; }
-
-        const weightLabel = isWeightEmpty ? "BMI: (NO DATA)" : `BMI: ${bmi}`;
-
-        ceilingDiv.innerHTML = `
-            <h3 style="font-size:0.7em; letter-spacing:3px; color:var(--primary); margin-top:25px; border-bottom:1px solid #333; padding-bottom:10px;">GENETIC_CEILING</h3>
-            <div class="insight-block" style="margin-bottom:15px; border-left:3px solid ${cCol}; padding-left:12px; background: rgba(255,255,255,0.02); padding:10px;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:0.8em; font-weight:bold; color:${cCol};">FRAME_EFFICIENCY</span>
-                    <span style="font-size:0.7em; color:#fff;">${weightLabel}</span>
-                </div>
-                <p style="font-size:0.65em; color:#bbb; margin:8px 0; line-height:1.4;">${cMsg}</p>
-                <div style="font-size:0.65em; color:#888;">Ideal Weight for ${h.toFixed(0)}cm: <span style="color:#fff;">${idealWeightMin.toFixed(0)}-${idealWeightMax.toFixed(0)}${u}</span></div>
-            </div>
-            <div class="insight-block" style="border-left:3px solid #ff4444; padding-left:12px; background: rgba(255,255,255,0.02); padding:10px;">
-                <span style="font-size:0.8em; font-weight:bold; color:#ff4444;">LEVERAGE_TAX: +${strengthTax}%</span>
-                <p style="font-size:0.65em; color:#bbb; margin:5px 0; line-height:1.4;">Based on height, you require ${strengthTax}% more raw force than a 170cm reference athlete.</p>
-            </div>`;
-
-        let tierDiv = document.getElementById("progressionTier");
-        if (!tierDiv) {
-            tierDiv = document.createElement("div");
-            tierDiv.id = "progressionTier";
-            ceilingDiv.parentNode.appendChild(tierDiv);
-        }
-
-        let tierHtml = "";
-        if (activeGoal !== "None") {
-            const skillIdx = skills.findIndex(sk => sk.name === activeGoal);
-            const score = parseFloat(curScores[skillIdx]);
-            let tier = "NOVICE"; let tCol = "#888"; let milestone = "";
-            if (score >= 80) { tier = "MASTERED"; tCol = "#ff00ff"; }
-            else if (score >= 65) { tier = "ELITE (Full)"; tCol = "#00ffcc"; }
-            else if (score >= 40) { tier = "ADVANCED"; tCol = "#ffcc00"; }
-            else if (score >= 15) { tier = "INTERMEDIATE"; tCol = "#00ccff"; }
-
-            const progressions = {
-                "Maltese": ["Planche Lean (Deep) / Zanetti Press", "Banded Maltese / Dumbbell Flyes", "Maltese ISO (Dream Machine)", "Full Maltese Holds", "Maltese to Planche Transitions"],
-                "Iron Cross": ["Support Holds & Skin the Cat", "L-Sit Ring Pulls (Wide)", "Assisted Cross (Dream Machine/Bands)", "Full Cross ISO Holds", "Cross Pull-outs / Weighted"],
-                "Full Planche": ["Planche Leans / Frog Stand", "Tuck / Advanced Tuck", "Straddle Planche Holds", "Full Planche (Clean Form)", "Planche Pushups / Maltese Prep"],
-                "Straddle Planche": ["Planche Leans / Tuck Holds", "Advanced Tuck Planche", "Straddle (Low Angle)", "Full Straddle Planche", "Straddle Planche Pushups"],
-                "Front Lever": ["Scapula Pulls / Skin the Cat", "Tuck / Adv. Tuck Lever", "Straddle / One-Leg Lever", "Full Front Lever", "Front Lever Pullups"],
-                "Muscle Ups": ["High Pullups & Straight Bar Dips", "Transition Negatives / Banded", "Clean Explosive Reps", "Strict / Slow Form", "Weighted / Ring Muscle Ups"]
-            };
-
-            const skillPath = progressions[activeGoal] || ["Basics", "Intermediate", "Advanced", "Full", "Mastery"];
-            const mIdx = score >= 80 ? 4 : score >= 65 ? 3 : score >= 40 ? 2 : score >= 15 ? 1 : 0;
-            milestone = skillPath[mIdx];
-
-            tierHtml = `
-                <h3 style="font-size:0.7em; letter-spacing:3px; color:var(--primary); margin-top:25px; border-bottom:1px solid #333; padding-bottom:10px;">PROGRESSION_TIER</h3>
-                <div class="insight-block" style="border-left:3px solid ${tCol}; padding:12px; background: rgba(255,255,255,0.03);">
-                    <div style="font-size:0.65em; color:var(--primary); letter-spacing:1px; margin-bottom:5px;">CURRENT_BRACKET</div>
-                    <div style="font-size:1.1em; font-weight:bold; color:${tCol}; font-family:monospace;">${tier}</div>
-                    <div style="margin:10px 0; height:4px; background:#111; border-radius:2px; overflow:hidden;">
-                        <div style="width:${score}%; height:100%; background:${tCol}; box-shadow: 0 0 10px ${tCol}55;"></div>
-                    </div>
-                    <div style="font-size:0.65em; color:#bbb;">NEXT_OBJECTIVE: <span style="color:#fff;">${milestone}</span></div>
-                </div>`;
-        }
-        tierDiv.innerHTML = tierHtml;
-
-        // 6. HEATMAP & VOLUME UPDATES
-        const shoulders = document.querySelectorAll('#joint-shoulder-l, #joint-shoulder-r');
-        const elbows = document.querySelectorAll('#joint-elbow-l, #joint-elbow-r');
-        let riskMsg = "SYSTEMS_NOMINAL";
-
-        if (pullPushRatio < 0.85) { shoulders.forEach(s => s.style.fill = "#ff4444"); riskMsg = "SHOULDER_RISK"; } 
-        else { shoulders.forEach(s => s.style.fill = "var(--potential)"); }
-
-        if (saIntegrity < 0.60) { elbows.forEach(e => e.style.fill = "#ff4444"); riskMsg = (riskMsg === "SHOULDER_RISK") ? "MULTI_JOINT_ADVISORY" : "ELBOW_RISK"; } 
-        else { elbows.forEach(e => e.style.fill = "var(--potential)"); }
-
-        const rMsg = document.getElementById("risk-msg");
-        if (rMsg) { rMsg.innerText = riskMsg; rMsg.style.color = (riskMsg === "SYSTEMS_NOMINAL") ? "var(--potential)" : "var(--danger)"; }
-
-        let pullSets = parseInt(document.getElementById("wpS").value) || 0;
-        let pushSets = parseInt(document.getElementById("wdS").value) || 0;
-        let totalTax = (pullSets * 1.5) + (pushSets * 1.5);
-        const vFill = document.getElementById("volume-fill");
-        if (vFill) {
-            vFill.style.width = Math.min((totalTax / 20) * 100, 100) + "%";
-            vFill.style.background = totalTax > 15 ? "var(--danger)" : "var(--primary)";
-        }
-        if (document.getElementById("volume-tax")) document.getElementById("volume-tax").innerText = totalTax.toFixed(1);
-
-        // 7. FINAL INJECTION & CHART STABILIZER
         document.getElementById("aiFeedback").innerHTML = auditHtml;
         document.getElementById("barContainer").innerHTML = barHtml;
         
-        // Update Chart Data
+        // --- CHART & MOBILE STABILIZER ---
         radarChart.data.datasets[0].data = curScores;
         radarChart.data.datasets[1].data = potScores;
         
-        // --- STABILIZER START ---
-        // This stops the chart from expanding and breaking on mobile during updates
+        // This is the specific mobile fix that won't break your data
         if (window.innerWidth < 600) {
-            radarChart.options.scales.r.pointLabels.font.size = 8;
-            radarChart.data.datasets[0].pointRadius = 2;
-            radarChart.data.datasets[1].pointRadius = 0;
+            radarChart.options.plugins.legend.display = false;
+            radarChart.options.scales.r.pointLabels.font.size = 10;
         }
+        
         radarChart.update('none'); 
-        // --- STABILIZER END ---
 
     } catch (err) { console.error(err); }
 }
