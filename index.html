@@ -821,7 +821,8 @@ document.getElementById("aiFeedback").appendChild(protocolDiv);
         if (document.getElementById("volume-tax")) document.getElementById("volume-tax").innerText = totalTax.toFixed(1);
 
         // FINAL INJECTION
-        document.getElementById("aiFeedback").innerHTML = auditHtml;
+        // Combined protocolHtml + auditHtml ensures both sections render in the side panel
+        document.getElementById("aiFeedback").innerHTML = protocolHtml + auditHtml;
         document.getElementById("barContainer").innerHTML = barHtml;
         
         radarChart.data.datasets[0].data = curScores;
