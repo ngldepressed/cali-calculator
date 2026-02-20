@@ -5,30 +5,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strength Matrix | Cali-Biotech</title>
     <style>
-        :root { --primary: #4c6fff; --bg: #0f0f17; --card: #1f1f2e; --neon: #00ff88; }
-        body { background-color: var(--bg); color: white; font-family: monospace; text-align: center; padding: 20px; }
-        .unit-toggle { margin-top: 20px; margin-bottom: 30px; }
-        select { background: #1f1f2e; color: var(--primary); border: 1px solid var(--primary); padding: 8px 15px; font-family: monospace; cursor: pointer; border-radius: 4px; }
-        .calc-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1400px; margin: 0 auto; }
-        .card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid #333; width: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.3s; }
-        .card:hover { border-color: var(--primary); }
-        h2 { color: var(--primary); font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        label { display: block; font-size: 0.7rem; color: #888; margin-top: 10px; text-align: left; text-transform: uppercase; }
-        input { width: 100%; padding: 12px; margin: 5px 0; border-radius: 5px; border: 1px solid #444; background: #12121c; color: white; box-sizing: border-box; font-family: monospace; }
-        .result-box { margin-top: 20px; padding: 15px; background: rgba(76, 111, 255, 0.1); border-radius: 8px; border-left: 3px solid var(--primary); min-height: 80px; text-align: left; }
-        .val { font-size: 1.1rem; color: var(--primary); font-weight: bold; display: block; }
-        .sub-val { font-size: 0.65rem; color: #666; display: block; margin-top: 5px; letter-spacing: 1px; }
-        .lvl-badge { display: inline-block; margin-top: 10px; padding: 4px 8px; font-size: 0.65rem; border: 1px solid var(--primary); color: var(--primary); border-radius: 3px; font-weight: bold; text-transform: uppercase; }
-        .back-btn { display: inline-block; margin-top: 40px; color: #555; text-decoration: none; font-size: 0.8rem; letter-spacing: 1px; border: 1px solid #333; padding: 10px 20px; border-radius: 5px; transition: 0.3s; }
-        .back-btn:hover { color: var(--primary); border-color: var(--primary); background: rgba(76,111,255,0.05); }
+        :root { 
+            --primary: #4c6fff; 
+            --bg: #0a0a0f; 
+            --card: #161625; 
+            --accent: #00f2ff;
+            --inter: #00ff88;
+            --adv-inter: #00a2ff;
+            --advanced: #bc62ff;
+            --gold: #ffcc00;
+        }
+        
+        body { 
+            background-color: var(--bg); 
+            color: white; 
+            font-family: 'Segoe UI', sans-serif; 
+            text-align: center; 
+            padding: 20px;
+            background-image: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #0a0a0f 100%);
+        }
+
+        .calc-container { 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 25px; 
+            max-width: 1400px; 
+            margin: 0 auto; 
+        }
+
+        .card { 
+            background: var(--card); 
+            padding: 30px; 
+            border-radius: 20px; 
+            border: 1px solid #2a2a3a; 
+            width: 320px; 
+            transition: all 0.4s ease;
+        }
+
+        .card:hover { border-color: var(--accent); transform: translateY(-5px); }
+
+        h2 { color: #fff; font-size: 0.8rem; letter-spacing: 3px; margin-bottom: 20px; text-transform: uppercase; }
+
+        label { display: block; font-size: 0.65rem; color: #aaa; margin-top: 15px; text-align: left; text-transform: uppercase; }
+
+        input { 
+            width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; 
+            border: 1px solid #333; background: #0f0f1a; color: var(--accent); 
+            box-sizing: border-box; font-family: monospace; font-size: 1rem; outline: none;
+        }
+
+        .result-box { 
+            margin-top: 25px; padding: 20px; background: rgba(0, 0, 0, 0.4); 
+            border-radius: 12px; border: 1px solid #2a2a3a; min-height: 100px;
+        }
+
+        .val { font-size: 1.4rem; color: #fff; font-weight: 800; display: block; margin-top: 5px; }
+        
+        .sub-val { font-size: 0.7rem; color: var(--accent); font-weight: bold; text-transform: uppercase; }
+
+        .lvl-badge { 
+            display: inline-block; margin-top: 15px; padding: 6px 12px; 
+            font-size: 0.7rem; border-radius: 4px; font-weight: 900; 
+            background: #222; color: #fff; letter-spacing: 1px;
+        }
+
+        /* Dynamic Colors */
+        .lvl-INTERMEDIATE { background: var(--inter); color: #000; }
+        .lvl-ADVANCED-INTERMEDIATE { background: var(--adv-inter); }
+        .lvl-ADVANCED { background: var(--advanced); }
+        .lvl-ELITE { background: var(--gold); color: #000; box-shadow: 0 0 15px var(--gold); }
     </style>
 </head>
 <body>
 
-    <div class="unit-toggle">
-        <select id="unitSystem" onchange="calcAll()">
-            <option value="kg">UNIT: METRIC (KG)</option>
-            <option value="lb">UNIT: IMPERIAL (LBS)</option>
+    <div style="margin-bottom: 30px;">
+        <select id="unitSystem" onchange="calcAll()" style="background: var(--card); color: var(--accent); border: 1px solid #333; padding: 10px 20px; border-radius: 50px; cursor: pointer; outline: none;">
+            <option value="kg">METRIC (KG)</option>
+            <option value="lb">IMPERIAL (LBS)</option>
         </select>
     </div>
 
@@ -42,8 +96,8 @@
             <label>Reps</label>
             <input type="number" id="prep" placeholder="0" oninput="calcAll()">
             <div class="result-box">
-                <span class="val" id="pRes">---</span>
-                <span id="pTotal" class="sub-val">TOTAL 1RM: ---</span>
+                <span id="pTotal" class="sub-val">Waiting for data</span>
+                <span class="val" id="pRes">0.0</span>
                 <div id="pLvl" class="lvl-badge">LEVEL: PENDING</div>
             </div>
         </div>
@@ -57,21 +111,23 @@
             <label>Reps</label>
             <input type="number" id="drep" placeholder="0" oninput="calcAll()">
             <div class="result-box">
-                <span class="val" id="dRes">---</span>
-                <span id="dTotal" class="sub-val">TOTAL 1RM: ---</span>
+                <span id="dTotal" class="sub-val">Waiting for data</span>
+                <span class="val" id="dRes">0.0</span>
                 <div id="dLvl" class="lvl-badge">LEVEL: PENDING</div>
             </div>
         </div>
 
         <div class="card">
             <h2>ZANETTI / SA RAISE</h2>
+            <label class="u-label">Bodyweight</label>
+            <input type="number" id="zabw" value="75" oninput="calcAll()">
             <label class="u-label">Dumbbell Weight</label>
             <input type="number" id="zaw" placeholder="0" oninput="calcAll()">
-            <label>Reps (Straight Arm)</label>
+            <label>Reps</label>
             <input type="number" id="zar" placeholder="0" oninput="calcAll()">
             <div class="result-box">
-                <span class="val" id="zaRes">---</span>
-                <span class="sub-val">ESTIMATED 1RM</span>
+                <span id="zaTotal" class="sub-val">ESTIMATED 1RM</span>
+                <span class="val" id="zaRes">0.0</span>
                 <div id="zaLvl" class="lvl-badge">LEVEL: PENDING</div>
             </div>
         </div>
@@ -85,8 +141,8 @@
             <label>Reps</label>
             <input type="number" id="cpr" placeholder="0" oninput="calcAll()">
             <div class="result-box">
-                <span class="val" id="cpRes">---</span>
-                <span class="sub-val">ESTIMATED 1RM</span>
+                <span id="cpTotal" class="sub-val">ESTIMATED 1RM</span>
+                <span class="val" id="cpRes">0.0</span>
                 <div id="cpLvl" class="lvl-badge">LEVEL: PENDING</div>
             </div>
         </div>
@@ -100,30 +156,20 @@
             <label>Reps</label>
             <input type="number" id="spr" placeholder="0" oninput="calcAll()">
             <div class="result-box">
-                <span class="val" id="spRes">---</span>
-                <span class="sub-val">ESTIMATED 1RM</span>
+                <span id="spTotal" class="sub-val">ESTIMATED 1RM</span>
+                <span class="val" id="spRes">0.0</span>
                 <div id="spLvl" class="lvl-badge">LEVEL: PENDING</div>
             </div>
         </div>
     </div>
 
-    <div style="text-align: center; margin-top: 40px;">
-        <a href="index.html" class="back-btn">← BACK TO HOME</a>
-    </div>
-
     <script>
         function getLevel(ratio, type) {
-            // IMMACULATE SCIENTIFIC RATIOS (Ratio = Added Weight / BW or Total / BW)
             const scales = {
-                // Weighted Pull-up (Added Weight / BW)
                 pull: [0.15, 0.30, 0.45, 0.65], 
-                // Weighted Dip (Added Weight / BW)
                 dip:  [0.25, 0.40, 0.60, 0.85],
-                // Bench/Chest Press (Total / BW)
                 chest: [0.80, 1.05, 1.30, 1.65],
-                // OHP/Shoulder Press (Total / BW)
                 shoulder: [0.50, 0.65, 0.85, 1.10],
-                // Zanetti (Per Arm Weight / BW) - Based on straight arm leverage
                 za: [0.12, 0.18, 0.25, 0.32]
             };
             const [inter, advInter, adv, elite] = scales[type];
@@ -135,66 +181,61 @@
         }
 
         function brzycki(w, r) {
-            if (r === 1) return w;
-            return w / (1.0278 - (0.0278 * r));
+            return r === 1 ? w : w / (1.0278 - (0.0278 * r));
         }
 
         function calcAll() {
             const unit = document.getElementById('unitSystem').value;
-            const labels = document.querySelectorAll('.u-label');
-            labels.forEach(l => {
-                let text = l.innerText.split('(')[0].trim();
-                l.innerText = text + " (" + unit + ")";
+            document.querySelectorAll('.u-label').forEach(l => {
+                l.innerText = l.innerText.split('(')[0].trim() + " (" + unit + ")";
             });
 
-            // 1. PULL & DIP (Added Weight logic)
+            // Logic for Pull/Dip
             ['p', 'd'].forEach(id => {
                 let bw = parseFloat(document.getElementById(id + 'bw').value) || 0;
                 let add = parseFloat(document.getElementById(id + 'add').value) || 0;
                 let reps = parseInt(document.getElementById(id + 'rep').value) || 0;
-                let res = document.getElementById(id + 'Res');
-                let total = document.getElementById(id + 'Total');
-                let lvl = document.getElementById(id + 'Lvl');
+                let resDisp = document.getElementById(id + 'Res');
+                let totalDisp = document.getElementById(id + 'pTotal' || id + 'dTotal'); // Target spans
+                let lvlDisp = document.getElementById(id + 'Lvl');
 
-                if (reps > 0 && add >= 0 && bw > 0) {
+                if (reps > 0 && bw > 0) {
                     let total1RM = brzycki(bw + add, reps);
                     let addedOnly = total1RM - bw;
-                    res.innerText = addedOnly.toFixed(1) + " " + unit + " added";
-                    total.innerText = "TOTAL 1RM: " + total1RM.toFixed(1) + " " + unit;
-                    lvl.innerText = "LEVEL: " + getLevel(addedOnly / bw, id === 'p' ? 'pull' : 'dip');
-                } else {
-                    res.innerText = "---"; lvl.innerText = "LEVEL: PENDING";
+                    document.getElementById(id + 'Total').innerText = "TOTAL 1RM: " + total1RM.toFixed(1) + " " + unit;
+                    resDisp.innerText = addedOnly.toFixed(1) + " " + unit;
+                    let level = getLevel(addedOnly / bw, id === 'p' ? 'pull' : 'dip');
+                    lvlDisp.innerText = "LEVEL: " + level;
+                    lvlDisp.className = "lvl-badge lvl-" + level.replace(/ /g, '-');
                 }
             });
 
-            // 2. CHEST & SHOULDER (Total Weight logic)
+            // Logic for Chest/Shoulder
             [['cp', 'chest'], ['sp', 'shoulder']].forEach(([id, type]) => {
                 let bw = parseFloat(document.getElementById(id + 'bw').value) || 0;
                 let w = parseFloat(document.getElementById(id + 'w').value) || 0;
                 let r = parseInt(document.getElementById(id + 'r').value) || 0;
-                let res = document.getElementById(id + 'Res');
-                let lvl = document.getElementById(id + 'Lvl');
-
                 if (r > 0 && w > 0 && bw > 0) {
                     let oneRM = brzycki(w, r);
-                    res.innerText = oneRM.toFixed(1) + " " + unit;
-                    lvl.innerText = "LEVEL: " + getLevel(oneRM / bw, type);
-                } else {
-                    res.innerText = "---"; lvl.innerText = "LEVEL: PENDING";
+                    document.getElementById(id + 'Res').innerText = oneRM.toFixed(1) + " " + unit;
+                    let level = getLevel(oneRM / bw, type);
+                    let lBox = document.getElementById(id + 'Lvl');
+                    lBox.innerText = "LEVEL: " + level;
+                    lBox.className = "lvl-badge lvl-" + level.replace(/ /g, '-');
                 }
             });
 
-            // 3. ZANETTI (Leverage/SA logic)
+            // Logic for Zanetti
+            let zbw = parseFloat(document.getElementById('zabw').value) || 75;
             let zw = parseFloat(document.getElementById('zaw').value) || 0;
             let zr = parseInt(document.getElementById('zar').value) || 0;
-            let zRes = document.getElementById('zaRes');
-            let zLvl = document.getElementById('zaLvl');
             if(zw > 0 && zr > 0) {
-                let oneRM = zw * (1 + (zr * 0.02)); // Custom leverage formula
-                zRes.innerText = oneRM.toFixed(1) + " " + unit + " MAX";
-                zLvl.innerText = "LEVEL: " + getLevel(oneRM / 75, 'za'); 
-            } else {
-                zRes.innerText = "---"; zLvl.innerText = "LEVEL: PENDING";
+                let oneRM = zw * (1 + (zr * 0.02));
+                document.getElementById('zaRes').innerText = oneRM.toFixed(1) + " " + unit;
+                let level = getLevel(oneRM / zbw, 'za');
+                let lBox = document.getElementById('zaLvl');
+                lBox.innerText = "LEVEL: " + level;
+                lBox.className = "lvl-badge lvl-" + level.replace(/ /g, '-');
             }
         }
         calcAll();
