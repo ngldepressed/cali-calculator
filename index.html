@@ -503,6 +503,10 @@ function loadSavedData() {
         Object.keys(data).forEach(id => { if(document.getElementById(id)) document.getElementById(id).value = data[id]; });
         updateLabels();
     }
+    const savedNotes = localStorage.getItem('cali_biotech_notes');
+    if (savedNotes && document.getElementById("sessionNotes")) {
+        document.getElementById("sessionNotes").value = savedNotes;
+    }
 }
 
 function logSession() {
@@ -848,8 +852,28 @@ function shareReport() {
 
 document.getElementById("shareBtn").style.display = "block";
 
-</script>
+function saveNotes() {
+    const notes = document.getElementById("sessionNotes").value;
+    localStorage.setItem("cali_biotech_notes", notes);
+    
+    // Aesthetic feedback to show it worked
+    const btn = event.currentTarget || event.target; 
+    const originalText = btn.innerText;
+    btn.innerText = "LOG_STOCKED_IN_MEMORY";
+    btn.style.background = "#00ffcc";
+    setTimeout(() => {
+        btn.innerText = originalText;
+        btn.style.background = "var(--primary)";
+    }, 2000);
+}
 
+</script>
+<div class="card" style="margin-top: 20px;">
+    <h3>Session Intelligence / Notes</h3>
+    <textarea id="sessionNotes" placeholder="Log fatigue levels, pain, or specific set details..." 
+              style="width: 100%; height: 80px; background: #111; color: #fff; border: 1px solid #333; padding: 10px; font-family: monospace; border-radius: 5px;"></textarea>
+    <button onclick="saveNotes()" style="margin-top: 10px; width: 100%; background: var(--primary); color: #000; border: none; padding: 8px; font-family: monospace; font-weight: bold; cursor: pointer;">COMMIT_LOG_TO_MEMORY</button>
+</div>
 </body>
 
 </html>
