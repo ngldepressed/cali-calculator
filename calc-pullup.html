@@ -96,6 +96,10 @@
             text-align: left; display: none;
         }
 
+        .skill-item { margin-bottom: 15px; }
+        .progress-bg { background: rgba(255,255,255,0.05); height: 8px; border-radius: 10px; margin-top: 8px; overflow: hidden; border: 1px solid #222; }
+        .progress-fill { height: 100%; width: 0%; transition: width 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
         .lvl-INTERMEDIATE { background: var(--inter); color: #000; }
         .lvl-ADVANCED-INTERMEDIATE { background: var(--adv-inter); }
         .lvl-ADVANCED { background: var(--advanced); }
@@ -149,7 +153,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div id="pLvl" class="lvl-badge">LEVEL: PENDING</div>
             </div>
         </div>
@@ -186,7 +189,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div id="dLvl" class="lvl-badge">LEVEL: PENDING</div>
             </div>
         </div>
@@ -244,6 +246,22 @@
         <div id="analysisContent" style="font-size: 0.8rem; line-height: 1.6; color:#bbb;"></div>
     </div>
 
+    <div id="skillBox" class="analysis-box" style="display:block; border-left: 5px solid var(--advanced); margin-top: 20px;">
+        <h3 style="color:var(--advanced); margin-top:0; font-size:0.8rem; letter-spacing:2px;">SKILL UNLOCK DIAGNOSTICS</h3>
+        <div class="skill-item">
+            <span class="b-label">Front Lever Readiness (Pull-up + Zanetti)</span>
+            <div class="progress-bg"><div id="flBar" class="progress-fill" style="background:var(--accent);"></div></div>
+        </div>
+        <div class="skill-item">
+            <span class="b-label">Planche Strength Base (Dip + Zanetti)</span>
+            <div class="progress-bg"><div id="plBar" class="progress-fill" style="background:var(--advanced);"></div></div>
+        </div>
+        <div class="skill-item">
+            <span class="b-label">Muscle-Up Efficiency (Pull-up + Shoulder)</span>
+            <div class="progress-bg"><div id="muBar" class="progress-fill" style="background:var(--inter);"></div></div>
+        </div>
+    </div>
+
     <script>
         const levelsOrder = ["BEGINNER", "INTERMEDIATE", "ADVANCED INTERMEDIATE", "ADVANCED", "ELITE"];
         const movementWeights = { p: 0.30, d: 0.30, cp: 0.15, sp: 0.15, za: 0.10 };
@@ -291,7 +309,6 @@
                 l.innerText = l.innerText.split('(')[0].trim() + " (" + unit + ")";
             });
 
-            // Pull/Dip Logic (Dual-1RM + Road to Elite)
             ['p', 'd'].forEach(id => {
                 let bw = parseFloat(document.getElementById(id + 'bw').value) || 0;
                 let add = parseFloat(document.getElementById(id + 'add').value) || 0;
@@ -300,14 +317,11 @@
                 
                 document.getElementById(id + 'Warn').style.display = reps > 10 ? 'block' : 'none';
 
-                // Core 1RM
                 let total1RM = (reps > 0 && bw > 0) ? brzycki(bw + add, reps) : 0;
                 let performance1RM = total1RM > 0 ? total1RM - bw : 0;
                 
                 if (bw > 0) {
                     document.getElementById(id + 'Res').innerText = "+" + performance1RM.toFixed(1) + " " + unit;
-                    
-                    // Road to Elite Logic
                     let targetWeight = bw * goalRatio;
                     let gap = targetWeight - performance1RM;
                     document.getElementById(id + 'TargetVal').innerText = "+" + targetWeight.toFixed(1) + unit;
@@ -325,7 +339,6 @@
                 }
             });
 
-            // Chest/Shoulder/Zanetti
             [['cp', 'chest', 'cpr', 'cpw', 'cpbw'], ['sp', 'shoulder', 'spr', 'spw', 'spbw'], ['za', 'za', 'zar', 'zaw', 'zabw']].forEach(([id, type, rId, wId, bId]) => {
                 let bw = parseFloat(document.getElementById(bId).value) || 0;
                 let w = parseFloat(document.getElementById(wId).value) || 0;
@@ -341,7 +354,6 @@
                     strengthMap[id] = oneRM / bw;
                     weightedScore += levelsOrder.indexOf(level) * movementWeights[id];
                     totalWeightUsed += movementWeights[id];
-
                     let lBox = document.getElementById(id + 'Lvl');
                     lBox.innerText = "LEVEL: " + level;
                     lBox.className = "lvl-badge lvl-" + level.replace(/ /g, '-');
@@ -351,6 +363,20 @@
             if (totalWeightUsed > 0) {
                 let finalIndex = Math.round(weightedScore / totalWeightUsed);
                 document.getElementById('globalRank').innerText = "RANK: " + levelsOrder[finalIndex];
+            }
+
+            // Skill Diagnostics Logic
+            if (strengthMap.p && strengthMap.za) {
+                let flScore = ((strengthMap.p / 0.55) * 60) + ((strengthMap.za / 0.30) * 40);
+                document.getElementById('flBar').style.width = Math.min(flScore, 100) + "%";
+            }
+            if (strengthMap.d && strengthMap.za) {
+                let plScore = ((strengthMap.d / 0.85) * 50) + ((strengthMap.za / 0.35) * 50);
+                document.getElementById('plBar').style.width = Math.min(plScore, 100) + "%";
+            }
+            if (strengthMap.p && strengthMap.sp) {
+                let muScore = ((strengthMap.p / 0.45) * 70) + ((strengthMap.sp / 0.80) * 30);
+                document.getElementById('muBar').style.width = Math.min(muScore, 100) + "%";
             }
 
             const aBox = document.getElementById('analysisBox');
