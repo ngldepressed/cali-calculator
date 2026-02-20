@@ -409,14 +409,44 @@ function initChart() {
         data: {
             labels: skills.map(s => s.name),
             datasets: [
-                { label: 'Reality', data: [], backgroundColor: 'rgba(76, 111, 255, 0.2)', borderColor: '#4c6fff', borderWidth: 2 },
-                { label: 'Potential', data: [], backgroundColor: 'rgba(0, 255, 204, 0.05)', borderColor: '#00ffcc', borderDash: [5, 5] }
+                { 
+                    label: 'Reality', 
+                    data: [], 
+                    backgroundColor: 'rgba(76, 111, 255, 0.3)', // Slightly more opaque
+                    borderColor: '#4c6fff', 
+                    borderWidth: 4, // BOLDER LINE (Increased from 2)
+                    pointRadius: 5  // Larger points
+                },
+                { 
+                    label: 'Potential', 
+                    data: [], 
+                    backgroundColor: 'rgba(0, 255, 204, 0.05)', 
+                    borderColor: '#00ffcc', 
+                    borderDash: [5, 5],
+                    borderWidth: 2 
+                }
             ]
         },
         options: { 
             responsive: true, 
             maintainAspectRatio: false,
-            scales: { r: { beginAtZero: true, max: 100, ticks: { display: false }, grid: { color: '#2a2a3a' } } }, 
+            scales: { 
+                r: { 
+                    beginAtZero: true, 
+                    max: 100, 
+                    ticks: { display: false }, 
+                    grid: { color: '#333', lineWidth: 1.5 }, // Bolder grid lines
+                    angleLines: { color: '#333' },
+                    pointLabels: {
+                        color: '#fff',
+                        font: {
+                            size: 14,       // LARGER TEXT
+                            weight: 'bold', // BOLD TEXT
+                            family: 'monospace'
+                        }
+                    }
+                } 
+            }, 
             plugins: { legend: { display: false } } 
         }
     });
