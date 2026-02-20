@@ -515,15 +515,11 @@ function logSession() {
     const hasBw = rawBwInput && parseFloat(rawBwInput) > 0;
     const bwForCalc = hasBw ? parseFloat(rawBwInput) : 75;
 
-    // 1. Data Helper: Separates what you did vs what you are capable of (1RM)
     const getLiftData = (idW, idR) => {
         const plate = parseFloat(document.getElementById(idW).value) || 0;
         const reps = parseInt(document.getElementById(idR).value) || 0;
-        
         if (plate === 0 && reps === 0) return { display: "---" };
-        
         const total1RM = (bwForCalc + plate * (1 + reps/30)).toFixed(1);
-        
         return { display: `${plate}${u} x ${reps} (${total1RM}${u})` };
     };
 
@@ -531,28 +527,29 @@ function logSession() {
     const push = getLiftData("wdW", "wdR");
     const sa = getLiftData("saW", "saR");
 
-    // 2. Skill Logic (FIXED: No more Ghost Muscle Ups)
-    let topSkill = "None";
-    let maxVal = 0; // Changed from -1 to 0
+    // --- FIXED SKILL LOGIC ---
+    let topSkillName = "None"; 
+    let maxVal = 0; 
+
     if (radarChart && radarChart.data.datasets[0].data.length > 0) {
         radarChart.data.datasets[0].data.forEach((score, index) => {
             let numericScore = parseFloat(score);
-            // Only update if score is actually BETTER than 0
+            // ONLY triggers if score is HIGHER than 0
             if (numericScore > maxVal) {
                 maxVal = numericScore;
-                topSkill = skills[index].name;
+                topSkillName = skills[index].name;
             }
         });
     }
 
-    // 3. Create Entry
     const entry = {
         date: new Date().toLocaleDateString(),
         bw: hasBw ? rawBwInput + u : "---",
         pull: pull.display,
         push: push.display,
         sa: sa.display,
-        skill: maxVal > 0 ? topSkill + " (" + Math.round(maxVal) + "%)" : "None (0%)"
+        // If maxVal is 0, it forces "None" - no exceptions.
+        skill: maxVal > 0 ? `${topSkillName} (${Math.round(maxVal)}%)` : "None (0%)"
     };
 
     savedLogs.unshift(entry);
