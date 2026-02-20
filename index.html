@@ -439,45 +439,38 @@ function initChart() {
             ]
         },
         options: { 
-    responsive: true, 
-    maintainAspectRatio: false,
-    layout: { 
-        // Small padding (5-10) is better to keep the chart large 
-        // without pushing text off-screen
-        padding: isMobile ? 5 : 20 
-    }, 
-    scales: { 
-        r: { 
-            beginAtZero: true, 
-            max: 100, 
-            ticks: { display: false }, 
-            grid: { color: '#333', lineWidth: 1 },
-            angleLines: { color: '#444' },
-            pointLabels: {
-                color: '#fff',
-                centerPointLabels: true,
-                // Increase font size slightly now that we have wrapping
-                font: {
-                    size: isMobile ? 11 : 16, 
-                    weight: 'bold',
-                    family: 'monospace'
-                },
-                // Add this padding to stop text from touching the grid lines
-                padding: isMobile ? 8 : 15,
-                
-                callback: function(label) {
-                    // This is your gold-standard fix for long words
-                    if (isMobile && /\s/.test(label)) {
-                        return label.split(/\s/); 
+            responsive: true, 
+            maintainAspectRatio: false,
+            layout: { 
+                padding: isMobile ? 5 : 20 
+            }, 
+            scales: { 
+                r: { 
+                    beginAtZero: true, 
+                    max: 100, 
+                    ticks: { display: false }, 
+                    grid: { color: '#333', lineWidth: 1 },
+                    angleLines: { color: '#444' },
+                    pointLabels: {
+                        color: '#fff',
+                        centerPointLabels: true,
+                        font: {
+                            size: isMobile ? 11 : 16, 
+                            weight: 'bold',
+                            family: 'monospace'
+                        },
+                        padding: isMobile ? 8 : 15,
+                        callback: function(label) {
+                            if (isMobile && /\s/.test(label)) {
+                                return label.split(/\s/); 
+                            }
+                            return label;
+                        }
                     }
-                    return label;
-                }
-            }
-        } 
-    }, 
-    plugins: { legend: { display: false } } 
-}
-        }
+                } 
+            }, 
+            plugins: { legend: { display: false } } 
+        } // Closed correctly here
     });
 }
 function saveToLocal() {
