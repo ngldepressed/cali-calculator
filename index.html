@@ -673,6 +673,7 @@ function analyze() {
 
         const activeGoal = document.getElementById("goalSelect").value;
         let barHtml = ""; const curScores = []; const potScores = [];
+        let protocolHtml = ""; // Defined safely at this scope
 
         skills.forEach(s => {
             let vectors = [];
@@ -693,6 +694,30 @@ function analyze() {
                 let weakest = vectors.reduce((prev, curr) => (prev.val < curr.val) ? prev : curr);
                 let neededPlate = ((weakest.req * bw) - bw) / conv;
                 recText = `CRITICAL PATH: Improve ${weakest.name}. Target 1RM: +${neededPlate.toFixed(1)}${u}.`;
+                
+                // INTERNAL PROTOCOL CALC (Inside loop where 'isTarget' is known)
+                let strengthGap = (weakest.val / 100); 
+                let sets, reps, intensityPerc, focus;
+                if (strengthGap < 0.75) { focus = "STRUCTURAL_ADAPTATION"; sets = 4; reps = "8-10"; intensityPerc = 0.70; } 
+                else if (strengthGap < 0.90) { focus = "NEURAL_DRIVE"; sets = 5; reps = "3-5"; intensityPerc = 0.85; } 
+                else { focus = "PEAK_SPECIFICITY"; sets = 6; reps = "1-2"; intensityPerc = 0.95; }
+
+                let current1RM = (weakest.name.includes("Push") ? push1RM : weakest.name.includes("Pull") ? pull1RM : sa1RM);
+                let trainingLoad = ((current1RM * intensityPerc * bw) - bw) / conv;
+                let targetLoad = ((weakest.req * bw) - bw) / conv;
+
+                protocolHtml = `
+                    <h3 style="font-size:0.7em; letter-spacing:3px; color:var(--potential); margin-top:25px; border-bottom:1px solid #333; padding-bottom:10px;">CORRECTION_PROTOCOL</h3>
+                    <div class="insight-block" style="border-left:3px solid var(--potential); padding:12px; background: rgba(0,255,204,0.03); margin-bottom:20px;">
+                        <div style="font-size:0.65em; color:var(--potential); font-weight:bold;">PHASE: ${focus}</div>
+                        <div style="font-size:1.1em; color:#fff; font-family:monospace; margin:10px 0;">
+                            ${weakest.name.toUpperCase()}: ${sets}x${reps} @ +${Math.max(0, trainingLoad).toFixed(1)}${u}
+                        </div>
+                        <div style="font-size:0.6em; color:#888; line-height:1.4;">
+                            * Rest 3-5 mins. Focus on perfect ${form < 1 ? 'FORM_CORRECTION' : 'locked-out'} execution.
+                            Your target 1RM for ${activeGoal} is +${targetLoad.toFixed(1)}${u}.
+                        </div>
+                    </div>`;
             }
 
             barHtml += `<div class="skill-bar-container" style="opacity: ${activeGoal !== "None" && !isTarget ? '0.2' : '1'}; margin-bottom:15px;">
@@ -706,42 +731,32 @@ function analyze() {
                 </div>`;
         });
 
-        // --- PROTOCOL GENERATION (Safely outside the loop) ---
-        let protocolHtml = "";
-        if (activeGoal !== "None") {
-            const skillData = skills.find(s => s.name === activeGoal);
-            let vData = [];
-            if (skillData.p > 0) vData.push({ name: "Push (Dips)", cur: push1RM, req: skillData.p * torqueFactor });
-            if (skillData.l > 0) vData.push({ name: "Pull (Pullups)", cur: pull1RM, req: skillData.l * torqueFactor });
-            if (skillData.s > 0) vData.push({ name: "SA (Zanetti)", cur: sa1RM, req: skillData.s * torqueFactor });
-
-            let weakestLink = vData.reduce((prev, curr) => (prev.cur/prev.req < curr.cur/curr.req) ? prev : curr);
-            let strengthGap = (weakestLink.cur / weakestLink.req);
-
-            let sets, reps, intensity, focus;
-            if (strengthGap < 0.75) { focus = "STRUCTURAL_ADAPTATION"; sets = 4; reps = "8-10"; intensity = 0.70; } 
-            else if (strengthGap < 0.90) { focus = "NEURAL_DRIVE"; sets = 5; reps = "3-5"; intensity = 0.85; } 
-            else { focus = "PEAK_SPECIFICITY"; sets = 6; reps = "1-2"; intensity = 0.95; }
-
-            let targetWeight = (weakestLink.req * bw) - bw; 
-            let trainingWeight = ((weakestLink.cur * intensity) * bw) - bw;
-
-            protocolHtml = `
-                <h3 style="font-size:0.7em; letter-spacing:3px; color:var(--potential); margin-top:25px; border-bottom:1px solid #333; padding-bottom:10px;">CORRECTION_PROTOCOL</h3>
-                <div class="insight-block" style="border-left:3px solid var(--potential); padding:12px; background: rgba(0,255,204,0.03); margin-bottom:20px;">
-                    <div style="font-size:0.65em; color:var(--potential); font-weight:bold;">PHASE: ${focus}</div>
-                    <div style="font-size:1.1em; color:#fff; font-family:monospace; margin:10px 0;">
-                        ${weakestLink.name.toUpperCase()}: ${sets}x${reps} @ +${Math.max(0, trainingWeight/conv).toFixed(1)}${u}
-                    </div>
-                    <div style="font-size:0.6em; color:#888; line-height:1.4;">
-                        * Rest 3-5 mins. Target 1RM: +${(targetWeight/conv).toFixed(1)}${u}.
-                    </div>
-                </div>`;
-        }
-
         const pullPushRatio = (pull1RM / push1RM).toFixed(2);
         const saIntegrity = (sa1RM / push1RM).toFixed(2);
         const relPower = push1RM.toFixed(2);
+
+        const hasWeightedData = (parseFloat(document.getElementById("wdW").value) > 0 || parseFloat(document.getElementById("saW").value) > 0);
+        const hasRepData = (parseInt(document.getElementById("pullups").value) > 0);
+
+        let tStatus = torqueFactor > 1.08 ? "PENALTY" : "OPTIMAL";
+        let tDesc = torqueFactor > 1.08 ? `Height (${h.toFixed(0)}cm) creates lever disadvantage.` : `Optimal leverages for statics.`;
+
+        let bStatus = "STABLE";
+        let bDesc = "Enter rep data to analyze scapular balance.";
+        if (hasRepData) {
+            bStatus = pullPushRatio < 0.85 ? "DEFICIT" : "BALANCED";
+            bDesc = pullPushRatio < 0.85 ? `Pull chain is ${((1-pullPushRatio)*100).toFixed(0)}% behind Push.` : `Scapular stabilizers are matched.`;
+        }
+
+        let sStatus = "NOMINAL";
+        let sDesc = "Density sufficient for current loads.";
+        if (!hasWeightedData) {
+            sStatus = "INACTIVE";
+            sDesc = "Enter weighted matrix data for tendon audit.";
+        } else if (saIntegrity < 0.62) {
+            sStatus = "TENDON LAG";
+            sDesc = "Muscle power outpaces connective tissue. High injury risk.";
+        }
 
         let auditHtml = `<h3 style="font-size:0.7em; letter-spacing:3px; color:var(--primary); margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">BIOMECHANICAL_REPORT</h3>`;
         const createInsight = (title, status, val, desc, color) => `<div class="insight-block" style="margin-bottom:15px; border-left:3px solid ${color}; padding-left:12px; background: rgba(255,255,255,0.02); padding-top:8px; padding-bottom:8px;">
@@ -750,34 +765,47 @@ function analyze() {
                     <span style="font-size:0.6em; background:${color}; color:#000; padding:1px 4px; border-radius:2px; font-weight:bold;">${status}</span>
                 </div>
                 <div style="font-size:1em; color:#fff; font-family:monospace; margin:4px 0;">${val}</div>
+                <p style="font-size:0.65em; color:#bbb; margin:0; line-height:1.4;">${desc}</p>
             </div>`;
 
-        auditHtml += createInsight("TORQUE_LOAD", torqueFactor > 1.08 ? "PENALTY" : "OPTIMAL", torqueFactor.toFixed(2) + "x", "#888");
-        auditHtml += createInsight("POSTERIOR_CHAIN", pullPushRatio < 0.85 ? "DEFICIT" : "BALANCED", pullPushRatio, "#00ffcc");
-        auditHtml += createInsight("CONNECTIVE_TISSUE", saIntegrity < 0.62 ? "TENDON LAG" : "NOMINAL", saIntegrity, "#ff4444");
+        auditHtml += createInsight("TORQUE_LOAD", tStatus, torqueFactor.toFixed(2) + "x", tDesc, torqueFactor > 1.08 ? "#ff9900" : "#888");
+        auditHtml += createInsight("POSTERIOR_CHAIN", bStatus, pullPushRatio, bDesc, pullPushRatio < 0.85 ? "#ff4444" : "#00ffcc");
+        auditHtml += createInsight("CONNECTIVE_TISSUE", sStatus, saIntegrity, sDesc, saIntegrity < 0.62 ? "#ff4444" : "#00ffcc");
+        auditHtml += createInsight("RELATIVE_POWER", "FORCE", relPower + "x BW", "Force generation relative to mass.", "var(--primary)");
 
-        // HEATMAP LOGIC
         const shoulders = document.querySelectorAll('#joint-shoulder-l, #joint-shoulder-r');
         const elbows = document.querySelectorAll('#joint-elbow-l, #joint-elbow-r');
-        shoulders.forEach(s => s.style.fill = pullPushRatio < 0.85 ? "#ff4444" : "var(--potential)");
-        elbows.forEach(e => e.style.fill = saIntegrity < 0.60 ? "#ff4444" : "var(--potential)");
+        let riskMsg = "SYSTEMS_NOMINAL";
 
-        // FINAL INJECTION
+        if (pullPushRatio < 0.85) { shoulders.forEach(s => s.style.fill = "#ff4444"); riskMsg = "SHOULDER_RISK"; } 
+        else { shoulders.forEach(s => s.style.fill = "var(--potential)"); }
+        if (saIntegrity < 0.60) { elbows.forEach(e => e.style.fill = "#ff4444"); riskMsg = (riskMsg === "SHOULDER_RISK") ? "MULTI_JOINT_ADVISORY" : "ELBOW_RISK"; } 
+        else { elbows.forEach(e => e.style.fill = "var(--potential)"); }
+
+        const rMsg = document.getElementById("risk-msg");
+        if (rMsg) { rMsg.innerText = riskMsg; rMsg.style.color = (riskMsg === "SYSTEMS_NOMINAL") ? "var(--potential)" : "var(--danger)"; }
+
+        let pullSets = parseInt(document.getElementById("wpS").value) || 0;
+        let pushSets = parseInt(document.getElementById("wdS").value) || 0;
+        let totalTax = (pullSets * 1.5) + (pushSets * 1.5);
+        const vFill = document.getElementById("volume-fill");
+        if (vFill) {
+            vFill.style.width = Math.min((totalTax / 20) * 100, 100) + "%";
+            vFill.style.background = totalTax > 15 ? "var(--danger)" : "var(--primary)";
+        }
+        if (document.getElementById("volume-tax")) document.getElementById("volume-tax").innerText = totalTax.toFixed(1);
+
         document.getElementById("aiFeedback").innerHTML = protocolHtml + auditHtml;
         document.getElementById("barContainer").innerHTML = barHtml;
-        
         radarChart.data.datasets[0].data = curScores;
         radarChart.data.datasets[1].data = potScores;
-        
         if (window.innerWidth < 600) {
             radarChart.options.plugins.legend.display = false;
             radarChart.options.scales.r.pointLabels.font.size = 10;
         }
         radarChart.update('none'); 
 
-    } catch (err) { 
-        console.error("Injection Error:", err); 
-    }
+    } catch (err) { console.error("Injection Error:", err); }
 }
 // Function 1: The actual image saver
 
