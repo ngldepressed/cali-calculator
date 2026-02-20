@@ -497,15 +497,20 @@ function saveToLocal() {
 }
 
 function loadSavedData() {
+    // 1. Loads your numerical stats (Weight, Reps, etc.)
     const saved = localStorage.getItem('caliData');
     if (saved) {
         const data = JSON.parse(saved);
-        Object.keys(data).forEach(id => { if(document.getElementById(id)) document.getElementById(id).value = data[id]; });
+        Object.keys(data).forEach(id => { 
+            if(document.getElementById(id)) document.getElementById(id).value = data[id]; 
+        });
         updateLabels();
     }
-    const savedNotes = localStorage.getItem('cali_biotech_notes');
-    if (savedNotes && document.getElementById("sessionNotes")) {
-        document.getElementById("sessionNotes").value = savedNotes;
+
+    // 2. Loads and displays your chronological training history
+    // We call displayNotes() here so the list appears on page load
+    if (document.getElementById("notesHistory")) {
+        displayNotes();
     }
 }
 
@@ -853,26 +858,61 @@ function shareReport() {
 document.getElementById("shareBtn").style.display = "block";
 
 function saveNotes() {
-    const notes = document.getElementById("sessionNotes").value;
-    localStorage.setItem("cali_biotech_notes", notes);
+    const noteText = document.getElementById("sessionNotes").value;
+    if (!noteText.trim()) return; // Don't save empty notes
+
+    const timestamp = new Date().toLocaleString(); // Gets current date and time
     
-    // Aesthetic feedback to show it worked
-    const btn = event.currentTarget || event.target; 
-    const originalText = btn.innerText;
-    btn.innerText = "LOG_STOCKED_IN_MEMORY";
-    btn.style.background = "#00ffcc";
-    setTimeout(() => {
-        btn.innerText = originalText;
-        btn.style.background = "var(--primary)";
-    }, 2000);
+    // 1. Get existing logs or start a new list
+    let history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
+
+    // 2. Add the new note to the top of the list
+    history.unshift({ date: timestamp, text: noteText });
+
+    // 3. Save back to localStorage
+    localStorage.setItem('cali_biotech_history', JSON.stringify(history));
+
+    // 4. Clear the input and refresh the list
+    document.getElementById("sessionNotes").value = "";
+    displayNotes();
+
+    // Visual feedback
+    const btn = event.target;
+    btn.innerText = "LOG_ARCHIVED";
+    setTimeout(() => btn.innerText = "COMMIT_TO_CHRONOS", 2000);
 }
+
+function displayNotes() {
+    const history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
+    const container = document.getElementById("notesHistory");
+    
+    if (history.length === 0) {
+        container.innerHTML = `<div style="font-size: 0.6em; color: #666; letter-spacing: 2px;">LOG_HISTORY_EMPTY</div>`;
+        return;
+    }
+
+    container.innerHTML = history.map(item => `
+        <div style="margin-bottom: 12px; padding: 8px; background: rgba(255,255,255,0.03); border-left: 2px solid var(--primary); font-family: monospace;">
+            <div style="font-size: 0.6em; color: var(--primary); margin-bottom: 4px;">[${item.date}]</div>
+            <div style="font-size: 0.8em; color: #ddd;">${item.text}</div>
+        </div>
+    `).join('');
+}
+
+// Add this line to your loadSavedData function
+// displayNotes();
 
 </script>
 <div class="card" style="margin-top: 20px;">
-    <h3>Session Intelligence / Notes</h3>
-    <textarea id="sessionNotes" placeholder="Log fatigue levels, pain, or specific set details..." 
+    <h3>Session Intelligence / Archive</h3>
+    <textarea id="sessionNotes" placeholder="Log fatigue, pain, or set details..." 
               style="width: 100%; height: 80px; background: #111; color: #fff; border: 1px solid #333; padding: 10px; font-family: monospace; border-radius: 5px;"></textarea>
-    <button onclick="saveNotes()" style="margin-top: 10px; width: 100%; background: var(--primary); color: #000; border: none; padding: 8px; font-family: monospace; font-weight: bold; cursor: pointer;">COMMIT_LOG_TO_MEMORY</button>
+    
+    <button onclick="saveNotes()" style="margin-top: 10px; width: 100%; background: var(--primary); color: #000; border: none; padding: 8px; font-family: monospace; font-weight: bold; cursor: pointer;">COMMIT_TO_CHRONOS</button>
+
+    <div id="notesHistory" style="margin-top: 20px; max-height: 200px; overflow-y: auto; border-top: 1px solid #333; padding-top: 10px;">
+        <div style="font-size: 0.6em; color: #666; letter-spacing: 2px;">LOG_HISTORY_EMPTY</div>
+    </div>
 </div>
 </body>
 
