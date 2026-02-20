@@ -37,6 +37,25 @@
             background-color: var(--deep-bg); 
         }
 
+        /* Biotech Scanning Animation */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 255, 136, 0.1);
+            z-index: 9999;
+            animation: scan 4s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
         header { 
             text-align: center; 
             padding: 60px 20px; 
@@ -71,8 +90,27 @@
             overflow: hidden;
         }
 
-        th, td { border-bottom: 1px solid var(--border-color); padding: 16px; text-align: left; }
+        th, td { border-bottom: 1px solid var(--border-color); padding: 16px; text-align: left; transition: 0.2s; }
         th { background-color: #21262d; color: var(--neon-green); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Technical Table Hover */
+        table tr:hover {
+            background: rgba(0, 255, 136, 0.03);
+            border-left: 2px solid var(--neon-green);
+        }
+
+        /* Technical Data Tag */
+        .data-tag {
+            font-family: monospace;
+            font-size: 0.7rem;
+            color: var(--neon-green);
+            border: 1px solid var(--neon-green);
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
 
         .cta-box { 
             background: var(--card-bg); 
@@ -112,7 +150,7 @@
             margin: 40px 0; 
         }
 
-        ul { padding-left: 20px; }
+        ul { padding-left: 20px; list-style: none; }
         li { margin-bottom: 10px; }
 
         footer { 
@@ -157,8 +195,8 @@
 
         <h3>Weekly Protocol</h3>
         <ul>
-            <li><strong>Frequency:</strong> 2–3 times per week. (Connective tissue needs 48–72h recovery).</li>
-            <li><strong>Total Volume:</strong> 60–120 seconds of quality hold time per session.</li>
+            <li><span class="data-tag">Metric: Frequency</span> 2–3 times per week. (Connective tissue needs 48–72h recovery).</li>
+            <li><span class="data-tag">Metric: Volume</span> 60–120 seconds of quality hold time per session.</li>
         </ul>
 
         <table>
@@ -224,9 +262,9 @@
         </table>
 
         <h2>The Golden Rules</h2>
-        <p><strong>1. The 3-Minute Rest Rule:</strong> You’re training the CNS (Central Nervous System). If you don’t let it recover, you get weaker set by set. Resting 60 seconds isn't “hardcore” — it’s underperforming.</p>
-        <p><strong>2. Failure is Not Noble:</strong> The second your arms bend, your scapula collapses, or your hips drop, the set is over. You don’t earn points for suffering through bad mechanics. Ego lifting with bodyweight is still ego lifting.</p>
-        <p><strong>3. Deload or Break:</strong> Every 4th or 5th week, cut your volume by 50% and drop to an easier progression. Connective tissue adapts slower than muscle.</p>
+        <p><span class="data-tag">System: CNS</span> <strong>1. The 3-Minute Rest Rule:</strong> You’re training the CNS (Central Nervous System). If you don’t let it recover, you get weaker set by set. Resting 60 seconds isn't “hardcore” — it’s underperforming.</p>
+        <p><span class="data-tag">System: Form</span> <strong>2. Failure is Not Noble:</strong> The second your arms bend, your scapula collapses, or your hips drop, the set is over. You don’t earn points for suffering through bad mechanics. Ego lifting with bodyweight is still ego lifting.</p>
+        <p><span class="data-tag">System: Recovery</span> <strong>3. Deload or Break:</strong> Every 4th or 5th week, cut your volume by 50% and drop to an easier progression. Connective tissue adapts slower than muscle.</p>
 
         <p class="quote">"One day you lean forward… and you don’t fall. That’s skill."</p>
         
