@@ -87,16 +87,16 @@
         td { padding: 10px; border-bottom: 1px solid #222; }
         .btn-log { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.7em; }
 
-     @media (max-width: 600px) {
+  @media (max-width: 600px) {
     #chart-card {
         padding: 5px !important;
-        margin-left: -10px;
-        margin-right: -10px;
-        width: calc(100% + 20px); /* Forces chart to stretch to phone edges */
+        margin: 0 !important; /* Reset margins to zero */
+        width: 100% !important; /* Stay inside the screen */
+        min-height: 450px; /* Keep it tall so the circle stays big */
     }
     canvas#skillRadar {
         width: 100% !important;
-        height: 400px !important; /* Fixed height for mobile stability */
+        height: 100% !important;
     }
 }
     </style>
@@ -441,8 +441,7 @@ function initChart() {
             responsive: true, 
             maintainAspectRatio: false,
             layout: {
-                // Zero padding allows the canvas to use every pixel
-                padding: 0 
+                padding: isMobile ? 10 : 20 
             },
             scales: { 
                 r: { 
@@ -453,16 +452,20 @@ function initChart() {
                     angleLines: { color: '#444' },
                     pointLabels: {
                         color: '#fff',
-                        display: true,
-                        // Center align prevents left-side clipping
                         centerPointLabels: true, 
                         font: {
                             size: isMobile ? 10 : 15, 
                             weight: 'bold',
                             family: 'monospace'
                         },
-                        // Tighten the gap between chart and text
-                        padding: isMobile ? 5 : 15 
+                        padding: isMobile ? 8 : 15,
+                        // THIS BIT SPLITS THE WORDS ON MOBILE
+                        callback: function(label) {
+                            if (isMobile && /\s/.test(label)) {
+                                return label.split(/\s/); 
+                            }
+                            return label;
+                        }
                     }
                 } 
             }, 
