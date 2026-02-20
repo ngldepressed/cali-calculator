@@ -1,27 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
   <url>
     <loc>https://www.calicalculator.com/index.html</loc>
-    <lastmod>2026-02-18</lastmod>
+    <lastmod>2026-02-21</lastmod>
     <priority>1.0</priority>
   </url>
-  <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://www.calicalculator.com/</loc>
-    <priority>1.00</priority>
-  </url>
-
   <url>
     <loc>https://www.calicalculator.com/strength-matrix.html</loc>
-    <priority>0.90</priority>
+    <lastmod>2026-02-21</lastmod>
+    <priority>0.9</priority>
   </url>
-
   <url>
     <loc>https://www.calicalculator.com/skill-tree.html</loc>
-    <priority>0.90</priority>
+    <lastmod>2026-02-21</lastmod>
+    <priority>0.9</priority>
   </url>
-</urlset>
 
   <url><loc>https://www.calicalculator.com/blog/chest-guide.html</loc><priority>0.8</priority></url>
   <url><loc>https://www.calicalculator.com/blog/planche-guide.html</loc><priority>0.8</priority></url>
@@ -43,4 +37,5 @@
   <url><loc>https://www.calicalculator.com/blog/contact.html</loc><priority>0.5</priority></url>
   <url><loc>https://www.calicalculator.com/blog/privacy.html</loc><priority>0.3</priority></url>
   <url><loc>https://www.calicalculator.com/blog/terms.html</loc><priority>0.3</priority></url>
+
 </urlset>
