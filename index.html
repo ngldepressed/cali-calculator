@@ -87,16 +87,30 @@
         td { padding: 10px; border-bottom: 1px solid #222; }
         .btn-log { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.7em; }
 
-  @media (max-width: 600px) {
+ @media (max-width: 600px) {
+    /* This ensures the card NEVER exceeds the screen width */
     #chart-card {
         padding: 5px !important;
-        margin: 0 !important; /* Reset margins to zero */
-        width: 100% !important; /* Stay inside the screen */
-        min-height: 450px; /* Keep it tall so the circle stays big */
+        margin: 0 !important; 
+        width: 100% !important;
+        min-height: 420px !important; /* Forces vertical space */
+        display: flex !important;
+        flex-direction: column;
+        overflow: hidden !important; /* Cuts off any stray pixels */
     }
+
+    /* This ensures the chart fills the container but doesn't push it out */
     canvas#skillRadar {
         width: 100% !important;
         height: 100% !important;
+        max-width: 100vw;
+    }
+
+    /* Make the dashboard stack properly */
+    .dashboard-row {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
     }
 }
     </style>
@@ -609,39 +623,30 @@ function analyze() {
         const u = sys === 'met' ? 'kg' : 'lbs';
         
         // --- THE FIX ---
-        // We get the weight, but if it's empty, we use 75 ONLY for the math
-        // This allows the bars to render so "Strongest Skill" is detected.
         const weightInput = document.getElementById("weight").value;
         const isWeightEmpty = !weightInput || parseFloat(weightInput) <= 0;
         let bw = (parseFloat(weightInput) || 75) * conv; 
-        // ---------------
 
         let h = sys === 'met' ? (parseFloat(document.getElementById("hCm").value) || 170) : ((parseFloat(document.getElementById("hFt").value)||5)*30.48)+((parseFloat(document.getElementById("hIn").value)||7)*2.54);
 
         // 1. CALCULATIONS
-        // --- START SIMULATION LOGIC ---
         if (isSimMode) {
-            // Force values into the input fields so the math functions use them
             document.getElementById("weight").value = 75;
             document.getElementById("pullups").value = 28;
             document.getElementById("pushups").value = 55;
             document.getElementById("mu").value = 12;
             document.getElementById("hang").value = 120;
-            
-            // Weighted Matrix (Elite numbers)
-            document.getElementById("wpW").value = 45; // +45kg pullup
+            document.getElementById("wpW").value = 45;
             document.getElementById("wpR").value = 5;
-            document.getElementById("wdW").value = 65; // +65kg dip
+            document.getElementById("wdW").value = 65;
             document.getElementById("wdR").value = 5;
-            document.getElementById("saW").value = 25; // +25kg Zanetti
+            document.getElementById("saW").value = 25;
             document.getElementById("saR").value = 5;
-            
-            // Force optimal form for the simulation
             document.getElementById("legRatio").value = "1.0";
             document.getElementById("form").value = "1.0";
             document.getElementById("cns").value = 10;
         }
-        // --- END SIMULATION LOGIC ---
+
         const pull1RM = (bw + (parseFloat(document.getElementById("wpW").value)||0)*conv * (1 + (parseInt(document.getElementById("wpR").value)||0)/30)) / bw;
         const push1RM = (bw + (parseFloat(document.getElementById("wdW").value)||0)*conv * (1 + (parseInt(document.getElementById("wdR").value)||0)/30)) / bw;
         let rawSa = (bw + (parseFloat(document.getElementById("saW").value)||0)*conv * (1 + (parseInt(document.getElementById("saR").value)||0)/30)) / bw;
@@ -711,16 +716,12 @@ function analyze() {
         const saIntegrity = (sa1RM / push1RM).toFixed(2);
         const relPower = push1RM.toFixed(2);
 
-       // --- CLEAN AUDIT LOGIC ---
-        // Safety Check: Do we have enough data to even run an audit?
         const hasWeightedData = (parseFloat(document.getElementById("wdW").value) > 0 || parseFloat(document.getElementById("saW").value) > 0);
         const hasRepData = (parseInt(document.getElementById("pullups").value) > 0);
 
-        // 1. Torque/Height Logic (This stays mostly the same)
         let tStatus = torqueFactor > 1.08 ? "PENALTY" : "OPTIMAL";
         let tDesc = torqueFactor > 1.08 ? `Height (${h.toFixed(0)}cm) creates lever disadvantage.` : `Optimal leverages for statics.`;
 
-        // 2. Pull/Push Balance Logic (Only alerts if data exists)
         let bStatus = "STABLE";
         let bDesc = "Enter rep data to analyze scapular balance.";
         if (hasRepData) {
@@ -728,7 +729,6 @@ function analyze() {
             bDesc = pullPushRatio < 0.85 ? `Pull chain is ${((1-pullPushRatio)*100).toFixed(0)}% behind Push.` : `Scapular stabilizers are matched.`;
         }
 
-        // 3. Tendon/SA Integrity Logic (The Fix for the "Red Box" bug)
         let sStatus = "NOMINAL";
         let sDesc = "Density sufficient for current loads.";
         if (!hasWeightedData) {
@@ -738,7 +738,6 @@ function analyze() {
             sStatus = "TENDON LAG";
             sDesc = "Muscle power outpaces connective tissue. High injury risk.";
         }
-        // --- END CLEAN AUDIT ---
 
         let auditHtml = `<h3 style="font-size:0.7em; letter-spacing:3px; color:var(--primary); margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">BIOMECHANICAL_REPORT</h3>`;
         
@@ -775,7 +774,6 @@ function analyze() {
         else if (bmi < 19) { cMsg = "POWER_DEFICIT: Low muscle volume for frame."; cCol = "#00ccff"; }
         else { cMsg = "OPTIMAL FRAME: BMI is in the elite power-to-weight window."; }
 
-        // Alert user if weight is missing in the report
         const weightLabel = isWeightEmpty ? "BMI: (NO DATA)" : `BMI: ${bmi}`;
 
         ceilingDiv.innerHTML = `
@@ -793,7 +791,6 @@ function analyze() {
                 <p style="font-size:0.65em; color:#bbb; margin:5px 0; line-height:1.4;">Based on height, you require ${strengthTax}% more raw force than a 170cm reference athlete.</p>
             </div>`;
 
-        // PROGRESSION TIER LOGIC
         let tierDiv = document.getElementById("progressionTier");
         if (!tierDiv) {
             tierDiv = document.createElement("div");
@@ -802,133 +799,82 @@ function analyze() {
         }
 
         let tierHtml = "";
-       if (activeGoal !== "None") {
-    const skillIdx = skills.findIndex(sk => sk.name === activeGoal);
-    const score = parseFloat(curScores[skillIdx]);
-    
-    let tier = "NOVICE"; 
-    let tCol = "#888";
-    let milestone = "";
+        if (activeGoal !== "None") {
+            const skillIdx = skills.findIndex(sk => sk.name === activeGoal);
+            const score = parseFloat(curScores[skillIdx]);
+            let tier = "NOVICE"; let tCol = "#888"; let milestone = "";
+            if (score >= 80) { tier = "MASTERED"; tCol = "#ff00ff"; }
+            else if (score >= 65) { tier = "ELITE (Full)"; tCol = "#00ffcc"; }
+            else if (score >= 40) { tier = "ADVANCED"; tCol = "#ffcc00"; }
+            else if (score >= 15) { tier = "INTERMEDIATE"; tCol = "#00ccff"; }
 
-    // 1. Determine Tier
-    if (score >= 80) { tier = "MASTERED"; tCol = "#ff00ff"; }
-    else if (score >= 65) { tier = "ELITE (Full)"; tCol = "#00ffcc"; }
-    else if (score >= 40) { tier = "ADVANCED"; tCol = "#ffcc00"; }
-    else if (score >= 15) { tier = "INTERMEDIATE"; tCol = "#00ccff"; }
+            const progressions = {
+                "Maltese": ["Planche Lean (Deep) / Zanetti Press", "Banded Maltese / Dumbbell Flyes", "Maltese ISO (Dream Machine)", "Full Maltese Holds", "Maltese to Planche Transitions"],
+                "Iron Cross": ["Support Holds & Skin the Cat", "L-Sit Ring Pulls (Wide)", "Assisted Cross (Dream Machine/Bands)", "Full Cross ISO Holds", "Cross Pull-outs / Weighted"],
+                "Full Planche": ["Planche Leans / Frog Stand", "Tuck / Advanced Tuck", "Straddle Planche Holds", "Full Planche (Clean Form)", "Planche Pushups / Maltese Prep"],
+                "Straddle Planche": ["Planche Leans / Tuck Holds", "Advanced Tuck Planche", "Straddle (Low Angle)", "Full Straddle Planche", "Straddle Planche Pushups"],
+                "Front Lever": ["Scapula Pulls / Skin the Cat", "Tuck / Adv. Tuck Lever", "Straddle / One-Leg Lever", "Full Front Lever", "Front Lever Pullups"],
+                "Muscle Ups": ["High Pullups & Straight Bar Dips", "Transition Negatives / Banded", "Clean Explosive Reps", "Strict / Slow Form", "Weighted / Ring Muscle Ups"]
+            };
 
-    // 2. Elite Skill Specific Mapping
-    const progressions = {
-        "Maltese": [
-            "Planche Lean (Deep) / Zanetti Press", 
-            "Banded Maltese / Dumbbell Flyes",
-            "Maltese ISO (Dream Machine)",
-            "Full Maltese Holds",
-            "Maltese to Planche Transitions"
-        ],
-        "Iron Cross": [
-            "Support Holds & Skin the Cat",
-            "L-Sit Ring Pulls (Wide)",
-            "Assisted Cross (Dream Machine/Bands)",
-            "Full Cross ISO Holds",
-            "Cross Pull-outs / Weighted"
-        ],
-        "Full Planche": [
-            "Planche Leans / Frog Stand",
-            "Tuck / Advanced Tuck",
-            "Straddle Planche Holds",
-            "Full Planche (Clean Form)",
-            "Planche Pushups / Maltese Prep"
-        ],
-        "Straddle Planche": [
-            "Planche Leans / Tuck Holds",
-            "Advanced Tuck Planche",
-            "Straddle (Low Angle)",
-            "Full Straddle Planche",
-            "Straddle Planche Pushups"
-        ],
-        "Front Lever": [
-            "Scapula Pulls / Skin the Cat",
-            "Tuck / Adv. Tuck Lever",
-            "Straddle / One-Leg Lever",
-            "Full Front Lever",
-            "Front Lever Pullups"
-        ],
-        "Muscle Ups": [
-            "High Pullups & Straight Bar Dips",
-            "Transition Negatives / Banded",
-            "Clean Explosive Reps",
-            "Strict / Slow Form",
-            "Weighted / Ring Muscle Ups"
-        ]
-    };
+            const skillPath = progressions[activeGoal] || ["Basics", "Intermediate", "Advanced", "Full", "Mastery"];
+            const mIdx = score >= 80 ? 4 : score >= 65 ? 3 : score >= 40 ? 2 : score >= 15 ? 1 : 0;
+            milestone = skillPath[mIdx];
 
-    // Get the correct milestone based on score
-    const skillPath = progressions[activeGoal] || ["Basics", "Intermediate", "Advanced", "Full", "Mastery"];
-    const mIdx = score >= 80 ? 4 : score >= 65 ? 3 : score >= 40 ? 2 : score >= 15 ? 1 : 0;
-    milestone = skillPath[mIdx];
-
-    tierHtml = `
-        <h3 style="font-size:0.7em; letter-spacing:3px; color:var(--primary); margin-top:25px; border-bottom:1px solid #333; padding-bottom:10px;">PROGRESSION_TIER</h3>
-        <div class="insight-block" style="border-left:3px solid ${tCol}; padding:12px; background: rgba(255,255,255,0.03);">
-            <div style="font-size:0.65em; color:var(--primary); letter-spacing:1px; margin-bottom:5px;">CURRENT_BRACKET</div>
-            <div style="font-size:1.1em; font-weight:bold; color:${tCol}; font-family:monospace;">${tier}</div>
-            <div style="margin:10px 0; height:4px; background:#111; border-radius:2px; overflow:hidden;">
-                <div style="width:${score}%; height:100%; background:${tCol}; box-shadow: 0 0 10px ${tCol}55;"></div>
-            </div>
-            <div style="font-size:0.65em; color:#bbb;">NEXT_OBJECTIVE: <span style="color:#fff;">${milestone}</span></div>
-        </div>`;
-}
+            tierHtml = `
+                <h3 style="font-size:0.7em; letter-spacing:3px; color:var(--primary); margin-top:25px; border-bottom:1px solid #333; padding-bottom:10px;">PROGRESSION_TIER</h3>
+                <div class="insight-block" style="border-left:3px solid ${tCol}; padding:12px; background: rgba(255,255,255,0.03);">
+                    <div style="font-size:0.65em; color:var(--primary); letter-spacing:1px; margin-bottom:5px;">CURRENT_BRACKET</div>
+                    <div style="font-size:1.1em; font-weight:bold; color:${tCol}; font-family:monospace;">${tier}</div>
+                    <div style="margin:10px 0; height:4px; background:#111; border-radius:2px; overflow:hidden;">
+                        <div style="width:${score}%; height:100%; background:${tCol}; box-shadow: 0 0 10px ${tCol}55;"></div>
+                    </div>
+                    <div style="font-size:0.65em; color:#bbb;">NEXT_OBJECTIVE: <span style="color:#fff;">${milestone}</span></div>
+                </div>`;
+        }
         tierDiv.innerHTML = tierHtml;
 
-       // 6. HEATMAP & VOLUME UPDATES
-const shoulders = document.querySelectorAll('#joint-shoulder-l, #joint-shoulder-r');
-const elbows = document.querySelectorAll('#joint-elbow-l, #joint-elbow-r');
-let riskMsg = "SYSTEMS_NOMINAL";
+        // 6. HEATMAP & VOLUME UPDATES
+        const shoulders = document.querySelectorAll('#joint-shoulder-l, #joint-shoulder-r');
+        const elbows = document.querySelectorAll('#joint-elbow-l, #joint-elbow-r');
+        let riskMsg = "SYSTEMS_NOMINAL";
 
-// Apply logic: If in Sim Mode, we force the heatmap to stay green (Nominal)
-// unless you want the simulation to show risks too.
-if (pullPushRatio < 0.85) { 
-    shoulders.forEach(s => s.style.fill = "#ff4444"); 
-    riskMsg = "SHOULDER_RISK"; 
-} else { 
-    shoulders.forEach(s => s.style.fill = "var(--potential)"); 
-}
+        if (pullPushRatio < 0.85) { shoulders.forEach(s => s.style.fill = "#ff4444"); riskMsg = "SHOULDER_RISK"; } 
+        else { shoulders.forEach(s => s.style.fill = "var(--potential)"); }
 
-if (saIntegrity < 0.60) { 
-    elbows.forEach(e => e.style.fill = "#ff4444"); 
-    riskMsg = (riskMsg === "SHOULDER_RISK") ? "MULTI_JOINT_ADVISORY" : "ELBOW_RISK"; 
-} else { 
-    elbows.forEach(e => e.style.fill = "var(--potential)"); 
-}
+        if (saIntegrity < 0.60) { elbows.forEach(e => e.style.fill = "#ff4444"); riskMsg = (riskMsg === "SHOULDER_RISK") ? "MULTI_JOINT_ADVISORY" : "ELBOW_RISK"; } 
+        else { elbows.forEach(e => e.style.fill = "var(--potential)"); }
 
-const rMsg = document.getElementById("risk-msg");
-if (rMsg) { 
-    rMsg.innerText = riskMsg; 
-    rMsg.style.color = (riskMsg === "SYSTEMS_NOMINAL") ? "var(--potential)" : "var(--danger)"; 
-}
+        const rMsg = document.getElementById("risk-msg");
+        if (rMsg) { rMsg.innerText = riskMsg; rMsg.style.color = (riskMsg === "SYSTEMS_NOMINAL") ? "var(--potential)" : "var(--danger)"; }
 
-// VOLUME CALCULATION
-// Added Math.max to prevent negative tax and ensures 0 on empty inputs
-let pullSets = parseInt(document.getElementById("wpS").value) || 0;
-let pushSets = parseInt(document.getElementById("wdS").value) || 0;
-let totalTax = (pullSets * 1.5) + (pushSets * 1.5);
+        let pullSets = parseInt(document.getElementById("wpS").value) || 0;
+        let pushSets = parseInt(document.getElementById("wdS").value) || 0;
+        let totalTax = (pullSets * 1.5) + (pushSets * 1.5);
+        const vFill = document.getElementById("volume-fill");
+        if (vFill) {
+            vFill.style.width = Math.min((totalTax / 20) * 100, 100) + "%";
+            vFill.style.background = totalTax > 15 ? "var(--danger)" : "var(--primary)";
+        }
+        if (document.getElementById("volume-tax")) document.getElementById("volume-tax").innerText = totalTax.toFixed(1);
 
-const vFill = document.getElementById("volume-fill");
-if (vFill) {
-    // We cap it at 100% so the bar doesn't fly off the screen
-    vFill.style.width = Math.min((totalTax / 20) * 100, 100) + "%";
-    // Change color of volume bar if overtraining (Tax > 15)
-    vFill.style.background = totalTax > 15 ? "var(--danger)" : "var(--primary)";
-}
-
-const vTax = document.getElementById("volume-tax");
-if (vTax) vTax.innerText = totalTax.toFixed(1);
-        // 7. FINAL INJECTION
+        // 7. FINAL INJECTION & CHART STABILIZER
         document.getElementById("aiFeedback").innerHTML = auditHtml;
         document.getElementById("barContainer").innerHTML = barHtml;
+        
+        // Update Chart Data
         radarChart.data.datasets[0].data = curScores;
         radarChart.data.datasets[1].data = potScores;
-        radarChart.update();
+        
+        // --- STABILIZER START ---
+        // This stops the chart from expanding and breaking on mobile during updates
+        if (window.innerWidth < 600) {
+            radarChart.options.scales.r.pointLabels.font.size = 8;
+            radarChart.data.datasets[0].pointRadius = 2;
+            radarChart.data.datasets[1].pointRadius = 0;
+        }
+        radarChart.update('none'); 
+        // --- STABILIZER END ---
 
     } catch (err) { console.error(err); }
 }
