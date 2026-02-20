@@ -26,7 +26,6 @@
             background-image: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #0a0a0f 100%);
         }
 
-        /* Power Score Header */
         .power-score-container {
             background: rgba(255, 255, 255, 0.03);
             border: 1px dashed #333;
@@ -61,11 +60,13 @@
 
         label { display: block; font-size: 0.65rem; color: #aaa; margin-top: 15px; text-align: left; text-transform: uppercase; }
 
-        input { 
+        input, select.goal-select { 
             width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; 
             border: 1px solid #333; background: #0f0f1a; color: var(--accent); 
             box-sizing: border-box; font-family: monospace; font-size: 1rem; outline: none;
         }
+
+        select.goal-select { color: var(--gold); font-size: 0.7rem; cursor: pointer; }
 
         .result-box { 
             margin-top: 25px; padding: 20px; background: rgba(0, 0, 0, 0.4); 
@@ -78,6 +79,8 @@
         .breakdown-row { display: flex; justify-content: center; border-top: 1px solid #2a2a3a; padding-top: 10px; margin-top: 10px; }
         .b-label { font-size: 0.55rem; color: #777; display: block; text-transform: uppercase; }
         .b-val { font-size: 0.85rem; color: #ccc; font-weight: bold; }
+
+        .target-section { margin-top: 15px; padding-top: 15px; border-top: 1px dashed #333; }
 
         .lvl-badge { 
             display: inline-block; margin-top: 15px; padding: 6px 12px; 
@@ -126,12 +129,27 @@
                 <span class="val-label">Performance 1RM</span>
                 <span class="val" id="pRes">READY</span>
                 <div id="pWarn" class="neural-warning">! NEURAL FATIGUE: LOW CONFIDENCE</div>
-                <div class="breakdown-row">
-                    <div>
-                        <span class="b-label">Total System 1RM</span>
-                        <span class="b-val" id="pTotal">READY</span>
+                
+                <div class="target-section">
+                    <label style="text-align:center; color:var(--gold);">ROAD TO ELITE</label>
+                    <select id="pGoal" class="goal-select" onchange="calcAll()">
+                        <option value="0.15">INTERMEDIATE</option>
+                        <option value="0.30">ADV. INTERMEDIATE</option>
+                        <option value="0.45">ADVANCED</option>
+                        <option value="0.65" selected>ELITE</option>
+                    </select>
+                    <div class="breakdown-row">
+                        <div style="margin-right:15px;">
+                            <span class="b-label">TARGET</span>
+                            <span class="b-val" id="pTargetVal" style="color:var(--gold);">--</span>
+                        </div>
+                        <div>
+                            <span class="b-label">GAP</span>
+                            <span class="b-val" id="pGap" style="color:var(--accent);">--</span>
+                        </div>
                     </div>
                 </div>
+
                 <div id="pLvl" class="lvl-badge">LEVEL: PENDING</div>
             </div>
         </div>
@@ -148,12 +166,27 @@
                 <span class="val-label">Performance 1RM</span>
                 <span class="val" id="dRes">READY</span>
                 <div id="dWarn" class="neural-warning">! NEURAL FATIGUE: LOW CONFIDENCE</div>
-                <div class="breakdown-row">
-                    <div>
-                        <span class="b-label">Total System 1RM</span>
-                        <span class="b-val" id="dTotal">READY</span>
+
+                <div class="target-section">
+                    <label style="text-align:center; color:var(--gold);">ROAD TO ELITE</label>
+                    <select id="dGoal" class="goal-select" onchange="calcAll()">
+                        <option value="0.25">INTERMEDIATE</option>
+                        <option value="0.40">ADV. INTERMEDIATE</option>
+                        <option value="0.60">ADVANCED</option>
+                        <option value="0.85" selected>ELITE</option>
+                    </select>
+                    <div class="breakdown-row">
+                        <div style="margin-right:15px;">
+                            <span class="b-label">TARGET</span>
+                            <span class="b-val" id="dTargetVal" style="color:var(--gold);">--</span>
+                        </div>
+                        <div>
+                            <span class="b-label">GAP</span>
+                            <span class="b-val" id="dGap" style="color:var(--accent);">--</span>
+                        </div>
                     </div>
                 </div>
+
                 <div id="dLvl" class="lvl-badge">LEVEL: PENDING</div>
             </div>
         </div>
@@ -237,7 +270,7 @@
 
         function saveToStorage() {
             const data = {};
-            document.querySelectorAll('input').forEach(i => data[i.id] = i.value);
+            document.querySelectorAll('input, select.goal-select').forEach(i => data[i.id] = i.value);
             localStorage.setItem('caliBiotechData', JSON.stringify(data));
         }
 
@@ -258,28 +291,37 @@
                 l.innerText = l.innerText.split('(')[0].trim() + " (" + unit + ")";
             });
 
-            // Pull/Dip Logic (Dual-1RM)
+            // Pull/Dip Logic (Dual-1RM + Road to Elite)
             ['p', 'd'].forEach(id => {
                 let bw = parseFloat(document.getElementById(id + 'bw').value) || 0;
                 let add = parseFloat(document.getElementById(id + 'add').value) || 0;
                 let reps = parseInt(document.getElementById(id + 'rep').value) || 0;
+                let goalRatio = parseFloat(document.getElementById(id + 'Goal').value);
                 
                 document.getElementById(id + 'Warn').style.display = reps > 10 ? 'block' : 'none';
 
-                if (reps > 0 && bw > 0) {
-                    let total1RM = brzycki(bw + add, reps);
-                    let performance1RM = total1RM - bw;
+                // Core 1RM
+                let total1RM = (reps > 0 && bw > 0) ? brzycki(bw + add, reps) : 0;
+                let performance1RM = total1RM > 0 ? total1RM - bw : 0;
+                
+                if (bw > 0) {
                     document.getElementById(id + 'Res').innerText = "+" + performance1RM.toFixed(1) + " " + unit;
-                    document.getElementById(id + 'Total').innerText = total1RM.toFixed(1) + " " + unit;
                     
-                    let level = getLevel(performance1RM / bw, id === 'p' ? 'pull' : 'dip');
-                    strengthMap[id] = performance1RM / bw;
-                    weightedScore += levelsOrder.indexOf(level) * movementWeights[id];
-                    totalWeightUsed += movementWeights[id];
+                    // Road to Elite Logic
+                    let targetWeight = bw * goalRatio;
+                    let gap = targetWeight - performance1RM;
+                    document.getElementById(id + 'TargetVal').innerText = "+" + targetWeight.toFixed(1) + unit;
+                    document.getElementById(id + 'Gap').innerText = gap > 0 ? "+" + gap.toFixed(1) + unit : "GOAL MET";
 
-                    let lBox = document.getElementById(id + 'Lvl');
-                    lBox.innerText = "LEVEL: " + level;
-                    lBox.className = "lvl-badge lvl-" + level.replace(/ /g, '-');
+                    if (reps > 0) {
+                        let level = getLevel(performance1RM / bw, id === 'p' ? 'pull' : 'dip');
+                        strengthMap[id] = performance1RM / bw;
+                        weightedScore += levelsOrder.indexOf(level) * movementWeights[id];
+                        totalWeightUsed += movementWeights[id];
+                        let lBox = document.getElementById(id + 'Lvl');
+                        lBox.innerText = "LEVEL: " + level;
+                        lBox.className = "lvl-badge lvl-" + level.replace(/ /g, '-');
+                    }
                 }
             });
 
@@ -306,13 +348,11 @@
                 }
             });
 
-            // Global Weighted Rank
             if (totalWeightUsed > 0) {
                 let finalIndex = Math.round(weightedScore / totalWeightUsed);
                 document.getElementById('globalRank').innerText = "RANK: " + levelsOrder[finalIndex];
             }
 
-            // Biotech Analysis
             const aBox = document.getElementById('analysisBox');
             if (strengthMap.p && strengthMap.d) {
                 aBox.style.display = 'block';
