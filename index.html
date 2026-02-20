@@ -748,19 +748,42 @@ function analyze() {
         auditHtml += createInsight("CONNECTIVE_TISSUE", sStatus, saIntegrity, sDesc, saIntegrity < 0.62 ? "#ff4444" : "#00ffcc");
         auditHtml += createInsight("RELATIVE_POWER", "FORCE", relPower + "x BW", "Force generation relative to mass.", "var(--primary)");
 
+        // RESTORED HEATMAP & VOLUME LOGIC
+        const shoulders = document.querySelectorAll('#joint-shoulder-l, #joint-shoulder-r');
+        const elbows = document.querySelectorAll('#joint-elbow-l, #joint-elbow-r');
+        let riskMsg = "SYSTEMS_NOMINAL";
+
+        if (pullPushRatio < 0.85) { shoulders.forEach(s => s.style.fill = "#ff4444"); riskMsg = "SHOULDER_RISK"; } 
+        else { shoulders.forEach(s => s.style.fill = "var(--potential)"); }
+
+        if (saIntegrity < 0.60) { elbows.forEach(e => e.style.fill = "#ff4444"); riskMsg = (riskMsg === "SHOULDER_RISK") ? "MULTI_JOINT_ADVISORY" : "ELBOW_RISK"; } 
+        else { elbows.forEach(e => e.style.fill = "var(--potential)"); }
+
+        const rMsg = document.getElementById("risk-msg");
+        if (rMsg) { rMsg.innerText = riskMsg; rMsg.style.color = (riskMsg === "SYSTEMS_NOMINAL") ? "var(--potential)" : "var(--danger)"; }
+
+        let pullSets = parseInt(document.getElementById("wpS").value) || 0;
+        let pushSets = parseInt(document.getElementById("wdS").value) || 0;
+        let totalTax = (pullSets * 1.5) + (pushSets * 1.5);
+        const vFill = document.getElementById("volume-fill");
+        if (vFill) {
+            vFill.style.width = Math.min((totalTax / 20) * 100, 100) + "%";
+            vFill.style.background = totalTax > 15 ? "var(--danger)" : "var(--primary)";
+        }
+        if (document.getElementById("volume-tax")) document.getElementById("volume-tax").innerText = totalTax.toFixed(1);
+
+        // FINAL INJECTION
         document.getElementById("aiFeedback").innerHTML = auditHtml;
         document.getElementById("barContainer").innerHTML = barHtml;
         
-        // --- CHART & MOBILE STABILIZER ---
         radarChart.data.datasets[0].data = curScores;
         radarChart.data.datasets[1].data = potScores;
         
-        // This is the specific mobile fix that won't break your data
+        // Mobile Fix (Crucial for display but doesn't touch math)
         if (window.innerWidth < 600) {
             radarChart.options.plugins.legend.display = false;
             radarChart.options.scales.r.pointLabels.font.size = 10;
         }
-        
         radarChart.update('none'); 
 
     } catch (err) { console.error(err); }
