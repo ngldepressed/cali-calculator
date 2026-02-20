@@ -193,7 +193,7 @@
     </div>
 
    <div class="dashboard-row" id="captureArea">
-   <div class="analysis-panel" id="chart-card" style="min-height: 600px; display: flex; align-items: center; justify-content: center; position: relative; background: #1f1f2e; padding: 30px;">
+   <div class="analysis-panel" id="chart-card" style="min-height: 70vh; display: flex; align-items: center; justify-content: center; position: relative; background: #1f1f2e; padding: 10px;">
         
         <div id="safetyDisclaimer" style="position: absolute; top: 15px; left: 50%; transform: translateX(-50%); width: 92%; z-index: 20; color: #ff4444; background: rgba(20, 10, 10, 0.95); border: 1px solid #ff4444; padding: 12px; border-radius: 8px; font-family: monospace; border-left: 4px solid #ff4444; box-shadow: 0 4px 15px rgba(0,0,0,0.5); pointer-events: none;">
             <div style="font-weight: bold; margin-bottom: 4px; letter-spacing: 1px; font-size: 0.85em;">⚠️ TENDON_INTEGRITY_WARNING</div>
@@ -404,7 +404,6 @@ let radarChart;
 const ctx = document.getElementById('skillRadar').getContext('2d');
 
 function initChart() {
-    // Check if screen is small to adjust font size dynamically
     const isMobile = window.innerWidth < 600;
 
     radarChart = new Chart(ctx, {
@@ -418,7 +417,7 @@ function initChart() {
                     backgroundColor: 'rgba(76, 111, 255, 0.3)', 
                     borderColor: '#4c6fff', 
                     borderWidth: 4, 
-                    pointRadius: isMobile ? 3 : 5 // Smaller points on mobile
+                    pointRadius: isMobile ? 4 : 6 
                 },
                 { 
                     label: 'Potential', 
@@ -433,13 +432,13 @@ function initChart() {
         options: { 
             responsive: true, 
             maintainAspectRatio: false,
-            // ADDED PADDING: This prevents labels from touching the edge
+            // We reduce padding to 5 to push the chart as close to the edge as possible
             layout: {
                 padding: {
-                    left: 20,
-                    right: 20,
-                    top: 20,
-                    bottom: 20
+                    left: 5,
+                    right: 5,
+                    top: 5,
+                    bottom: 5
                 }
             },
             scales: { 
@@ -448,21 +447,23 @@ function initChart() {
                     max: 100, 
                     ticks: { display: false }, 
                     grid: { color: '#333', lineWidth: 1.5 },
-                    angleLines: { color: '#333' },
+                    angleLines: { color: '#444' },
                     pointLabels: {
                         color: '#fff',
-                        // RESPONSIVE FONT: Smaller on mobile, Bold on PC
+                        // This forces the labels to stay visible even when the chart is huge
+                        overflow: 'none', 
                         font: {
-                            size: isMobile ? 10 : 14, 
+                            size: isMobile ? 11 : 15, // Increased font size
                             weight: 'bold',
                             family: 'monospace'
                         },
-                        // Helps wrap text or prevent clipping
-                        padding: 10 
+                        padding: isMobile ? 8 : 15 
                     }
                 } 
             }, 
-            plugins: { legend: { display: false } } 
+            plugins: { 
+                legend: { display: false }
+            }
         }
     });
 }
