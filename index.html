@@ -359,6 +359,39 @@
 let isSystemReady = false;
 let isSimMode = false;
 
+const recs = {
+    "Full Planche": [
+        { min: 0, max: 30, text: "Beginner: Planche Leans 3x10-15s, Tuck Holds 3x8s, focus on core tightness." },
+        { min: 30, max: 70, text: "Intermediate: Advanced Tuck Planche 3x8-10s, Straddle Planche 3x5-8s, work straight-arm tension." },
+        { min: 70, max: 100, text: "Advanced: Weighted Planche Leans 3x5-6s, Full Straddle Planche 3x5s, fine-tune hollow body form." }
+    ],
+    "Straddle Planche": [
+        { min: 0, max: 30, text: "Beginner: Tuck Planche Holds 3x8s, focus on elbow and wrist control." },
+        { min: 30, max: 70, text: "Intermediate: Advanced Tuck 3x8s, widen straddle gradually, add planche leans." },
+        { min: 70, max: 100, text: "Advanced: Weighted Lean Planche 3x5s, full Straddle Planche, emphasize scapular protraction." }
+    ],
+    "Front Lever": [
+        { min: 0, max: 30, text: "Beginner: Scapular Pulls 4x10, Front Lever Tucks 4x8-10s." },
+        { min: 30, max: 70, text: "Intermediate: Advanced Tuck 3x6-8s, slow negatives, partial extensions." },
+        { min: 70, max: 100, text: "Advanced: Straddle Front Lever 3x5-8s, full front lever holds, work slow eccentrics." }
+    ],
+    "Iron Cross": [
+        { min: 0, max: 30, text: "Beginner: Ring Support Holds 3x20s, external rotation focus." },
+        { min: 30, max: 70, text: "Intermediate: Assisted Cross Holds 3x5-10s, partial range cross." },
+        { min: 70, max: 100, text: "Advanced: Full Iron Cross 3x3-5s, rings fly negatives, strict form." }
+    ],
+    "Maltese": [
+        { min: 0, max: 30, text: "Beginner: Planche Lean Holds 3x10s, Straight Arm Presses 3x5 reps." },
+        { min: 30, max: 70, text: "Intermediate: Rings Fly Negatives 3x6-8s, work full range slowly." },
+        { min: 70, max: 100, text: "Advanced: Full Maltese Hold 3x3-5s, add weighted holds, refine shoulder alignment." }
+    ],
+    "Muscle-up": [
+        { min: 0, max: 30, text: "Beginner: High Pull-ups 4x6, Dips 3x8, focus on explosive strength." },
+        { min: 30, max: 70, text: "Intermediate: Transition Drills 3x5-8, Full Muscle-up 3x3-5, refine technique." },
+        { min: 70, max: 100, text: "Advanced: Weighted Muscle-ups 3x3-5, fine-tune chest-to-bar pull and dip form." }
+    ]
+};
+
 function toggleSimMode() {
     // 1. Update the global variable so other functions know we are simulating
     isSimMode = document.getElementById("simMode").checked;
@@ -919,6 +952,40 @@ function deleteSingleNote(index) {
     displayNotes();
 }
 
+function showRecommendations() {
+    const feedback = document.getElementById('aiFeedback');
+    if (!radarChart || radarChart.data.datasets[0].data.length === 0) return;
+
+    // Keep the existing biomechanical audit
+    // We'll append recommendations below it
+    const auditHtml = feedback.innerHTML;
+
+    // Build recommendations dynamically based on skill %
+    let recHtml = `<h3 style="font-size:0.7em; letter-spacing:3px; color:var(--potential); margin-top:15px; border-bottom:1px solid #333; padding-bottom:5px;">RECOMMENDATIONS</h3>`;
+
+    radarChart.data.labels.forEach((skillName, idx) => {
+        const score = parseFloat(radarChart.data.datasets[0].data[idx] || 0);
+        if (score === 0) return; // Skip skills with no progress
+
+        let tier = "";
+        if (score < 40) tier = "Beginner: Easy holds / negatives";
+        else if (score < 70) tier = "Intermediate: Weighted reps / extended holds";
+        else tier = "Advanced: Fine-tuning / peak contraction work";
+
+        const exercise = recs[skillName] || "General Conditioning";
+
+        recHtml += `<div style="font-size:0.75em; margin-bottom:10px; color:#00ffcc; font-family:monospace;">
+                        <strong>${skillName} (${Math.round(score)}%):</strong><br>
+                        ${tier}<br>
+                        Exercise Recommendation: ${exercise}
+                    </div>`;
+    });
+
+    // Inject recommendations after the audit
+    feedback.innerHTML = auditHtml + recHtml;
+}
+analyze();
+showRecommendations();
 </script>
 <div class="card" style="margin-top: 20px;">
     <h3>Biotic Feedback / Archive</h3>
