@@ -8,367 +8,350 @@
     <link rel="canonical" href="https://www.calicalculator.com/skill-tree.html" />
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-<style>
-        :root { 
-            --primary: #00ff88; 
-            --bg: #0b0e14; 
-            --card: #1c2128; 
-            --elite: #ff3e3e; 
-            --text: #f0f6fc; 
-            --border: #30363d;
-            --accent: #58a6ff;
-        }
-        
-        body { 
-            background-color: var(--bg); 
-            color: var(--text); 
-            font-family: 'Outfit', sans-serif; 
-            margin: 0; 
-            padding: 20px; 
-            background-image: radial-gradient(var(--border) 0.5px, transparent 0.5px);
-            background-size: 30px 30px;
+
+    <style>
+        :root {
+            --primary: #00ff88;
+            --bg: #05070a;
+            --card: #0f1218;
+            --elite: #ff3e3e;
+            --text: #e6edf3;
+            --border: #1f242d;
+            --glow: rgba(0, 255, 136, 0.3);
         }
 
-        .header { text-align: center; margin-bottom: 40px; }
-        .header h1 { 
+        body {
+            background-color: var(--bg);
+            color: var(--text);
             font-family: 'JetBrains Mono', monospace;
-            font-size: 2rem; 
-            letter-spacing: 5px;
-            background: linear-gradient(to right, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            margin: 0;
+            padding: 40px 20px;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
         }
 
-        /* Mastery Tracker */
-        .mastery-card {
-            max-width: 800px;
-            margin: 0 auto 40px;
-            background: var(--card);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
+        /* --- RPG HEADER --- */
+        .rpg-header {
             text-align: center;
+            margin-bottom: 60px;
         }
-        .bar-bg { height: 12px; background: #111; border-radius: 10px; margin-top: 10px; overflow: hidden; border: 1px solid #333; }
-        #bar-fill { width: 0%; height: 100%; background: var(--primary); box-shadow: 0 0 15px var(--primary); transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-        .tree-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 25px; 
-            max-width: 1600px; 
+        .rpg-header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            letter-spacing: 8px;
+            color: #fff;
+            text-shadow: 0 0 20px var(--primary);
+            margin: 0;
+        }
+
+        .stats-hud {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            background: var(--card);
+            padding: 10px 30px;
+            border: 1px solid var(--primary);
+            border-radius: 4px;
+            box-shadow: inset 0 0 10px var(--glow);
+        }
+
+        .progress-container {
+            width: 100%;
+            max-width: 800px;
+            height: 12px;
+            background: #111;
+            margin: 20px auto;
+            border-radius: 10px;
+            border: 1px solid #333;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #58a6ff);
+            box-shadow: 0 0 20px var(--primary);
+            transition: width 1s ease-out;
+        }
+
+        /* --- SKILL TREE GRID --- */
+        .tree-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            max-width: 1600px;
             margin: 0 auto;
         }
 
-        .branch { 
-            background: var(--card); 
-            padding: 25px; 
-            border-radius: 12px; 
+        .skill-branch {
+            position: relative;
+            background: rgba(15, 18, 24, 0.8);
             border: 1px solid var(--border);
-            transition: 0.3s ease;
+            padding: 30px;
+            border-radius: 15px;
         }
-        .branch:hover { border-color: #444; transform: translateY(-3px); }
 
-        .branch-header { 
-            color: var(--primary); 
-            font-size: 1rem; 
-            font-weight: 700;
-            margin-bottom: 20px;
+        .branch-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--primary);
             text-transform: uppercase;
-            letter-spacing: 2px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 12px;
-            text-align: center;
-        }
-
-        .tier-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            color: var(--accent);
-            text-transform: uppercase;
-            margin: 25px 0 12px;
-            display: block;
-            border-left: 2px solid var(--accent);
-            padding-left: 8px;
-        }
-
-        .node {
-            background: rgba(255,255,255,0.02); 
-            border: 1px solid transparent;
-            padding: 10px 15px; 
-            margin-bottom: 6px; 
-            border-radius: 6px;
+            margin-bottom: 30px;
             display: flex;
-            justify-content: space-between; 
+            align-items: center;
+            gap: 15px;
+        }
+
+        .branch-title::after {
+            content: "";
+            flex-grow: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+        }
+
+        /* --- SKILL NODES --- */
+        .tier-group { margin-bottom: 30px; position: relative; }
+
+        .tier-name {
+            font-size: 0.7rem;
+            color: #555;
+            margin-bottom: 15px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .skill-node {
+            background: #161b22;
+            border: 1px solid var(--border);
+            padding: 12px 20px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
-        .node:hover { background: rgba(255,255,255,0.06); border-color: var(--border); }
 
-        .node.mastered {
+        .skill-node:hover {
             border-color: var(--primary);
-            background: rgba(0, 255, 136, 0.08);
+            transform: translateX(10px) scale(1.02);
+            background: #1c2128;
+            box-shadow: 0 0 25px rgba(0, 255, 136, 0.1);
         }
-        .node.mastered h3 { color: var(--primary); font-weight: 700; }
 
-        .node h3 { font-size: 0.8rem; margin: 0; font-weight: 400; color: #ccc; }
-        .node span { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: #555; }
+        .skill-node.mastered {
+            border-color: var(--primary);
+            background: rgba(0, 255, 136, 0.05);
+            box-shadow: inset 0 0 15px rgba(0, 255, 136, 0.1);
+        }
 
-        .elite { border-right: 3px solid var(--elite); }
-        .elite h3 { color: #ff8080; }
+        .skill-node.mastered h3 { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
 
-        .full-width { grid-column: 1 / -1; }
+        .skill-node h3 {
+            font-size: 0.85rem;
+            margin: 0;
+            color: #ccc;
+            transition: 0.3s;
+        }
 
-        /* Protocols Styling */
-        .protocol-box {
-            background: rgba(255, 62, 62, 0.03);
+        .skill-rank {
+            font-size: 0.6rem;
+            background: #21262d;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: #888;
+        }
+
+        .elite-node {
+            border-right: 4px solid var(--elite);
+        }
+
+        .elite-node:hover {
+            border-color: var(--elite);
+            box-shadow: 0 0 25px rgba(255, 62, 62, 0.2);
+        }
+
+        /* --- FOOTER HUD --- */
+        .footer-hud {
+            margin-top: 80px;
+            padding: 40px;
+            background: var(--card);
             border: 1px solid var(--border);
-            border-left: 4px solid var(--elite);
-            padding: 25px;
-            border-radius: 12px;
-            margin-top: 40px;
+            border-radius: 10px;
         }
-        .protocol-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .protocol-item h4 { color: var(--primary); font-size: 0.8rem; margin-top: 0; text-transform: uppercase; }
-        .protocol-item p, li { font-size: 0.8rem; color: #999; line-height: 1.5; }
 
-        .back-btn { display: block; width: fit-content; margin: 50px auto; color: #666; text-decoration: none; font-family: 'JetBrains Mono'; font-size: 0.7rem; border-bottom: 1px solid transparent; }
-        .back-btn:hover { color: var(--primary); border-color: var(--primary); }
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
 
-        @media (max-width: 1200px) { .tree-grid { grid-template-columns: 1fr; } }
+        .protocol-card {
+            border-left: 2px solid var(--primary);
+            padding-left: 20px;
+        }
+
+        .protocol-card h4 {
+            color: var(--primary);
+            font-size: 0.8rem;
+            margin-top: 0;
+        }
+
+        .protocol-card p {
+            font-size: 0.75rem;
+            color: #888;
+            line-height: 1.6;
+        }
+
     </style>
 </head>
 <body>
 
-    <div class="header"><h1>SKILL TREE :: BIOTECH</h1></div>
-
-    <div class="mastery-card">
-        <div style="font-size: 0.8rem; color: var(--primary); font-weight: bold; letter-spacing: 2px;">NEURAL INTEGRATION: <span id="perc">0%</span></div>
-        <div class="bar-bg"><div id="bar-fill"></div></div>
+    <div class="rpg-header">
+        <h1>CALI-BIOTECH</h1>
+        <div class="stats-hud">
+            <div class="stat-item">LVL: <span id="user-lvl">1</span></div>
+            <div class="stat-item">MASTERED: <span id="mastery-count">0</span></div>
+        </div>
+        <div class="progress-container">
+            <div id="progress-fill"></div>
+        </div>
+        <p style="font-size: 0.7rem; color: #555;">NEURAL SYNCHRONIZATION AT <span id="perc">0%</span></p>
     </div>
 
-    <div class="tree-grid">
-        
-        <div class="branch">
-            <div class="branch-header">Pushing Power</div>
-            <span class="tier-label">Basics</span>
-            <div class="node"><h3>Planche Lean</h3><span>BASE</span></div>
-            <div class="node"><h3>Pseudo Planche PU</h3><span>LVL 1</span></div>
-            <div class="node"><h3>Planche Parallettes</h3><span>LVL 1</span></div>
-            <div class="node"><h3>L-Sit to Planche</h3><span>LVL 2</span></div>
-            <div class="node"><h3>Press to Planche</h3><span>LVL 2</span></div>
+    <div class="tree-container">
+        <div class="skill-branch">
+            <div class="branch-title">Pulling Power</div>
             
-            <span class="tier-label">Intermediate</span>
-            <div class="node"><h3>Tuck Planche</h3><span>LVL 3</span></div>
-            <div class="node"><h3>Planche PU (Tuck)</h3><span>LVL 3</span></div>
-            <div class="node"><h3>Adv Tuck Planche</h3><span>LVL 4</span></div>
-            <div class="node"><h3>90° Planche Hold</h3><span>LVL 4</span></div>
-            
-            <span class="tier-label">Advanced</span>
-            <div class="node"><h3>Straddle Planche</h3><span>LVL 5</span></div>
-            <div class="node"><h3>Planche PU (Straddle)</h3><span>LVL 5</span></div>
-            <div class="node"><h3>Full Planche</h3><span>LVL 6</span></div>
-            <div class="node"><h3>Planche PU (Full)</h3><span>LVL 6</span></div>
-            <div class="node"><h3>Ring Planche</h3><span>LVL 6</span></div>
-            <div class="node"><h3>Wide Planche</h3><span>LVL 6</span></div>
-            
-            <span class="tier-label">Elite Mastery</span>
-            <div class="node elite"><h3>Maltese Lean</h3><span>RANK A</span></div>
-            <div class="node elite"><h3>Tuck Maltese</h3><span>RANK A</span></div>
-            <div class="node elite"><h3>Straddle Maltese</h3><span>RANK S</span></div>
-            <div class="node elite"><h3>Maltese (Rings)</h3><span>RANK S</span></div>
-            <div class="node elite"><h3>Inverted Cross</h3><span>RANK S</span></div>
-            <div class="node elite"><h3>Supinated Planche</h3><span>RANK SS</span></div>
-            <div class="node elite"><h3>Zanetti Press</h3><span>RANK SS</span></div>
-            <div class="node elite"><h3>One Arm Planche (Ast)</h3><span>RANK SS</span></div>
-            <div class="node elite"><h3>Reverse Planche</h3><span>ZENITH</span></div>
-        </div>
+            <div class="tier-group">
+                <div class="tier-name">Tier 1: Foundations</div>
+                <div class="skill-node" onclick="toggleSkill(this)"><h3>Skin the Cat</h3><span class="skill-rank">BASE</span></div>
+                <div class="skill-node" onclick="toggleSkill(this)"><h3>German Hang</h3><span class="skill-rank">BASE</span></div>
+                <div class="skill-node" onclick="toggleSkill(this)"><h3>Back Lever</h3><span class="skill-rank">LVL 1</span></div>
+            </div>
 
-        <div class="branch">
-            <div class="branch-header">Pulling Strength</div>
-            <span class="tier-label">Basics</span>
-            <div class="node"><h3>Skin the Cat</h3><span>BASE</span></div>
-            <div class="node"><h3>German Hang</h3><span>BASE</span></div>
-            <div class="node"><h3>Back Lever</h3><span>LVL 1</span></div>
-            <div class="node"><h3>Straddle Back Lever</h3><span>LVL 1</span></div>
-            <div class="node"><h3>Ice Cream Makers</h3><span>LVL 2</span></div>
-            
-            <span class="tier-label">Intermediate</span>
-            <div class="node"><h3>Tuck Front Lever</h3><span>LVL 3</span></div>
-            <div class="node"><h3>Adv Tuck FL</h3><span>LVL 3</span></div>
-            <div class="node"><h3>Archer Pull-up</h3><span>LVL 3</span></div>
-            <div class="node"><h3>Muscle-up (Strict)</h3><span>LVL 4</span></div>
-            <div class="node"><h3>FL Raises</h3><span>LVL 4</span></div>
-            
-            <span class="tier-label">Advanced</span>
-            <div class="node"><h3>Straddle Front Lever</h3><span>LVL 5</span></div>
-            <div class="node"><h3>Full Front Lever</h3><span>LVL 6</span></div>
-            <div class="node"><h3>Supinated FL</h3><span>LVL 6</span></div>
-            <div class="node"><h3>Front Lever Pull</h3><span>LVL 6</span></div>
-            <div class="node"><h3>One Arm Pull-up</h3><span>LVL 6</span></div>
-            <div class="node"><h3>Slow Muscle-up</h3><span>LVL 6</span></div>
-            
-            <span class="tier-label">Elite Mastery</span>
-            <div class="node elite"><h3>Front Lever Touch</h3><span>RANK A</span></div>
-            <div class="node elite"><h3>Supinated FL Touch</h3><span>RANK A</span></div>
-            <div class="node elite"><h3>OA FL (Assisted)</h3><span>RANK S</span></div>
-            <div class="node elite"><h3>Hefesto (Tuck)</h3><span>RANK S</span></div>
-            <div class="node elite"><h3>Hefesto (Full)</h3><span>RANK SS</span></div>
-            <div class="node elite"><h3>One Arm FL</h3><span>RANK SS</span></div>
-            <div class="node elite"><h3>Victorian Cross</h3><span>ZENITH</span></div>
-        </div>
+            <div class="tier-group">
+                <div class="tier-name">Tier 2: Lever Logic</div>
+                <div class="skill-node" onclick="toggleSkill(this)"><h3>Tuck Front Lever</h3><span class="skill-rank">LVL 3</span></div>
+                <div class="skill-node" onclick="toggleSkill(this)"><h3>Muscle-Up</h3><span class="skill-rank">LVL 4</span></div>
+            </div>
 
-        <div class="branch">
-            <div class="branch-header">Vertical Presses</div>
-            <span class="tier-label">Basics</span>
-            <div class="node"><h3>Wall Handstand</h3><span>BASE</span></div>
-            <div class="node"><h3>Pike Press</h3><span>BASE</span></div>
-            <div class="node"><h3>Shoulder Stand</h3><span>LVL 1</span></div>
-            <div class="node"><h3>Bent Arm HS</h3><span>LVL 2</span></div>
-            <div class="node"><h3>HS Shoulder Taps</h3><span>LVL 2</span></div>
-            
-            <span class="tier-label">Intermediate</span>
-            <div class="node"><h3>Freestanding HS</h3><span>LVL 3</span></div>
-            <div class="node"><h3>Tuck Handstand</h3><span>LVL 3</span></div>
-            <div class="node"><h3>Straddle HS</h3><span>LVL 3</span></div>
-            <div class="node"><h3>HS Push-up (Wall)</h3><span>LVL 4</span></div>
-            <div class="node"><h3>Straddle Press to HS</h3><span>LVL 4</span></div>
-            
-            <span class="tier-label">Advanced</span>
-            <div class="node"><h3>Strict HS Push-up</h3><span>LVL 5</span></div>
-            <div class="node"><h3>Deficit HS PU</h3><span>LVL 5</span></div>
-            <div class="node"><h3>Stalder Press</h3><span>LVL 6</span></div>
-            <div class="node"><h3>90° Hold</h3><span>LVL 6</span></div>
-            <div class="node"><h3>90° Push-up</h3><span>LVL 6</span></div>
-            <div class="node"><h3>Hollowback HS</h3><span>LVL 6</span></div>
-            
-            <span class="tier-label">Elite Mastery</span>
-            <div class="node elite"><h3>Tiger Bend</h3><span>RANK A</span></div>
-            <div class="node elite"><h3>Hollowback Press</h3><span>RANK A</span></div>
-            <div class="node elite"><h3>OA HS (Wall Ast)</h3><span>RANK S</span></div>
-            <div class="node elite"><h3>Mexican HS</h3><span>RANK S</span></div>
-            <div class="node elite"><h3>One Arm Handstand</h3><span>RANK SS</span></div>
-            <div class="node elite"><h3>Butterfly Mount</h3><span>RANK SS</span></div>
-            <div class="node elite"><h3>OA HS Push-up (Part)</h3><span>RANK SS</span></div>
-            <div class="node elite"><h3>OA HS Push-up</h3><span>ZENITH</span></div>
-        </div>
-
-        <div class="branch full-width">
-            <div class="branch-header">Lower Body & Leg Mastery</div>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
-                <div>
-                    <span class="tier-label">Foundations</span>
-                    <div class="node"><h3>Assisted Pistol</h3><span>BASE</span></div>
-                    <div class="node"><h3>Deep Sissy Squat</h3><span>LVL 1</span></div>
-                    <div class="node"><h3>Cossack Squat</h3><span>LVL 2</span></div>
-                </div>
-                <div>
-                    <span class="tier-label">Intermediate</span>
-                    <div class="node"><h3>Pistol Squat</h3><span>LVL 3</span></div>
-                    <div class="node"><h3>Shrimp Squat</h3><span>LVL 3</span></div>
-                    <div class="node"><h3>Harop Curl (Partial)</h3><span>LVL 4</span></div>
-                </div>
-                <div>
-                    <span class="tier-label">Advanced & Elite</span>
-                    <div class="node"><h3>Nordic Curls</h3><span>LVL 5</span></div>
-                    <div class="node"><h3>Dragon Pistol</h3><span>LVL 6</span></div>
-                    <div class="node elite"><h3>Full Nordic</h3><span>RANK A</span></div>
-                    <div class="node elite"><h3>Explosive Nordic</h3><span>RANK S</span></div>
-                    <div class="node elite"><h3>Weighted Pistol</h3><span>RANK SS</span></div>
-                </div>
+            <div class="tier-group">
+                <div class="tier-name">Tier 3: The Zenith</div>
+                <div class="skill-node elite-node" onclick="toggleSkill(this)"><h3>One Arm Pullup</h3><span class="skill-rank">RANK S</span></div>
+                <div class="skill-node elite-node" onclick="toggleSkill(this)"><h3>Victorian Cross</h3><span class="skill-rank">ZENITH</span></div>
             </div>
         </div>
 
-        <div class="branch full-width">
-            <div class="branch-header">Statics & Specialized Holds</div>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
-                <div>
-                    <span class="tier-label">Support</span>
-                    <div class="node"><h3>Dead Hang</h3><span>BASE</span></div>
-                    <div class="node"><h3>Support Hold</h3><span>BASE</span></div>
-                    <div class="node"><h3>Inverted Hang</h3><span>BASE</span></div>
-                    <div class="node"><h3>Arch Hang</h3><span>LVL 1</span></div>
-                    <div class="node"><h3>Elbow Lever</h3><span>LVL 1</span></div>
-                    <div class="node"><h3>Reverse Support</h3><span>LVL 2</span></div>
-                    <div class="node"><h3>L-Sit</h3><span>LVL 2</span></div>
-                </div>
-                <div>
-                    <span class="tier-label">Levers & Flags</span>
-                    <div class="node"><h3>Dragon Flag</h3><span>LVL 3</span></div>
-                    <div class="node"><h3>Side Lever (Flag)</h3><span>LVL 3</span></div>
-                    <div class="node"><h3>Straddle Flag</h3><span>LVL 3</span></div>
-                    <div class="node"><h3>Full Human Flag</h3><span>LVL 4</span></div>
-                    <div class="node"><h3>V-Sit</h3><span>LVL 4</span></div>
-                    <div class="node"><h3>Tuck Manna</h3><span>LVL 5</span></div>
-                    <div class="node"><h3>Tuck Victorian</h3><span>LVL 5</span></div>
-                </div>
-                <div>
-                    <span class="tier-label">Elite Holds</span>
-                    <div class="node elite"><h3>Iron Cross (Ast)</h3><span>RANK A</span></div>
-                    <div class="node elite"><h3>Iron Cross</h3><span>RANK A</span></div>
-                    <div class="node elite"><h3>Manna</h3><span>RANK S</span></div>
-                    <div class="node elite"><h3>Zanetti Hold</h3><span>RANK S</span></div>
-                    <div class="node elite"><h3>Straddle Victorian</h3><span>RANK SS</span></div>
-                    <div class="node elite"><h3>Victorian (Floor)</h3><span>RANK SS</span></div>
-                    <div class="node elite"><h3>Victorian (Rings)</h3><span>ZENITH</span></div>
-                </div>
+        <div class="skill-branch">
+            <div class="branch-title">Pushing Power</div>
+            
+            <div class="tier-group">
+                <div class="tier-name">Tier 1: Scapular Force</div>
+                <div class="skill-node" onclick="toggleSkill(this)"><h3>Planche Lean</h3><span class="skill-rank">BASE</span></div>
+                <div class="skill-node" onclick="toggleSkill(this)"><h3>Pseudo Pushups</h3><span class="skill-rank">LVL 1</span></div>
+            </div>
+
+            <div class="tier-group">
+                <div class="tier-name">Tier 2: Static Mastery</div>
+                <div class="skill-node" onclick="toggleSkill(this)"><h3>Tuck Planche</h3><span class="skill-rank">LVL 3</span></div>
+                <div class="skill-node" onclick="toggleSkill(this)"><h3>Straddle Planche</h3><span class="skill-rank">LVL 5</span></div>
+            </div>
+
+            <div class="tier-group">
+                <div class="tier-name">Tier 3: Maltese Protocol</div>
+                <div class="skill-node elite-node" onclick="toggleSkill(this)"><h3>Banded Maltese</h3><span class="skill-rank">RANK A</span></div>
+                <div class="skill-node elite-node" onclick="toggleSkill(this)"><h3>Supinated Planche</h3><span class="skill-rank">RANK SS</span></div>
+            </div>
+        </div>
+
+        <div class="skill-branch">
+            <div class="branch-title">Vertical Balance</div>
+            
+            <div class="tier-group">
+                <div class="tier-name">Tier 1: Stability</div>
+                <div class="skill-node" onclick="toggleSkill(this)"><h3>Wall Handstand</h3><span class="skill-rank">BASE</span></div>
+                <div class="skill-node" onclick="toggleSkill(this)"><h3>Pike Press</h3><span class="skill-rank">LVL 1</span></div>
+            </div>
+
+            <div class="tier-group">
+                <div class="tier-name">Tier 2: Freestanding</div>
+                <div class="skill-node" onclick="toggleSkill(this)"><h3>HS Hold</h3><span class="skill-rank">LVL 3</span></div>
+                <div class="skill-node" onclick="toggleSkill(this)"><h3>HS Pushups</h3><span class="skill-rank">LVL 5</span></div>
+            </div>
+
+            <div class="tier-group">
+                <div class="tier-name">Tier 3: God-Like Control</div>
+                <div class="skill-node elite-node" onclick="toggleSkill(this)"><h3>90 Degree Pushup</h3><span class="skill-rank">RANK A</span></div>
+                <div class="skill-node elite-node" onclick="toggleSkill(this)"><h3>One Arm Handstand</h3><span class="skill-rank">RANK SS</span></div>
             </div>
         </div>
     </div>
 
-    <div class="protocol-box">
-        <h3 style="color:var(--elite); margin-top:0; font-family:'JetBrains Mono'; letter-spacing:3px;">SYSTEM ARCHITECTURE</h3>
+    <div class="footer-hud">
+        <div class="branch-title">Neural Protocols</div>
         <div class="protocol-grid">
-            <div class="protocol-item">
-                <h4>Progression Logic</h4>
-                <p>Neural (Brain), Structural (Muscle), and Connective (Tendons). Muscles adapt in weeks; tendons in months.</p>
+            <div class="protocol-card">
+                <h4>System Architecture</h4>
+                <p>Neural adaptation happens first, then structural muscle, finally connective tissue. Don't rush the tendons.</p>
             </div>
-            <div class="protocol-item">
-                <h4>Timeframes</h4>
-                <ul>
-                    <li>Basics: 1-3 Months</li>
-                    <li>Intermediate: 6-12 Months</li>
-                    <li>Elite: 3-10 Years focus.</li>
-                </ul>
-            </div>
-            <div class="protocol-item">
+            <div class="protocol-card" style="border-color: var(--elite);">
                 <h4>Injury Fail-Safe</h4>
-                <p>Avoid "System Shutdown." Never increase intensity by >10% monthly. Sharp pain = 40% reduction for 14 days.</p>
+                <p>System Shutdown active. Sharp pain requires 40% load reduction for 14 days. No exceptions.</p>
+            </div>
+            <div class="protocol-card">
+                <h4>Mastery Window</h4>
+                <p>Basics: 1-3 Mo. Advanced: 12-24 Mo. Zenith: 3-10 Years.</p>
             </div>
         </div>
     </div>
-
-    <a href="index.html" class="back-btn">RETURN TO HUB</a>
 
     <script>
+        function toggleSkill(element) {
+            element.classList.toggle('mastered');
+            updateProgress();
+            
+            // Local Storage Logic
+            const masteredNodes = document.querySelectorAll('.skill-node.mastered');
+            const skillNames = Array.from(masteredNodes).map(n => n.querySelector('h3').innerText);
+            localStorage.setItem('caliMasteredSkills', JSON.stringify(skillNames));
+        }
+
+        function updateProgress() {
+            const allNodes = document.querySelectorAll('.skill-node');
+            const masteredNodes = document.querySelectorAll('.skill-node.mastered');
+            const count = masteredNodes.length;
+            const total = allNodes.length;
+            const progress = (count / total) * 100;
+
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('mastery-count').innerText = count;
+            document.getElementById('perc').innerText = Math.round(progress) + '%';
+            
+            // Level Calculation Logic
+            const level = Math.floor(count / 2) + 1;
+            document.getElementById('user-lvl').innerText = level;
+        }
+
+        // Initialize from local storage
         document.addEventListener('DOMContentLoaded', () => {
-            const nodes = document.querySelectorAll('.node');
-            const bar = document.getElementById('bar-fill');
-            const perc = document.getElementById('perc');
-
-            const updateUI = () => {
-                const masteredCount = document.querySelectorAll('.node.mastered').length;
-                const total = nodes.length;
-                const progress = (masteredCount / total) * 100;
-                bar.style.width = progress + '%';
-                perc.innerText = Math.round(progress) + '%';
-            };
-
-            nodes.forEach(node => {
-                const name = node.querySelector('h3').innerText;
-                const saved = JSON.parse(localStorage.getItem('caliMasteredSkills')) || [];
-                if (saved.includes(name)) node.classList.add('mastered');
-
-                node.addEventListener('click', () => {
-                    node.classList.toggle('mastered');
-                    const current = Array.from(document.querySelectorAll('.node.mastered'))
-                                         .map(n => n.querySelector('h3').innerText);
-                    localStorage.setItem('caliMasteredSkills', JSON.stringify(current));
-                    updateUI();
-                });
+            const saved = JSON.parse(localStorage.getItem('caliMasteredSkills')) || [];
+            document.querySelectorAll('.skill-node').forEach(node => {
+                if (saved.includes(node.querySelector('h3').innerText)) {
+                    node.classList.add('mastered');
+                }
             });
-            updateUI();
+            updateProgress();
         });
     </script>
 </body>
