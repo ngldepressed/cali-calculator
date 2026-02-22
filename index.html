@@ -598,325 +598,113 @@ function generateGoalBrief(vectors, bw, conv, u) {
 function analyze() {
     if(!isSystemReady) return;
     if(!radarChart) initChart();
+
     try {
         const sys = document.getElementById("unitSystem").value;
         const conv = sys === 'imp' ? 0.453592 : 1;
         const u = sys === 'met' ? 'kg' : 'lbs';
         
-        const weightInput = document.getElementById("weight").value;
-        const isWeightEmpty = !weightInput || parseFloat(weightInput) <= 0;
-        let bw = (parseFloat(weightInput) || 75) * conv;
-
+        let weightVal = parseFloat(document.getElementById("weight").value) || 75;
         let h = sys === 'met' ? (parseFloat(document.getElementById("hCm").value) || 170) : ((parseFloat(document.getElementById("hFt").value)||5)*30.48)+((parseFloat(document.getElementById("hIn").value)||7)*2.54);
+        
+        if (isSimMode) { weightVal = 75; h = 175; }
+        const bw = weightVal * conv;
 
-        if (isSimMode) {
-            document.getElementById("weight").value = 75;
-            document.getElementById("pullups").value = 28;
-            document.getElementById("pushups").value = 55;
-            document.getElementById("mu").value = 12;
-            document.getElementById("hang").value = 120;
-            document.getElementById("wpW").value = 45;
-            document.getElementById("wpR").value = 5;
-            document.getElementById("wdW").value = 65;
-            document.getElementById("wdR").value = 5;
-            document.getElementById("saW").value = 25;
-            document.getElementById("saR").value = 5;
-            document.getElementById("legRatio").value = "1.0";
-            document.getElementById("form").value = "1.0";
-            document.getElementById("cns").value = 10;
-        }
+        const get1RM = (preW, preR) => {
+            const w = (parseFloat(document.getElementById(preW).value) || 0) * conv;
+            const r = parseInt(document.getElementById(preR).value) || 0;
+            return (bw + w * (1 + r/30)) / bw;
+        };
 
-        const pull1RM = (bw + (parseFloat(document.getElementById("wpW").value)||0)*conv * (1 + (parseInt(document.getElementById("wpR").value)||0)/30)) / bw;
-        const push1RM = (bw + (parseFloat(document.getElementById("wdW").value)||0)*conv * (1 + (parseInt(document.getElementById("wdR").value)||0)/30)) / bw;
-        let rawSa = (bw + (parseFloat(document.getElementById("saW").value)||0)*conv * (1 + (parseInt(document.getElementById("saR").value)||0)/30)) / bw;
-        const sa1RM = Math.max(rawSa, (push1RM * 0.75));
+        const pull1RM = get1RM("wpW", "wpR");
+        const push1RM = get1RM("wdW", "wdR");
+        const sa1RM = get1RM("saW", "saR");
 
         const torqueFactor = Math.pow(h / 170, 2.3) * (parseFloat(document.getElementById("legRatio").value) || 1.0);
         const cnsVal = (parseInt(document.getElementById("cns").value) || 10) / 10;
         const form = parseFloat(document.getElementById("form").value) || 1.0;
 
-        if (isSimMode) {
-            radarChart.data.datasets[0].label = 'SIMULATED TARGET';
-            radarChart.data.datasets[0].borderColor = '#00ffcc';
-        } else {
-            radarChart.data.datasets[0].label = 'REALITY';
-            radarChart.data.datasets[0].borderColor = '#4c6fff';
-            if (typeof saveToLocal === 'function') saveToLocal();
-        }
-
         let skillPanel = document.getElementById("skillBars");
         if (!document.getElementById("goalSelect")) {
-            skillPanel.innerHTML = `<div style="margin-bottom:20px;"><label style="color:var(--primary); font-size:0.7em; letter-spacing:2px;">MISSION_TARGET</label>
-            <select id="goalSelect" onchange="analyze()" style="background:#111; color:#fff; width:100%; border:1px solid #333; padding:10px; border-radius:5px; margin-top:5px;">
+            skillPanel.innerHTML = `<label style="color:var(--primary); font-size:0.7em; letter-spacing:2px;">MISSION_TARGET</label>
+            <select id="goalSelect" onchange="analyze()" style="background:#111; color:#fff; width:100%; border:1px solid #333; padding:10px; border-radius:5px; margin-top:5px; margin-bottom:15px;">
                 <option value="None">No Active Goal</option>${skills.map(s => `<option value="${s.name}">${s.name}</option>`).join('')}
-            </select></div><div id="barContainer"></div>`;
+            </select><div id="barContainer"></div>`;
         }
 
         const activeGoal = document.getElementById("goalSelect").value;
-        let barHtml = ""; const curScores = []; const potScores = [];
+        let barHtml = "";
+        const curScores = [];
+        const potScores = [];
+        let activeRecs = ""; // String to hold the recommended exercise
 
         skills.forEach(s => {
             let vectors = [];
-            if (s.p > 0) vectors.push({ name: "Push (Dips)", val: (push1RM / (s.p * torqueFactor)) * 100, req: s.p * torqueFactor });
-            if (s.l > 0) vectors.push({ name: "Pull (Pullups)", val: (pull1RM / (s.l * torqueFactor)) * 100, req: s.l * torqueFactor });
-            if (s.s > 0) vectors.push({ name: "SA (Zanetti)", val: (sa1RM / (s.s * torqueFactor)) * 100, req: s.s * torqueFactor });
-            
+            if (s.p > 0) vectors.push({ name: "Push (Dips)", val: (push1RM / (s.p * torqueFactor)) * 100, req: s.p * torqueFactor, raw: push1RM });
+            if (s.l > 0) vectors.push({ name: "Pull (Pullups)", val: (pull1RM / (s.l * torqueFactor)) * 100, req: s.l * torqueFactor, raw: pull1RM });
+            if (s.s > 0) vectors.push({ name: "SA (Zanetti)", val: (sa1RM / (s.s * torqueFactor)) * 100, req: s.s * torqueFactor, raw: sa1RM });
+
             const sig = (x) => 100 / (1 + Math.exp(-0.15 * (x - 52)));
             let minVal = Math.min(...vectors.map(v => v.val));
             let cur = sig(minVal) * cnsVal * form;
-            // FORCE ZERO if base requirements are not met
-if (s.l > 0 && pull1RM <= 1.0) cur = 0; // If skill needs pull and pull is 0
-if (s.p > 0 && push1RM <= 1.0) cur = 0; // If skill needs push and push is 0
-if (s.s > 0 && sa1RM <= 1.0) cur = 0;   // If skill needs straight arm and sa is 0
-
-            const rawPull = parseFloat(document.getElementById("pullups").value) || 0;
-            const rawPush = parseFloat(document.getElementById("pushups").value) || 0;
-            const rawMu = parseFloat(document.getElementById("mu").value) || 0;
             
-            if (s.name === "Muscle Ups" && rawMu === 0) cur = 0;
-            if (s.name === "Pullups" && rawPull === 0) cur = 0;
-            if (s.name === "Dips" && rawPush === 0) cur = 0;
+            if ((s.l > 0 && pull1RM <= 1.0) || (s.p > 0 && push1RM <= 1.0)) cur = 0;
 
             const isTarget = s.name === activeGoal;
             curScores.push(cur.toFixed(1));
             potScores.push(sig(Math.max(...vectors.map(v => v.val))).toFixed(1));
 
-            let recText = "";
+            // If this is the goal, calculate the specific bottleneck
+            let goalLogicHtml = "";
             if (isTarget) {
                 let weakest = vectors.reduce((prev, curr) => (prev.val < curr.val) ? prev : curr);
                 let neededPlate = ((weakest.req * bw) - bw) / conv;
-                recText = `CRITICAL PATH: Improve ${weakest.name}. Target 1RM: +${neededPlate.toFixed(1)}${u}.`;
+                activeRecs = recs[s.name] || "General conditioning";
+                
+                goalLogicHtml = `<div style="font-size:0.7em; color:var(--potential); margin-top:5px; font-family:monospace;">
+                    > CRITICAL: Improve ${weakest.name} (+${Math.max(0, neededPlate).toFixed(1)}${u})<br>
+                    > DRILL: ${activeRecs}
+                </div>`;
             }
 
-            barHtml += `<div class="skill-bar-container" style="opacity: ${activeGoal !== "None" && !isTarget ? '0.2' : '1'}; margin-bottom:15px;">
+            barHtml += `
+                <div class="skill-bar-container" style="opacity: ${activeGoal !== "None" && !isTarget ? '0.2' : '1'}; margin-bottom:15px;">
                     <div class="skill-label" style="display:flex; justify-content:space-between; font-family:monospace; font-size:0.85em;">
                         <span>${s.name.toUpperCase()}</span><span>${cur.toFixed(0)}%</span>
                     </div>
                     <div class="bar-bg" style="background:#111; height:6px; border-radius:10px; border:1px solid #333;">
                         <div class="bar-fill" style="width: ${cur}%; height:100%; background: ${isTarget ? 'var(--potential)' : 'var(--primary)'}; border-radius:10px;"></div>
                     </div>
-                    ${isTarget ? `<div style="font-size:0.7em; color:var(--potential); margin-top:5px; font-family:monospace;">> ${recText}</div>` : ''}
+                    ${goalLogicHtml}
                 </div>`;
         });
 
+        // Audit Report Injection
         const pullPushRatio = (pull1RM / push1RM).toFixed(2);
         const saIntegrity = (sa1RM / push1RM).toFixed(2);
-        const relPower = push1RM.toFixed(2);
-        const hasWeightedData = (parseFloat(document.getElementById("wdW").value) > 0 || parseFloat(document.getElementById("saW").value) > 0);
-        const hasRepData = (parseInt(document.getElementById("pullups").value) > 0);
-
-        let tStatus = torqueFactor > 1.08 ? "PENALTY" : "OPTIMAL";
-        let tDesc = torqueFactor > 1.08 ? `Height (${h.toFixed(0)}cm) creates lever disadvantage.` : `Optimal leverages for statics.`;
-        let bStatus = hasRepData ? (pullPushRatio < 0.85 ? "DEFICIT" : "BALANCED") : "STABLE";
-        let bDesc = hasRepData ? (pullPushRatio < 0.85 ? `Pull chain is ${((1-pullPushRatio)*100).toFixed(0)}% behind Push.` : `Scapular stabilizers are matched.`) : "Enter rep data.";
-        let sStatus = !hasWeightedData ? "INACTIVE" : (saIntegrity < 0.62 ? "TENDON LAG" : "NOMINAL");
-        let sDesc = !hasWeightedData ? "Enter data." : (saIntegrity < 0.62 ? "High injury risk." : "Density sufficient.");
-
+        
         let auditHtml = `<h3 style="font-size:0.7em; letter-spacing:3px; color:var(--primary); margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">BIOMECHANICAL_REPORT</h3>`;
-        const createInsight = (title, status, val, desc, color) => `<div class="insight-block" style="margin-bottom:15px; border-left:3px solid ${color}; padding-left:12px; background: rgba(255,255,255,0.02); padding-top:8px; padding-bottom:8px;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:0.8em; font-weight:bold; color:${color};">${title}</span>
-                    <span style="font-size:0.6em; background:${color}; color:#000; padding:1px 4px; border-radius:2px; font-weight:bold;">${status}</span>
-                </div>
-                <div style="font-size:1em; color:#fff; font-family:monospace; margin:4px 0;">${val}</div>
-                <p style="font-size:0.65em; color:#bbb; margin:0; line-height:1.4;">${desc}</p>
+        
+        // Add Goal-Specific Recommended Exercise to the Audit Report
+        if (activeGoal !== "None") {
+            auditHtml += `<div style="margin-bottom:15px; border-left:3px solid var(--potential); padding-left:12px; background: rgba(0,255,204,0.05); padding-top:8px; padding-bottom:8px;">
+                <div style="font-size:0.6em; color:var(--potential); font-weight:bold; letter-spacing:1px;">ACTIVE_MISSION_DRILL</div>
+                <div style="font-size:0.9em; color:#fff; font-family:monospace; margin:4px 0;">${activeRecs}</div>
             </div>`;
+        }
 
-        auditHtml += createInsight("TORQUE_LOAD", tStatus, torqueFactor.toFixed(2) + "x", tDesc, torqueFactor > 1.08 ? "#ff9900" : "#888");
-        auditHtml += createInsight("POSTERIOR_CHAIN", bStatus, pullPushRatio, bDesc, pullPushRatio < 0.85 ? "#ff4444" : "#00ffcc");
-        auditHtml += createInsight("CONNECTIVE_TISSUE", sStatus, saIntegrity, sDesc, saIntegrity < 0.62 ? "#ff4444" : "#00ffcc");
-        auditHtml += createInsight("RELATIVE_POWER", "FORCE", relPower + "x BW", "Force gen.", "var(--primary)");
+        auditHtml += `<div style="font-size:0.8em; color:#bbb;">Torque Load: ${torqueFactor.toFixed(2)}x</div>`;
+        auditHtml += `<div style="font-size:0.8em; color:${pullPushRatio < 0.85 ? '#ff4444' : '#00ffcc'}">Chain Balance: ${pullPushRatio}</div>`;
 
-        const shoulders = document.querySelectorAll('#joint-shoulder-l, #joint-shoulder-r');
-        const elbows = document.querySelectorAll('#joint-elbow-l, #joint-elbow-r');
-        let riskMsg = "SYSTEMS_NOMINAL";
-        if (pullPushRatio < 0.85) { shoulders.forEach(s => s.style.fill = "#ff4444"); riskMsg = "SHOULDER_RISK"; } else { shoulders.forEach(s => s.style.fill = "var(--potential)"); }
-        if (saIntegrity < 0.60) { elbows.forEach(e => e.style.fill = "#ff4444"); riskMsg = (riskMsg === "SHOULDER_RISK") ? "MULTI_JOINT_ADVISORY" : "ELBOW_RISK"; } else { elbows.forEach(e => e.style.fill = "var(--potential)"); }
-        const rMsg = document.getElementById("risk-msg");
-        if (rMsg) { rMsg.innerText = riskMsg; rMsg.style.color = (riskMsg === "SYSTEMS_NOMINAL") ? "var(--potential)" : "var(--danger)"; }
-
-// --- RELENTLESS VOLUME AUDIT ---
-let pullSets = parseInt(document.getElementById("wpS").value) || 0;
-let pushSets = parseInt(document.getElementById("wdS").value) || 0;
-let saSets = parseInt(document.getElementById("saS")?.value) || 0;
-
-// Intensity Scaling (e.g., +30kg on a 75kg athlete = 1.4)
-const pullInt = pull1RM; 
-const pushInt = push1RM;
-
-// Math: Sets * (Intensity Squared)
-let pullLoad = pullSets * (pullInt * pullInt);
-let pushLoad = pushSets * (pushInt * pushInt);
-let totalTax = pullLoad + pushLoad + (saSets * 3);
-
-// 1. Determine Status and Color
-let vStatus = "OPTIMAL";
-let vColor = "#00ffcc";
-
-// Trigger DANGER if tax is high OR if total sets exceed 25
-if (totalTax > 40 || (pullSets + pushSets) > 25) {
-    vStatus = "OVERREACHING";
-    vColor = "#ff4444";
-} else if (totalTax > 25) {
-    vStatus = "HIGH LOAD";
-    vColor = "#ff9900";
-}
-
-// 2. Update the Bar Color and Width
-const vFill = document.getElementById("volume-fill");
-if (vFill) {
-    let volumePct = Math.min((totalTax / 45) * 100, 100); 
-    vFill.style.width = volumePct + "%";
-    vFill.style.background = vColor;
-}
-
-// 3. Update the Text (Fixes the "Still says Optimal" bug)
-const vStatusLabel = document.getElementById("recovery-status"); 
-if (vStatusLabel) {
-    vStatusLabel.innerText = vStatus;
-    vStatusLabel.style.color = vColor;
-}
-
-// 4. Update the Numeric Tax Display
-if (document.getElementById("volume-tax")) {
-    document.getElementById("volume-tax").innerText = totalTax.toFixed(1);
-}
-        // Injects ONLY the Biomechanical Report
         document.getElementById("aiFeedback").innerHTML = auditHtml;
         document.getElementById("barContainer").innerHTML = barHtml;
+        
+        // Update Chart
         radarChart.data.datasets[0].data = curScores;
         radarChart.data.datasets[1].data = potScores;
         radarChart.update('none');
 
-    } catch (err) { console.error("Injection Error:", err); }
-}
-// Function 1: The actual image saver
-
-function shareReport() {
-
-    const target = document.getElementById("captureArea");
-
-    const btn = document.getElementById("shareBtn");
-
-    btn.innerText = "GENERATING...";
-
-   
-
-    html2canvas(target, {
-
-        backgroundColor: "#1f1f2e",
-
-        scale: 2 // Makes the image high quality
-
-    }).then(canvas => {
-
-        const link = document.createElement('a');
-
-        link.download = 'CaliBiotech_Report.png';
-
-        link.href = canvas.toDataURL();
-
-        link.click();
-
-        btn.innerText = "DOWNLOAD_REPORT.PNG";
-
-    });
-
-}
-
-function shareReport() {
-
-    const target = document.getElementById("captureArea");
-
-    const btn = document.getElementById("shareBtn");
-
-    btn.innerText = "GENERATING...";
-
-   
-
-    html2canvas(target, {
-
-        backgroundColor: "#1f1f2e",
-
-        scale: 2
-
-    }).then(canvas => {
-
-        const link = document.createElement('a');
-
-        link.download = 'CaliBiotech_Report.png';
-
-        link.href = canvas.toDataURL();
-
-        link.click();
-
-        btn.innerText = "DOWNLOAD_REPORT.PNG";
-
-    });
-
-}
-
-document.getElementById("shareBtn").style.display = "block";
-
-// Function to wipe the entire history
-function clearAllNotes() {
-    if (confirm("PROCEED? This will permanently erase all archived feedback data.")) {
-        localStorage.removeItem('cali_biotech_history');
-        displayNotes();
-    }
-}
-
-// Updated saveNotes to handle your specific naming
-function saveNotes() {
-    const noteText = document.getElementById("sessionNotes").value;
-    if (!noteText.trim()) return; 
-
-    const timestamp = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-    
-    let history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
-    history.unshift({ date: timestamp, text: noteText });
-    localStorage.setItem('cali_biotech_history', JSON.stringify(history));
-
-    document.getElementById("sessionNotes").value = "";
-    displayNotes();
-
-    // Feedback for the button
-    const btn = event.currentTarget;
-    const originalText = "COMMIT_DATA";
-    btn.innerText = "DATA_COMMITTED";
-    btn.style.background = "#00ffcc";
-    setTimeout(() => {
-        btn.innerText = originalText;
-        btn.style.background = "var(--primary)";
-    }, 2000);
-}
-
-// This function builds the visual list on the screen
-function displayNotes() {
-    const history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
-    const container = document.getElementById("notesHistory");
-    if (!container) return;
-    
-    if (history.length === 0) {
-        container.innerHTML = `<div style="font-size: 0.6em; color: #666; letter-spacing: 2px;">NO_FEEDBACK_ENTRIES</div>`;
-        return;
-    }
-
-    container.innerHTML = history.map((item, index) => `
-        <div style="margin-bottom: 12px; padding: 10px; background: rgba(255,255,255,0.03); border-left: 2px solid var(--primary); font-family: monospace; position: relative;">
-            <div style="font-size: 0.6em; color: var(--primary); margin-bottom: 4px;">[${item.date}]</div>
-            <div style="font-size: 0.8em; color: #ddd; padding-right: 20px;">${item.text}</div>
-            <span onclick="deleteSingleNote(${index})" style="position: absolute; top: 5px; right: 8px; color: #444; cursor: pointer; font-size: 0.8em;">&times;</span>
-        </div>
-    `).join('');
-}
-
-// New: Allows deleting just one entry
-function deleteSingleNote(index) {
-    let history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
-    history.splice(index, 1);
-    localStorage.setItem('cali_biotech_history', JSON.stringify(history));
-    displayNotes();
+    } catch (err) { console.error("Analysis Error:", err); }
 }
 
 </script>
