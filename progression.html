@@ -5,7 +5,6 @@
 <title>Elite Calisthenics Coaching System</title>
 
 <style>
-/* MATCHING THE TARGET THEME */
 :root {
     --primary: #4c6fff;
     --bg-dark: #0a0a0f;
@@ -15,7 +14,7 @@
 }
 
 body { 
-    font-family: 'Monospace', 'Courier New', Courier; 
+    font-family: 'Courier New', monospace; 
     background: var(--bg-dark); 
     color: var(--text-main); 
     padding: 20px;
@@ -37,7 +36,6 @@ h1 { text-align: center; font-size: 1.5em; }
     margin: 15px 0; 
     border-radius: 4px; 
     border: 1px solid rgba(76, 111, 255, 0.2);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
 
 input, button, select { 
@@ -56,8 +54,7 @@ input, button, select {
 button { 
     background: rgba(76, 111, 255, 0.05); 
     cursor: pointer; 
-    transition: all 0.3s ease;
-    letter-spacing: 2px;
+    transition: 0.3s ease;
 }
 
 button:hover {
@@ -69,9 +66,8 @@ button:hover {
     padding: 8px; 
     margin: 4px 0; 
     background: rgba(255, 255, 255, 0.03); 
-    border-radius: 2px; 
-    font-size: 11px; 
     border-left: 2px solid #333;
+    font-size: 11px;
 }
 
 .mastered { 
@@ -79,72 +75,25 @@ button:hover {
     border-left: 2px solid #00c896;
     color: #00c896;
 }
-
-/* Specific UI elements from your reference */
-select {
-    width: 220px;
-}
-
-.sim-toggle-container {
-    padding: 10px 0;
-}
-
-#dashboard, #coach {
-    line-height: 1.6;
-    font-size: 0.9em;
-}
-
 </style>
 </head>
 <body>
 
 <h1>Elite AI Calisthenics Coach</h1>
 
-<div id="login" class="card">
-    <h2>Premium Login</h2>
-    <input id="user" placeholder="Username">
-    <input id="pass" type="password" placeholder="Password">
-    <button onclick="login()">Login</button>
+<div class="card">
+    <h2>Athlete Input</h2>
+    <input id="sleep" placeholder="Sleep Hours">
+    <input id="soreness" placeholder="Soreness (1-10)">
+    <input id="rpe" placeholder="Session RPE (1-10)">
+    <button onclick="updateSystem()">Update Athlete State</button>
 </div>
 
-<div id="app" style="display:none;">
-
-    <div class="card">
-        <h2>Athlete Input</h2>
-        <input id="sleep" placeholder="Sleep Hours">
-        <input id="soreness" placeholder="Soreness (1-10)">
-        <input id="rpe" placeholder="Session RPE (1-10)">
-        
-        <div class="sim-toggle-container">
-            <label style="cursor:pointer; display: flex; align-items: center; gap: 10px;">
-                <input type="checkbox" id="simMode" style="width: auto; margin: 0;">
-                <span style="color:var(--primary); font-size: 0.7em; letter-spacing: 2px; font-weight: bold;">ACTIVATE BIOTEST SIMULATION</span>
-            </label>
-        </div>
-
-        <button onclick="updateSystem()">Update Athlete State</button>
-        
-        <select id="unitSystem" style="margin-top:10px;">
-            <option value="met">METRIC (KG / CM)</option>
-            <option value="imp">IMPERIAL (LBS / FT-IN)</option>
-        </select>
-    </div>
-
-    <div id="dashboard" class="card"></div>
-    <div id="skillTree" class="card"></div>
-    <div id="coach" class="card"></div>
-
-</div>
+<div id="dashboard" class="card"></div>
+<div id="skillTree" class="card"></div>
+<div id="coach" class="card"></div>
 
 <script>
-// Logic remains identical to your original provided code
-function login(){
-  if(user.value==="premium" && pass.value==="coach"){
-    document.getElementById("login").style.display="none";
-    document.getElementById("app").style.display="block";
-  } else alert("Use: premium / coach");
-}
-
 const families = {
     push_straight:["Planche Lean","Pseudo Planche PU","Tuck Planche Lean","Tuck Planche","Tuck Planche PU","Adv Tuck Planche","Adv Tuck PU","Straddle Planche","Straddle PU","Full Planche","Full Planche PU","Planche to HS","90° Planche PU","Maltese Lean","Floor Maltese","Ring Maltese"],
     pull_straight:["Tuck FL","Tuck FL Row","Adv Tuck FL","Adv Tuck FL Row","Straddle FL","Straddle FL Pull","Full FL","FL Pullups","FL to Inverted","Half Lay FL","Victorian Prep","Tuck Victorian","Straddle Victorian","Full Victorian","Victorian Pull","Victorian to Cross"],
@@ -159,19 +108,23 @@ const families = {
 let SkillDB = [];
 Object.keys(families).forEach(fam=>{
   families[fam].forEach((skill,index)=>{
-    SkillDB.push({ id: skill, family: fam, level: index+1, prereq: index>0 ? families[fam][index-1] : null });
+    SkillDB.push({ 
+        id: skill, 
+        family: fam, 
+        level: index+1, 
+        prereq: index>0 ? families[fam][index-1] : null 
+    });
   });
 });
 
-let fatigue = JSON.parse(localStorage.getItem("fatigue"))||0;
-let mastery = JSON.parse(localStorage.getItem("mastery"))||{};
-let week = JSON.parse(localStorage.getItem("week"))||1;
+let fatigue = 0;
+let mastery = {};
+let week = 1;
 
 function updateFatigue(rpe){
   fatigue += rpe*2;
   fatigue -= 4;
   if(fatigue<0) fatigue=0;
-  localStorage.setItem("fatigue",fatigue);
 }
 
 function injuryRisk(){
@@ -204,7 +157,6 @@ function advanceSkill(){
 function updateMastery(skill){
   mastery[skill]=(mastery[skill]||0)+8;
   if(mastery[skill]>100) mastery[skill]=100;
-  localStorage.setItem("mastery",JSON.stringify(mastery));
 }
 
 function renderTree(){
@@ -218,11 +170,11 @@ function renderTree(){
   document.getElementById("skillTree").innerHTML=html;
 }
 
-function coachResponse(state,risk,waveData){
-  if(risk==="High") return "SYSTEM OVERLOAD DETECTED. IMMEDIATE DELOAD RECOMMENDED. AVOID STRAIGHT-ARM MAX EFFORT.";
-  if(state==="Fatigued") return "REDUCE INTENSITY TO 60%. EMPHASIZE TENDON CONDITIONING AND TECHNIQUE QUALITY.";
-  if(state==="Peak") return "NEUROLOGICAL READINESS HIGH. ATTEMPT NEXT PROGRESSION WITH LONGER HOLDS.";
-  return "MAINTAIN STRUCTURED OVERLOAD WITHIN WAVE PROGRESSION.";
+function coachResponse(state,risk){
+  if(risk==="High") return "System overload detected. Immediate deload recommended.";
+  if(state==="Fatigued") return "Reduce intensity to 60%. Focus on tendon health and clean execution.";
+  if(state==="Peak") return "Neurological readiness high. Attempt next progression.";
+  return "Maintain structured overload within wave cycle.";
 }
 
 function updateSystem(){
@@ -240,13 +192,12 @@ function updateSystem(){
   if(state==="Peak") updateMastery(skill);
 
   week++;
-  localStorage.setItem("week",week);
 
   document.getElementById("dashboard").innerHTML=`
   <h2>Athlete Dashboard</h2>
   WEEK: ${week}<br>
   FATIGUE: ${fatigue}<br>
-  INJURY RISK: <span style="color:${risk==='Low'?'#00c896':'#ff4c4c'}">${risk}</span><br>
+  INJURY RISK: ${risk}<br>
   READINESS: ${state}<br>
   WAVE INTENSITY: ${waveData.int}%<br>
   VOLUME SETS: ${waveData.vol}<br>
@@ -256,7 +207,7 @@ function updateSystem(){
 
   document.getElementById("coach").innerHTML=`
   <h2>Coach Analysis</h2>
-  ${coachResponse(state,risk,waveData)}
+  ${coachResponse(state,risk)}
   `;
 
   renderTree();
