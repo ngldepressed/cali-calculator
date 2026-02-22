@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Elite Calisthenics Coaching System</title>
+
+<style>
+body { font-family: Arial; background:#0f0f0f; color:#eee; padding:20px; }
+h1 { text-align:center; }
+.card { background:#1c1c1c; padding:20px; margin:15px 0; border-radius:10px; }
+input,button,select { width:100%; padding:8px; margin:5px 0; }
+button { background:#00c896; border:none; font-weight:bold; cursor:pointer; }
+.skill { padding:4px; margin:2px 0; background:#2a2a2a; border-radius:4px; font-size:13px; }
+.mastered { background:#145a32; }
+</style>
+</head>
+<body>
+
+<h1>Elite AI Calisthenics Coach</h1>
+
+<div id="login" class="card">
+<h2>Premium Login</h2>
+<input id="user" placeholder="Username">
+<input id="pass" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+</div>
+
+<div id="app" style="display:none;">
+
+<div class="card">
+<h2>Athlete Input</h2>
+<input id="sleep" placeholder="Sleep Hours">
+<input id="soreness" placeholder="Soreness (1-10)">
+<input id="rpe" placeholder="Session RPE (1-10)">
+<button onclick="updateSystem()">Update Athlete State</button>
+</div>
+
+<div id="dashboard" class="card"></div>
+<div id="skillTree" class="card"></div>
+<div id="coach" class="card"></div>
+
+</div>
+
+<script>
+
+// =============================
+// LOGIN
+// =============================
+function login(){
+  if(user.value==="premium" && pass.value==="coach"){
+    login.style.display="none";
+    app.style.display="block";
+  } else alert("Use: premium / coach");
+}
+
+// =============================
+// ELITE 128 SKILL HIERARCHY
+// =============================
+
+const families = {
+
+push_straight:[
+"Planche Lean","Pseudo Planche PU","Tuck Planche Lean","Tuck Planche",
+"Tuck Planche PU","Adv Tuck Planche","Adv Tuck PU","Straddle Planche",
+"Straddle PU","Full Planche","Full Planche PU","Planche to HS",
+"90° Planche PU","Maltese Lean","Floor Maltese","Ring Maltese"
+],
+
+pull_straight:[
+"Tuck FL","Tuck FL Row","Adv Tuck FL","Adv Tuck FL Row",
+"Straddle FL","Straddle FL Pull","Full FL","FL Pullups",
+"FL to Inverted","Half Lay FL","Victorian Prep","Tuck Victorian",
+"Straddle Victorian","Full Victorian","Victorian Pull","Victorian to Cross"
+],
+
+pull_bent:[
+"Australian Row","Pullup","Chest to Bar","Archer Pullup",
+"L Pullup","Typewriter","Assist OAC","OAC Ecc",
+"OAC","OAC +10kg","OAC +20kg","OAC +30kg",
+"Ice Cream Maker","Strict MU","One Arm MU","MU to Cross"
+],
+
+push_bent:[
+"PB Dip","Ring Dip","Deep Ring Dip","Wall HSPU",
+"Partial HSPU","Full HSPU","Deficit HSPU","Free HSPU",
+"90° HSPU","90° to HS","OA HSPU Ecc","OA HSPU",
+"Ring 90 Dip","RTO 90 Dip","90 Dip to Cross","90 Dip to Maltese"
+],
+
+handstand:[
+"Wall HS","Free HS","Tuck Press","Straddle Press",
+"Pike Press","L Sit Press","Stalder","Straddle Stalder",
+"Straight Press","Manna Press","OA HS","OA Shoulder Tap",
+"OA Press Tuck","OA Straddle Press","OA Straight Press","OA Press to Cross"
+],
+
+compression:[
+"Tuck L","L Sit","Str L","45° V","90° V","120° V",
+"150° V","Manna Prep","Manna","Elevated Manna",
+"Manna Press","Manna to HS","RTO V","RTO Manna",
+"Manna to Cross","Manna to Maltese"
+],
+
+cross_family:[
+"RTO Support","Assist Cross","Tuck Cross","Adv Tuck Cross",
+"Straddle Cross","Iron Cross","Cross Pullout","Cross to Support",
+"Cross to BL","Inverted Cross","Inv Cross Pull","Elevator Prep",
+"Elevator","Elevator to Cross","Butterfly Mount","Butterfly to Cross"
+],
+
+legs:[
+"Squat","Bulgarian","Shrimp","Adv Shrimp",
+"Pistol","Weighted Pistol","Nordic","Full Nordic",
+"Nordic +W","Dragon Squat","Jump Pistol","Sissy",
+"Assist Cossack","Full Cossack","Elevated Cossack","Pistol to Press"
+]
+
+};
+
+// =============================
+// BUILD DATABASE + PREREQS
+// =============================
+
+let SkillDB = [];
+
+Object.keys(families).forEach(fam=>{
+  families[fam].forEach((skill,index)=>{
+    SkillDB.push({
+      id: skill,
+      family: fam,
+      level: index+1,
+      prereq: index>0 ? families[fam][index-1] : null
+    });
+  });
+});
+
+// =============================
+// STATE STORAGE
+// =============================
+
+let fatigue = JSON.parse(localStorage.getItem("fatigue"))||0;
+let mastery = JSON.parse(localStorage.getItem("mastery"))||{};
+let week = JSON.parse(localStorage.getItem("week"))||1;
+
+// =============================
+// FATIGUE MODEL
+// =============================
+
+function updateFatigue(rpe){
+  fatigue += rpe*2;
+  fatigue -= 4;
+  if(fatigue<0) fatigue=0;
+  localStorage.setItem("fatigue",fatigue);
+}
+
+function injuryRisk(){
+  if(fatigue>80) return "High";
+  if(fatigue>50) return "Moderate";
+  return "Low";
+}
+
+// =============================
+// READINESS
+// =============================
+
+function readiness(sleep,soreness){
+  let score=(sleep*10)-(soreness*5)-(fatigue/2);
+  if(score>70) return "Peak";
+  if(score>40) return "Normal";
+  return "Fatigued";
+}
+
+// =============================
+// WAVE PERIODIZATION
+// =============================
+
+function wave(){
+  let m=week%4;
+  if(m===1) return {int:70,vol:5};
+  if(m===2) return {int:80,vol:4};
+  if(m===3) return {int:90,vol:3};
+  return {int:60,vol:2};
+}
+
+// =============================
+// AUTO PROGRESSION
+// =============================
+
+function advanceSkill(){
+  let fam = Object.keys(families)[week % 8];
+  let currentLevel = Math.min(week,16);
+  return families[fam][currentLevel-1];
+}
+
+// =============================
+// MASTERY
+// =============================
+
+function updateMastery(skill){
+  mastery[skill]=(mastery[skill]||0)+8;
+  if(mastery[skill]>100) mastery[skill]=100;
+  localStorage.setItem("mastery",JSON.stringify(mastery));
+}
+
+// =============================
+// SKILL TREE VISUAL
+// =============================
+
+function renderTree(){
+  let html="<h2>Elite Skill Tree</h2>";
+  SkillDB.forEach(s=>{
+    let percent=mastery[s.id]||0;
+    html+=`<div class="skill ${percent>=100?"mastered":""}">
+    ${s.family} L${s.level} - ${s.id} (${percent}%)
+    </div>`;
+  });
+  skillTree.innerHTML=html;
+}
+
+// =============================
+// AI COACH LOGIC
+// =============================
+
+function coachResponse(state,risk,waveData){
+  if(risk==="High")
+    return "System overload detected. Immediate deload recommended. Avoid straight-arm max effort.";
+  if(state==="Fatigued")
+    return "Reduce intensity to 60%. Emphasize tendon conditioning and technique quality.";
+  if(state==="Peak")
+    return "Neurological readiness high. Attempt next progression with longer holds.";
+  return "Maintain structured overload within wave progression.";
+}
+
+// =============================
+// MAIN SYSTEM UPDATE
+// =============================
+
+function updateSystem(){
+
+  let sleep=parseInt(document.getElementById("sleep").value);
+  let soreness=parseInt(document.getElementById("soreness").value);
+  let rpe=parseInt(document.getElementById("rpe").value);
+
+  updateFatigue(rpe);
+
+  let state=readiness(sleep,soreness);
+  let risk=injuryRisk();
+  let waveData=wave();
+  let skill=advanceSkill();
+
+  if(state==="Peak") updateMastery(skill);
+
+  week++;
+  localStorage.setItem("week",week);
+
+  dashboard.innerHTML=`
+  <h2>Athlete Dashboard</h2>
+  Week: ${week}<br>
+  Fatigue: ${fatigue}<br>
+  Injury Risk: ${risk}<br>
+  Readiness: ${state}<br>
+  Wave Intensity: ${waveData.int}%<br>
+  Volume Sets: ${waveData.vol}<br>
+  Target Skill: ${skill}<br>
+  Prescribed Holds: ${Math.round(waveData.int/10)}-${Math.round(waveData.int/5)} sec
+  `;
+
+  coach.innerHTML=`
+  <h2>Coach Analysis</h2>
+  ${coachResponse(state,risk,waveData)}
+  `;
+
+  renderTree();
+}
+
+renderTree();
+
+</script>
+</body>
+</html>
