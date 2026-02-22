@@ -275,25 +275,6 @@
     <div class="card" style="margin-top: 25px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <h3 style="border: none; margin: 0;">Training History Log</h3>
-            <div class="card" style="margin-top: 20px; border: 1px solid var(--potential);">
-    <h3>Biotech Lab: Sequence Analysis</h3>
-    <div class="input-terminal">
-        <label>Neural Link ID</label>
-        <div style="display: flex; gap: 10px;">
-            <input type="text" id="subject-id" placeholder="Enter Subject ID..." style="flex: 2;">
-            <button onclick="saveProfile()" class="btn-log" style="background: var(--potential); color: black;">SAVE_ID</button>
-        </div>
-        
-        <label>DNA Input (A, T, C, G)</label>
-        <textarea id="dna-input" placeholder="Paste sequence for analysis..." style="width: 100%; height: 60px; margin-top: 5px; background: var(--bg); color: var(--potential); border: 1px solid #333; border-radius: 8px; padding: 10px; font-family: monospace;"></textarea>
-        
-        <button onclick="analyzeDNA()" class="btn-prepare" style="width: 100%; margin-top: 10px; padding: 10px;">EXECUTE_ANALYSIS</button>
-        
-        <div id="lab-console" style="margin-top: 15px; background: #0b0b12; padding: 10px; border-radius: 8px; border: 1px solid #222; font-family: monospace; font-size: 0.7em; color: #888; height: 100px; overflow-y: auto;">
-            > SYSTEM_READY... AWAITING_SEQUENCE...
-        </div>
-    </div>
-</div>
             <button class="btn-log" onclick="logSession()">LOG CURRENT DATA</button>
         </div>
         <div style="overflow-x: auto;">
@@ -936,46 +917,7 @@ function deleteSingleNote(index) {
     localStorage.setItem('cali_biotech_history', JSON.stringify(history));
     displayNotes();
 }
-// --- NEW BIOTECH FUNCTIONS ---
 
-function saveProfile() {
-    const id = document.getElementById('subject-id').value;
-    if(id) {
-        localStorage.setItem('biotech_id', id);
-        logToLab(`ID_CONFIRMED: ${id} STORED IN LOCAL_CACHE`, 'var(--potential)');
-    }
-}
-
-function analyzeDNA() {
-    const dna = document.getElementById('dna-input').value.toUpperCase().replace(/\s/g, '');
-    if (!/^[ATCG]+$/.test(dna) || dna.length === 0) {
-        logToLab("ERROR: INVALID_NUCLEOTIDE_DATA", "var(--danger)");
-        return;
-    }
-
-    const gcCount = (dna.match(/[GC]/g) || []).length;
-    const gcPercent = ((gcCount / dna.length) * 100).toFixed(2);
-    const mrna = dna.replace(/T/g, 'U');
-
-    logToLab(`SCANNING... LENGTH: ${dna.length}bp`, 'var(--text)');
-    logToLab(`GC_CONTENT: ${gcPercent}%`, 'var(--potential)');
-    logToLab(`TRANSCRIPTION: ${mrna.substring(0, 15)}...`, 'var(--primary)');
-}
-
-function logToLab(msg, color) {
-    const consoleBox = document.getElementById('lab-console');
-    const time = new Date().toLocaleTimeString([], {hour12: false});
-    const entry = `<div style="color:${color}; margin-bottom: 4px;">[${time}] > ${msg}</div>`;
-    consoleBox.innerHTML = entry + consoleBox.innerHTML;
-}
-
-// Update your existing loadSavedData to also fetch the Biotech ID
-const originalLoadData = loadSavedData;
-loadSavedData = function() {
-    originalLoadData(); // Runs your old code
-    const savedId = localStorage.getItem('biotech_id');
-    if(savedId) document.getElementById('subject-id').value = savedId;
-};
 </script>
 <div class="card" style="margin-top: 20px;">
     <h3>Biotic Feedback / Archive</h3>
