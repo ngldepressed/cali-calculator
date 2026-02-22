@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Elite Calisthenics Coaching System</title>
+<title>Elite Calisthenics Coaching Engine</title>
 
 <style>
 :root {
@@ -10,210 +10,320 @@
     --bg-dark: #0a0a0f;
     --card-bg: #1f1f2e;
     --text-main: #e6edf3;
-    --glow: rgba(76, 111, 255, 0.15);
+    --glow: rgba(76,111,255,.2);
 }
-
-body { 
-    font-family: 'Courier New', monospace; 
-    background: var(--bg-dark); 
-    color: var(--text-main); 
-    padding: 20px;
-    letter-spacing: 1px;
+body{
+    background:var(--bg-dark);
+    color:var(--text-main);
+    font-family:Courier New, monospace;
+    padding:20px;
 }
-
-h1, h2 { 
-    text-transform: uppercase; 
-    letter-spacing: 4px; 
-    color: var(--primary);
-    text-shadow: 0 0 10px var(--glow);
+h1,h2{
+    color:var(--primary);
+    letter-spacing:3px;
 }
-
-h1 { text-align: center; font-size: 1.5em; }
-
-.card { 
-    background: var(--card-bg); 
-    padding: 20px; 
-    margin: 15px 0; 
-    border-radius: 4px; 
-    border: 1px solid rgba(76, 111, 255, 0.2);
+.card{
+    background:var(--card-bg);
+    padding:20px;
+    margin:15px 0;
+    border-radius:6px;
+    border:1px solid rgba(76,111,255,.2);
 }
-
-input, button, select { 
-    width: 100%; 
-    padding: 12px; 
-    margin: 8px 0; 
-    background: #161625;
-    border: 1px solid var(--primary);
-    color: var(--primary);
-    font-family: monospace;
-    font-weight: bold;
-    text-transform: uppercase;
-    box-sizing: border-box;
+input,select,button{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    background:#111;
+    border:1px solid var(--primary);
+    color:var(--primary);
+    font-family:monospace;
 }
-
-button { 
-    background: rgba(76, 111, 255, 0.05); 
-    cursor: pointer; 
-    transition: 0.3s ease;
+button:hover{
+    background:rgba(76,111,255,.2);
+    cursor:pointer;
 }
-
-button:hover {
-    background: rgba(76, 111, 255, 0.15);
-    box-shadow: 0 0 15px var(--glow);
+.progressBar{
+    height:8px;
+    background:#222;
+    margin-top:4px;
 }
-
-.skill { 
-    padding: 8px; 
-    margin: 4px 0; 
-    background: rgba(255, 255, 255, 0.03); 
-    border-left: 2px solid #333;
-    font-size: 11px;
+.progressFill{
+    height:8px;
+    background:#00c896;
 }
-
-.mastered { 
-    background: rgba(0, 200, 150, 0.1); 
-    border-left: 2px solid #00c896;
-    color: #00c896;
+.small{
+    font-size:12px;
+    opacity:.8;
 }
 </style>
 </head>
 <body>
 
-<h1>Elite AI Calisthenics Coach</h1>
+<h1>Elite Adaptive Calisthenics Coach</h1>
 
 <div class="card">
-    <h2>Athlete Input</h2>
-    <input id="sleep" placeholder="Sleep Hours">
-    <input id="soreness" placeholder="Soreness (1-10)">
-    <input id="rpe" placeholder="Session RPE (1-10)">
-    <button onclick="updateSystem()">Update Athlete State</button>
+<h2>Target Skill</h2>
+<select id="skillSelect"></select>
+</div>
+
+<div class="card">
+<h2>Athlete Readiness</h2>
+<input id="sleep" placeholder="Sleep Hours">
+<input id="soreness" placeholder="Soreness 1-10">
+<input id="rpe" placeholder="Session RPE 1-10">
+<button onclick="updateSystem()">Generate Session</button>
 </div>
 
 <div id="dashboard" class="card"></div>
-<div id="skillTree" class="card"></div>
 <div id="coach" class="card"></div>
 
 <script>
-const families = {
-    push_straight:["Planche Lean","Pseudo Planche PU","Tuck Planche Lean","Tuck Planche","Tuck Planche PU","Adv Tuck Planche","Adv Tuck PU","Straddle Planche","Straddle PU","Full Planche","Full Planche PU","Planche to HS","90° Planche PU","Maltese Lean","Floor Maltese","Ring Maltese"],
-    pull_straight:["Tuck FL","Tuck FL Row","Adv Tuck FL","Adv Tuck FL Row","Straddle FL","Straddle FL Pull","Full FL","FL Pullups","FL to Inverted","Half Lay FL","Victorian Prep","Tuck Victorian","Straddle Victorian","Full Victorian","Victorian Pull","Victorian to Cross"],
-    pull_bent:["Australian Row","Pullup","Chest to Bar","Archer Pullup","L Pullup","Typewriter","Assist OAC","OAC Ecc","OAC","OAC +10kg","OAC +20kg","OAC +30kg","Ice Cream Maker","Strict MU","One Arm MU","MU to Cross"],
-    push_bent:["PB Dip","Ring Dip","Deep Ring Dip","Wall HSPU","Partial HSPU","Full HSPU","Deficit HSPU","Free HSPU","90° HSPU","90° to HS","OA HSPU Ecc","OA HSPU","Ring 90 Dip","RTO 90 Dip","90 Dip to Cross","90 Dip to Maltese"],
-    handstand:["Wall HS","Free HS","Tuck Press","Straddle Press","Pike Press","L Sit Press","Stalder","Straddle Stalder","Straight Press","Manna Press","OA HS","OA Shoulder Tap","OA Press Tuck","OA Straddle Press","OA Straight Press","OA Press to Cross"],
-    compression:["Tuck L","L Sit","Str L","45° V","90° V","120° V","150° V","Manna Prep","Manna","Elevated Manna","Manna Press","Manna to HS","RTO V","RTO Manna","Manna to Cross","Manna to Maltese"],
-    cross_family:["RTO Support","Assist Cross","Tuck Cross","Adv Tuck Cross","Straddle Cross","Iron Cross","Cross Pullout","Cross to Support","Cross to BL","Inverted Cross","Inv Cross Pull","Elevator Prep","Elevator","Elevator to Cross","Butterfly Mount","Butterfly to Cross"],
-    legs:["Squat","Bulgarian","Shrimp","Adv Shrimp","Pistol","Weighted Pistol","Nordic","Full Nordic","Nordic +W","Dragon Squat","Jump Pistol","Sissy","Assist Cossack","Full Cossack","Elevated Cossack","Pistol to Press"]
+
+// =======================
+// ELITE SKILL DATABASE
+// =======================
+
+const SkillLadders = {
+
+"Full Planche":[
+{n:"Planche Lean",hold:20},
+{n:"Tuck Planche",hold:15},
+{n:"Advanced Tuck Planche",hold:15},
+{n:"Straddle Planche",hold:12},
+{n:"Full Planche",hold:10}
+],
+
+"Front Lever":[
+{n:"Tuck FL",hold:20},
+{n:"Advanced Tuck FL",hold:15},
+{n:"Straddle FL",hold:12},
+{n:"Full FL",hold:10}
+],
+
+"Iron Cross":[
+{n:"RTO Support",hold:30},
+{n:"Tuck Cross",hold:15},
+{n:"Advanced Tuck Cross",hold:12},
+{n:"Straddle Cross",hold:10},
+{n:"Iron Cross",hold:8}
+],
+
+"One Arm Chin Up":[
+{n:"Archer Pullup",hold:5},
+{n:"OAC Negative",hold:3},
+{n:"Band Assisted OAC",hold:5},
+{n:"Full OAC",hold:1},
+{n:"Weighted OAC",hold:1}
+],
+
+"Manna":[
+{n:"L-Sit",hold:30},
+{n:"V-Sit 90°",hold:15},
+{n:"150° V-Sit",hold:12},
+{n:"Manna",hold:8}
+]
+
 };
 
-let SkillDB = [];
-Object.keys(families).forEach(fam=>{
-  families[fam].forEach((skill,index)=>{
-    SkillDB.push({ 
-        id: skill, 
-        family: fam, 
-        level: index+1, 
-        prereq: index>0 ? families[fam][index-1] : null 
-    });
-  });
+// =======================
+// GLOBAL STATE
+// =======================
+
+let mastery = {};
+let fatigue = 0;
+let week = 1;
+let phase = "Accumulation";
+
+// =======================
+// INIT DROPDOWN
+// =======================
+
+const select = document.getElementById("skillSelect");
+Object.keys(SkillLadders).forEach(skill=>{
+  let o=document.createElement("option");
+  o.value=skill;
+  o.textContent=skill;
+  select.appendChild(o);
 });
 
-let fatigue = 0;
-let mastery = {};
-let week = 1;
+// =======================
+// FATIGUE SYSTEM
+// =======================
 
 function updateFatigue(rpe){
-  fatigue += rpe*2;
-  fatigue -= 4;
-  if(fatigue<0) fatigue=0;
+ fatigue += rpe*3;
+ fatigue -= 4;
+ if(fatigue<0) fatigue=0;
 }
 
 function injuryRisk(){
-  if(fatigue>80) return "High";
-  if(fatigue>50) return "Moderate";
-  return "Low";
+ if(fatigue>90) return "High";
+ if(fatigue>60) return "Moderate";
+ return "Low";
 }
 
 function readiness(sleep,soreness){
-  let score=(sleep*10)-(soreness*5)-(fatigue/2);
-  if(score>70) return "Peak";
-  if(score>40) return "Normal";
-  return "Fatigued";
+ let score=(sleep*10)-(soreness*6)-(fatigue/2);
+ if(score>70) return "Peak";
+ if(score>40) return "Normal";
+ return "Fatigued";
 }
 
-function wave(){
-  let m=week%4;
-  if(m===1) return {int:70,vol:5};
-  if(m===2) return {int:80,vol:4};
-  if(m===3) return {int:90,vol:3};
-  return {int:60,vol:2};
+// =======================
+// PERIODIZATION ENGINE
+// =======================
+
+function updatePhase(){
+ let m = week%4;
+ if(m===1) phase="Accumulation";
+ if(m===2) phase="Intensification";
+ if(m===3) phase="Peak";
+ if(m===0) phase="Deload";
 }
 
-function advanceSkill(){
-  let fam = Object.keys(families)[week % 8];
-  let currentLevel = Math.min(week,16);
-  return families[fam][currentLevel-1];
+// =======================
+// PROGRESSION ENGINE
+// =======================
+
+function currentProgression(skill){
+ let ladder=SkillLadders[skill];
+ for(let i=0;i<ladder.length;i++){
+  if((mastery[ladder[i].n]||0)<100){
+   return ladder[i];
+  }
+ }
+ return ladder[ladder.length-1];
 }
 
-function updateMastery(skill){
-  mastery[skill]=(mastery[skill]||0)+8;
-  if(mastery[skill]>100) mastery[skill]=100;
+// =======================
+// PRESCRIPTION ENGINE
+// =======================
+
+function prescription(skillObj){
+
+ let sets,rest,intensityMultiplier;
+
+ if(phase==="Accumulation"){
+  sets=5; rest="90s"; intensityMultiplier=.8;
+ }
+ if(phase==="Intensification"){
+  sets=4; rest="2-3min"; intensityMultiplier=.9;
+ }
+ if(phase==="Peak"){
+  sets=3; rest="3-4min"; intensityMultiplier=1;
+ }
+ if(phase==="Deload"){
+  sets=3; rest="60s"; intensityMultiplier=.6;
+ }
+
+ let holdTime=Math.round(skillObj.hold*intensityMultiplier);
+
+ return {
+  sets,
+  rest,
+  hold:holdTime
+ }
 }
 
-function renderTree(){
-  let html="<h2>Elite Skill Tree</h2>";
-  SkillDB.forEach(s=>{
-    let percent=mastery[s.id]||0;
-    html+=`<div class="skill ${percent>=100?"mastered":""}">
-    ${s.family.toUpperCase()} L${s.level} - ${s.id} (${percent}%)
-    </div>`;
-  });
-  document.getElementById("skillTree").innerHTML=html;
+// =======================
+// ACCESSORY ENGINE
+// =======================
+
+function accessory(skill){
+
+ if(skill.includes("Planche")){
+  return "Scap Protraction 3x15s<br>PPPUs 3x6<br>Wrist Prep 5min";
+ }
+ if(skill.includes("FL")){
+  return "Scap Retraction 3x12<br>FL Rows 3x6<br>Hollow Body 3x30s";
+ }
+ if(skill.includes("Cross")){
+  return "Support Hold 3x20s<br>Ring Turn Out 3x15s<br>Shoulder IR Mobility";
+ }
+ return "Core Compression 3x12<br>General Mobility 5min";
 }
 
-function coachResponse(state,risk){
-  if(risk==="High") return "System overload detected. Immediate deload recommended.";
-  if(state==="Fatigued") return "Reduce intensity to 60%. Focus on tendon health and clean execution.";
-  if(state==="Peak") return "Neurological readiness high. Attempt next progression.";
-  return "Maintain structured overload within wave cycle.";
+// =======================
+// COACH ANALYSIS
+// =======================
+
+function coachText(skill,state,risk,prog){
+
+ return `
+TARGET SKILL: ${skill}<br><br>
+
+Current Progression: ${prog.n}<br>
+
+Readiness State: ${state}<br>
+Injury Risk: ${risk}<br><br>
+
+Technical Emphasis:<br>
+- Full scapular control<br>
+- Straight elbow lock<br>
+- Posterior pelvic tilt<br><br>
+
+Progression Rule:<br>
+When you exceed prescribed hold by 20% for 2 sessions, advancement unlocks automatically.
+`;
 }
+
+// =======================
+// MAIN ENGINE
+// =======================
 
 function updateSystem(){
-  let sleep=parseInt(document.getElementById("sleep").value)||0;
-  let soreness=parseInt(document.getElementById("soreness").value)||0;
-  let rpe=parseInt(document.getElementById("rpe").value)||0;
 
-  updateFatigue(rpe);
+ let skill=select.value;
+ let sleep=parseInt(document.getElementById("sleep").value)||0;
+ let soreness=parseInt(document.getElementById("soreness").value)||0;
+ let rpe=parseInt(document.getElementById("rpe").value)||0;
 
-  let state=readiness(sleep,soreness);
-  let risk=injuryRisk();
-  let waveData=wave();
-  let skill=advanceSkill();
+ updateFatigue(rpe);
+ updatePhase();
 
-  if(state==="Peak") updateMastery(skill);
+ let state=readiness(sleep,soreness);
+ let risk=injuryRisk();
 
-  week++;
+ let prog=currentProgression(skill);
+ let pres=prescription(prog);
 
-  document.getElementById("dashboard").innerHTML=`
-  <h2>Athlete Dashboard</h2>
-  WEEK: ${week}<br>
-  FATIGUE: ${fatigue}<br>
-  INJURY RISK: ${risk}<br>
-  READINESS: ${state}<br>
-  WAVE INTENSITY: ${waveData.int}%<br>
-  VOLUME SETS: ${waveData.vol}<br>
-  TARGET SKILL: ${skill}<br>
-  PRESCRIBED HOLDS: ${Math.round(waveData.int/10)}-${Math.round(waveData.int/5)} SEC
-  `;
+ // Mastery progression logic
+ if(state==="Peak" && risk==="Low"){
+  mastery[prog.n]=(mastery[prog.n]||0)+15;
+ }
+ if(mastery[prog.n]>100) mastery[prog.n]=100;
 
-  document.getElementById("coach").innerHTML=`
-  <h2>Coach Analysis</h2>
-  ${coachResponse(state,risk)}
-  `;
+ document.getElementById("dashboard").innerHTML=`
+ <h2>Performance Dashboard</h2>
+ Week: ${week}<br>
+ Phase: ${phase}<br>
+ Fatigue: ${fatigue}<br>
+ Readiness: ${state}<br>
+ Injury Risk: ${risk}<br><br>
 
-  renderTree();
+ <b>${prog.n}</b> Mastery: ${mastery[prog.n]||0}%
+ <div class="progressBar">
+   <div class="progressFill" style="width:${mastery[prog.n]||0}%"></div>
+ </div>
+ `;
+
+ document.getElementById("coach").innerHTML=`
+ <h2>Session Prescription</h2>
+ Main Skill: ${prog.n}<br>
+ Sets: ${pres.sets}<br>
+ Hold: ${pres.hold}s<br>
+ Rest: ${pres.rest}<br><br>
+
+ <h3>Accessory Work</h3>
+ ${accessory(prog.n)}<br><br>
+
+ <h3>Coach Intelligence Report</h3>
+ ${coachText(skill,state,risk,prog)}
+ `;
+
+ week++;
 }
 
-renderTree();
 </script>
 </body>
 </html>
