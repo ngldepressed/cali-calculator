@@ -8,212 +8,172 @@
     <link rel="canonical" href="https://www.calicalculator.com/skill-tree.html" />
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <style>
+<style>
         :root { 
-            /* Matches the Specificity is King neon theme */
             --primary: #00ff88; 
-            --bg: #0d1117; 
-            --card: #161b22; 
+            --bg: #0b0e14; 
+            --card: #1c2128; 
             --elite: #ff3e3e; 
-            --text: #e6edf3; 
+            --text: #f0f6fc; 
             --border: #30363d;
+            --accent: #58a6ff;
         }
         
         body { 
             background-color: var(--bg); 
             color: var(--text); 
-            font-family: 'Inter', sans-serif; 
+            font-family: 'Outfit', sans-serif; 
             margin: 0; 
             padding: 20px; 
-            /* Subtle grid background */
             background-image: radial-gradient(var(--border) 0.5px, transparent 0.5px);
             background-size: 30px 30px;
         }
 
-        /* Biotech Scanning Line */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: rgba(0, 255, 136, 0.08);
-            z-index: 9999;
-            animation: scan 10s linear infinite;
-            pointer-events: none;
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { 
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem; 
+            letter-spacing: 5px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-        
-        .header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
-        .header h1 { 
-            font-family: 'JetBrains Mono', monospace; 
-            letter-spacing: 10px; 
-            font-size: 1.6rem; 
-            color: var(--primary); 
-            text-transform: uppercase;
-            text-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+        /* Mastery Tracker */
+        .mastery-card {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
         }
+        .bar-bg { height: 12px; background: #111; border-radius: 10px; margin-top: 10px; overflow: hidden; border: 1px solid #333; }
+        #bar-fill { width: 0%; height: 100%; background: var(--primary); box-shadow: 0 0 15px var(--primary); transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
         .tree-grid { 
             display: grid; 
             grid-template-columns: repeat(3, 1fr); 
-            gap: 20px; 
+            gap: 25px; 
             max-width: 1600px; 
             margin: 0 auto;
         }
 
-        .statics-container { grid-column: 1 / -1; margin-top: 20px; }
-
         .branch { 
-            background: rgba(22, 27, 34, 0.7); 
-            padding: 20px; 
-            border-radius: 8px; 
+            background: var(--card); 
+            padding: 25px; 
+            border-radius: 12px; 
             border: 1px solid var(--border);
-            backdrop-filter: blur(5px);
+            transition: 0.3s ease;
         }
+        .branch:hover { border-color: #444; transform: translateY(-3px); }
 
         .branch-header { 
-            font-family: 'JetBrains Mono', monospace; 
             color: var(--primary); 
-            font-size: 0.85rem; 
-            letter-spacing: 3px; 
-            margin-bottom: 25px; 
-            text-align: center; 
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 12px; 
+            font-size: 1rem; 
+            font-weight: 700;
+            margin-bottom: 20px;
             text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+            text-align: center;
         }
 
         .tier-label {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem; 
-            color: var(--primary); 
+            font-size: 0.65rem;
+            color: var(--accent);
             text-transform: uppercase;
-            margin: 20px 0 10px 5px; 
-            letter-spacing: 2px; 
-            font-weight: bold;
-            border-left: 2px solid var(--primary); 
-            padding-left: 10px;
-            opacity: 0.8;
+            margin: 25px 0 12px;
+            display: block;
+            border-left: 2px solid var(--accent);
+            padding-left: 8px;
         }
 
-        .node-subgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-
         .node {
-            background: var(--card); 
-            border: 1px solid var(--border);
-            padding: 8px 12px; 
+            background: rgba(255,255,255,0.02); 
+            border: 1px solid transparent;
+            padding: 10px 15px; 
             margin-bottom: 6px; 
-            transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer; 
-            border-radius: 3px; 
+            border-radius: 6px;
             display: flex;
             justify-content: space-between; 
             align-items: center;
-            text-decoration: none; 
+            cursor: pointer;
+            transition: 0.2s;
         }
+        .node:hover { background: rgba(255,255,255,0.06); border-color: var(--border); }
 
-        .node:hover { 
-            border-color: var(--primary); 
-            background: #1a1a25; 
-            transform: translateX(4px); 
-            box-shadow: -4px 0 10px rgba(0, 255, 136, 0.1);
-        }
-
-        /* Mastery State */
         .node.mastered {
             border-color: var(--primary);
-            background: rgba(0, 255, 136, 0.1);
+            background: rgba(0, 255, 136, 0.08);
         }
+        .node.mastered h3 { color: var(--primary); font-weight: 700; }
 
-        .node h3 { font-size: 0.7rem; margin: 0; font-weight: 400; color: #ccc; }
-        .node span { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; color: var(--primary); opacity: 0.4; }
-        
+        .node h3 { font-size: 0.8rem; margin: 0; font-weight: 400; color: #ccc; }
+        .node span { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: #555; }
+
         .elite { border-right: 3px solid var(--elite); }
-        .elite:hover { border-color: var(--elite); box-shadow: 4px 0 10px rgba(255, 62, 62, 0.1); }
         .elite h3 { color: #ff8080; }
-        .elite span { color: var(--elite); opacity: 0.6; }
 
-        /* Protocol Box Styling */
+        .full-width { grid-column: 1 / -1; }
+
+        /* Protocols Styling */
         .protocol-box {
-            grid-column: 1 / -1;
-            margin-top: 40px;
-            background: rgba(22, 27, 34, 0.7);
-            padding: 30px;
-            border-radius: 8px;
+            background: rgba(255, 62, 62, 0.03);
             border: 1px solid var(--border);
-            border-left: 5px solid var(--elite);
+            border-left: 4px solid var(--elite);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 40px;
         }
+        .protocol-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .protocol-item h4 { color: var(--primary); font-size: 0.8rem; margin-top: 0; text-transform: uppercase; }
+        .protocol-item p, li { font-size: 0.8rem; color: #999; line-height: 1.5; }
 
-        .protocol-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-top: 20px;
-        }
+        .back-btn { display: block; width: fit-content; margin: 50px auto; color: #666; text-decoration: none; font-family: 'JetBrains Mono'; font-size: 0.7rem; border-bottom: 1px solid transparent; }
+        .back-btn:hover { color: var(--primary); border-color: var(--primary); }
 
-        .protocol-item h4 {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--primary);
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .protocol-item p, .protocol-item li {
-            font-size: 0.75rem;
-            line-height: 1.6;
-            color: #bbb;
-        }
-
-        .footer-nav { margin: 60px 0; text-align: center; }
-        .back-btn { 
-            font-family: 'JetBrains Mono', monospace; 
-            text-decoration: none; 
-            color: var(--text); 
-            border: 1px solid var(--border); 
-            padding: 12px 40px; 
-            font-size: 0.75rem; 
-            border-radius: 4px;
-            transition: 0.3s;
-        }
-        .back-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(0, 255, 136, 0.05); }
-
-        @media (max-width: 1100px) {
-            .tree-grid { grid-template-columns: 1fr; }
-            .node-subgrid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 1200px) { .tree-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-    <div class="header"><h1>SKILL TREE</h1></div>
+    <div class="header"><h1>SKILL TREE :: BIOTECH</h1></div>
+
+    <div class="mastery-card">
+        <div style="font-size: 0.8rem; color: var(--primary); font-weight: bold; letter-spacing: 2px;">NEURAL INTEGRATION: <span id="perc">0%</span></div>
+        <div class="bar-bg"><div id="bar-fill"></div></div>
+    </div>
 
     <div class="tree-grid">
         
         <div class="branch">
-            <div class="branch-header">Push Skills</div>
-            <div class="tier-label">Basics</div>
+            <div class="branch-header">Pushing Power</div>
+            <span class="tier-label">Basics</span>
             <div class="node"><h3>Planche Lean</h3><span>BASE</span></div>
             <div class="node"><h3>Pseudo Planche PU</h3><span>LVL 1</span></div>
             <div class="node"><h3>Planche Parallettes</h3><span>LVL 1</span></div>
             <div class="node"><h3>L-Sit to Planche</h3><span>LVL 2</span></div>
             <div class="node"><h3>Press to Planche</h3><span>LVL 2</span></div>
-            <div class="tier-label">Intermediate</div>
+            
+            <span class="tier-label">Intermediate</span>
             <div class="node"><h3>Tuck Planche</h3><span>LVL 3</span></div>
             <div class="node"><h3>Planche PU (Tuck)</h3><span>LVL 3</span></div>
             <div class="node"><h3>Adv Tuck Planche</h3><span>LVL 4</span></div>
             <div class="node"><h3>90° Planche Hold</h3><span>LVL 4</span></div>
-            <div class="tier-label">Advanced</div>
+            
+            <span class="tier-label">Advanced</span>
             <div class="node"><h3>Straddle Planche</h3><span>LVL 5</span></div>
             <div class="node"><h3>Planche PU (Straddle)</h3><span>LVL 5</span></div>
             <div class="node"><h3>Full Planche</h3><span>LVL 6</span></div>
             <div class="node"><h3>Planche PU (Full)</h3><span>LVL 6</span></div>
             <div class="node"><h3>Ring Planche</h3><span>LVL 6</span></div>
             <div class="node"><h3>Wide Planche</h3><span>LVL 6</span></div>
-            <div class="tier-label">Elite Mastery</div>
+            
+            <span class="tier-label">Elite Mastery</span>
             <div class="node elite"><h3>Maltese Lean</h3><span>RANK A</span></div>
             <div class="node elite"><h3>Tuck Maltese</h3><span>RANK A</span></div>
             <div class="node elite"><h3>Straddle Maltese</h3><span>RANK S</span></div>
@@ -226,27 +186,30 @@
         </div>
 
         <div class="branch">
-            <div class="branch-header">Pull Skills</div>
-            <div class="tier-label">Basics</div>
+            <div class="branch-header">Pulling Strength</div>
+            <span class="tier-label">Basics</span>
             <div class="node"><h3>Skin the Cat</h3><span>BASE</span></div>
             <div class="node"><h3>German Hang</h3><span>BASE</span></div>
             <div class="node"><h3>Back Lever</h3><span>LVL 1</span></div>
             <div class="node"><h3>Straddle Back Lever</h3><span>LVL 1</span></div>
             <div class="node"><h3>Ice Cream Makers</h3><span>LVL 2</span></div>
-            <div class="tier-label">Intermediate</div>
+            
+            <span class="tier-label">Intermediate</span>
             <div class="node"><h3>Tuck Front Lever</h3><span>LVL 3</span></div>
             <div class="node"><h3>Adv Tuck FL</h3><span>LVL 3</span></div>
             <div class="node"><h3>Archer Pull-up</h3><span>LVL 3</span></div>
             <div class="node"><h3>Muscle-up (Strict)</h3><span>LVL 4</span></div>
             <div class="node"><h3>FL Raises</h3><span>LVL 4</span></div>
-            <div class="tier-label">Advanced</div>
+            
+            <span class="tier-label">Advanced</span>
             <div class="node"><h3>Straddle Front Lever</h3><span>LVL 5</span></div>
             <div class="node"><h3>Full Front Lever</h3><span>LVL 6</span></div>
             <div class="node"><h3>Supinated FL</h3><span>LVL 6</span></div>
             <div class="node"><h3>Front Lever Pull</h3><span>LVL 6</span></div>
             <div class="node"><h3>One Arm Pull-up</h3><span>LVL 6</span></div>
             <div class="node"><h3>Slow Muscle-up</h3><span>LVL 6</span></div>
-            <div class="tier-label">Elite Mastery</div>
+            
+            <span class="tier-label">Elite Mastery</span>
             <div class="node elite"><h3>Front Lever Touch</h3><span>RANK A</span></div>
             <div class="node elite"><h3>Supinated FL Touch</h3><span>RANK A</span></div>
             <div class="node elite"><h3>OA FL (Assisted)</h3><span>RANK S</span></div>
@@ -258,26 +221,29 @@
 
         <div class="branch">
             <div class="branch-header">Vertical Presses</div>
-            <div class="tier-label">Basics</div>
+            <span class="tier-label">Basics</span>
             <div class="node"><h3>Wall Handstand</h3><span>BASE</span></div>
             <div class="node"><h3>Pike Press</h3><span>BASE</span></div>
             <div class="node"><h3>Shoulder Stand</h3><span>LVL 1</span></div>
             <div class="node"><h3>Bent Arm HS</h3><span>LVL 2</span></div>
             <div class="node"><h3>HS Shoulder Taps</h3><span>LVL 2</span></div>
-            <div class="tier-label">Intermediate</div>
+            
+            <span class="tier-label">Intermediate</span>
             <div class="node"><h3>Freestanding HS</h3><span>LVL 3</span></div>
             <div class="node"><h3>Tuck Handstand</h3><span>LVL 3</span></div>
             <div class="node"><h3>Straddle HS</h3><span>LVL 3</span></div>
             <div class="node"><h3>HS Push-up (Wall)</h3><span>LVL 4</span></div>
             <div class="node"><h3>Straddle Press to HS</h3><span>LVL 4</span></div>
-            <div class="tier-label">Advanced</div>
+            
+            <span class="tier-label">Advanced</span>
             <div class="node"><h3>Strict HS Push-up</h3><span>LVL 5</span></div>
             <div class="node"><h3>Deficit HS PU</h3><span>LVL 5</span></div>
             <div class="node"><h3>Stalder Press</h3><span>LVL 6</span></div>
             <div class="node"><h3>90° Hold</h3><span>LVL 6</span></div>
             <div class="node"><h3>90° Push-up</h3><span>LVL 6</span></div>
             <div class="node"><h3>Hollowback HS</h3><span>LVL 6</span></div>
-            <div class="tier-label">Elite Mastery</div>
+            
+            <span class="tier-label">Elite Mastery</span>
             <div class="node elite"><h3>Tiger Bend</h3><span>RANK A</span></div>
             <div class="node elite"><h3>Hollowback Press</h3><span>RANK A</span></div>
             <div class="node elite"><h3>OA HS (Wall Ast)</h3><span>RANK S</span></div>
@@ -288,121 +254,121 @@
             <div class="node elite"><h3>OA HS Push-up</h3><span>ZENITH</span></div>
         </div>
 
-        <div class="statics-container">
-            <div class="branch">
-                <div class="branch-header">Lower Body</div>
-                <div class="node-subgrid">
-                    <div>
-                        <div class="tier-label">Foundations</div>
-                        <div class="node"><h3>Assisted Pistol</h3><span>BASE</span></div>
-                        <div class="node"><h3>Deep Sissy Squat</h3><span>LVL 1</span></div>
-                        <div class="node"><h3>Cossack Squat</h3><span>LVL 2</span></div>
-                    </div>
-                    <div>
-                        <div class="tier-label">Intermediate</div>
-                        <div class="node"><h3>Pistol Squat</h3><span>LVL 3</span></div>
-                        <div class="node"><h3>Shrimp Squat</h3><span>LVL 3</span></div>
-                        <div class="node"><h3>Harop Curl (Partial)</h3><span>LVL 4</span></div>
-                    </div>
-                    <div>
-                        <div class="tier-label">Advanced & Elite</div>
-                        <div class="node"><h3>Nordic Curls</h3><span>LVL 5</span></div>
-                        <div class="node"><h3>Dragon Pistol</h3><span>LVL 6</span></div>
-                        <div class="node elite"><h3>Full Nordic</h3><span>RANK A</span></div>
-                        <div class="node elite"><h3>Explosive Nordic</h3><span>RANK S</span></div>
-                        <div class="node elite"><h3>Weighted Pistol</h3><span>RANK SS</span></div>
-                    </div>
+        <div class="branch full-width">
+            <div class="branch-header">Lower Body & Leg Mastery</div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                <div>
+                    <span class="tier-label">Foundations</span>
+                    <div class="node"><h3>Assisted Pistol</h3><span>BASE</span></div>
+                    <div class="node"><h3>Deep Sissy Squat</h3><span>LVL 1</span></div>
+                    <div class="node"><h3>Cossack Squat</h3><span>LVL 2</span></div>
+                </div>
+                <div>
+                    <span class="tier-label">Intermediate</span>
+                    <div class="node"><h3>Pistol Squat</h3><span>LVL 3</span></div>
+                    <div class="node"><h3>Shrimp Squat</h3><span>LVL 3</span></div>
+                    <div class="node"><h3>Harop Curl (Partial)</h3><span>LVL 4</span></div>
+                </div>
+                <div>
+                    <span class="tier-label">Advanced & Elite</span>
+                    <div class="node"><h3>Nordic Curls</h3><span>LVL 5</span></div>
+                    <div class="node"><h3>Dragon Pistol</h3><span>LVL 6</span></div>
+                    <div class="node elite"><h3>Full Nordic</h3><span>RANK A</span></div>
+                    <div class="node elite"><h3>Explosive Nordic</h3><span>RANK S</span></div>
+                    <div class="node elite"><h3>Weighted Pistol</h3><span>RANK SS</span></div>
                 </div>
             </div>
         </div>
 
-        <div class="statics-container">
-            <div class="branch">
-                <div class="branch-header">Statics</div>
-                <div class="node-subgrid">
-                    <div>
-                        <div class="tier-label">Support</div>
-                        <div class="node"><h3>Dead Hang</h3><span>BASE</span></div>
-                        <div class="node"><h3>Support Hold</h3><span>BASE</span></div>
-                        <div class="node"><h3>Inverted Hang</h3><span>BASE</span></div>
-                        <div class="node"><h3>Arch Hang</h3><span>LVL 1</span></div>
-                        <div class="node"><h3>Elbow Lever</h3><span>LVL 1</span></div>
-                        <div class="node"><h3>Reverse Support</h3><span>LVL 2</span></div>
-                        <div class="node"><h3>L-Sit</h3><span>LVL 2</span></div>
-                    </div>
-                    <div>
-                        <div class="tier-label">Levers & Flags</div>
-                        <div class="node"><h3>Dragon Flag</h3><span>LVL 3</span></div>
-                        <div class="node"><h3>Side Lever (Flag)</h3><span>LVL 3</span></div>
-                        <div class="node"><h3>Straddle Flag</h3><span>LVL 3</span></div>
-                        <div class="node"><h3>Full Human Flag</h3><span>LVL 4</span></div>
-                        <div class="node"><h3>V-Sit</h3><span>LVL 4</span></div>
-                        <div class="node"><h3>Tuck Manna</h3><span>LVL 5</span></div>
-                        <div class="node"><h3>Tuck Victorian</h3><span>LVL 5</span></div>
-                    </div>
-                    <div>
-                        <div class="tier-label">Elite Holds</div>
-                        <div class="node elite"><h3>Iron Cross (Ast)</h3><span>RANK A</span></div>
-                        <div class="node elite"><h3>Iron Cross</h3><span>RANK A</span></div>
-                        <div class="node elite"><h3>Manna</h3><span>RANK S</span></div>
-                        <div class="node elite"><h3>Zanetti Hold</h3><span>RANK S</span></div>
-                        <div class="node elite"><h3>Straddle Victorian</h3><span>RANK SS</span></div>
-                        <div class="node elite"><h3>Victorian (Floor)</h3><span>RANK SS</span></div>
-                        <div class="node elite"><h3>Victorian (Rings)</h3><span>ZENITH</span></div>
-                    </div>
+        <div class="branch full-width">
+            <div class="branch-header">Statics & Specialized Holds</div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                <div>
+                    <span class="tier-label">Support</span>
+                    <div class="node"><h3>Dead Hang</h3><span>BASE</span></div>
+                    <div class="node"><h3>Support Hold</h3><span>BASE</span></div>
+                    <div class="node"><h3>Inverted Hang</h3><span>BASE</span></div>
+                    <div class="node"><h3>Arch Hang</h3><span>LVL 1</span></div>
+                    <div class="node"><h3>Elbow Lever</h3><span>LVL 1</span></div>
+                    <div class="node"><h3>Reverse Support</h3><span>LVL 2</span></div>
+                    <div class="node"><h3>L-Sit</h3><span>LVL 2</span></div>
                 </div>
-            </div>
-        </div>
-
-        <div class="protocol-box">
-            <div class="branch-header" style="border:none;">System Architecture & Protocols</div>
-            <div class="protocol-grid">
-                <div class="protocol-item">
-                    <h4>Progression Logic</h4>
-                    <p>Adaptation follows a 3-tier pipeline: Neural (Brain/Nerves), Structural (Muscle), and Connective (Tendons). Muscles adapt in weeks; tendons adapt in months.</p>
+                <div>
+                    <span class="tier-label">Levers & Flags</span>
+                    <div class="node"><h3>Dragon Flag</h3><span>LVL 3</span></div>
+                    <div class="node"><h3>Side Lever (Flag)</h3><span>LVL 3</span></div>
+                    <div class="node"><h3>Straddle Flag</h3><span>LVL 3</span></div>
+                    <div class="node"><h3>Full Human Flag</h3><span>LVL 4</span></div>
+                    <div class="node"><h3>V-Sit</h3><span>LVL 4</span></div>
+                    <div class="node"><h3>Tuck Manna</h3><span>LVL 5</span></div>
+                    <div class="node"><h3>Tuck Victorian</h3><span>LVL 5</span></div>
                 </div>
-                <div class="protocol-item">
-                    <h4>Time Expectations</h4>
-                    <ul>
-                        <li><strong>Basics:</strong> 1-3 Months</li>
-                        <li><strong>Intermediate:</strong> 6-12 Months</li>
-                        <li><strong>Elite:</strong> 3-10 Years of specific focus.</li>
-                    </ul>
-                </div>
-                <div class="protocol-item">
-                    <h4>Mobility Keys</h4>
-                    <p><strong>Planche:</strong> 15°+ Wrist Extension.<br><strong>Handstand:</strong> 180° Shoulder Flexion.<br><strong>Victorian:</strong> Elite Scapular Depression.</p>
-                </div>
-                <div class="protocol-item" style="border-left: 2px solid var(--elite); padding-left: 15px;">
-                    <h4>Injury Fail-Safe</h4>
-                    <p>Avoid "System Shutdown." Never increase intensity by >10% monthly. Sharp joint pain requires immediate 40% load reduction for 14 days.</p>
+                <div>
+                    <span class="tier-label">Elite Holds</span>
+                    <div class="node elite"><h3>Iron Cross (Ast)</h3><span>RANK A</span></div>
+                    <div class="node elite"><h3>Iron Cross</h3><span>RANK A</span></div>
+                    <div class="node elite"><h3>Manna</h3><span>RANK S</span></div>
+                    <div class="node elite"><h3>Zanetti Hold</h3><span>RANK S</span></div>
+                    <div class="node elite"><h3>Straddle Victorian</h3><span>RANK SS</span></div>
+                    <div class="node elite"><h3>Victorian (Floor)</h3><span>RANK SS</span></div>
+                    <div class="node elite"><h3>Victorian (Rings)</h3><span>ZENITH</span></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="footer-nav"><a href="index.html" class="back-btn">← BACK_HOME</a></div>
+    <div class="protocol-box">
+        <h3 style="color:var(--elite); margin-top:0; font-family:'JetBrains Mono'; letter-spacing:3px;">SYSTEM ARCHITECTURE</h3>
+        <div class="protocol-grid">
+            <div class="protocol-item">
+                <h4>Progression Logic</h4>
+                <p>Neural (Brain), Structural (Muscle), and Connective (Tendons). Muscles adapt in weeks; tendons in months.</p>
+            </div>
+            <div class="protocol-item">
+                <h4>Timeframes</h4>
+                <ul>
+                    <li>Basics: 1-3 Months</li>
+                    <li>Intermediate: 6-12 Months</li>
+                    <li>Elite: 3-10 Years focus.</li>
+                </ul>
+            </div>
+            <div class="protocol-item">
+                <h4>Injury Fail-Safe</h4>
+                <p>Avoid "System Shutdown." Never increase intensity by >10% monthly. Sharp pain = 40% reduction for 14 days.</p>
+            </div>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-btn">RETURN TO HUB</a>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const nodes = document.querySelectorAll('.node');
-            const masteredSkills = JSON.parse(localStorage.getItem('caliMasteredSkills')) || [];
-            
+            const bar = document.getElementById('bar-fill');
+            const perc = document.getElementById('perc');
+
+            const updateUI = () => {
+                const masteredCount = document.querySelectorAll('.node.mastered').length;
+                const total = nodes.length;
+                const progress = (masteredCount / total) * 100;
+                bar.style.width = progress + '%';
+                perc.innerText = Math.round(progress) + '%';
+            };
+
             nodes.forEach(node => {
-                const skillName = node.querySelector('h3').innerText;
-                if (masteredSkills.includes(skillName)) node.classList.add('mastered');
+                const name = node.querySelector('h3').innerText;
+                const saved = JSON.parse(localStorage.getItem('caliMasteredSkills')) || [];
+                if (saved.includes(name)) node.classList.add('mastered');
 
                 node.addEventListener('click', () => {
                     node.classList.toggle('mastered');
-                    updateStorage();
+                    const current = Array.from(document.querySelectorAll('.node.mastered'))
+                                         .map(n => n.querySelector('h3').innerText);
+                    localStorage.setItem('caliMasteredSkills', JSON.stringify(current));
+                    updateUI();
                 });
             });
-
-            function updateStorage() {
-                const mastered = Array.from(document.querySelectorAll('.node.mastered'))
-                                     .map(n => n.querySelector('h3').innerText);
-                localStorage.setItem('caliMasteredSkills', JSON.stringify(mastered));
-            }
+            updateUI();
         });
     </script>
 </body>
