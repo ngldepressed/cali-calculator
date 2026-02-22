@@ -359,75 +359,6 @@
 let isSystemReady = false;
 let isSimMode = false;
 
-const recs = {
-    "Full Planche": `
-        <strong>Full Planche Progression:</strong><br>
-        1. Planche Leans – 3x10-15s, maintain scapular protraction, slow lean<br>
-        2. Tuck Planche Holds – 4x8-12s, focus on core tightness<br>
-        3. Advanced Tuck Planche – 3x8-10s, straight arms<br>
-        4. Straddle Planche – 3x5-8s, hips high, toes pointed<br>
-        <em>Notes:</em> Train 3-4x/week, rest 2 min between sets, emphasize straight-arm stability
-    `,
-    "Straddle Planche": `
-        <strong>Straddle Planche Progression:</strong><br>
-        1. Tuck Planche Holds – 3x10-12s, keep elbows locked<br>
-        2. Advanced Tuck Planche – 3x8s, gradual straddle widening<br>
-        3. Straddle Planche – 4x5-8s, full body tension<br>
-        4. Weighted Lean Planche – 3x6-8s, add small plates if strong<br>
-        <em>Notes:</em> Focus on wrist mobility and scapular depression
-    `,
-    "Front Lever": `
-        <strong>Front Lever Progression:</strong><br>
-        1. Scapular Pulls – 4x10, control shoulder blades<br>
-        2. Front Lever Tucks – 4x8-10s, keep hips tucked<br>
-        3. Advanced Tuck Front Lever – 3x6-8s, slow negatives<br>
-        4. Straddle Front Lever – 3x5-8s, full extension<br>
-        <em>Notes:</em> Train 2-3x/week, emphasize slow eccentric lowering
-    `,
-    "Iron Cross": `
-        <strong>Iron Cross Progression:</strong><br>
-        1. Ring Support Holds – 3x20-30s, external rotation<br>
-        2. Assisted Cross Holds – 3x5-10s with bands<br>
-        3. Partial Range Cross – 4x5-8s, controlled<br>
-        4. Full Iron Cross – 3x3-5s, strict form<br>
-        <em>Notes:</em> Build shoulder strength and tendon integrity slowly, 2-3x/week max
-    `,
-    "Maltese": `
-        <strong>Maltese Progression:</strong><br>
-        1. Planche Lean Holds – 3x10-15s<br>
-        2. Straight Arm Presses – 3x5-8 reps<br>
-        3. Rings Fly Negatives – 3x6-8s<br>
-        4. Full Maltese Hold – 3x3-5s<br>
-        <em>Notes:</em> Focus on shoulder and chest tendon conditioning
-    `,
-    "Muscle-up": `
-        <strong>Muscle-up Progression:</strong><br>
-        1. High Pull-ups – 4x6-10 reps, explosive<br>
-        2. Dips on Rings – 3x8-12 reps, controlled<br>
-        3. Transition Drills – 3x5-8 reps<br>
-        4. Full Muscle-up – 3-4x3-5 reps<br>
-        <em>Notes:</em> Train technique first, then strength; 2-3x/week
-    `
-};
-function showRecommendations() {
-    const feedback = document.getElementById('aiFeedback');
-    if (!radarChart) return;
-
-    feedback.innerHTML = ""; // Clear placeholder
-
-    radarChart.data.labels.forEach((skillName, idx) => {
-        const score = radarChart.data.datasets[0].data[idx] || 0;
-        if(score === 0) return; // Skip if no data
-
-        const rec = recs[skillName];
-        const div = document.createElement('div');
-        div.style.fontSize = '0.75em';
-        div.style.marginBottom = '12px';
-        div.style.color = '#00ffcc';
-        div.innerHTML = `<strong>${skillName} (${Math.round(score)}%):</strong><br>${rec}`;
-        feedback.appendChild(div);
-    });
-}
 function toggleSimMode() {
     // 1. Update the global variable so other functions know we are simulating
     isSimMode = document.getElementById("simMode").checked;
@@ -987,7 +918,6 @@ function deleteSingleNote(index) {
     localStorage.setItem('cali_biotech_history', JSON.stringify(history));
     displayNotes();
 }
-showRecommendations();
 
 </script>
 <div class="card" style="margin-top: 20px;">
