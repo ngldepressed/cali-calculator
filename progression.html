@@ -1,261 +1,323 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>CALI-BIOTECH | NEURAL ARCHITECTURE v2.0</title>
-    <style>
-        :root {
-            --primary: #4c6fff;
-            --bg: #0a0a0f;
-            --surface: #161625;
-            --accent: #00ff88;
-            --warning: #ff4c4c;
-            --text: #e6edf3;
-            --glow: rgba(76, 111, 255, 0.2);
-        }
-
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Courier New', monospace;
-            padding: 30px;
-            line-height: 1.4;
-        }
-
-        .engine-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 20px;
-        }
-
-        .sidebar, .main-view { display: flex; flex-direction: column; gap: 20px; }
-
-        .card {
-            background: var(--surface);
-            padding: 20px;
-            border-radius: 4px;
-            border: 1px solid rgba(76, 111, 255, 0.15);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        h1, h2, h3 {
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-top: 0;
-            color: var(--primary);
-        }
-
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 0.85em;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 5px;
-        }
-
-        .val { color: var(--accent); font-weight: bold; }
-
-        input, select, button {
-            width: 100%;
-            background: #000;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            padding: 12px;
-            margin: 10px 0;
-            font-family: monospace;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
-        button {
-            background: rgba(76, 111, 255, 0.1);
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            background: var(--primary);
-            color: #000;
-            box-shadow: 0 0 20px var(--glow);
-        }
-
-        .meter {
-            height: 4px;
-            background: #222;
-            width: 100%;
-            margin-top: 5px;
-            overflow: hidden;
-        }
-
-        .meter-fill { height: 100%; background: var(--primary); transition: 1s; }
-
-        .log-entry {
-            font-size: 0.75em;
-            padding: 8px;
-            border-left: 2px solid var(--primary);
-            background: rgba(255,255,255,0.02);
-            margin-bottom: 5px;
-        }
-
-        .presc-block { border-left: 2px solid var(--accent); padding-left: 15px; margin-bottom: 20px; }
-        .presc-title { color: var(--accent); font-size: 0.8em; margin-bottom: 5px; }
-    </style>
+<meta charset="UTF-8">
+<title>ELITE PERFORMANCE LAB</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body{background:#0b0f17;color:#e6edf3;font-family:monospace;padding:20px}
+h1,h2,h3{color:#4c6fff}
+.card{background:#141a24;padding:18px;margin:14px 0;border:1px solid #1f2a3a}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+input,select,button{
+width:100%;padding:8px;margin:5px 0;
+background:#000;border:1px solid #4c6fff;color:#4c6fff;font-family:monospace
+}
+button:hover{background:#4c6fff;color:#000;cursor:pointer}
+.small{font-size:12px;opacity:.7}
+.stat{display:flex;justify-content:space-between}
+</style>
 </head>
 <body>
 
-    <header style="text-align: center; margin-bottom: 40px;">
-        <h1>NEURAL ARCHITECTURE :: ADAPTIVE COACH</h1>
-        <div style="font-size: 0.7em; opacity: 0.6;">BIOTEST SIMULATION ACTIVE // VERSION 2.0.4</div>
-    </header>
+<h1>NEURAL PERFORMANCE LAB</h1>
 
-    <div class="engine-container">
-        
-        <div class="sidebar">
-            <div class="card">
-                <h3>System Initialization</h3>
-                <label class="small">PRIMARY OBJECTIVE</label>
-                <select id="skillTarget">
-                    <option value="planche">PLANCHE (STRAIGHT ARM PUSH)</option>
-                    <option value="front_lever">FRONT LEVER (STRAIGHT ARM PULL)</option>
-                    <option value="oac">ONE ARM CHIN (BENT ARM PULL)</option>
-                    <option value="maltese">MALTESE (EXTREME LEVERAGE)</option>
-                </select>
+<div class="card">
+<h2>Skill Baseline Input</h2>
 
-                <label class="small">DATA INPUTS</label>
-                <input type="number" id="sleep" placeholder="SLEEP (HRS)">
-                <input type="number" id="rpe" placeholder="PREV SESSION RPE (1-10)">
-                <input type="number" id="hrv" placeholder="ESTIMATED HRV (1-100)">
+<div class="grid">
+<div>
+<label>Planche Progression</label>
+<select id="plancheLevel"></select>
+<input id="plancheHold" placeholder="Max Hold (sec)">
+</div>
 
-                <button onclick="calculateMacrocycle()">EXECUTE BIOTEST</button>
-            </div>
+<div>
+<label>Front Lever Progression</label>
+<select id="flLevel"></select>
+<input id="flHold" placeholder="Max Hold (sec)">
+</div>
+</div>
+</div>
 
-            <div id="status-card" class="card" style="display:none;">
-                <h3>Neural Status</h3>
-                <div id="stats-display"></div>
-            </div>
-        </div>
+<div class="card">
+<h2>Weekly Recovery Inputs</h2>
+<input id="sleep" placeholder="Sleep Hours">
+<input id="soreness" placeholder="Muscle Soreness 1-10">
+<input id="stress" placeholder="Stress 1-10">
+<button onclick="runWeek()">Run Week</button>
+<button onclick="prevWeek()">Previous Week</button>
+<button onclick="nextWeek()">Next Week</button>
+</div>
 
-        <div class="main-view">
-            <div id="output" class="card" style="min-height: 400px;">
-                <h2 id="session-header">Waiting for initialization...</h2>
-                <div id="session-content"></div>
-            </div>
-        </div>
-
-    </div>
+<div id="dashboard" class="card"></div>
+<div id="analysis" class="card"></div>
+<canvas id="chart"></canvas>
 
 <script>
-    // COMPLEX STATE ENGINE
-    let state = {
-        week: 1,
-        cumulativeFatigue: 0,
-        neuralLoad: 0,
-        adaptationScore: 0,
-        phase: "ANATOMICAL ADAPTATION"
-    };
 
-    const SkillHierarchy = {
-        planche: [
-            {id: "Planche Lean", intensity: 1, volume: 30},
-            {id: "Tuck Planche", intensity: 2, volume: 20},
-            {id: "Adv. Tuck", intensity: 3, volume: 15},
-            {id: "Straddle Planche", intensity: 4, volume: 10},
-            {id: "Full Planche", intensity: 5, volume: 8}
-        ],
-        // Additional skill arrays would go here
-    };
+/* =======================
+   DATABASE GENERATION
+======================= */
 
-    function calculateMacrocycle() {
-        const sleep = parseFloat(document.getElementById('sleep').value) || 8;
-        const rpe = parseFloat(document.getElementById('rpe').value) || 5;
-        const hrv = parseFloat(document.getElementById('hrv').value) || 70;
+function generateFamily(name, base){
+  const holds=[5,8,10,12,15,20]
+  let db=[]
+  base.forEach((b,i)=>{
+    holds.forEach((h,j)=>{
+      db.push({
+        id:`${name}_${i}_${h}`,
+        family:name,
+        base:b,
+        required:h,
+        tier:i+1,
+        prereq: j>0
+          ? `${name}_${i}_${holds[j-1]}`
+          : i>0
+            ? `${name}_${i-1}_${holds[holds.length-1]}`
+            : null
+      })
+    })
+  })
+  return db
+}
 
-        // 1. NEURAL FATIGUE MODELING (The Logic)
-        let recoveryFactor = (sleep / 8) * (hrv / 100);
-        state.neuralLoad = (rpe * 1.5) / recoveryFactor;
-        state.cumulativeFatigue += (state.neuralLoad - 5);
-        if(state.cumulativeFatigue < 0) state.cumulativeFatigue = 0;
+const SkillDB=[
+  ...generateFamily("Planche",[
+    "Lean","Tuck","AdvTuck","Straddle","Full"
+  ]),
+  ...generateFamily("FrontLever",[
+    "Tuck","AdvTuck","Straddle","Full"
+  ])
+]
 
-        // 2. PERIODIZATION LOGIC
-        const mesoCycle = Math.ceil(state.week / 4);
-        const microCycle = state.week % 4; // 1,2,3 = Load, 0 = Deload
-        
-        let intensityScale = 0.7; // Base
-        if(microCycle === 1) { intensityScale = 0.75; state.phase = "ACCUMULATION"; }
-        if(microCycle === 2) { intensityScale = 0.85; state.phase = "INTENSIFICATION"; }
-        if(microCycle === 3) { intensityScale = 0.95; state.phase = "PEAK OVERLOAD"; }
-        if(microCycle === 0) { intensityScale = 0.60; state.phase = "STRATEGIC DELOAD"; }
+/* =======================
+   STATE
+======================= */
 
-        // 3. GENERATE COMPLEX SESSION
-        generatePrescription(intensityScale, microCycle);
-        updateUI();
-        state.week++;
+let State={
+  week:1,
+  fatigue:0,
+  phase:"Accumulation",
+  history:[]
+}
+
+let Athlete={
+  mastery:{}
+}
+
+/* =======================
+   INITIALIZE DROPDOWNS
+======================= */
+
+function populateSelect(id,family){
+  const sel=document.getElementById(id)
+  SkillDB.filter(s=>s.family===family)
+  .forEach(s=>{
+    let opt=document.createElement("option")
+    opt.value=s.id
+    opt.textContent=`${s.base} ${s.required}s`
+    sel.appendChild(opt)
+  })
+}
+
+populateSelect("plancheLevel","Planche")
+populateSelect("flLevel","FrontLever")
+
+/* =======================
+   MASTERY CALCULATION
+======================= */
+
+function calculateMastery(skillId,hold){
+  const skill=SkillDB.find(s=>s.id===skillId)
+  return Math.min((hold/skill.required)*100,150)
+}
+
+/* =======================
+   READINESS MODEL
+======================= */
+
+function readiness(sleep,soreness,stress){
+  let sleepFactor=sleep/8
+  let fatigueFactor=State.fatigue/100
+  let soreFactor=soreness/10
+  let stressFactor=stress/10
+
+  return (sleepFactor*0.4)
+        - (fatigueFactor*0.3)
+        - (soreFactor*0.2)
+        - (stressFactor*0.1)
+}
+
+/* =======================
+   PERIODIZATION
+======================= */
+
+function updatePhase(){
+  let m=State.week%4
+  if(m===1) State.phase="Accumulation"
+  if(m===2) State.phase="Intensification"
+  if(m===3) State.phase="Peak"
+  if(m===0) State.phase="Deload"
+}
+
+/* =======================
+   WEEK RUN
+======================= */
+
+function runWeek(){
+
+  let sleep=parseFloat(sleepInput())||8
+  let sore=parseFloat(soreness.value)||3
+  let stress=parseFloat(stress.value)||3
+
+  updatePhase()
+
+  let ready=readiness(sleep,sore,stress)
+
+  let plancheId=plancheLevel.value
+  let flId=flLevel.value
+
+  let pHold=parseFloat(plancheHold.value)||0
+  let flHold=parseFloat(flHold.value)||0
+
+  Athlete.mastery[plancheId]=calculateMastery(plancheId,pHold)
+  Athlete.mastery[flId]=calculateMastery(flId,flHold)
+
+  let intensityBase=
+    State.phase==="Deload"?0.6:
+    State.phase==="Peak"?0.95:
+    State.phase==="Intensification"?0.85:0.75
+
+  let intensity=intensityBase*ready
+
+  let trainingLoad=(intensity*10)+(sore*2)
+
+  State.fatigue += trainingLoad
+  State.fatigue*=0.92
+  if(State.fatigue<0) State.fatigue=0
+
+  State.history.push({
+    week:State.week,
+    fatigue:State.fatigue,
+    readiness:ready
+  })
+
+  renderDashboard(ready,intensity)
+  renderAnalysis(plancheId,flId,ready,intensity)
+  updateChart()
+
+  save()
+}
+
+/* =======================
+   DASHBOARD
+======================= */
+
+function renderDashboard(ready,intensity){
+  dashboard.innerHTML=`
+  <h2>Performance Dashboard</h2>
+  <div class="stat"><span>Week</span><span>${State.week}</span></div>
+  <div class="stat"><span>Phase</span><span>${State.phase}</span></div>
+  <div class="stat"><span>Fatigue Index</span><span>${State.fatigue.toFixed(1)}</span></div>
+  <div class="stat"><span>Readiness Score</span><span>${ready.toFixed(2)}</span></div>
+  <div class="stat"><span>Intensity Multiplier</span><span>${intensity.toFixed(2)}</span></div>
+  `
+}
+
+/* =======================
+   ENGINE ANALYSIS
+======================= */
+
+function renderAnalysis(plancheId,flId,ready,intensity){
+
+  const pMastery=Athlete.mastery[plancheId]||0
+  const flMastery=Athlete.mastery[flId]||0
+
+  analysis.innerHTML=`
+  <h2>Engine Analysis</h2>
+
+  1. Planche Mastery: ${pMastery.toFixed(1)}%<br>
+  2. Front Lever Mastery: ${flMastery.toFixed(1)}%<br>
+  3. Current Phase indicates ${State.phase} emphasis.<br>
+  4. Fatigue accumulation trending at ${State.fatigue.toFixed(1)}.<br>
+  5. Readiness composite suggests ${ready>0.7?"high neural output":"conservative load management"}.<br>
+  6. Soreness contribution increasing tendon load risk.<br>
+  7. Stress index influencing CNS recovery rate.<br>
+  8. Intensity scaling set at ${(intensity*100).toFixed(0)}% of base wave.<br>
+  9. Prerequisite validation active for tier progression.<br>
+  10. Auto-deload trigger threshold at fatigue > 85.<br>
+  11. Next tier unlock requires >110% mastery.<br>
+  12. Recommendation: ${State.fatigue>80?"Reduce volume immediately":"Proceed within structured overload."}
+  `
+}
+
+/* =======================
+   CHART
+======================= */
+
+let chart
+function updateChart(){
+  const ctx=document.getElementById("chart")
+  if(chart) chart.destroy()
+
+  chart=new Chart(ctx,{
+    type:"line",
+    data:{
+      labels:State.history.map(h=>h.week),
+      datasets:[
+        {
+          label:"Fatigue",
+          data:State.history.map(h=>h.fatigue),
+          borderColor:"red"
+        },
+        {
+          label:"Readiness",
+          data:State.history.map(h=>h.readiness),
+          borderColor:"green"
+        }
+      ]
     }
+  })
+}
 
-    function generatePrescription(scale, micro) {
-        const target = document.getElementById('skillTarget').value;
-        const isDeload = micro === 0;
+/* =======================
+   WEEK CONTROL
+======================= */
 
-        let html = `<h3>CURRENT PHASE: ${state.phase}</h3>`;
-        
-        // Block 1: Neural Prep
-        html += `<div class="presc-block">
-                    <div class="presc-title">BLOCK A: NEURAL PRIMING (WARMUP)</div>
-                    • Scapular Depressions: 3 x 12 (Focus on max depression)<br>
-                    • Wrist Load Cycles: 5 Minutes (Radial/Ulnar focus)<br>
-                    • Hollow Body Rockers: 3 x 45s
-                 </div>`;
+function nextWeek(){
+  State.week++
+  save()
+}
 
-        // Block 2: Primary Lever (The Complex Part)
-        let sets = isDeload ? 2 : (micro === 3 ? 5 : 3);
-        let holdTime = Math.round(15 * (1/scale));
-        
-        html += `<div class="presc-block">
-                    <div class="presc-title">BLOCK B: ISO-METRIC LEVERAGE</div>
-                    • Primary Skill: ${target.toUpperCase()} PROGRESSION<br>
-                    • Volume: ${sets} Sets<br>
-                    • Intensity: ${Math.round(scale * 100)}% of Max Hold<br>
-                    • Hold Time: ${holdTime}s Per Set<br>
-                    • Rest Interval: ${isDeload ? '90s' : '180s-240s'}
-                 </div>`;
+function prevWeek(){
+  if(State.week>1) State.week--
+  save()
+}
 
-        // Block 3: Dynamic Accessory
-        html += `<div class="presc-block">
-                    <div class="presc-title">BLOCK C: STRUCTURAL INTEGRITY</div>
-                    • Zanetti Press: 3 x 8 (Lightweight/High Form)<br>
-                    • Pseudo Pushups: 3 x ${isDeload ? 5 : 10} (Lean: Max)<br>
-                    • Face Pulls: 4 x 15 (External Rotation Focus)
-                 </div>`;
+/* =======================
+   HELPERS
+======================= */
 
-        // Block 4: Coach Logic
-        let alertColor = state.cumulativeFatigue > 15 ? 'var(--warning)' : 'var(--accent)';
-        html += `<div class="log-entry" style="border-color: ${alertColor}">
-                    <strong>ENGINE ANALYSIS:</strong><br>
-                    ${state.cumulativeFatigue > 15 ? 
-                    'CRITICAL FATIGUE DETECTED. AUTO-REGULATING VOLUME BY -25%.' : 
-                    'HOMEOSTASIS STABLE. PROCEED WITH PLANNED OVERLOAD.'}
-                    Focus on straight-arm elbow locking to prevent bicep tendon shear.
-                 </div>`;
+function sleepInput(){
+  return document.getElementById("sleep").value
+}
 
-        document.getElementById('session-content').innerHTML = html;
-        document.getElementById('session-header').innerText = `SESSION LOG: WEEK ${state.week}`;
-    }
+function save(){
+  localStorage.setItem("labState",JSON.stringify({State,Athlete}))
+}
 
-    function updateUI() {
-        document.getElementById('status-card').style.display = 'block';
-        let risk = state.cumulativeFatigue > 20 ? "CRITICAL" : (state.cumulativeFatigue > 10 ? "ELEVATED" : "OPTIMAL");
-        
-        document.getElementById('stats-display').innerHTML = `
-            <div class="stat-row"><span>WEEK</span> <span class="val">${state.week}</span></div>
-            <div class="stat-row"><span>NEURAL LOAD</span> <span class="val">${state.neuralLoad.toFixed(1)}</span></div>
-            <div class="stat-row"><span>FATIGUE DEBT</span> <span class="val">${state.cumulativeFatigue.toFixed(1)}</span></div>
-            <div class="stat-row"><span>INJURY RISK</span> <span class="val" style="color:${risk==='CRITICAL'?'#ff4c4c':''}">${risk}</span></div>
-            <div class="meter"><div class="meter-fill" style="width:${Math.min(state.cumulativeFatigue * 5, 100)}%"></div></div>
-        `;
-    }
+function load(){
+  let data=localStorage.getItem("labState")
+  if(data){
+    let parsed=JSON.parse(data)
+    State=parsed.State
+    Athlete=parsed.Athlete
+  }
+}
+
+load()
+
 </script>
 </body>
 </html>
