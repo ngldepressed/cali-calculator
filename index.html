@@ -359,6 +359,22 @@
 let isSystemReady = false;
 let isSimMode = false;
 
+// --- ADD THIS FUNCTION ---
+function recommend(skill, vectors, bw, conv, u) {
+    // Skill is current skill object
+    // vectors = [{name, val, req}]
+    // Returns recommendation string
+    let weakest = vectors.reduce((prev, curr) => (prev.val < curr.val) ? prev : curr);
+    let neededPlate = ((weakest.req * bw) - bw) / conv;
+
+    // Beginner vs Advanced advice
+    if (skill.level === "beginner") {
+        return `EASY STEP: Focus on ${weakest.name}, target 1RM increase: +${neededPlate.toFixed(1)}${u}.`;
+    } else {
+        return `FINE-TUNE: Prioritize ${weakest.name}, incrementally add +${neededPlate.toFixed(1)}${u} while refining form.`;
+    }
+}
+
 const recs = {
     "Full Planche": [
         { min: 0, max: 30, text: "Beginner: Planche Leans 3x10-15s, Tuck Holds 3x8s, focus on core tightness." },
@@ -714,12 +730,10 @@ if (s.s > 0 && sa1RM <= 1.0) cur = 0;   // If skill needs straight arm and sa is
             curScores.push(cur.toFixed(1));
             potScores.push(sig(Math.max(...vectors.map(v => v.val))).toFixed(1));
 
-            let recText = "";
-            if (isTarget) {
-                let weakest = vectors.reduce((prev, curr) => (prev.val < curr.val) ? prev : curr);
-                let neededPlate = ((weakest.req * bw) - bw) / conv;
-                recText = `CRITICAL PATH: Improve ${weakest.name}. Target 1RM: +${neededPlate.toFixed(1)}${u}.`;
-            }
+           let recText = "";
+if (isTarget) {
+    recText = recommend(s, vectors, bw, conv, u);
+}
 
             barHtml += `<div class="skill-bar-container" style="opacity: ${activeGoal !== "None" && !isTarget ? '0.2' : '1'}; margin-bottom:15px;">
                     <div class="skill-label" style="display:flex; justify-content:space-between; font-family:monospace; font-size:0.85em;">
