@@ -356,27 +356,8 @@
 </html>
 </div>
 <script>
-
-
 let isSystemReady = false;
 let isSimMode = false;
-
-const skills = [
-    { name: "Full Planche", p: 3.4, l: 0, s: 2.5, minEntry: 45 },
-    { name: "Straddle Planche", p: 2.8, l: 0, s: 2.0, minEntry: 30 },
-    { name: "Front Lever", p: 0, l: 2.6, s: 1.8, minEntry: 30 },
-    { name: "Iron Cross", p: 0, l: 3.0, s: 4.0, minEntry: 50 },
-    { name: "Maltese", p: 4.5, l: 0, s: 3.5, minEntry: 55 },
-    { name: "Muscle-up", p: 1.5, l: 1.6, s: 0, minEntry: 15 }
-];
-const recs = {
-    "Full Planche": "Planche Leans / Weighted PPPU / Zanetti Press",
-    "Straddle Planche": "Tuck Planche Holds / Banded Straddle Leans",
-    "Front Lever": "Scapular Pulls / Front Lever Touch (to hips)",
-    "Iron Cross": "Maltese-to-cross eccentrics / Straight-arm cable pulls / Biceps tendon conditioning",
-    "Maltese": "Zanetti Press / Floor Sliders / Dumbbell Maltese Press",
-    "Muscle-up": "High Pull-ups / Explosive Rows" 
-};
 
 function toggleSimMode() {
     // 1. Update the global variable so other functions know we are simulating
@@ -423,9 +404,23 @@ function updateLabels() {
     document.getElementById("hImperial").style.display = isMet ? "none" : "block";
 }
 
+const skills = [
+    { name: "Full Planche", p: 3.4, l: 0, s: 2.5, minEntry: 45 },
+    { name: "Straddle Planche", p: 2.8, l: 0, s: 2.0, minEntry: 30 },
+    { name: "Front Lever", p: 0, l: 2.6, s: 1.8, minEntry: 30 },
+    { name: "Iron Cross", p: 0, l: 3.0, s: 4.0, minEntry: 50 },
+    { name: "Maltese", p: 4.5, l: 0, s: 3.5, minEntry: 55 },
+    { name: "Muscle-up", p: 1.5, l: 1.6, s: 0, minEntry: 15 }
+];
 
-
-
+const recs = {
+    "Full Planche": "Planche Leans / PPPU",
+    "Straddle Planche": "Tuck Planche Holds",
+    "Front Lever": "Scapular Pulls / Negatives",
+    "Iron Cross": "Rings Fly / Cross Pulls",
+    "Maltese": "Zanetti Press / Ring Fly",
+    "Muscle-up": "High Pull-ups / Explosive Row"
+};
 
 let radarChart;
 const ctx = document.getElementById('skillRadar').getContext('2d');
@@ -583,10 +578,6 @@ function generateGoalBrief(vectors, bw, conv, u) {
         
         // Use 'gap' consistently
         let gap = (targetTotalWeight - currentTotalWeight) / conv;
-        brief += `<div style="color:#ddd; margin-bottom:2px;">• ${b.name}: Add +${Math.max(0, gap).toFixed(1)}${u} to 1RM</div>`;
-    });
-    return brief;
-
         
         let exerciseName = "";
         let equipment = "to belt/bar";
@@ -690,13 +681,13 @@ if (s.s > 0 && sa1RM <= 1.0) cur = 0;   // If skill needs straight arm and sa is
             curScores.push(cur.toFixed(1));
             potScores.push(sig(Math.max(...vectors.map(v => v.val))).toFixed(1));
 
-           let recText = "";
+            let recText = "";
             if (isTarget) {
-                // This calls the function you just verified!
-                recText = generateGoalBrief(vectors, bw, conv, u);
+                let weakest = vectors.reduce((prev, curr) => (prev.val < curr.val) ? prev : curr);
+                let neededPlate = ((weakest.req * bw) - bw) / conv;
+                recText = `CRITICAL PATH: Improve ${weakest.name}. Target 1RM: +${neededPlate.toFixed(1)}${u}.`;
             }
 
-          
             barHtml += `<div class="skill-bar-container" style="opacity: ${activeGoal !== "None" && !isTarget ? '0.2' : '1'}; margin-bottom:15px;">
                     <div class="skill-label" style="display:flex; justify-content:space-between; font-family:monospace; font-size:0.85em;">
                         <span>${s.name.toUpperCase()}</span><span>${cur.toFixed(0)}%</span>
@@ -927,25 +918,7 @@ function deleteSingleNote(index) {
     localStorage.setItem('cali_biotech_history', JSON.stringify(history));
     displayNotes();
 }
-function showRecommendations() {
-    const feedback = document.getElementById('aiFeedback');
-    if (!radarChart) return;
 
-    feedback.innerHTML = ""; // Clear placeholder
-
-    radarChart.data.labels.forEach((skillName, idx) => {
-        const score = radarChart.data.datasets[0].data[idx] || 0;
-        const rec = recs[skillName];
-        const div = document.createElement('div');
-        div.style.fontSize = '0.75em';
-        div.style.marginBottom = '8px';
-        div.style.color = '#00ffcc';
-        div.textContent = `${skillName} (${Math.round(score)}%): ${rec}`;
-        feedback.appendChild(div);
-    });
-}
-
- showRecommendations();
 </script>
 <div class="card" style="margin-top: 20px;">
     <h3>Biotic Feedback / Archive</h3>
