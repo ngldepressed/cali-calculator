@@ -927,7 +927,25 @@ function deleteSingleNote(index) {
     localStorage.setItem('cali_biotech_history', JSON.stringify(history));
     displayNotes();
 }
+function showRecommendations() {
+    const feedback = document.getElementById('aiFeedback');
+    if (!radarChart) return;
 
+    feedback.innerHTML = ""; // Clear placeholder
+
+    radarChart.data.labels.forEach((skillName, idx) => {
+        const score = radarChart.data.datasets[0].data[idx] || 0;
+        const rec = recs[skillName];
+        const div = document.createElement('div');
+        div.style.fontSize = '0.75em';
+        div.style.marginBottom = '8px';
+        div.style.color = '#00ffcc';
+        div.textContent = `${skillName} (${Math.round(score)}%): ${rec}`;
+        feedback.appendChild(div);
+    });
+}
+
+ showRecommendations();
 </script>
 <div class="card" style="margin-top: 20px;">
     <h3>Biotic Feedback / Archive</h3>
