@@ -31,6 +31,35 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
+
+
+
+body {
+    font-size: 18px; /* Increased from 14px/16px */
+    line-height: 1.6;
+}
+
+.card {
+    padding: 25px; /* Added more breathing room for bigger text */
+}
+
+/* This makes the labels on your input fields easier to read */
+label {
+    font-size: 0.9em;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Adjusts the input text size */
+input, select, textarea {
+    font-size: 16px !important;
+    padding: 12px !important;
+}
+
+
+
+
         /* ADD THIS INSIDE THE <style> TAG */
 .sim-active input, .sim-active select { 
     border-color: var(--potential) !important; 
@@ -159,6 +188,15 @@
    onmouseout="this.style.background='rgba(76, 111, 255, 0.05)';"
 >
     VIEW SKILL TREE
+</a>
+
+
+<a href="physio.html" 
+   style="display: inline-block; text-decoration: none !important; color: #00ff88; background: rgba(0, 255, 136, 0.05); border: 1px solid #00ff88; padding: 12px 24px; font-family: monospace; font-size: 0.75em; letter-spacing: 3px; font-weight: bold; border-radius: 4px; text-transform: uppercase; transition: all 0.3s ease; box-shadow: 0 0 15px rgba(0, 255, 136, 0.1); width: 220px; box-sizing: border-box; margin-top: 10px;"
+   onmouseover="this.style.background='rgba(0, 255, 136, 0.15)';"
+   onmouseout="this.style.background='rgba(0, 255, 136, 0.05)';"
+>
+   CALORIE CALCULATOR
 </a>
 
     <select id="unitSystem" onchange="updateLabels(); analyze(); saveToLocal();" style="width: 220px; background: #1f1f2e; color: var(--primary); border: 1px solid var(--primary); padding: 5px; font-family: monospace;">
@@ -594,11 +632,11 @@ function generateGoalBrief(vectors, bw, conv, u) {
             equipment = "per dumbbell";
         }
 
-        // CHANGED: Use 'gap' here instead of 'displayGap'
-        brief += `<span class="rec-exercise" style="opacity:1">↑ **${exerciseName}**: Add +${Math.max(0, gap).toFixed(1)}${u} ${equipment}</span>`;
+        brief += `<div class="rec-exercise" style="opacity:1; font-size:0.75em; margin-top:4px;">↑ **${exerciseName}**: Add +${Math.max(0, gap).toFixed(1)}${u} ${equipment}</div>`;
     });
     return brief;
 }
+
 function analyze() {
     if(!isSystemReady) return;
     if(!radarChart) initChart();
@@ -716,30 +754,142 @@ if (s.s > 0 && sa1RM <= 1.0) cur = 0;   // If skill needs straight arm and sa is
         let sStatus = !hasWeightedData ? "INACTIVE" : (saIntegrity < 0.62 ? "TENDON LAG" : "NOMINAL");
         let sDesc = !hasWeightedData ? "Enter data." : (saIntegrity < 0.62 ? "High injury risk." : "Density sufficient.");
 
-        let auditHtml = `<h3 style="font-size:0.7em; letter-spacing:3px; color:var(--primary); margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">BIOMECHANICAL_REPORT</h3>`;
-        const createInsight = (title, status, val, desc, color) => `<div class="insight-block" style="margin-bottom:15px; border-left:3px solid ${color}; padding-left:12px; background: rgba(255,255,255,0.02); padding-top:8px; padding-bottom:8px;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:0.8em; font-weight:bold; color:${color};">${title}</span>
-                    <span style="font-size:0.6em; background:${color}; color:#000; padding:1px 4px; border-radius:2px; font-weight:bold;">${status}</span>
-                </div>
-                <div style="font-size:1em; color:#fff; font-family:monospace; margin:4px 0;">${val}</div>
-                <p style="font-size:0.65em; color:#bbb; margin:0; line-height:1.4;">${desc}</p>
+     // --- DEEP BIOMECHANICAL PROFILING (CLEAN TITLES) ---
+
+// 1. Scapular Ratio
+const scapularHealth = (pull1RM / push1RM).toFixed(2);
+const scapStatus = scapularHealth < 0.90 ? "DYSFUNCTION RISK" : "STRUCTURAL SYMMETRY";
+const scapColor = scapularHealth < 0.90 ? "#ff4444" : "#00ffcc";
+const scapDesc = scapularHealth < 0.90 
+    ? `Anterior dominance detected. Your pull-to-push ratio of ${scapularHealth} suggests the front of your body is significantly stronger than your back, increasing the risk of shoulder impingement.` 
+    : `Optimal scapular-humeral balance. Your posterior stabilizers are strong enough to safely offset high-intensity pushing loads.`;
+
+// 2. Tendon Integrity (Straight Arm)
+const tendonLoad = (sa1RM / push1RM).toFixed(2);
+const tendonStatus = tendonLoad < 0.65 ? "LOW DENSITY" : "ELASTIC STABILITY";
+const tendonColor = tendonLoad < 0.65 ? "#ff9900" : "#00ffcc";
+const tendonDesc = `Straight-arm to Bent-arm ratio is ${tendonLoad}. ${tendonLoad < 0.65 ? 'Your muscle strength is outpacing your tendon adaptation. Prioritize isometric holds to thicken connective tissue.' : 'Your distal tendon insertions are well-conditioned for your current muscle mass.'}`;
+
+// 3. Torque Disadvantage
+const leverEffect = (torqueFactor > 1.1) ? "LEVERAGE TAX" : "MECHANICAL EDGE";
+const leverDesc = `Based on your height of ${h.toFixed(0)}cm, you experience a ${((torqueFactor - 1) * 100).toFixed(1)}% increase in joint torque during static holds compared to the average gymnast profile.`;
+
+// 4. Neural Drive Efficiency
+const cnsEfficiency = (cnsVal * 100).toFixed(0);
+const cnsDesc = `Your Central Nervous System readiness is at ${cnsEfficiency}%. ${cnsVal < 0.8 ? 'Current motor unit recruitment is sub-optimal; consider a deload to restore neural firing speed.' : 'Your brain is effectively recruiting high-threshold motor units for maximum force.'}`;
+
+// 5. Explosive Transfer
+const vPull = (parseFloat(document.getElementById("mu").value) || 0);
+const hPull = (parseFloat(document.getElementById("pullups").value) || 0);
+const pullEfficiency = hPull > 0 ? (vPull / hPull).toFixed(2) : 0;
+const pullDesc = pullEfficiency < 0.4 ? "TRANSITION GAP: Your explosive power in the muscle-up transition is lower than your raw pulling endurance." : "POWER SYNC: You have a highly efficient transfer of momentum from the vertical pull into the dip phase.";
+
+// 6. Joint Shear Valuation
+const elbowShear = (sa1RM > push1RM * 0.8) ? "NOMINAL" : "SHEAR RISK";
+const elbowDesc = `High-intensity weighted dips without sufficient straight-arm support creates 'shear' forces at the elbow. ${elbowShear === "NOMINAL" ? 'Joint stress is distributed safely.' : 'High risk for medial epicondylitis (Golfer\'s Elbow).'}`;
+
+// 7. Relative Power Coefficient
+const relCoeff = (push1RM * 1.2 + pull1RM * 1.2).toFixed(2);
+const relDesc = `This is your systemic power-to-weight score. Your body is capable of generating ${relCoeff}x its own mass in total force across the primary planes of motion.`;
+
+// 8. Kinetic Chain Integrity
+const formTax = (1 - form) * 100;
+const kineticDesc = formTax > 0 ? `Energy Leakage: ${formTax.toFixed(0)}% of your force is being lost due to lack of total-body tension (core/glute engagement).` : `Perfect structural rigidity. Force is being transmitted through your skeleton with zero energy loss.`;
+
+
+let recommendationHtml = "";
+if (activeGoal !== "None") {
+    const skillIndex = skills.findIndex(s => s.name === activeGoal);
+    const currentSkillPct = parseFloat(curScores[skillIndex]);
+    
+    recommendationHtml = `
+            <div class="card" style="margin-top:20px; border: 1px solid var(--potential); background: rgba(0, 255, 204, 0.02);">
+                <h3 style="font-size:0.75em; letter-spacing:3px; color:var(--potential); margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">RECOMMENDED EXERCISES AND PROGRESSION</h3>
+                <div id="recoContainer">
+        `;
+
+    let protocol = [];
+    if (activeGoal.includes("Planche")) {
+        if (currentSkillPct < 35) protocol = ["Planche Leans (Protraction Focus)", "Scapula Push-ups", "Frog Stand (30s Hold)"];
+        else if (currentSkillPct < 65) protocol = ["Tuck Planche Max Effort", "Pseudo Planche Push-ups", "Dumbbell Straight Arm Raises"];
+        else protocol = ["Advanced Tuck / Straddle Negatives", "Planche Press to Handstand", "90 Degree Push-ups"];
+    } else if (activeGoal === "Front Lever") {
+        if (currentSkillPct < 35) protocol = ["Scapular Pull-ups", "Active Arch Hangs", "Tuck FL Pulls"];
+        else if (currentSkillPct < 65) protocol = ["Adv. Tuck FL Holds", "Front Lever Negatives", "Ice Cream Makers"];
+        else protocol = ["Straddle / Full FL Pull-to-Inverted", "Front Lever Rows", "Dragon Flags"];
+        } else if (activeGoal === "Maltese") {
+                if (currentSkillPct < 40) protocol = ["Maltese Leans (Low Bar)", "Planche Push-ups", "Dumbbell Maltese Press"];
+                else protocol = ["Maltese Negatives (Rings)", "Wide Arm Planche Holds", "Victorian Pull-ins"];
+    } else if (activeGoal === "Iron Cross") {
+        if (currentSkillPct < 35) protocol = ["Support Hold (External Rotation)", "Skin the Cat", "Rings Wide Support"];
+        else if (currentSkillPct < 65) protocol = ["Feet Assisted Cross Pulls", "Weighted Ring Flys", "Zanetti Press"];
+        else protocol = ["Iron Cross Negatives", "Blocked Cross Holds", "Full Zanetti (Bodyweight)"];
+    } else if (activeGoal === "Muscle-up") {
+        if (currentSkillPct < 50) protocol = ["Chest to Bar Explosive Pulls", "Tricep Extension Dips", "Transition Isometrics"];
+        else protocol = ["Weighted Muscle-ups", "Slow Negatives", "Russian Dips"];
+    }
+
+    protocol.forEach(ex => {
+        recommendationHtml += `
+            <div style="margin-bottom:10px; padding:12px; background: rgba(255,255,255,0.03); border-left: 2px solid var(--potential); display:flex; align-items:center; gap:10px;">
+                <span style="color:var(--potential); font-weight:bold; font-family:monospace;">>></span>
+                <span style="font-size:0.85em; color:#fff; font-family:monospace; text-transform: uppercase;">${ex}</span>
             </div>`;
+    });
+    recommendationHtml += `</div></div>`;
+}
 
-        auditHtml += createInsight("TORQUE_LOAD", tStatus, torqueFactor.toFixed(2) + "x", tDesc, torqueFactor > 1.08 ? "#ff9900" : "#888");
-        auditHtml += createInsight("POSTERIOR_CHAIN", bStatus, pullPushRatio, bDesc, pullPushRatio < 0.85 ? "#ff4444" : "#00ffcc");
-        auditHtml += createInsight("CONNECTIVE_TISSUE", sStatus, saIntegrity, sDesc, saIntegrity < 0.62 ? "#ff4444" : "#00ffcc");
-        auditHtml += createInsight("RELATIVE_POWER", "FORCE", relPower + "x BW", "Force gen.", "var(--primary)");
+// --- HEAT MAP LOGIC (RE-CONNECTED) ---
+const shoulders = document.querySelectorAll('#joint-shoulder-l, #joint-shoulder-r');
+const elbows = document.querySelectorAll('#joint-elbow-l, #joint-elbow-r');
+let riskMsg = "SYSTEMS NOMINAL";
 
-        const shoulders = document.querySelectorAll('#joint-shoulder-l, #joint-shoulder-r');
-        const elbows = document.querySelectorAll('#joint-elbow-l, #joint-elbow-r');
-        let riskMsg = "SYSTEMS_NOMINAL";
-        if (pullPushRatio < 0.85) { shoulders.forEach(s => s.style.fill = "#ff4444"); riskMsg = "SHOULDER_RISK"; } else { shoulders.forEach(s => s.style.fill = "var(--potential)"); }
-        if (saIntegrity < 0.60) { elbows.forEach(e => e.style.fill = "#ff4444"); riskMsg = (riskMsg === "SHOULDER_RISK") ? "MULTI_JOINT_ADVISORY" : "ELBOW_RISK"; } else { elbows.forEach(e => e.style.fill = "var(--potential)"); }
-        const rMsg = document.getElementById("risk-msg");
-        if (rMsg) { rMsg.innerText = riskMsg; rMsg.style.color = (riskMsg === "SYSTEMS_NOMINAL") ? "var(--potential)" : "var(--danger)"; }
+// 1. Shoulder Logic (tied to Scapular Balance)
+if (scapularHealth < 0.85) { 
+    shoulders.forEach(s => s.style.fill = "#ff4444"); 
+    riskMsg = "SHOULDER RISK"; 
+} else { 
+    shoulders.forEach(s => s.style.fill = "var(--potential)"); 
+}
 
-// --- RELENTLESS VOLUME AUDIT ---
+// 2. Elbow Logic (tied to Tendon Density/Shear)
+if (tendonLoad < 0.60) { 
+    elbows.forEach(e => e.style.fill = "#ff4444"); 
+    riskMsg = (riskMsg === "SHOULDER RISK") ? "MULTI JOINT ADVISORY" : "ELBOW RISK"; 
+} else { 
+    elbows.forEach(e => e.style.fill = "var(--potential)"); 
+}
+
+// 3. Update the UI Text for Risk
+const rMsg = document.getElementById("risk-msg");
+if (rMsg) { 
+    rMsg.innerText = riskMsg; 
+    rMsg.style.color = (riskMsg === "SYSTEMS NOMINAL") ? "var(--potential)" : "#ff4444"; 
+}
+
+
+// --- INJECTION ---
+let auditHtml = `<h3 style="font-size:0.75em; letter-spacing:3px; color:var(--primary); margin-bottom:20px; border-bottom:1px solid #333; padding-bottom:10px;">ADVANCED BIOMECHANICAL PROFILING</h3>`;
+
+const createInsight = (title, status, val, desc, color) => `<div class="insight-block" style="margin-bottom:15px; border-left:3px solid ${color}; padding-left:12px; background: rgba(255,255,255,0.02); padding-top:8px; padding-bottom:8px;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.8em; font-weight:bold; color:${color};">${title}</span>
+        <span style="font-size:0.6em; background:${color}; color:#000; padding:1px 4px; border-radius:2px; font-weight:bold;">${status}</span>
+    </div>
+    <div style="font-size:1em; color:#fff; font-family:monospace; margin:4px 0;">${val}</div>
+    <p style="font-size:0.65em; color:#bbb; margin:0; line-height:1.4;">${desc}</p>
+</div>`;
+
+auditHtml += createInsight("SCAPULAR BALANCE", scapStatus, scapularHealth, scapDesc, scapColor);
+auditHtml += createInsight("TENDON DENSITY", tendonStatus, tendonLoad, tendonDesc, tendonColor);
+auditHtml += createInsight("LEVERAGE DIFFERENTIAL", leverEffect, torqueFactor.toFixed(2) + "x", leverDesc, "#888");
+auditHtml += createInsight("NEURAL DRIVE", cnsEfficiency + "%", "CAPACITY", cnsDesc, "#4c6fff");
+auditHtml += createInsight("EXPLOSIVE TRANSFER", "PULL RATIO", pullEfficiency, pullDesc, "#ff9900");
+auditHtml += createInsight("JOINT SHEAR VALUATION", elbowShear, "ELBOW STRESS", elbowDesc, elbowShear === "NOMINAL" ? "#00ffcc" : "#ff4444");
+auditHtml += createInsight("SYSTEMIC OUTPUT", "POWER COEFF", relCoeff, relDesc, "var(--primary)");
+auditHtml += createInsight("KINETIC INTEGRITY", formTax > 0 ? "LEAKAGE DETECTED" : "INTEGRATED", form.toFixed(2), kineticDesc, formTax > 10 ? "#ff4444" : "#00ffcc");
+
+document.getElementById("aiFeedback").innerHTML = auditHtml + recommendationHtml;// --- RELENTLESS VOLUME AUDIT ---
 let pullSets = parseInt(document.getElementById("wpS").value) || 0;
 let pushSets = parseInt(document.getElementById("wdS").value) || 0;
 let saSets = parseInt(document.getElementById("saS")?.value) || 0;
@@ -786,7 +936,7 @@ if (document.getElementById("volume-tax")) {
     document.getElementById("volume-tax").innerText = totalTax.toFixed(1);
 }
         // Injects ONLY the Biomechanical Report
-        document.getElementById("aiFeedback").innerHTML = auditHtml;
+        
         document.getElementById("barContainer").innerHTML = barHtml;
         radarChart.data.datasets[0].data = curScores;
         radarChart.data.datasets[1].data = potScores;
@@ -862,66 +1012,96 @@ function shareReport() {
 
 document.getElementById("shareBtn").style.display = "block";
 
-// Function to wipe the entire history
-function clearAllNotes() {
-    if (confirm("PROCEED? This will permanently erase all archived feedback data.")) {
-        localStorage.removeItem('cali_biotech_history');
-        displayNotes();
-    }
-}
-
-// Updated saveNotes to handle your specific naming
+// Professional save function with real-time UI updates
 function saveNotes() {
-    const noteText = document.getElementById("sessionNotes").value;
-    if (!noteText.trim()) return; 
+    const noteInput = document.getElementById("sessionNotes");
+    const noteText = noteInput.value.trim();
+    
+    if (!noteText) return; 
 
-    const timestamp = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    const timestamp = new Date().toLocaleDateString() + " | " + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
     
     let history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
     history.unshift({ date: timestamp, text: noteText });
     localStorage.setItem('cali_biotech_history', JSON.stringify(history));
 
-    document.getElementById("sessionNotes").value = "";
+    noteInput.value = "";
     displayNotes();
 
-    // Feedback for the button
+    // Visual confirmation
     const btn = event.currentTarget;
-    const originalText = "COMMIT_DATA";
-    btn.innerText = "DATA_COMMITTED";
+    const originalText = "Commit Data";
+    btn.innerText = "Data Committed";
     btn.style.background = "#00ffcc";
+    btn.style.color = "#000";
+    
     setTimeout(() => {
         btn.innerText = originalText;
         btn.style.background = "var(--primary)";
     }, 2000);
 }
 
-// This function builds the visual list on the screen
+// Cleanly renders the archive entries
 function displayNotes() {
     const history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
     const container = document.getElementById("notesHistory");
     if (!container) return;
     
     if (history.length === 0) {
-        container.innerHTML = `<div style="font-size: 0.6em; color: #666; letter-spacing: 2px;">NO_FEEDBACK_ENTRIES</div>`;
+        container.innerHTML = `<div style="font-size: 0.7em; color: #444; letter-spacing: 2px; text-align: center; padding: 40px;">NO ARCHIVED ENTRIES</div>`;
         return;
     }
 
     container.innerHTML = history.map((item, index) => `
-        <div style="margin-bottom: 12px; padding: 10px; background: rgba(255,255,255,0.03); border-left: 2px solid var(--primary); font-family: monospace; position: relative;">
-            <div style="font-size: 0.6em; color: var(--primary); margin-bottom: 4px;">[${item.date}]</div>
-            <div style="font-size: 0.8em; color: #ddd; padding-right: 20px;">${item.text}</div>
-            <span onclick="deleteSingleNote(${index})" style="position: absolute; top: 5px; right: 8px; color: #444; cursor: pointer; font-size: 0.8em;">&times;</span>
+        <div style="margin-bottom: 15px; padding: 20px; background: rgba(255,255,255,0.01); border-left: 4px solid var(--primary); font-family: 'Inter', sans-serif; position: relative; border-radius: 2px;">
+            <div style="font-size: 0.6em; color: var(--primary); margin-bottom: 8px; font-weight: bold; letter-spacing: 1.5px; opacity: 0.8;">[${item.date}]</div>
+            <div style="font-size: 0.95em; color: #d1d1d1; padding-right: 30px; line-height: 1.6;">${item.text}</div>
+            <span onclick="deleteSingleNote(${index})" style="position: absolute; top: 15px; right: 15px; color: #555; cursor: pointer; font-size: 1.2em; transition: color 0.2s;" onmouseover="this.style.color='#ff4444'" onmouseout="this.style.color='#555'">&times;</span>
         </div>
     `).join('');
 }
 
-// New: Allows deleting just one entry
 function deleteSingleNote(index) {
     let history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
     history.splice(index, 1);
     localStorage.setItem('cali_biotech_history', JSON.stringify(history));
     displayNotes();
 }
+
+function clearAllNotes() {
+    if (confirm("PROCEED? This will permanently erase all archived feedback data.")) {
+        localStorage.removeItem('cali_biotech_history');
+        displayNotes();
+    }
+
+
+// Initialize notes on load
+document.addEventListener('DOMContentLoaded', () => {
+    displayNotes();
+});
+
+
+
+
+    container.innerHTML = history.map((item, index) => `
+   <div class="card" style="margin-top: 30px; border: 1px solid #333; background: #1a1a1a; width: 100%; box-sizing: border-box;">
+    <h3 style="font-size: 0.8em; letter-spacing: 3px; color: var(--primary); margin-bottom: 20px; text-transform: uppercase;">Biotic Feedback Archive</h3>
+    
+    <textarea id="sessionNotes" placeholder="Record physiological feedback, RPE, or specific joint sensations..." 
+              style="width: 100%; height: 160px; background: #0a0a0a; color: #fff; border: 1px solid #333; padding: 20px; font-family: 'Inter', sans-serif; border-radius: 6px; line-height: 1.6; resize: vertical; box-sizing: border-box; outline: none; transition: border-color 0.3s ease;"></textarea>
+    
+    <div style="display: flex; gap: 15px; margin-top: 20px;">
+        <button onclick="saveNotes()" style="flex: 4; background: var(--primary); color: #000; border: none; padding: 14px; font-family: 'Monospace'; font-weight: 900; cursor: pointer; border-radius: 4px; letter-spacing: 1.5px; text-transform: uppercase;">Commit Data</button>
+        <button onclick="clearAllNotes()" style="flex: 1; background: rgba(255, 68, 68, 0.05); color: #ff4444; border: 1px solid rgba(255, 68, 68, 0.3); padding: 14px; font-family: 'Monospace'; font-size: 0.8em; cursor: pointer; border-radius: 4px; font-weight: bold; text-transform: uppercase;">Delete All</button>
+    </div>
+
+    <div id="notesHistory" style="margin-top: 30px; max-height: 500px; overflow-y: auto; border-top: 1px solid #222; padding-top: 20px;">
+        </div>
+</div>
+    `).join('');
+}
+
+
 
 </script>
 <div class="card" style="margin-top: 20px;">
