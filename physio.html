@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CDL3F645R2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-CDL3F645R2');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calorie Calculator | Cali-Biotech</title>    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary: #00ff88; 
+            --bg: #0d1117; 
+            --card: #161b22; 
+            --elite: #ff3e3e; 
+            --text: #e6edf3; 
+            --border: #30363d;
+        }
+        
+        body { 
+            background-color: var(--bg); 
+            color: var(--text); 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background-image: radial-gradient(var(--border) 0.5px, transparent 0.5px);
+            background-size: 30px 30px;
+        }
+
+        /* Biotech Scanning Line */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 255, 136, 0.08);
+            z-index: 9999;
+            animation: scan 10s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+        
+        .header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
+        .header h1 { 
+            font-family: 'JetBrains Mono', monospace; 
+            letter-spacing: 10px; 
+            font-size: 1.6rem; 
+            color: var(--primary); 
+            text-transform: uppercase;
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+        }
+
+        .main-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px; 
+            max-width: 1600px; 
+            margin: 0 auto;
+        }
+
+        .branch { 
+            background: rgba(22, 27, 34, 0.7); 
+            padding: 25px; 
+            border-radius: 8px; 
+            border: 1px solid var(--border);
+            backdrop-filter: blur(5px);
+        }
+
+        .branch-header { 
+            font-family: 'JetBrains Mono', monospace; 
+            color: var(--primary); 
+            font-size: 0.85rem; 
+            letter-spacing: 3px; 
+            margin-bottom: 25px; 
+            text-align: center; 
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px; 
+            text-transform: uppercase;
+        }
+
+        label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem; 
+            color: var(--primary); 
+            text-transform: uppercase;
+            margin: 15px 0 5px 0; 
+            display: block;
+            letter-spacing: 2px; 
+            opacity: 0.8;
+        }
+
+        input, select {
+            width: 100%;
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.1);
+        }
+
+        /* Result Stats Styling */
+        .stat-node {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-node h3 { font-size: 0.7rem; margin: 0; color: #ccc; text-transform: uppercase; }
+        .stat-node span { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; color: var(--primary); font-weight: bold; }
+
+        .protocol-box {
+            grid-column: 1 / -1;
+            margin-top: 20px;
+            background: rgba(22, 27, 34, 0.7);
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--primary);
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { font-family: 'JetBrains Mono', monospace; text-align: left; font-size: 0.65rem; color: var(--primary); padding-bottom: 10px; text-transform: uppercase; }
+        td { padding: 12px 0; border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #bbb; }
+
+        .footer-nav { margin: 60px 0; text-align: center; }
+        .back-btn { 
+            font-family: 'JetBrains Mono', monospace; 
+            text-decoration: none; 
+            color: var(--text); 
+            border: 1px solid var(--border); 
+            padding: 12px 40px; 
+            font-size: 0.75rem; 
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+        .back-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(0, 255, 136, 0.05); }
+
+        #imperialHeight { display: none; gap: 10px; }
+
+        @media (max-width: 900px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header"><h1>CALORIE CALCULATOR</h1></div>
+    <div class="main-grid">
+        
+        <div class="branch">
+            <div class="branch-header">Biometric Data</div>
+            
+            <label>Unit System</label>
+            <select id="unitSystem" onchange="toggleUnits()">
+                <option value="met">METRIC (KG/CM)</option>
+                <option value="imp">IMPERIAL (LBS/FT)</option>
+            </select>
+
+            <label id="weightLabel">Weight (KG)</label>
+            <input type="number" id="weight" value="75" oninput="calculate()">
+
+            <label id="heightLabel">Height (CM)</label>
+            <div id="metricHeight">
+                <input type="number" id="hCm" value="175" oninput="calculate()">
+            </div>
+            <div id="imperialHeight">
+                <input type="number" id="hFt" placeholder="FT" oninput="calculate()">
+                <input type="number" id="hIn" placeholder="IN" oninput="calculate()">
+            </div>
+
+            <label>Age</label>
+            <input type="number" id="age" value="25" oninput="calculate()">
+        </div>
+
+        <div class="branch">
+            <div class="branch-header">Navy Measurements</div>
+            
+            <label>Neck Circumference (CM)</label>
+            <input type="number" id="neck" value="38" oninput="calculate()">
+
+            <label>Waist Circumference (CM)</label>
+            <input type="number" id="waist" value="82" oninput="calculate()">
+
+            <label>Activity Coefficient</label>
+            <select id="activity" onchange="calculate()">
+                <option value="1.2">Sedentary (Office)</option>
+                <option value="1.375">Light (1-2 days/wk)</option>
+                <option value="1.55" selected>Moderate (3-5 days/wk)</option>
+                <option value="1.725">Heavy (6-7 days/wk)</option>
+                <option value="1.9">Professional Athlete</option>
+            </select>
+
+            <div style="margin-top: 25px; font-size: 0.6rem; color: #666; font-family: 'JetBrains Mono'; line-height: 1.4;">
+                * Measurement precision critical for Navy Formula accuracy. Measure waist at navel level.
+            </div>
+        </div>
+
+        <div class="branch">
+            <div class="branch-header">Analysis Output</div>
+            
+            <div class="stat-node">
+                <h3>Body Fat</h3>
+                <span id="bf-val">--%</span>
+            </div>
+
+            <div class="stat-node">
+                <h3>Lean Mass</h3>
+                <span id="lm-val">--kg</span>
+            </div>
+
+            <div class="stat-node" style="border-right: 3px solid var(--primary);">
+                <h3>Maintenance</h3>
+                <span id="tdee-val">-- kcal</span>
+            </div>
+
+            <div class="stat-node" style="border-right: 3px solid var(--elite);">
+                <h3>Protein Target</h3>
+                <span id="prot-val">--g</span>
+            </div>
+        </div>
+
+        <div class="protocol-box">
+            <div class="branch-header" style="border:none; text-align: left;">Calorie & Macro Protocols</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Objective</th>
+                        <th>Kcal/Day</th>
+                        <th>Protein</th>
+                        <th>Primary Effect</th>
+                    </tr>
+                </thead>
+                <tbody id="protocol-body">
+                    </tbody>
+            </table>
+        </div>
+
+        <div class="protocol-box" style="border-left: 5px solid #555; margin-top: 40px;">
+    <div class="branch-header" style="border:none; text-align: left;">System Architecture & Methodology</div>
+    
+    <div class="protocol-grid">
+        <div class="protocol-item">
+            <h4>1. Basal Metabolic Rate (BMR)</h4>
+            <p>Utilizes the <strong>Mifflin-St Jeor Equation</strong>, recognized as the current gold standard for metabolic estimation:</p>
+            <p style="font-family: 'JetBrains Mono'; color: var(--primary); font-size: 0.65rem; background: #000; padding: 10px; border-radius: 4px;">
+                BMR = (10 × W) + (6.25 × H) - (5 × A) + 5
+            </p>
+        </div>
+
+        <div class="protocol-item">
+            <h4>2. Total Daily Energy Expenditure (TDEE)</h4>
+            <p>Calculated by applying an activity multiplier to your BMR. This accounts for the <strong>Thermogenic Effect of Activity</strong>:</p>
+            <ul style="padding-left: 15px;">
+                <li>Sedentary: BMR × 1.2</li>
+                <li>Moderate: BMR × 1.55</li>
+                <li>Athlete: BMR × 1.9</li>
+            </ul>
+        </div>
+
+        <div class="protocol-item">
+            <h4>3. Protein Scaling (Lean Mass Logic)</h4>
+            <p>Unlike standard calculators, we scale protein based on <strong>Lean Body Mass (LBM)</strong> to optimize power-to-weight ratios:</p>
+            <p style="font-family: 'JetBrains Mono'; color: var(--primary); font-size: 0.65rem; background: #000; padding: 10px; border-radius: 4px;">
+                Target = LBM (kg) × 2.2g
+            </p>
+        </div>
+
+        <div class="protocol-item">
+            <h4>4. Phase Differentials</h4>
+            <p><strong>Lean Bulk:</strong> +10% surplus for muscle synthesis without excess fat storage.<br>
+               <strong>Lean Cut:</strong> -15% deficit for fat oxidation while preserving neural strength.</p>
+        </div>
+    </div>
+
+    <hr style="border: 0; border-top: 1px solid var(--border); margin: 25px 0;">
+
+    <div style="font-size: 0.65rem; color: #666; line-height: 1.5; font-family: 'JetBrains Mono';">
+        <strong style="color: var(--elite);">[ MEDICAL DISCLAIMER ]</strong>: 
+        This tool provides estimates based on statistical averages (Mifflin-St Jeor study, 1990). Variables such as TEF (Thermic Effect of Food) and NEAT (Non-Exercise Activity Thermogenesis) create individual margins of error. Results are for informational and performance-tracking purposes only. Consult with a medical professional or certified nutritionist before beginning any high-intensity training or restrictive dieting protocol. Use of this system constitutes acknowledgment that you are training at your own risk.
+    </div>
+</div>
+
+    </div>
+
+    <div class="footer-nav"><a href="skills.html" class="back-btn">← BACK_TO_SKILLS</a></div>
+
+    <script>
+        function toggleUnits() {
+            const sys = document.getElementById("unitSystem").value;
+            const mHeight = document.getElementById("metricHeight");
+            const iHeight = document.getElementById("imperialHeight");
+            document.getElementById("heightLabel").innerText = sys === 'met' ? "Height (CM)" : "Height (FT / IN)";
+            document.getElementById("weightLabel").innerText = sys === 'met' ? "Weight (KG)" : "Weight (LBS)";
+            
+            mHeight.style.display = sys === 'met' ? "block" : "none";
+            iHeight.style.display = sys === 'met' ? "none" : "flex";
+            calculate();
+        }
+
+        function calculate() {
+            const sys = document.getElementById("unitSystem").value;
+            const weightInput = parseFloat(document.getElementById("weight").value) || 0;
+            const neck = parseFloat(document.getElementById("neck").value) || 1;
+            const waist = parseFloat(document.getElementById("waist").value) || 1;
+            const activity = parseFloat(document.getElementById("activity").value);
+            const age = parseFloat(document.getElementById("age").value) || 25;
+
+            let height;
+            if (sys === 'met') {
+                height = parseFloat(document.getElementById("hCm").value) || 1;
+            } else {
+                const ft = parseFloat(document.getElementById("hFt").value) || 0;
+                const inch = parseFloat(document.getElementById("hIn").value) || 0;
+                height = (ft * 30.48) + (inch * 2.54);
+            }
+
+            if (weightInput < 10 || waist < 10) return;
+
+            const weightKg = sys === 'imp' ? weightInput * 0.453592 : weightInput;
+            
+            // US Navy Body Fat Formula
+            const bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height)) - 450;
+            const leanMass = weightKg * (1 - (bodyFat / 100));
+            
+            // Mifflin-St Jeor
+            const bmr = (10 * weightKg) + (6.25 * height) - (5 * age) + 5;
+            const tdee = bmr * activity;
+            const protein = leanMass * 2.2; // Athlete Standard
+
+            // Update UI
+            document.getElementById("bf-val").innerText = bodyFat.toFixed(1) + "%";
+            document.getElementById("lm-val").innerText = leanMass.toFixed(1) + (sys === 'met' ? "kg" : "kg");
+            document.getElementById("tdee-val").innerText = Math.round(tdee) + " kcal";
+            document.getElementById("prot-val").innerText = Math.round(protein) + "g";
+
+            // Protocols
+            const protBody = document.getElementById("protocol-body");
+            const rows = [
+                { name: "Lean Bulk (+10%)", kcal: tdee * 1.1, p: protein, note: "Optimal Muscle/Leverage Ratio" },
+                { name: "Maintenance", kcal: tdee, p: protein, note: "Body Recomposition" },
+                { name: "Lean Cut (-15%)", kcal: tdee * 0.85, p: protein * 1.1, note: "Skill Power-to-Weight Optimization" }
+            ];
+
+            protBody.innerHTML = rows.map(r => `
+                <tr>
+                    <td>${r.name}</td>
+                    <td>${Math.round(r.kcal)}</td>
+                    <td>${Math.round(r.p)}g</td>
+                    <td>${r.note}</td>
+                </tr>
+            `).join('');
+        }
+
+        window.onload = calculate;
+    </script>
+</body>
+</html>
