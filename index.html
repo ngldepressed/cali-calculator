@@ -149,6 +149,30 @@ input, select, textarea {
 </head>
 
  <body onload="loadSavedData(); renderLogs();"> 
+
+<div style="position: absolute; top: 25px; right: 240px; z-index: 9999;">
+    <a href="faq.html" style="
+        text-decoration: none; 
+        color: #fff; 
+        font-weight: 800; 
+        font-size: 1.1rem; 
+        letter-spacing: 3px; 
+        border: 2px solid #444; 
+        padding: 12px 28px; 
+        border-radius: 6px;
+        background: #333333;
+        transition: 0.3s;
+        display: inline-block;
+        text-transform: uppercase;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    " onmouseover="this.style.backgroundColor='#444'; this.style.borderColor='#007bff'; this.style.transform='scale(1.05)';" 
+       onmouseout="this.style.backgroundColor='#333333'; this.style.borderColor='#444'; this.style.transform='scale(1)';"
+       target="_blank">
+        FAQ
+    </a>
+</div>
+
+
 <div class="container" id="mainContainer">
     <nav style="padding: 15px; border-bottom: 1px solid #333; display: flex; justify-content: center; margin-bottom: 20px;">
         <a href="index.html" style="color: var(--primary); text-decoration: none; font-weight: bold; font-size: 0.8em; letter-spacing: 2px;">HOME</a>
@@ -697,19 +721,32 @@ function analyze() {
         const activeGoal = document.getElementById("goalSelect").value;
         let barHtml = ""; const curScores = []; const potScores = [];
 
-        skills.forEach(s => {
+    skills.forEach(s => {
+
             let vectors = [];
+
             if (s.p > 0) vectors.push({ name: "Push (Dips)", val: (push1RM / (s.p * torqueFactor)) * 100, req: s.p * torqueFactor });
+
             if (s.l > 0) vectors.push({ name: "Pull (Pullups)", val: (pull1RM / (s.l * torqueFactor)) * 100, req: s.l * torqueFactor });
+
             if (s.s > 0) vectors.push({ name: "SA (Zanetti)", val: (sa1RM / (s.s * torqueFactor)) * 100, req: s.s * torqueFactor });
-            
+
+           
+
             const sig = (x) => 100 / (1 + Math.exp(-0.15 * (x - 52)));
+
             let minVal = Math.min(...vectors.map(v => v.val));
+
             let cur = sig(minVal) * cnsVal * form;
+
             // FORCE ZERO if base requirements are not met
+
 if (s.l > 0 && pull1RM <= 1.0) cur = 0; // If skill needs pull and pull is 0
+
 if (s.p > 0 && push1RM <= 1.0) cur = 0; // If skill needs push and push is 0
+
 if (s.s > 0 && sa1RM <= 1.0) cur = 0;   // If skill needs straight arm and sa is 0
+
 
             const rawPull = parseFloat(document.getElementById("pullups").value) || 0;
             const rawPush = parseFloat(document.getElementById("pushups").value) || 0;
