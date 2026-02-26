@@ -13,6 +13,12 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1230203526545088"
      crossorigin="anonymous"></script>
 
+
+
+
+     <meta name="description" content="Advanced Cali-Biotech Calorie Calculator. Estimate Body Fat using Navy Formula and TDEE via Mifflin-St Jeor for calisthenics athletes.">
+<meta name="keywords" content="Calisthenics Calculator, TDEE, Body Fat Navy Formula, Lean Mass Calculator">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calorie Calculator | Cali-Biotech</title>    
@@ -184,11 +190,11 @@
             </select>
 
             <label id="weightLabel">Weight (KG)</label>
-            <input type="number" id="weight" value="75" oninput="calculate()">
+<input type="number" id="weight" placeholder="0" oninput="calculate()">
 
             <label id="heightLabel">Height (CM)</label>
             <div id="metricHeight">
-                <input type="number" id="hCm" value="175" oninput="calculate()">
+<input type="number" id="hCm" placeholder="0" oninput="calculate()">
             </div>
             <div id="imperialHeight">
                 <input type="number" id="hFt" placeholder="FT" oninput="calculate()">
@@ -196,55 +202,61 @@
             </div>
 
             <label>Age</label>
-            <input type="number" id="age" value="25" oninput="calculate()">
+<input type="number" id="age" placeholder="25" oninput="calculate()">
         </div>
 
-        <div class="branch">
-            <div class="branch-header">Navy Measurements</div>
-            
-            <label>Neck Circumference (CM)</label>
-            <input type="number" id="neck" value="38" oninput="calculate()">
+    <div class="branch">
+    <div class="branch-header">Navy Measurements</div>
+    
+<label id="neckLabel">Neck Circumference (CM)</label>
+<input type="number" id="neck" placeholder="0" oninput="calculate()">
 
-            <label>Waist Circumference (CM)</label>
-            <input type="number" id="waist" value="82" oninput="calculate()">
+<label id="waistLabel">Waist Circumference (CM)</label>
+<input type="number" id="waist" placeholder="0" oninput="calculate()">
 
-            <label>Activity Coefficient</label>
-            <select id="activity" onchange="calculate()">
-                <option value="1.2">Sedentary (Office)</option>
-                <option value="1.375">Light (1-2 days/wk)</option>
-                <option value="1.55" selected>Moderate (3-5 days/wk)</option>
-                <option value="1.725">Heavy (6-7 days/wk)</option>
-                <option value="1.9">Professional Athlete</option>
-            </select>
 
-            <div style="margin-top: 25px; font-size: 0.6rem; color: #666; font-family: 'JetBrains Mono'; line-height: 1.4;">
-                * Measurement precision critical for Navy Formula accuracy. Measure waist at navel level.
-            </div>
-        </div>
+    <label>Activity Coefficient</label>
+    <select id="activity" onchange="calculate()">
+        <option value="1.2">Sedentary (Office)</option>
+        <option value="1.375">Light (1-2 days/wk)</option>
+        <option value="1.55" selected>Moderate (3-5 days/wk)</option>
+        <option value="1.725">Heavy (6-7 days/wk)</option>
+        <option value="1.9">Professional Athlete</option>
+    </select>
 
-        <div class="branch">
-            <div class="branch-header">Analysis Output</div>
-            
-            <div class="stat-node">
-                <h3>Body Fat</h3>
-                <span id="bf-val">--%</span>
-            </div>
+    <div style="margin-top: 25px; font-size: 0.6rem; color: #666; font-family: 'JetBrains Mono'; line-height: 1.4;">
+        * Measurement precision critical for Navy Formula accuracy. Measure waist at navel level.
+    </div>
+</div>
 
-            <div class="stat-node">
-                <h3>Lean Mass</h3>
-                <span id="lm-val">--kg</span>
-            </div>
+      <div class="branch">
+    <div class="branch-header">Analysis Output</div>
+    
+    <div class="stat-node">
+        <h3>Body Fat</h3>
+        <span id="bf-val">--%</span>
+    </div>
 
-            <div class="stat-node" style="border-right: 3px solid var(--primary);">
-                <h3>Maintenance</h3>
-                <span id="tdee-val">-- kcal</span>
-            </div>
+    <div class="stat-node">
+        <h3>Maintenance</h3>
+        <span id="tdee-val">-- kcal</span>
+    </div>
 
-            <div class="stat-node" style="border-right: 3px solid var(--elite);">
-                <h3>Protein Target</h3>
-                <span id="prot-val">--g</span>
-            </div>
-        </div>
+    <div class="stat-node" style="border-right: 3px solid var(--elite);">
+        <h3>Protein (Build)</h3>
+        <span id="prot-val">--g</span>
+    </div>
+
+    <div class="stat-node" style="border-right: 3px solid #f1c40f;">
+        <h3>Carbs (Fuel)</h3>
+        <span id="carb-val">--g</span>
+    </div>
+
+    <div class="stat-node" style="border-right: 3px solid #e67e22;">
+        <h3>Fats (Hormones)</h3>
+        <span id="fat-val">--g</span>
+    </div>
+</div>
 
         <div class="protocol-box">
             <div class="branch-header" style="border:none; text-align: left;">Calorie & Macro Protocols</div>
@@ -312,73 +324,119 @@
     <div class="footer-nav"><a href="skills.html" class="back-btn">← BACK_TO_SKILLS</a></div>
 
     <script>
-        function toggleUnits() {
-            const sys = document.getElementById("unitSystem").value;
-            const mHeight = document.getElementById("metricHeight");
-            const iHeight = document.getElementById("imperialHeight");
-            document.getElementById("heightLabel").innerText = sys === 'met' ? "Height (CM)" : "Height (FT / IN)";
-            document.getElementById("weightLabel").innerText = sys === 'met' ? "Weight (KG)" : "Weight (LBS)";
-            
-            mHeight.style.display = sys === 'met' ? "block" : "none";
-            iHeight.style.display = sys === 'met' ? "none" : "flex";
-            calculate();
-        }
+      function toggleUnits() {
+    const sys = document.getElementById("unitSystem").value;
+    const mHeight = document.getElementById("metricHeight");
+    const iHeight = document.getElementById("imperialHeight");
 
-        function calculate() {
-            const sys = document.getElementById("unitSystem").value;
-            const weightInput = parseFloat(document.getElementById("weight").value) || 0;
-            const neck = parseFloat(document.getElementById("neck").value) || 1;
-            const waist = parseFloat(document.getElementById("waist").value) || 1;
-            const activity = parseFloat(document.getElementById("activity").value);
-            const age = parseFloat(document.getElementById("age").value) || 25;
+    // Update Main Biometric Labels
+    document.getElementById("heightLabel").innerText = sys === 'met' ? "Height (CM)" : "Height (FT / IN)";
+    document.getElementById("weightLabel").innerText = sys === 'met' ? "Weight (KG)" : "Weight (LBS)";
 
-            let height;
-            if (sys === 'met') {
-                height = parseFloat(document.getElementById("hCm").value) || 1;
-            } else {
-                const ft = parseFloat(document.getElementById("hFt").value) || 0;
-                const inch = parseFloat(document.getElementById("hIn").value) || 0;
-                height = (ft * 30.48) + (inch * 2.54);
-            }
+    // NEW: Update Navy Measurement Labels
+    document.getElementById("neckLabel").innerText = sys === 'met' ? "Neck Circumference (CM)" : "Neck Circumference (IN)";
+    document.getElementById("waistLabel").innerText = sys === 'met' ? "Waist Circumference (CM)" : "Waist Circumference (IN)";
+    
+    mHeight.style.display = sys === 'met' ? "block" : "none";
+    iHeight.style.display = sys === 'met' ? "none" : "flex";
+    
+    calculate();
+}
 
-            if (weightInput < 10 || waist < 10) return;
+      function calculate() {
+    // 1. Grab Weight First (The Gatekeeper)
+    const weightInput = parseFloat(document.getElementById("weight").value);
+    
+    // EXIT if no weight (Keeps UI clean)
+    if (!weightInput || weightInput === 0) {
+        const ids = ["bf-val", "lm-val", "tdee-val", "prot-val", "carb-val", "fat-val"];
+        ids.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.innerText = "--";
+        });
+        const protBody = document.getElementById("protocol-body");
+        if(protBody) protBody.innerHTML = "";
+        return; 
+    }
 
-            const weightKg = sys === 'imp' ? weightInput * 0.453592 : weightInput;
-            
-            // US Navy Body Fat Formula
-            const bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height)) - 450;
-            const leanMass = weightKg * (1 - (bodyFat / 100));
-            
-            // Mifflin-St Jeor
-            const bmr = (10 * weightKg) + (6.25 * height) - (5 * age) + 5;
-            const tdee = bmr * activity;
-            const protein = leanMass * 2.2; // Athlete Standard
+    // 2. Grab ALL other inputs (Vital: This was missing/out of order before)
+    const sys = document.getElementById("unitSystem").value;
+    const age = parseFloat(document.getElementById("age").value) || 25;
+    const activity = parseFloat(document.getElementById("activity").value) || 1.2;
+    let neck = parseFloat(document.getElementById("neck").value) || 0;
+    let waist = parseFloat(document.getElementById("waist").value) || 0;
 
-            // Update UI
-            document.getElementById("bf-val").innerText = bodyFat.toFixed(1) + "%";
-            document.getElementById("lm-val").innerText = leanMass.toFixed(1) + (sys === 'met' ? "kg" : "kg");
-            document.getElementById("tdee-val").innerText = Math.round(tdee) + " kcal";
-            document.getElementById("prot-val").innerText = Math.round(protein) + "g";
+    // 3. Height & Unit Logic
+    let height;
+    if (sys === 'met') {
+        height = parseFloat(document.getElementById("hCm").value) || 170; 
+    } else {
+        const ft = parseFloat(document.getElementById("hFt").value) || 5;
+        const inch = parseFloat(document.getElementById("hIn").value) || 7;
+        height = (ft * 30.48) + (inch * 2.54);
+        
+        // Convert neck/waist for the formula
+        neck = neck * 2.54;
+        waist = waist * 2.54;
+    }
 
-            // Protocols
-            const protBody = document.getElementById("protocol-body");
-            const rows = [
-                { name: "Lean Bulk (+10%)", kcal: tdee * 1.1, p: protein, note: "Optimal Muscle/Leverage Ratio" },
-                { name: "Maintenance", kcal: tdee, p: protein, note: "Body Recomposition" },
-                { name: "Lean Cut (-15%)", kcal: tdee * 0.85, p: protein * 1.1, note: "Skill Power-to-Weight Optimization" }
-            ];
+    const weightKg = sys === 'imp' ? weightInput * 0.453592 : weightInput;
 
-            protBody.innerHTML = rows.map(r => `
-                <tr>
-                    <td>${r.name}</td>
-                    <td>${Math.round(r.kcal)}</td>
-                    <td>${Math.round(r.p)}g</td>
-                    <td>${r.note}</td>
-                </tr>
-            `).join('');
-        }
+    // 4. Body Fat Logic (US Navy Formula)
+    let bodyFat;
+    if (waist <= neck || waist < 10) {
+        bodyFat = 15; // Standard athlete fallback
+        document.getElementById("bf-val").innerText = "ESTIMATED 15%";
+        document.getElementById("bf-val").style.color = "#888"; 
+    } else {
+        bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height)) - 450;
+        document.getElementById("bf-val").innerText = Math.max(3, Math.min(50, bodyFat)).toFixed(1) + "%";
+        document.getElementById("bf-val").style.color = "var(--primary)"; 
+    }
 
-        window.onload = calculate;
-    </script>
+    // 5. Main Math (Mifflin-St Jeor & Macros)
+    const safeBF = Math.max(3, Math.min(50, bodyFat)); 
+    const leanMass = weightKg * (1 - (safeBF / 100));
+    const bmr = (10 * weightKg) + (6.25 * height) - (5 * age) + 5;
+    const tdee = bmr * activity;
+    const protein = leanMass * 2.2; 
+
+    const proteinKcal = protein * 4;
+    const fatKcal = tdee * 0.25;
+    const fatGrams = fatKcal / 9;
+    const carbKcal = tdee - (proteinKcal + fatKcal);
+    const carbGrams = Math.max(0, carbKcal / 4);
+
+    // 6. UPDATE UI (Mapping values to your HTML IDs)
+    document.getElementById("tdee-val").innerText = Math.round(tdee) + " kcal";
+    document.getElementById("prot-val").innerText = Math.round(protein) + "g";
+    document.getElementById("carb-val").innerText = Math.round(carbGrams) + "g";
+    document.getElementById("fat-val").innerText = Math.round(fatGrams) + "g";
+
+    const displayLBM = sys === 'imp' ? (leanMass * 2.20462).toFixed(1) + " lbs" : leanMass.toFixed(1) + " kg";
+    const lmElem = document.getElementById("lm-val");
+    if(lmElem) lmElem.innerText = displayLBM;
+
+    // 7. Protocols Table (The part you didn't want trimmed)
+    const protBody = document.getElementById("protocol-body");
+    const rows = [
+        { name: "Lean Bulk (+10%)", kcal: tdee * 1.1, p: protein, note: "Optimal Muscle/Leverage Ratio" },
+        { name: "Maintenance", kcal: tdee, p: protein, note: "Body Recomposition" },
+        { name: "Lean Cut (-15%)", kcal: tdee * 0.85, p: protein * 1.1, note: "Skill Power-to-Weight Optimization" }
+    ];
+
+    if(protBody) {
+        protBody.innerHTML = rows.map(r => `
+            <tr>
+                <td>${r.name}</td>
+                <td>${Math.round(r.kcal)}</td>
+                <td>${Math.round(r.p)}g</td>
+                <td>${r.note}</td>
+            </tr>
+        `).join('');
+    }
+}
+// window.onload = calculate;   
+ </script>
 </body>
 </html>
