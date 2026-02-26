@@ -173,6 +173,76 @@
         @media (max-width: 900px) {
             .main-grid { grid-template-columns: 1fr; }
         }
+
+/* Dark High-Contrast Footer */
+.site-footer {
+    background-color: #1a1a1a; /* Deep Charcoal - looks better than pure black */
+    color: #eeeeee;
+    padding: 60px 20px;
+    margin-top: 60px;
+    border-top: 4px solid var(--primary); /* Thick brand-color line at the top */
+    font-family: sans-serif;
+}
+
+.footer-container {
+    max-width: 900px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+.footer-section h3 {
+    color: var(--primary); /* Your primary color will pop against the dark bg */
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section li {
+    margin-bottom: 8px;
+    border-bottom: 1px solid #333; /* Subtle separators for list items */
+    padding-bottom: 5px;
+}
+
+.share-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.share-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+/* Button colors adjusted for Dark Background */
+.twitter { 
+    background-color: #ffffff; 
+    color: #000000; 
+}
+
+.copy { 
+    background-color: var(--primary); 
+    color: white; 
+}
+
+.share-btn:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+
+
+
+
     </style>
 </head>
 <body>
@@ -437,6 +507,40 @@
     }
 }
 // window.onload = calculate;   
+
+
+
  </script>
+
+    <footer class="site-footer">
+    <div class="footer-container">
+        <h2>Nutritional Guidelines & Methodology</h2>
+        
+        <div class="footer-section">
+            <h3>Glossary of Terms</h3>
+            <ul>
+                <li><strong>BMR:</strong> Calories burned at rest for vital functions.</li>
+                <li><strong>TDEE:</strong> Total calories burned daily including activity.</li>
+                <li><strong>Lean Body Mass:</strong> Total weight minus body fat.</li>
+            </ul>
+        </div>
+
+        <div class="footer-section">
+            <h3>Macronutrient Distribution</h3>
+            <p><strong>Protein:</strong> 10-35% | <strong>Carbs:</strong> 45-65% | <strong>Fats:</strong> 20-35%</p>
+            <p>Focus on whole food sources and maintain cholesterol below 300mg/day.</p>
+        </div>
+
+        <div class="footer-section">
+            <h3>Fat Loss Logic</h3>
+            <p>A 3,500 calorie deficit equals ~1lb of fat loss. We recommend a safe deficit of 500-1,000 calories per day for sustainable results.</p>
+        </div>
+
+       
+    </div>
+</footer>
+
+
+
 </body>
 </html>
