@@ -154,42 +154,44 @@ input, select, textarea {
         gap: 10px;
     }
 }
-/* Container and Scrollbar */
+/* Responsive Container */
 .glossary-scroll-container {
-    max-height: 600px;
+    max-height: 500px;
     overflow-y: auto;
-    padding: 10px;
+    padding: 10px; /* Reduced for mobile */
     background: rgba(0, 0, 0, 0.2);
     border-radius: 8px;
-    scrollbar-width: thin;
 }
 
-/* Force 2 Columns even on mobile */
+/* Forced 2-Column Grid */
 .glossary-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr; 
-    gap: 15px;
+    grid-template-columns: 1fr 1fr; /* 2 columns on ALL devices */
+    gap: 12px; /* Tighter gap for mobile */
 }
 
-/* Card Styling for each definition */
-.glossary-item {
-    background: rgba(255, 255, 255, 0.03);
-    padding: 12px;
-    border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
+/* Adjustments for Phone Screens */
 @media (max-width: 600px) {
     .content-rich-section {
-        margin: 15px 5px !important;
-        padding: 15px !important;
+        margin: 20px 10px !important; /* Move section closer to screen edges */
+        padding: 15px !important; /* Less internal padding */
     }
-    .glossary-grid { gap: 8px; } /* Tighter for small screens */
     
-    .glossary-item strong { font-size: 0.75em; }
-    .glossary-item p { 
-        font-size: 0.72em !important; 
-        line-height: 1.4 !important; 
+    .glossary-grid strong {
+        font-size: 0.7em; /* Smaller titles */
+        letter-spacing: 0px;
+    }
+
+    .glossary-grid p {
+        font-size: 0.75em !important; /* Smaller body text */
+        line-height: 1.3 !important;
+    }
+}
+
+/* Standard PC/Tablet Gap */
+@media (min-width: 768px) {
+    .glossary-grid {
+        gap: 30px;
     }
 }
     </style>
@@ -461,155 +463,148 @@ input, select, textarea {
          <a href="blog/lat-pulldown-truth.html" class="blog-link">Lat Pulldown vs Pull-up</a>
 
 <section class="content-rich-section" style="background: rgba(76, 111, 255, 0.05); border: 1px solid #2a2a3a; margin: 40px 20px; padding: 30px; border-radius: 12px; border-left: 5px solid var(--primary);">
-    <h2 style="color: var(--primary); font-size: 1.1em; letter-spacing: 3px; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 25px; text-transform: uppercase;">Technical Manual: Biomechanical Definitions</h2>
+    <h2 style="color: var(--primary); font-size: 1.1em; letter-spacing: 2px; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 25px; text-transform: uppercase;">Technical Manual: Biomechanical Definitions</h2>
     
     <div class="glossary-scroll-container">
         <div class="glossary-grid">
             
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[01] ALLOMETRIC SCALING</strong>
-                
-                <p style="color: #bbb; margin: 0;">The mathematical relationship between body size and strength. In calisthenics, strength is proportional to muscle cross-sectional area (length²), while weight is proportional to volume (length³).</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[01] ALLOMETRIC SCALING</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Strength scales to Area (L²), weight scales to Volume (L³).</p>
             </div>
             
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[02] SCAPULAR PROTRACTION</strong>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[02] SCAPULAR PROTRACTION</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Shoulder blades forward. Key for Planche integrity.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[03] EXTERNAL ROTATION</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Humerus outward rotation to lock joints in Ring work.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[04] MOMENT ARM</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Distance from joint to force. Shorter = mechanical advantage.</p>
                 
-                <p style="color: #bbb; margin: 0;">Moving the shoulder blades away from the spine. Essential for "hollow body" integrity in the Planche.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[03] EXTERNAL ROTATION</strong>
-                <p style="color: #bbb; margin: 0;">Rotating the humerus outward to "lock" the shoulder joint, especially critical in Ring work.</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[05] TENDON ADAPTATION</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Adapts 10x slower than muscle. Avoid rapid load spikes.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[04] MOMENT ARM</strong>
-                
-
-[Image of moment arm biomechanics]
-
-                <p style="color: #bbb; margin: 0;">The perpendicular distance from the joint to the force. Shorter limbs = shorter moment arms = mechanical advantage.</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[06] NEURAL RECRUITMENT</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">CNS ability to fire motor units during maximal holds.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[05] TENDON ADAPTATION</strong>
-                <p style="color: #bbb; margin: 0;">Connective tissue adapts 10x slower than muscle. This is the primary cause of "Golfer's Elbow" in beginners.</p>
-            </div>
-
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[06] NEURAL RECRUITMENT</strong>
-                <p style="color: #bbb; margin: 0;">The CNS ability to fire motor units. High-intensity statics are "Maximal Voluntary Contractions."</p>
-            </div>
-
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[07] ABDUCTION VS. ADDUCTION</strong>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[07] ABDUCTION / ADDUCTION</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Movement away/toward midline. Crucial for Iron Cross.</p>
                 
 
+[Image of abduction and adduction]
 
-
-                <p style="color: #bbb; margin: 0;">Abduction (away from midline) vs. Adduction (toward midline). Crucial for Iron Cross execution.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[08] MIND-MUSCLE CONNECTION</strong>
-                <p style="color: #bbb; margin: 0;">Deliberate contraction to ensure "Full Body Tension" and prevent energy leaks.</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[08] MIND-MUSCLE CONNECTION</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Deliberate contraction to prevent energy leaks.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[09] MECHANICAL LEVERAGE</strong>
-                <p style="color: #bbb; margin: 0;">Manipulating your center of mass (e.g., straddle vs. full) to change difficulty.</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[09] MECHANICAL LEVERAGE</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Changing COM (straddle vs full) to adjust intensity.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[10] ISOMETRIC SCALING</strong>
-                <p style="color: #bbb; margin: 0;">Strength gained at a specific joint angle (joint-angle specificity). Only transfers +/- 15 degrees.</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[10] ISOMETRIC SCALING</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Strength gained at specific angles (+/- 15 degrees).</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[11] INTENSITY (LOAD)</strong>
-                <p style="color: #bbb; margin: 0;">Percentage of max force. Increased in calisthenics by decreasing leverage.</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[11] INTENSITY (LOAD)</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">% of max force, increased by decreasing leverage.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[12] VOLUME (TOTAL TAX)</strong>
-                <p style="color: #bbb; margin: 0;">Sets × Time × Intensity. Excessive volume at high intensity = Neural Fatigue.</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[12] VOLUME (TOTAL TAX)</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Sets × Time. High intensity leads to Neural Fatigue.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[13] SCAPULAR DEPRESSION</strong>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[13] SCAPULAR DEPRESSION</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Pulling shoulders down to stabilize the joint.</p>
                 
 
+[Image of scapular depression]
 
-
-                <p style="color: #bbb; margin: 0;">Pulling shoulders down. Prevents shrugging and stabilizes the glenohumeral joint.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[14] FALSE GRIP</strong>
-                
-                <p style="color: #bbb; margin: 0;">Flexing the wrist over the bar to shorten the forearm lever for Muscle-ups.</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[14] FALSE GRIP</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Wrist flexed over bar to shorten forearm lever.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[15] ANTERIOR PELVIC TILT (APT)</strong>
-                
-                <p style="color: #bbb; margin: 0;">"Piking" at the hips. A form leak that indicates weak glutes/core during levers.</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[15] ANTERIOR PELVIC TILT</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">"Piking" at hips; indicates core/glute weakness.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[16] PROPRIOCEPTION</strong>
-                <p style="color: #bbb; margin: 0;">Spatial awareness. "Feeling" your hip height without a mirror.</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[16] PROPRIOCEPTION</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Spatial awareness; "feeling" hip height in space.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[17] PLYOMETRIC TRANSFER</strong>
-                <p style="color: #bbb; margin: 0;">Converting static strength into explosive pop (e.g., high pull-ups).</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[17] PLYOMETRIC TRANSFER</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Converting static strength into explosive pop.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[18] NEURAL DRIVE</strong>
-                <p style="color: #bbb; margin: 0;">The "electrical signal" from brain to muscle. Like upgrading your body's wiring.</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[18] NEURAL DRIVE</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Brain-to-muscle electrical signal efficiency.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[19] EXPLOSIVE TRANSFER</strong>
-                <p style="color: #bbb; margin: 0;">The "Pop" that carries you through the sticking point of a Muscle-up.</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[19] EXPLOSIVE TRANSFER</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Pop required to bypass Muscle-up sticking points.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[20] KINETIC INTEGRITY</strong>
-                <p style="color: #bbb; margin: 0;">Total body tightness. Making the body a "rigid log" to prevent energy leaks.</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[20] KINETIC INTEGRITY</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Making the body a "rigid log" to save energy.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[21] LEVERAGE DIFFERENTIAL</strong>
-                <p style="color: #bbb; margin: 0;">The "Tall Person Tax." Long limbs feel heavier due to physics.</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[21] LEVERAGE DIFFERENTIAL</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">The "Tall Person Tax" due to limb length.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[22] PROGRESSIVE OVERLOAD</strong>
-                <p style="color: #bbb; margin: 0;">Making moves harder by changing angles or slowing down the tempo.</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[22] PROGRESSIVE OVERLOAD</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Harder moves via angles or slower tempo.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[23] SCAPULAR STRENGTH</strong>
-                <p style="color: #bbb; margin: 0;">The shoulder foundation. Essential before attempting advanced holds.</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[23] SCAPULAR STRENGTH</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Foundation required for all advanced holds.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[24] GREASING THE GROOVE</strong>
-                <p style="color: #bbb; margin: 0;">Practicing reps frequently throughout the day to "teach" the brain the movement.</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[24] GREASING THE GROOVE</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">High frequency, sub-maximal practice for skill.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[25] STRAIGHT-ARM STRENGTH</strong>
-                <p style="color: #bbb; margin: 0;">Locking arms like steel pillars. The hallmark of elite calisthenics.</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[25] STRAIGHT-ARM STRENGTH</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Locked joints acting as structural pillars.</p>
             </div>
 
-            <div class="glossary-item">
-                <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[26] THE STICKING POINT</strong>
-                <p style="color: #bbb; margin: 0;">The specific inch where you fail. Targeted with isometrics to kill weaknesses.</p>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[26] THE STICKING POINT</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">The failure inch; killed with targeted isometrics.</p>
             </div>
 
         </div>
