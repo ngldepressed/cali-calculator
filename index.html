@@ -9,6 +9,10 @@
     <title>Cali-Biotech | The Supreme Skill Tree</title>
 <meta name="description" content="Master the OAP, Full Planche, and Victorian Cross with the ultimate calisthenics matrix.">
 
+
+
+
+
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.calicalculator.com/">
 <meta property="og:title" content="Cali-Biotech | Skill Tree & 1RM Matrix">
@@ -39,6 +43,42 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
+
+
+    /* Ensure everything stays within the screen width */
+* {
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+/* Force the main container to stack on mobile */
+@media (max-width: 768px) {
+    .app-shell {
+        display: flex;
+        flex-direction: column; /* Stacks Sidebar on top of Content */
+        height: auto;
+    }
+
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--zinc-800);
+        padding: 20px;
+    }
+
+    .main-content {
+        padding: 15px;
+    }
+
+    .hud-grid {
+        grid-template-columns: 1fr; /* Forces charts to stack vertically */
+        gap: 15px;
+    }
+
+    .score-val {
+        font-size: 48px; /* Shrinks huge numbers so they don't clip */
+    }
+}
     <style>
 
 
