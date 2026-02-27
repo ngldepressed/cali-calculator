@@ -2,7 +2,34 @@
 <html lang="en">
 <head>
 
-
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "How often should I take a deload week?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Every 6th week is the recommended protocol. During this period, you should reduce your volume by 50% (fewer sets/reps) but keep the intensity high (same weight or progression level)."
+    }
+  }, {
+    "@type": "Question",
+    "name": "What is the SAID principle?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "SAID stands for Specific Adaptation to Imposed Demands. It means your body only gets better at exactly what you practice. If you want a Full Planche, training high-rep pushups won't help; you must practice the specific mechanical demand of the skill."
+    }
+  }, {
+    "@type": "Question",
+    "name": "Why do my elbows hurt during Planche or Back Lever training?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "This is typically Distal Biceps Tendonitis or Medial Epicondylitis. It occurs because the lever arm is too long for your current tendon density. Incorporate high-rep light bicep curls and Zanetti Presses for repair."
+    }
+  }]
+}
+</script>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-CDL3F645R2"></script>
     <script>
@@ -119,6 +146,15 @@
             border-top: 1px solid var(--card-border); 
             text-align: center;
         }
+
+        .site-footer a {
+    transition: 0.3s;
+}
+
+.site-footer a:hover {
+    color: var(--primary) !important;
+    text-decoration: underline;
+}
     </style>
 </head>
 <body>
@@ -339,11 +375,17 @@
         </div>
     </div>
 
-    <footer class="site-footer">
-
+<footer class="site-footer">
+    <div style="margin: 20px 0; text-align: center;">
+        <a href="about.html" style="color: #888; text-decoration: none; margin: 0 10px;">About Us</a> | 
         
-        </footer>
-
+        <a href="privacy-policy.html" style="color: #888; text-decoration: none; margin: 0 10px;">Privacy Policy</a> | 
+        
+        <a href="contact.html" style="color: #888; text-decoration: none; margin: 0 10px;">Contact Us</a> | 
+        
+        <a href="terms.html" style="color: #888; text-decoration: none; margin: 0 10px;">Terms & Conditions</a>
+    </div>
+</footer>
     <script>
         function filterFAQ() {
             let input = document.getElementById('faqSearch').value.toLowerCase();
@@ -355,5 +397,7 @@
             }
         }
     </script>
+
+
 </body>
 </html>
