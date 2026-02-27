@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-
-     <script async src="https://www.googletagmanager.com/gtag/js?id=G-CDL3F645R2"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CDL3F645R2"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -11,10 +9,8 @@
       gtag('config', 'G-CDL3F645R2');
     </script>
 
-
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1230203526545088"
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1230203526545088"
      crossorigin="anonymous"></script>
-
      
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,13 +21,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { 
-            /* Matches the Specificity is King neon theme */
             --primary: #00ff88; 
             --bg: #0d1117; 
             --card: #161b22; 
             --elite: #ff3e3e; 
             --text: #e6edf3; 
             --border: #30363d;
+            --text-dim: #8b949e;
         }
         
         body { 
@@ -40,12 +36,10 @@
             font-family: 'Inter', sans-serif; 
             margin: 0; 
             padding: 20px; 
-            /* Subtle grid background */
             background-image: radial-gradient(var(--border) 0.5px, transparent 0.5px);
             background-size: 30px 30px;
         }
 
-        /* Biotech Scanning Line */
         body::before {
             content: "";
             position: fixed;
@@ -137,7 +131,6 @@
             box-shadow: -4px 0 10px rgba(0, 255, 136, 0.1);
         }
 
-        /* Mastery State */
         .node.mastered {
             border-color: var(--primary);
             background: rgba(0, 255, 136, 0.1);
@@ -151,7 +144,6 @@
         .elite h3 { color: #ff8080; }
         .elite span { color: var(--elite); opacity: 0.6; }
 
-        /* Protocol Box Styling */
         .protocol-box {
             grid-column: 1 / -1;
             margin-top: 40px;
@@ -183,7 +175,16 @@
             color: #bbb;
         }
 
-        .footer-nav { margin: 60px 0; text-align: center; }
+        /* Footer & Legal Links */
+        .site-footer {
+            margin-top: 80px;
+            border-top: 1px solid var(--border);
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .footer-nav { margin-bottom: 20px; }
+        
         .back-btn { 
             font-family: 'JetBrains Mono', monospace; 
             text-decoration: none; 
@@ -195,6 +196,34 @@
             transition: 0.3s;
         }
         .back-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(0, 255, 136, 0.05); }
+
+        .legal-nav {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .legal-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.2s;
+        }
+
+        .legal-link:hover { color: var(--primary); }
+
+        .copyright {
+            margin-top: 25px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: #444;
+            text-transform: uppercase;
+        }
 
         @media (max-width: 1100px) {
             .tree-grid { grid-template-columns: 1fr; }
@@ -396,7 +425,20 @@
         </div>
     </div>
 
-    <div class="footer-nav"><a href="index.html" class="back-btn">← BACK_HOME</a></div>
+    <footer class="site-footer">
+        <nav class="footer-nav">
+            <a href="index.html" class="back-btn">← BACK_HOME</a>
+        </nav>
+        
+        <nav class="legal-nav">
+            <a href="about.html" class="legal-link">About</a>
+            <a href="privacy.html" class="legal-link">Privacy Policy</a>
+            <a href="terms.html" class="legal-link">Terms of Service</a>
+            <a href="contact.html" class="legal-link">Contact</a>
+        </nav>
+
+        <p class="copyright">© 2026 CALI-BIOTECH // CORE_SYSTEM_v2.0.4</p>
+    </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
