@@ -48,9 +48,9 @@
             left: 0;
             width: 100%;
             height: 2px;
-            background: rgba(0, 255, 136, 0.1);
+            background: rgba(0, 255, 136, 0.2);
             z-index: 9999;
-            animation: scan 4s linear infinite;
+            animation: scan 6s linear infinite;
             pointer-events: none;
         }
 
@@ -160,6 +160,17 @@
             margin: 40px 0; 
         }
 
+        .math-block {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--neon-green);
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            border: 1px dashed var(--border-color);
+        }
+
         footer { 
             margin-top: 80px; 
             padding-bottom: 40px;
@@ -167,23 +178,12 @@
             color: var(--text-dim); 
             font-size: 0.85rem; 
         }
-
-        .math-block {
-            text-align: center;
-            font-family: serif;
-            font-size: 1.4rem;
-            color: var(--neon-green);
-            margin: 30px 0;
-            padding: 20px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 8px;
-        }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>ZERO TO ADVANCED TUCK:<br>PLANCHE PROGRESSION</h1>
+        <h1>ZERO TO ADVANCED TUCK:<br>PLANCHE PROTOCOL</h1>
         <p style="color: var(--text-dim); font-family: monospace;">STOP BEING A HUMAN PENDULUM // DEFY PHYSICS</p>
     </header>
 
@@ -205,37 +205,26 @@
         <p>Shrugging kills your leverage. You need to pull your shoulders down toward your butt. Think about tucking your shoulder blades into your back pockets. This creates a solid "shelf" for your weight to sit on.</p>
 
         <h3>3. Straight Arms: The "Bone Lock"</h3>
-        <p>The second your elbows micro-bend, the load shifts from your connective tissue to your triceps. Your triceps are weak compared to the forces at play here. Lock the elbows. Imagine they are made of solid steel.</p>
+        <p>The second your elbows micro-bend, the load shifts from your connective tissue to your triceps. Lock the elbows. Imagine they are made of solid steel.</p>
 
-        <h3>4. External Rotation: Screw into the Floor</h3>
-        <p>Turn your hands out 30–45°. While they’re glued to the floor, rotate your elbow pits toward the front. This "screws" the humerus into the shoulder socket, protecting your bicep tendons.</p>
-
-        <h2>Phase II: The Frog Trap</h2>
-        <p>The "Frog Stand" is a balance trick. Your knees are resting on your triceps, meaning you aren't "holding" yourself up. To bridge the neurological gap, use the <strong>Alternating Frog Release</strong>:</p>
-        <ul>
-            <li><span class="data-tag">Step 1</span> Get into a Frog Stand.</li>
-            <li><span class="data-tag">Step 2</span> Lift one knee off your elbow. Keep it tucked but not touching.</li>
-            <li><span class="data-tag">Step 3</span> Hold for 5 seconds, then switch.</li>
-        </ul>
-
-        <h2>Phase III: The Advanced Tuck</h2>
-        <p>In the Advanced Tuck, you’re trying to become a beam. Gravity starts to really hate you here.</p>
+        <h2>Phase II: Mechanical Efficiency</h2>
+        <p>In calisthenics, your center of mass (CoM) must stay directly over your base of support. For the planche, as your legs move further back, your shoulders must move further forward.</p>
 
         <div class="math-block">
-          {Total Body Tension} = {Glute Squeeze} +{Core Compression} 
+            $$\tau = r \times F \sin(\theta)$$
+            <p style="font-size: 0.9rem; color: var(--text-dim); margin-top: 10px;">Where $\tau$ is the torque at the shoulder. As the radius ($r$) of your body increases, the force required to maintain equilibrium grows exponentially.</p>
         </div>
 
-        <h3>The "Open the Hip" Drill</h3>
-        <p>To get to the Advanced Tuck, you need a flat back. Pull your butt up and back until your spine is a flat table. <strong>The Counter-Lean:</strong> As your butt moves back, your shoulders must lean further forward to compensate. It’s a seesaw.</p>
+        <h2>Phase III: The Frog Release</h2>
+        <p>The "Frog Stand" is a balance trick. To bridge the neurological gap to a real tuck hold, use the <strong>Alternating Frog Release</strong>:</p>
+        <ul>
+            <li><span class="data-tag">Step 1</span> Get into a stable Frog Stand.</li>
+            <li><span class="data-tag">Step 2</span> Lift one knee 2cm off your elbow. Keep it tucked but hovering.</li>
+            <li><span class="data-tag">Step 3</span> Hold for 5 seconds. This forces the anterior deltoid to take 100% of the load on that side.</li>
+        </ul>
 
-        <h2>Phase IV: Tendon Conditioning</h2>
-        <p>Your muscles are fast. Your tendons are slow and stupid. You need to build armor.</p>
-        <div class="highlight">
-            <strong>THE PELICAN PREP:</strong> Take light weights or a band. Put your arms behind your back, keep them perfectly straight, and lift them up. High reps, low weight. Conditioning the "pull" on the tendon.
-        </div>
-
-        <h2>Phase V: 4-Week Bridge Routine</h2>
-        <p>Frequency: 3 times per week. (48h recovery required).</p>
+        <h2>Phase IV: 4-Week Bridge Routine</h2>
+        <p>Frequency: 3 times per week. (48h recovery mandatory for CNS recovery).</p>
 
         <table>
             <thead>
@@ -249,17 +238,17 @@
                 <tr>
                     <td>Alt. Frog Release</td>
                     <td>4 Sets / 30s</td>
-                    <td>Stop leaning on arms.</td>
+                    <td>Zero reliance on tricep "shelving."</td>
                 </tr>
                 <tr>
                     <td>Planche Leans</td>
                     <td>3 Sets / 15s</td>
-                    <td>Maximum forward lean.</td>
+                    <td>Shoulders past fingertips.</td>
                 </tr>
                 <tr>
                     <td>Pseudo Pushups</td>
                     <td>4 Sets / 8 Reps</td>
-                    <td>Hands at the waist.</td>
+                    <td>Maintain protraction at the bottom.</td>
                 </tr>
                 <tr>
                     <td>Scapula Shrugs</td>
@@ -269,16 +258,20 @@
                 <tr>
                     <td>Bicep Pre-hab</td>
                     <td>3 Sets / 20 Reps</td>
-                    <td>Bulletproof the elbows.</td>
+                    <td>Condition the distal tendon.</td>
                 </tr>
             </tbody>
         </table>
 
+        <div class="highlight">
+            <strong>THE PELICAN PREP:</strong> Take light weights or a band. Put your arms behind your back, keep them perfectly straight, and lift them up. This conditions the "pull" on the bicep tendon that occurs during extreme forward leans.
+        </div>
+
         <h2>Final Safety Checklist</h2>
         <ul>
-            <li><span class="data-tag">Protocol: CNS</span> Max effort hold of 5s? Rest for at least 2 minutes. Quality over junk reps.</li>
-            <li><span class="data-tag">Pain Audit</span> Muscle burn is good. Sharp, stabbing pain in the joint is a full STOP.</li>
-            <li><span class="data-tag">Regress</span> If your back isn't flat in the Advanced Tuck, go back to Tuck. Do not polish a statue that hasn't been carved yet.</li>
+            <li><span class="data-tag">CNS Audit</span> Max effort holds drain the nervous system. Rest 3 minutes between sets.</li>
+            <li><span class="data-tag">Pain Audit</span> Muscle burn is growth. Sharp, stabbing pain in the inner elbow is a <strong>HARD STOP</strong>.</li>
+            <li><span class="data-tag">Form Check</span> If your back isn't flat in the Advanced Tuck, you are "cheating" the physics. Regress to Tuck.</li>
         </ul>
     </section>
 
