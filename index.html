@@ -154,27 +154,24 @@ input, select, textarea {
         gap: 10px;
     }
 }
-
-/* Container for the glossary */
+/* Container for the scroll area */
 .glossary-scroll-container {
-    max-height: 500px;
+    max-height: 550px;
     overflow-y: auto;
-    padding-right: 10px;
-    border: 1px solid #222;
+    padding: 10px;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 8px;
 }
 
-/* The Grid - Responsive Fix */
+/* The Grid System: 1 column by default (Mobile First) */
 .glossary-grid {
-    display: grid; 
-    /* Default: 1 column for mobile */
+    display: grid;
     grid-template-columns: 1fr; 
-    gap: 20px; 
-    padding: 15px;
+    gap: 25px;
+    width: 100%;
 }
 
-/* Desktop View: Switch to 2 columns if screen is wider than 768px */
+/* Desktop Fix: Switch to 2 columns on larger screens */
 @media (min-width: 768px) {
     .glossary-grid {
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -183,7 +180,7 @@ input, select, textarea {
 
 /* Custom Scrollbar */
 .glossary-scroll-container::-webkit-scrollbar {
-    width: 4px; /* Thinner for mobile */
+    width: 5px;
 }
 .glossary-scroll-container::-webkit-scrollbar-thumb {
     background: var(--primary);
@@ -458,15 +455,16 @@ input, select, textarea {
          <a href="blog/lat-pulldown-truth.html" class="blog-link">Lat Pulldown vs Pull-up</a>
 
 
-      <section class="content-rich-section" style="background: rgba(76, 111, 255, 0.05); border: 1px solid #2a2a3a; margin: 40px 20px; padding: 30px; border-radius: 12px; border-left: 5px solid var(--primary);">
+  <section class="content-rich-section" style="background: rgba(76, 111, 255, 0.05); border: 1px solid #2a2a3a; margin: 40px 20px; padding: 30px; border-radius: 12px; border-left: 5px solid var(--primary);">
     <h2 style="color: var(--primary); font-size: 1.1em; letter-spacing: 3px; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 25px; text-transform: uppercase;">Technical Manual: Biomechanical Definitions</h2>
     
     <div class="glossary-scroll-container">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+        <div class="glossary-grid">
             
             <div>
                 <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[01] ALLOMETRIC SCALING</strong>
                 <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">The mathematical relationship between body size and strength. In calisthenics, strength is proportional to muscle cross-sectional area (length²), while weight is proportional to volume (length³).</p>
+                
             </div>
             
             <div>
@@ -499,6 +497,10 @@ input, select, textarea {
             <div>
                 <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[07] ABDUCTION VS. ADDUCTION</strong>
                 <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Abduction (away from midline) vs. Adduction (toward midline). Crucial for Iron Cross execution.</p>
+                
+
+
+
             </div>
 
             <div>
@@ -513,7 +515,7 @@ input, select, textarea {
 
             <div>
                 <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[10] ISOMETRIC SCALING</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Strength gained at a specific joint angle (joint-angle specificity). Only transfers +/- 15 degrees.</p>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Strength gained at a specific joint angle. Only transfers +/- 15 degrees.</p>
             </div>
 
             <div>
@@ -530,16 +532,21 @@ input, select, textarea {
                 <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[13] SCAPULAR DEPRESSION</strong>
                 <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Pulling shoulders down. Prevents shrugging and stabilizes the glenohumeral joint.</p>
                 
+
+
+
             </div>
 
             <div>
                 <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[14] FALSE GRIP</strong>
                 <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Flexing the wrist over the bar to shorten the forearm lever for Muscle-ups.</p>
+                
             </div>
 
             <div>
                 <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[15] ANTERIOR PELVIC TILT (APT)</strong>
                 <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">"Piking" at the hips. A form leak that indicates weak glutes/core during levers.</p>
+                
             </div>
 
             <div>
@@ -565,7 +572,6 @@ input, select, textarea {
             <div>
                 <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[20] KINETIC INTEGRITY</strong>
                 <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Total body tightness. Making the body a "rigid log" to prevent energy leaks.</p>
-                
             </div>
 
             <div>
@@ -591,7 +597,6 @@ input, select, textarea {
             <div>
                 <strong style="color: var(--potential); display: block; margin-bottom: 8px; font-family: monospace;">[25] STRAIGHT-ARM STRENGTH</strong>
                 <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Locking arms like steel pillars. The hallmark of elite calisthenics.</p>
-                
             </div>
 
             <div>
