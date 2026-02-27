@@ -19,14 +19,6 @@
 
     <link rel="canonical" href="https://www.calicalculator.com/blog/specificity-is-king.html" />
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CDL3F445R2"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-CDL3F445R2');
-    </script>
-
     <style>
         :root {
             --neon-green: #00ff88;
@@ -55,7 +47,7 @@
             left: 0;
             width: 100%;
             height: 2px;
-            background: rgba(0, 255, 136, 0.1);
+            background: rgba(0, 255, 136, 0.2);
             z-index: 9999;
             animation: scan 4s linear infinite;
             pointer-events: none;
@@ -79,15 +71,26 @@
         h2 { border-left: 4px solid var(--neon-green); padding-left: 20px; margin-top: 50px; color: #fff; font-size: 1.8rem; }
         h3 { color: var(--neon-green); margin-top: 30px; font-weight: 600; }
         
-        p { margin-bottom: 20px; }
-
         .highlight { 
             background: rgba(0, 255, 136, 0.05); 
             padding: 25px; 
             border-radius: 8px; 
             border: 1px solid rgba(0, 255, 136, 0.2); 
             margin: 30px 0; 
+        }
+
+        .checklist {
+            background: #000;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .checklist li::before {
+            content: "[√] ";
             color: var(--neon-green);
+            font-family: monospace;
         }
 
         table { 
@@ -103,13 +106,6 @@
         th, td { border-bottom: 1px solid var(--border-color); padding: 16px; text-align: left; transition: 0.2s; }
         th { background-color: #21262d; color: var(--neon-green); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Technical Table Hover */
-        table tr:hover {
-            background: rgba(0, 255, 136, 0.03);
-            border-left: 2px solid var(--neon-green);
-        }
-
-        /* Technical Data Tag */
         .data-tag {
             font-family: monospace;
             font-size: 0.7rem;
@@ -119,13 +115,11 @@
             border-radius: 4px;
             text-transform: uppercase;
             margin-right: 8px;
-            vertical-align: middle;
         }
 
         .cta-box { 
             background: var(--card-bg); 
             border: 1px solid var(--neon-green);
-            color: white; 
             padding: 40px; 
             border-radius: 12px; 
             text-align: center; 
@@ -141,14 +135,7 @@
             font-weight: 800; 
             border-radius: 6px; 
             margin-top: 20px; 
-            transition: all 0.3s ease;
             text-transform: uppercase;
-            font-size: 0.9rem;
-        }
-
-        .btn:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3); 
         }
 
         .quote { 
@@ -159,9 +146,6 @@
             padding-left: 25px; 
             margin: 40px 0; 
         }
-
-        ul { padding-left: 20px; list-style: none; }
-        li { margin-bottom: 10px; }
 
         footer { 
             margin-top: 80px; 
@@ -182,32 +166,31 @@
     <section>
         <p class="quote">"Most people in calisthenics are strong. Very few are skilled."</p>
 
-        <p>You can bang out 5x5 weighted dips with 20kg hanging from your waist. You can crank weighted pull-ups like a machine. Your chest is pumped, your lats are thick, your triceps look like horseshoes carved out of stone. You walk into the gym and the plates clank when you move. People see you strap weight around your hips and they nod. Respect. Power. Mass. You look like you know what you’re doing.</p>
+        <p>You can bang out 5x5 weighted dips with 20kg hanging from your waist. You can crank weighted pull-ups like a machine. You look like you know what you’re doing.</p>
         
         <p>And then you lean forward for a <strong>planche…</strong> and your body folds like a lawn chair.</p>
-        <p>All that iron. All that ego. And gravity makes you its bitch in two seconds flat.</p>
 
         <div class="highlight">
-            <strong>BIOTECH INTEL:</strong> You built a bigger engine. You never built the chassis. General strength does not translate to structural integrity in extreme leverage.
+            <span class="data-tag">BIOTECH INTEL</span> <strong>STRUCTURAL INTEGRITY VOID:</strong> You built a bigger engine (muscle mass). You never built the chassis (tendon stiffness/neurological lock). General strength does not translate to structural integrity in extreme leverage.
         </div>
 
-        <p>That’s the part nobody wants to hear. You can bench a house and still not own your own body. Because calisthenics at the high level isn’t about how much you can move. It’s about how well you can resist being moved. It’s about torque, joint stacking, scapular control, tendon stiffness, neurological precision. It’s about building a frame that doesn’t shake when physics gets nasty.</p>
-
         <h2>The Planche: The Brutal Teacher</h2>
-        <p>The planche doesn’t care about your dip numbers. It doesn’t care about your Instagram followers. It doesn’t care that you “almost had it” last week.</p>
-        <p>The planche is unforgiving. You don’t grind a planche rep. You either hold it or you don’t. There is no ugly rep that “still counts.” The second your elbows soften, your hips sag, or your shoulder blades pinch together like you’re trying to squeeze a pencil between them, the illusion is over.</p>
-        
-        <p><strong>If your shoulder blades pinch together, you’re not doing a planche — you’re doing a heavy push-up fantasy.</strong></p>
-        
-        <p>A real planche is protraction. It’s pushing the floor away so hard your upper back feels like it’s going to split open. It’s locked elbows that feel like steel rods. It’s glutes squeezed so tight you could crack a walnut. It’s ribs down, abs braced, toes pointed, every millimeter of your body screaming to stay in one straight, ruthless line.</p>
+        <p>A real planche is protraction. It’s locked elbows that feel like steel rods. It’s ribs down, abs braced, toes pointed, every millimeter of your body screaming to stay in one ruthless line.</p>
 
-        <p>And here’s the ugly truth: you don’t muscle your way into that. You earn it by building connective tissue that can handle insane leverage without folding.</p>
+        
+
+        <div class="checklist">
+            <h3 style="margin-top: 0;">Integrity Checklist: Planche</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li>Scapula Protracted (Angry Cat Back)</li>
+                <li>Elbow Pits Rotated Forward (External Rotation)</li>
+                <li>Posterior Pelvic Tilt (No Banana Back)</li>
+                <li>Toes Plantarflexed (Pointed)</li>
+            </ul>
+        </div>
 
         <h3>Weekly Protocol</h3>
-        <ul>
-            <li><span class="data-tag">Metric: Frequency</span> 2–3 times per week. (Connective tissue needs 48–72h recovery).</li>
-            <li><span class="data-tag">Metric: Volume</span> 60–120 seconds of quality hold time per session.</li>
-        </ul>
+        <p><span class="data-tag">RECOVERY</span> Connective tissue adapts 3x slower than muscle. Frequency is capped to prevent tendonosis.</p>
 
         <table>
             <thead>
@@ -236,12 +219,10 @@
             </tbody>
         </table>
 
-        <p>That doesn’t look sexy on paper. It’s not a “killer circuit.” You’re not drenched in sweat doing burpees. But this is surgical work. This is tension training. You’re accumulating high-quality seconds under perfect mechanics. Not flailing. Not surviving. Executing.</p>
-
         <h2>The Front Lever: Precision Pulling</h2>
-        <p>Now flip over.</p>
-        <p>You think the front lever is about biceps because your arms are straight and you’re pulling. Wrong. If you’re trying to curl yourself into position, you’re already lost.</p>
-        <p>You don’t win the lever with biceps. You win it with lat-core connection. If your lower back arches, you’re leaking force. If your scapulae aren’t retracted and depressed, you’re hanging from your joints.</p>
+        <p>You don’t win the lever with biceps. You win it with lat-core connection. If your scapulae aren’t retracted and depressed, you’re hanging from your joints.</p>
+
+        
 
         <h3>The Front Lever Session</h3>
         <table>
@@ -272,21 +253,19 @@
         </table>
 
         <h2>The Golden Rules</h2>
-        <p><span class="data-tag">System: CNS</span> <strong>1. The 3-Minute Rest Rule:</strong> You’re training the CNS (Central Nervous System). If you don’t let it recover, you get weaker set by set. Resting 60 seconds isn't “hardcore” — it’s underperforming.</p>
-        <p><span class="data-tag">System: Form</span> <strong>2. Failure is Not Noble:</strong> The second your arms bend, your scapula collapses, or your hips drop, the set is over. You don’t earn points for suffering through bad mechanics. Ego lifting with bodyweight is still ego lifting.</p>
-        <p><span class="data-tag">System: Recovery</span> <strong>3. Deload or Break:</strong> Every 4th or 5th week, cut your volume by 50% and drop to an easier progression. Connective tissue adapts slower than muscle.</p>
+        <p><span class="data-tag">SYSTEM: CNS</span> <strong>1. The 3-Minute Rest Rule:</strong> You’re training the CNS. Resting 60 seconds isn't “hardcore” — it’s underperforming. You need full ATP recovery for neurological precision.</p>
+        
+        <p><span class="data-tag">SYSTEM: FORM</span> <strong>2. Failure is Not Noble:</strong> The second your arms bend or your scapula collapses, the set is over. Ego lifting with bodyweight is still ego lifting.</p>
+        
+        <p><span class="data-tag">SYSTEM: RECOVERY</span> <strong>3. The Deload Requirement:</strong> Every 4th week, cut volume by 50%. This is for the tendons, not the muscles.</p>
 
         <p class="quote">"One day you lean forward… and you don’t fall. That’s skill."</p>
-        
-        <p>Most people chase strength because it’s easy to measure. Add five kilos. Add a rep. Simple. Linear. Satisfying. Skill is quieter. Slower. Brutal on the ego. It exposes holes in your foundation and forces you to fix them one unglamorous set at a time.</p>
-        
-        <p>But when you finally hold that planche clean… when you lock in that front lever without shaking like a shopping cart with a bad wheel… you understand. You didn’t just build a bigger engine. <strong>You built a body that doesn’t fold.</strong></p>
     </section>
 
     <div class="cta-box">
         <h2>ENGINEER YOUR STRENGTH</h2>
-        <p>Use our 1RM Matrix and Skill Tree to track your actual structural integrity.</p>
-        <a href="../index.html" class="btn">Back to Home</a>
+        <p>Use our Skill Tree to track your actual structural integrity.</p>
+        <a href="../index.html" class="btn">Back to Command Center</a>
     </div>
 
     <footer>
