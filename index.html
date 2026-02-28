@@ -1471,6 +1471,109 @@ document.addEventListener('DOMContentLoaded', () => {
     <p>&copy; 2026 Cali Biotech | Data-Driven Bodyweight Training</p>
 </footer>
 
+<!-- Cookie Consent Banner -->
+<div id="cookie-banner" style="
+    position: fixed;
+    bottom: -150px;
+    left: 0;
+    right: 0;
+    background: #1a1a1a;
+    color: #fff;
+    padding: 20px 15px;
+    text-align:center;
+    z-index: 9999;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.3);
+    transition: bottom 0.5s ease;
+">
+    🍪 We use cookies to improve your experience and show personalized ads.
+    <button id="accept-cookies" style="background:#4caf50;color:#fff;padding:10px 18px;border:none;border-radius:5px;margin-left:10px;cursor:pointer;">Accept</button>
+    <button id="reject-cookies" style="background:#f44336;color:#fff;padding:10px 18px;border:none;border-radius:5px;margin-left:10px;cursor:pointer;">Reject</button>
+</div>
+
+<script>
+// Cookie helper functions
+function setCookie(name,value,days){
+    const date = new Date();
+    date.setTime(date.getTime() + (days*24*60*60*1000));
+    document.cookie = name + "=" + value + "; expires=" + date.toUTCString() + "; path=/";
+}
+function getCookie(name){
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for(let c of ca){ c=c.trim(); if(c.indexOf(nameEQ)===0) return c.substring(nameEQ.length); }
+    return null;
+}
+
+// Banner show/hide
+function showBanner(){ document.getElementById('cookie-banner').style.bottom='0'; }
+function hideBanner(){ document.getElementById('cookie-banner').style.bottom='-150px'; }
+
+// Load Google Analytics
+function loadGA(){
+    const gaScript = document.createElement('script');
+    gaScript.async = true;
+    gaScript.src = "https://www.googletagmanager.com/gtag/js?id=G-CDL3F645R2";
+    document.head.appendChild(gaScript);
+
+    gaScript.onload = () => {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', 'G-CDL3F645R2');
+    };
+}
+
+// Load AdSense
+function loadAdsense(personalized){
+    const adScript = document.createElement('script');
+    adScript.async = true;
+    adScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
+    adScript.setAttribute("data-ad-client", "ca-pub-1230203526545088"); // Your AdSense ID
+    adScript.crossOrigin = "anonymous";
+    document.head.appendChild(adScript);
+
+    window.adsbygoogle = window.adsbygoogle || [];
+    window.adsbygoogle.push({
+        google_ad_client: "ca-pub-1230203526545088",
+        enable_page_level_ads: true,
+        ...(personalized ? {} : { non_personalized_ads: 1 })
+    });
+}
+
+// Radar chart resize logic (kept from your code)
+window.addEventListener('resize', () => {
+    if (typeof radarChart !== 'undefined' && radarChart){
+        radarChart.destroy();
+        initChart();
+        analyze();
+    }
+});
+
+// Check existing consent
+const consent = getCookie('cookie_consent');
+if(!consent){ 
+    showBanner(); 
+} else {
+    if(consent==='accepted'){ loadGA(); loadAdsense(true); }
+    else { loadAdsense(false); }
+}
+
+// Button handlers
+document.getElementById('accept-cookies').onclick = function(){
+    setCookie('cookie_consent','accepted',365);
+    hideBanner();
+    loadGA();
+    loadAdsense(true);
+};
+document.getElementById('reject-cookies').onclick = function(){
+    setCookie('cookie_consent','rejected',365);
+    hideBanner();
+    loadAdsense(false);
+};
+</script>
+
 
 </body>
 
