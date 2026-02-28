@@ -3,123 +3,1372 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 USA Tax Calculator | OBBB Act Updated</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<nav>
-    <div class="nav-content">
-        <strong>TaxPlan2026</strong>
-        <div class="nav-links">
-            <a href="index.html">Calculator</a>
-            <a href="#articles">Guides</a>
-        </div>
-    </div>
-</nav>
-
-<div class="container">
-   <main class="main-card">
-    <h1>Advanced 2026 Tax Estimator</h1>
+    <title>Cali-Biotech: Production Command</title>
     
-    <div class="form-section">
-        <h3>1. Filing Details</h3>
-        <div class="input-grid">
-            <div class="input-group">
-                <label>Filing Status</label>
-                <select id="status">
-                    <option value="single">Single</option>
-                    <option value="married">Married Filing Jointly</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label>Are you 65 or older?</label>
-                <select id="isSenior">
-                    <option value="no">No</option>
-                    <option value="yes">Yes</option>
-                </select>
-            </div>
-        </div>
-    </div>
+    <link rel="canonical" href="https://www.calicalculator.com/" />
+    <title>Cali-Biotech | The Supreme Skill Tree</title>
+<meta name="description" content="Master the OAP, Full Planche, and Victorian Cross with the ultimate calisthenics matrix.">
 
-    <div class="form-section">
-        <h3>2. Income Breakdown (2026 Rules)</h3>
-        <div class="input-group">
-            <label>Annual Base Salary ($)</label>
-            <input type="number" id="income" placeholder="70000">
-        </div>
-        <div class="input-grid">
-            <div class="input-group">
-                <label>Annual Overtime Pay ($)</label>
-                <input type="number" id="overtime" value="0">
-                <small>OBBB Act: Federal Tax-Free (if applicable)</small>
-            </div>
-            <div class="input-group">
-                <label>Annual Tips ($)</label>
-                <input type="number" id="tips" value="0">
-                <small>OBBB Act: Federal Tax-Free (if applicable)</small>
-            </div>
-        </div>
-    </div>
 
-    <div class="form-section">
-        <h3>3. Families & Credits</h3>
-        <div class="input-group">
-            <label>Number of Qualifying Children (under 17)</label>
-            <input type="number" id="children" value="0">
 
-            <label for="otherDependents">Number of Other Dependents (non-qualifying children, elderly, relatives)</label>
-            <input type="number" id="otherDependents" min="0" max="10" value="0">
-        </div>
-    </div>
 
-    <button class="calc-btn" onclick="calculateAdvancedTax()">Calculate My 2026 Estimate</button>
 
-    <div id="calculatorContainer">
-        <div id="result" class="result-box"></div>
-        <div id="obbbArticle"></div>
-    </div>
-</main>
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.calicalculator.com/">
+<meta property="og:title" content="Cali-Biotech | Skill Tree & 1RM Matrix">
+<meta property="og:description" content="Track your vertical pulling power and static holds.">
+<meta property="og:image" content="https://www.calicalculator.com/preview-image.jpg">
 
-    <aside class="sidebar">
-        <h3>2026 Tax Learning Center</h3>
-        <div id="articles">
-            <!-- UPDATED LINK -->
-                   <a href="blog/how-obbb-affects-2026.html">
-                    How obbb affects 2026 
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:title" content="Cali-Biotech Skill Tree">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CDL3F645R2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-CDL3F645R2');
 
-                   </a> 
-                
-           
 
-            <a href="standard-deduction-2026.html" class="article-link">
-                The New $16,100 Standard Deduction
-            </a>
+      window.addEventListener('resize', () => {
+    if (radarChart) {
+        radarChart.destroy();
+        initChart();
+        analyze();
+    }
+});
+    </script>
 
-            <a href="salt-cap-update.html" class="article-link">
-                New $40,000 SALT Cap for Homeowners
-            </a>
-        </div>
-    </aside>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1230203526545088"
+     crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+
+
+
+body {
+    font-size: 18px; /* Increased from 14px/16px */
+    line-height: 1.6;
+}
+
+.card {
+    padding: 25px; /* Added more breathing room for bigger text */
+}
+
+/* This makes the labels on your input fields easier to read */
+label {
+    font-size: 0.9em;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Adjusts the input text size */
+input, select, textarea {
+    font-size: 16px !important;
+    padding: 12px !important;
+}
+
+
+
+
+        /* ADD THIS INSIDE THE <style> TAG */
+.sim-active input, .sim-active select { 
+    border-color: var(--potential) !important; 
+    box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+    color: var(--potential) !important;
+}
+
+.sim-active .card h3 {
+    color: var(--potential) !important;
+    border-bottom: 1px solid var(--potential) !important;
+}
+        * { box-sizing: border-box; }
+        :root { --primary: #4c6fff; --potential: #00ffcc; --bg: #0b0b12; --card: #161621; --border: #2a2a3a; --danger: #ff4c4c; --text: #e0e0e0; }
+        
+        html, body { width: 100%; margin: 0; padding: 0; overflow-x: hidden; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+        body { display: flex; flex-direction: column; align-items: center; padding: 10px; }
+        
+        .container { background: var(--card); padding: 20px; border-radius: 24px; width: 100%; max-width: 1300px; box-shadow: 0 30px 60px rgba(0,0,0,0.8); border: 1px solid var(--border); transition: 0.3s; margin: 0 auto; }
+        
+        .main-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
+        .card { background: #1f1f2e; padding: 18px; border-radius: 16px; border: 1px solid #333; }
+        .card h3 { margin-top: 0; color: var(--primary); font-size: 0.75em; text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        
+        label { display: block; margin-top: 8px; font-size: 0.65em; color: #888; text-transform: uppercase; font-weight: bold; }
+        input, select { width: 100%; padding: 10px; margin-top: 4px; border-radius: 8px; border: 1px solid #333; background: var(--bg); color: white; font-size: 0.85em; transition: 0.3s; }
+        
+        .inline-quad { display: grid; grid-template-columns: 1.2fr 0.8fr 0.8fr 1fr; gap: 5px; } 
+        
+        .dashboard-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+        
+        .analysis-panel { background: #1f1f2e; padding: 20px; border-radius: 20px; border: 1px solid #333; min-height: 450px; position: relative; }
+        
+        .prepare-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(22, 22, 33, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; border-radius: 20px; text-align: center; padding: 20px; }
+        .btn-prepare { background: transparent; color: var(--potential); border: 2px solid var(--potential); padding: 15px 30px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 0.8em; letter-spacing: 2px; transition: 0.3s; }
+        .btn-prepare:hover { background: var(--potential); color: black; box-shadow: 0 0 20px rgba(0, 255, 204, 0.4); }
+
+        .skill-bar-container { margin-bottom: 12px; }
+        .skill-label { display: flex; justify-content: space-between; font-size: 0.75em; margin-bottom: 4px; font-weight: bold; }
+        .bar-bg { background: #0b0b12; height: 8px; border-radius: 4px; overflow: hidden; border: 1px solid #333; }
+        .bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--potential)); transition: width 0.5s ease; }
+        
+        .heatmap-container { background: #1f1f2e; padding: 15px; border-radius: 20px; border: 1px solid #333; text-align: center; margin-top: 20px; }
+        .joint { transition: fill 0.4s ease; fill: #444; }
+
+        .volume-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .stat-box { background: #0b0b12; padding: 10px; border-radius: 12px; border: 1px solid #333; text-align: center; }
+        .stat-val { display: block; font-size: 1.1em; font-weight: bold; color: var(--potential); }
+        .stat-label { font-size: 0.55em; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .battery-bar { width: 100%; height: 8px; background: #333; border-radius: 4px; margin-top: 8px; overflow: hidden; }
+        .battery-fill { height: 100%; background: var(--potential); transition: width 0.5s; }
+
+        .blog-section { width: 100%; margin-top: 40px; padding: 20px; border-top: 1px solid var(--border); }
+        .blog-link { color: var(--potential); text-decoration: none; font-size: 0.8em; margin-right: 20px; display: inline-block; margin-bottom: 10px; }
+
+        table { width: 100%; font-size: 0.75em; border-collapse: collapse; margin-top: 10px; color: #bbb; }
+        th { color: var(--primary); text-align: left; padding: 10px; border-bottom: 1px solid #333; text-transform: uppercase; font-size: 0.7em; }
+        td { padding: 10px; border-bottom: 1px solid #222; }
+        .btn-log { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.7em; }
+
+ @media (max-width: 600px) {
+    /* This ensures the card NEVER exceeds the screen width */
+    #chart-card {
+        padding: 5px !important;
+        margin: 0 !important; 
+        width: 100% !important;
+        min-height: 420px !important; /* Forces vertical space */
+        display: flex !important;
+        flex-direction: column;
+        overflow: hidden !important; /* Cuts off any stray pixels */
+    }
+
+    /* This ensures the chart fills the container but doesn't push it out */
+    canvas#skillRadar {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100vw;
+    }
+
+    /* Make the dashboard stack properly */
+    .dashboard-row {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+/* Responsive Container */
+.glossary-scroll-container {
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 10px; /* Reduced for mobile */
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+/* Forced 2-Column Grid */
+.glossary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 columns on ALL devices */
+    gap: 12px; /* Tighter gap for mobile */
+}
+
+/* Adjustments for Phone Screens */
+@media (max-width: 600px) {
+    .content-rich-section {
+        margin: 20px 10px !important; /* Move section closer to screen edges */
+        padding: 15px !important; /* Less internal padding */
+    }
+    
+    .glossary-grid strong {
+        font-size: 0.7em; /* Smaller titles */
+        letter-spacing: 0px;
+    }
+
+    .glossary-grid p {
+        font-size: 0.75em !important; /* Smaller body text */
+        line-height: 1.3 !important;
+    }
+}
+
+/* Standard PC/Tablet Gap */
+@media (min-width: 768px) {
+    .glossary-grid {
+        gap: 30px;
+    }
+}
+    </style>
+</head>
+
+ <body onload="loadSavedData(); renderLogs();"> 
+
+<div style="position: absolute; top: 25px; right: 240px; z-index: 9999;">
+    <a href="faq.html" style="
+        text-decoration: none; 
+        color: #fff; 
+        font-weight: 800; 
+        font-size: 1.1rem; 
+        letter-spacing: 3px; 
+        border: 2px solid #444; 
+        padding: 12px 28px; 
+        border-radius: 6px;
+        background: #333333;
+        transition: 0.3s;
+        display: inline-block;
+        text-transform: uppercase;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    " onmouseover="this.style.backgroundColor='#444'; this.style.borderColor='#007bff'; this.style.transform='scale(1.05)';" 
+       onmouseout="this.style.backgroundColor='#333333'; this.style.borderColor='#444'; this.style.transform='scale(1)';"
+       target="_blank">
+        FAQ
+    </a>
 </div>
 
-<footer class="disclaimer">
-    <p>
-        Disclaimer: This tool provides general tax estimates for informational purposes only 
-        and does not constitute tax, legal, or financial advice. 
-        Always consult IRS guidance or a qualified tax professional.
+
+<div class="container" id="mainContainer">
+    <nav style="padding: 15px; border-bottom: 1px solid #333; display: flex; justify-content: center; margin-bottom: 20px;">
+        <a href="index.html" style="color: var(--primary); text-decoration: none; font-weight: bold; font-size: 0.8em; letter-spacing: 2px;">HOME</a>
+    </nav>
+
+    <h1 style="text-align:center; color:var(--primary); font-size:1.4em; letter-spacing:4px; margin-bottom: 20px;">CALI-BIOTECH COMMAND</h1>
+
+ <div style="text-align: center; margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 15px;">
+    
+    <a href="calc-pullup.html" 
+       style="
+        display: inline-block;
+        text-decoration: none !important; 
+        color: #4c6fff; 
+        background: rgba(76, 111, 255, 0.05);
+        border: 1px solid #4c6fff; 
+        padding: 12px 24px; 
+        font-family: monospace;
+        font-size: 0.75em; 
+        letter-spacing: 3px; 
+        font-weight: bold; 
+        border-radius: 4px;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 15px rgba(76, 111, 255, 0.1);
+        width: 220px;
+        box-sizing: border-box;
+       "
+       onmouseover="this.style.background='rgba(76, 111, 255, 0.15)'; this.style.boxShadow='0 0 25px rgba(76, 111, 255, 0.4)'; this.style.color='#fff';"
+       onmouseout="this.style.background='rgba(76, 111, 255, 0.05)'; this.style.boxShadow='0 0 15px rgba(76, 111, 255, 0.1)'; this.style.color='#4c6fff';"
+    >
+        1 REP MAX CALCULATOR
+    </a>
+<a href="skills.html" 
+   style="display: inline-block; text-decoration: none !important; color: #4c6fff; background: rgba(76, 111, 255, 0.05); border: 1px solid #4c6fff; padding: 12px 24px; font-family: monospace; font-size: 0.75em; letter-spacing: 3px; font-weight: bold; border-radius: 4px; text-transform: uppercase; transition: all 0.3s ease; box-shadow: 0 0 15px rgba(76, 111, 255, 0.1); width: 220px; box-sizing: border-box; margin-top: 10px;"
+   onmouseover="this.style.background='rgba(76, 111, 255, 0.15)';"
+   onmouseout="this.style.background='rgba(76, 111, 255, 0.05)';"
+>
+    VIEW SKILL TREE
+</a>
+
+
+<a href="physio.html" 
+   style="display: inline-block; text-decoration: none !important; color: #00ff88; background: rgba(0, 255, 136, 0.05); border: 1px solid #00ff88; padding: 12px 24px; font-family: monospace; font-size: 0.75em; letter-spacing: 3px; font-weight: bold; border-radius: 4px; text-transform: uppercase; transition: all 0.3s ease; box-shadow: 0 0 15px rgba(0, 255, 136, 0.1); width: 220px; box-sizing: border-box; margin-top: 10px;"
+   onmouseover="this.style.background='rgba(0, 255, 136, 0.15)';"
+   onmouseout="this.style.background='rgba(0, 255, 136, 0.05)';"
+>
+   CALORIE CALCULATOR
+</a>
+
+    <select id="unitSystem" onchange="updateLabels(); analyze(); saveToLocal();" style="width: 220px; background: #1f1f2e; color: var(--primary); border: 1px solid var(--primary); padding: 5px; font-family: monospace;">
+        <option value="met">METRIC (KG / CM)</option>
+        <option value="imp">IMPERIAL (LBS / FT-IN)</option>
+    </select>
+
+    <div class="sim-toggle-container">
+        <label style="cursor:pointer; display: flex; align-items: center; gap: 10px; padding: 0 15px;">
+            <input type="checkbox" id="simMode" onchange="toggleSimMode()" style="width: auto; margin: 0;">
+            <span style="color:var(--potential); font-size: 0.7em; letter-spacing: 2px; font-weight: bold;">ACTIVATE BIOTEST SIMULATION</span>
+        </label>
+    </div>
+
+</div>
+    <div class="main-grid">
+        <div class="card">
+            <h3>Structure & Readiness</h3>
+            <div class="inline-quad" style="grid-template-columns: 1fr 1fr;">
+                <div><label id="wLabel">Weight (kg)</label><input type="number" id="weight" value="75" oninput="analyze();"></div>
+                <div id="hMetric"><label>Height (cm)</label><input type="number" id="hCm" value="175" oninput="analyze();"></div>
+                <div id="hImperial" style="display:none;"><label>Height (ft/in)</label>
+                    <div style="display:flex; gap:5px;"><input type="number" id="hFt" value="5" oninput="analyze();"><input type="number" id="hIn" value="9" oninput="analyze();"></div>
+                </div>
+            </div>
+            <label>Surface Stability</label>
+            <select id="surface" onchange="analyze();"><option value="1.0">Stable (Floor)</option><option value="1.25">Unstable (Rings)</option></select>
+            <label>CNS Readiness</label>
+            <input type="range" id="cns" min="1" max="10" value="9" oninput="analyze();">
+        </div>
+
+        <div class="card">
+            <h3>BW Basics & Skills</h3>
+            <div class="inline-quad" style="grid-template-columns: 1fr 1fr;">
+                <div><label>Max Pullups</label><input type="number" id="pullups" value="15" oninput="analyze();"></div>
+                <div><label>Max Pushups</label><input type="number" id="pushups" value="35" oninput="analyze();"></div>
+            </div>
+            <div class="inline-quad" style="grid-template-columns: 1fr 1fr;">
+                <div><label>Muscle-Ups</label><input type="number" id="mu" value="5" oninput="analyze();"></div>
+                <div><label>Dead Hang (s)</label><input type="number" id="hang" value="60" oninput="analyze();"></div>
+            </div>
+            <div class="inline-quad" style="grid-template-columns: 1.2fr 0.8fr;">
+                <div><label>Leg Inertia</label><select id="legRatio" onchange="analyze();"><option value="0.95">Short</option><option value="1.0" selected>Neutral</option><option value="1.1">Long/Heavy</option></select></div>
+                <div><label>Form</label><select id="form" onchange="analyze();"><option value="1.0">Elite</option><option value="0.7">Piked</option></select></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Weighted Matrix</h3>
+            <div class="inline-quad"><div class="col-header">Weight</div><div class="col-header">Reps</div><div class="col-header">Sets</div><div class="col-header">RPE</div></div>
+            <label id="pullLabel">Weighted Pull-up</label>
+            <div class="inline-quad"><input type="number" id="wpW" value="25" oninput="analyze();"><input type="number" id="wpR" value="5" oninput="analyze();"><input type="number" id="wpS" value="3" oninput="analyze();"><input type="number" id="wpRPE" value="8" oninput="analyze();"></div>
+            <label id="dipLabel">Weighted Dip</label>
+            <div class="inline-quad"><input type="number" id="wdW" value="35" oninput="analyze();"><input type="number" id="wdR" value="5" oninput="analyze();"><input type="number" id="wdS" value="3" oninput="analyze();"><input type="number" id="wdRPE" value="8" oninput="analyze();"></div>
+            <label id="zanLabel">Zanetti Raise (SA)</label>
+            <div class="inline-quad"><input type="number" id="saW" value="12" oninput="analyze();"><input type="number" id="saR" value="8" oninput="analyze();"><input type="number" id="saS" value="3" oninput="analyze();"><input type="number" id="saRPE" value="9" oninput="analyze();"></div>
+        </div>
+    </div>
+
+   <div class="dashboard-row" id="captureArea">
+   <div class="analysis-panel" id="chart-card" style="min-height: 70vh; display: flex; align-items: center; justify-content: center; position: relative; background: #1f1f2e; padding: 10px;">
+        
+        <div id="safetyDisclaimer" style="position: absolute; top: 15px; left: 50%; transform: translateX(-50%); width: 92%; z-index: 20; color: #ff4444; background: rgba(20, 10, 10, 0.95); border: 1px solid #ff4444; padding: 12px; border-radius: 8px; font-family: monospace; border-left: 4px solid #ff4444; box-shadow: 0 4px 15px rgba(0,0,0,0.5); pointer-events: none;">
+            <div style="font-weight: bold; margin-bottom: 4px; letter-spacing: 1px; font-size: 0.85em;">⚠️ TENDON_INTEGRITY_WARNING</div>
+            <p style="margin: 0; font-size: 0.75em; line-height: 1.4; color: #ddd;">
+                Straight-arm loads detected. Connective tissue adaptation is 10x slower than muscle. 
+            </p>
+        </div>
+        
+        <div id="radar-lock" class="prepare-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 10; background: rgba(22, 22, 33, 0.95);">
+            <button class="btn-prepare" onclick="prepareSystem()">PREPARE TRAINING MATRIX</button>
+        </div>
+
+        <canvas id="skillRadar" style="width: 100% !important; height: auto !important;"></canvas>
+    </div>
+
+    <div class="analysis-panel" id="auditWrapper" style="display: flex; flex-direction: column; gap: 20px;">
+        <div id="skillBars">
+            <div style="text-align: center; color: #444; margin-top: 100px;">SYSTEM OFFLINE</div>
+        </div>
+        <div id="aiFeedback" style="border-top: 1px solid #333; padding-top: 15px;">
+            <div style="text-align: center; color: #444;">AWAITING AUDIT</div>
+        </div>
+        <button id="shareBtn" onclick="shareReport()" style="display:none; width:100%; margin-top:auto; background:transparent; border:1px solid var(--potential); color:var(--potential); cursor:pointer; padding:12px; font-family: monospace; border-radius:8px; font-size:0.7em; text-transform:uppercase;">Download_Report.png</button>
+    </div>
+</div>
+    <div class="heatmap-container">
+        <h3 style="font-size:0.7em; color:var(--primary); margin-bottom:10px; letter-spacing: 1px;">INJURY RISK HEATMAP</h3>
+        <svg width="120" height="180" viewBox="0 0 100 150">
+            <circle cx="50" cy="20" r="10" class="joint" /> 
+            <line x1="50" y1="30" x2="50" y2="80" stroke="#333" stroke-width="4" /> 
+            <line x1="50" y1="40" x2="20" y2="60" stroke="#333" stroke-width="3" /> 
+            <circle id="joint-shoulder-l" cx="35" cy="40" r="5" class="joint" /> 
+            <circle id="joint-shoulder-r" cx="65" cy="40" r="5" class="joint" />
+            <circle id="joint-elbow-l" cx="20" cy="60" r="5" class="joint" /> 
+            <circle id="joint-elbow-r" cx="80" cy="60" r="5" class="joint" />
+            <circle id="joint-wrist-l" cx="10" cy="90" r="4" class="joint" /> 
+            <circle id="joint-wrist-r" cx="90" cy="90" r="4" class="joint" />
+        </svg>
+        <p id="risk-msg" style="font-size:0.65em; color:#888; margin-top:10px; font-weight: bold;">SCANNINING BIOMETRICS...</p>
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+        <h3>Volume & Recovery Optimizer</h3>
+        <div class="volume-grid">
+            <div class="stat-box">
+                <span class="stat-label">Weekly Volume Tax</span>
+                <span id="volume-tax" class="stat-val">0</span>
+                <div class="battery-bar"><div id="volume-fill" class="battery-fill" style="width: 0%"></div></div>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">Recovery Window</span>
+                <span id="recovery-status" class="stat-val">OPTIMAL</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 25px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h3 style="border: none; margin: 0;">Training History Log</h3>
+            <button class="btn-log" onclick="logSession()">LOG CURRENT DATA</button>
+        </div>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                   <tr><th>Date</th><th>BW</th><th>Pull</th><th>Push</th><th>SA</th><th></th></tr>
+                <tbody id="logBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 40px; background: rgba(76, 111, 255, 0.05); border: 1px solid var(--primary);">
+    <h3 style="letter-spacing: 2px; color: var(--primary);">SYSTEM LOGIC</h3>
+    <p style="font-size: 0.8em; line-height: 1.6; color: #eee; margin-bottom: 20px;">
+        Our command system uses <strong>Biomechanical Torque Analysis</strong> to bridge the gap between weighted strength and bodyweight mastery.
     </p>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+<div style="border-left: 2px solid #3b82f6; padding-left: 10px;">
+<div style="font-size: 0.65em; color: #3b82f6; font-weight: bold;">LEVERAGE TAX</div>
+<div style="font-size: 0.7em; color: #888;">Accounting for how longer limbs increase difficulty; as height increases, the strength required rises by a 2.3x exponent, making skills significantly harder for taller athletes.</div>
+</div>
+<div style="border-left: 2px solid #10b981; padding-left: 10px;">
+<div style="font-size: 0.65em; color: #10b981; font-weight: bold;">SCAPULAR BALANCE</div>
+<div style="font-size: 0.7em; color: #888;">Maintaining a 1:1 ratio between pulling and pushing movements to keep shoulders neutral and prevent the "hunched" posture caused by overactive chest muscles.</div>
+</div>
+<div style="border-left: 2px solid #ef4444; padding-left: 10px;">
+<div style="font-size: 0.65em; color: #ef4444; font-weight: bold;">TENDON INTEGRITY</div>
+<div style="font-size: 0.7em; color: #888;">Ensuring connective tissue strength matches muscle power; specifically monitoring Straight-Arm (SA) holds to prevent bicep or elbow tears during high-tension skills.</div>
+</div>
+<div style="border-left: 2px solid #fff; padding-left: 10px;">
+<div style="font-size: 0.65em; color: #fff; font-weight: bold;">GENETIC CEILING</div>
+<div style="font-size: 0.7em; color: #888;">Identifying the optimal Body Mass Index (21–23.5) where you have the maximum muscle-to-weight ratio for advanced calisthenics without being too heavy to move efficiently.</div>
+</div>
+</div>
+    </div>
+</div>
+<div style="margin: 40px auto; max-width: 450px; padding: 30px; text-align: center; background: #16161e; border: 1px solid #2a2a3a; border-radius: 16px; font-family: sans-serif;">
+    <h2 style="font-size: 0.8em; color: #fff; letter-spacing: 2px; margin-bottom: 20px; font-weight: 600; opacity: 0.8; text-transform: uppercase;">
+        Support The Grind
+    </h2>
+    <a href="https://buymeacoffee.com/CaliBiotech" 
+       target="_blank" 
+       onmouseover="this.style.transform='scale(1.03)'; this.style.backgroundColor='#ffe433';" 
+       onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='#ffdd00';"
+       style="display: block; background: #ffdd00; color: #000; text-decoration: none; font-weight: 800; font-size: 1.1em; padding: 18px; border-radius: 12px; transition: all 0.2s ease-in-out;">
+        ☕ BUY ME A PROTEIN SHAKE
+    </a>
+    <p style="font-size: 0.75em; color: #666; margin-top: 20px; line-height: 1.6;">
+        Your support helps keep the <b>Cali-Biotech</b> engine running.<br>
+        Join the mission to optimize performance.
+    </p>
+</div>
+    <div class="blog-section">
+        <h3 style="color:var(--primary); font-size:0.9em; margin-bottom: 15px;">RESOURCES & GUIDES</h3>
+        <a href="blog/chest-guide.html" class="blog-link">3 Best Exercises for a Massive Chest</a>
+        <a href="blog/planche-guide.html" class="blog-link">Unlock the Planche: Top 3 Exercises</a>
+        <a href="blog/front-lever-guide.html" class="blog-link">Master the Front Lever</a>
+        <a href="blog/pullup-guide.html" class="blog-link">First Pull-up Guide</a>
+        <a href="blog/planche-pushup-guide.html" class="blog-link">The Best Pushup for Planche</a>
+        <a href="blog/planche-progression-zero-to-advanced-tuck.html" class="blog-link">From zero to advanced tuck PLANCHE</a>
+        <a href="./blog/specificity-is-king.html" class="blog-link">specificity is king</a>
+           <a href="blog/ring-shoulder-guide.html" class="blog-link">3D Shoulders with Rings</a>
+        <a href="blog/back-thickness.html" class="blog-link">Back Thickness</a>
+         <a href="blog/weighted-calisthenics.html" class="blog-link">Drop the Ego: Weighted Training</a>
+         <a href="blog/hardest-skills.html" class="blog-link">10 Hardest Skills</a>
+         <a href="blog/beginner-skills.html" class="blog-link">Beginner Skills</a>
+         <a href="blog/fast-track-skills.html" class="blog-link">8-12 Week Skills</a>
+         <a href="blog/equipment-guide.html" class="blog-link">Essential Equipment</a>
+         <a href="blog/attractive-physique.html" class="blog-link">Top Aesthetic Bodyparts</a>
+         <a href="blog/calisthenics-diet.html" class="blog-link">The Truth About Bulking</a>
+         <a href="blog/lat-pulldown-truth.html" class="blog-link">Lat Pulldown vs Pull-up</a>
+
+<section class="content-rich-section" style="background: rgba(76, 111, 255, 0.05); border: 1px solid #2a2a3a; margin: 40px 20px; padding: 30px; border-radius: 12px; border-left: 5px solid var(--primary);">
+    <h2 style="color: var(--primary); font-size: 1.1em; letter-spacing: 2px; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 25px; text-transform: uppercase;">Technical Manual: Biomechanical Definitions</h2>
+    
+    <div class="glossary-scroll-container">
+        <div class="glossary-grid">
+            
+           <div>
+    <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[01] ALLOMETRIC SCALING</strong>
+    <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">
+        The "Size Paradox": As an athlete grows larger, their <strong>body mass</strong> increases much faster than their <strong>muscle force</strong>. This is why smaller athletes often find bodyweight skills easier to master than heavyweights.
+    </p>
+</div>
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[02] SCAPULAR PROTRACTION</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Shoulder blades forward. Key for Planche integrity.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[03] EXTERNAL ROTATION</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Humerus outward rotation to lock joints in Ring work.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[04] MOMENT ARM</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Distance from joint to force. Shorter = mechanical advantage.</p>
+                
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[05] TENDON ADAPTATION</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Adapts 10x slower than muscle. Avoid rapid load spikes.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[06] NEURAL RECRUITMENT</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">CNS ability to fire motor units during maximal holds.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[07] ABDUCTION / ADDUCTION</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Movement away/toward midline. Crucial for Iron Cross.</p>
+                
+
+
+
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[08] MIND-MUSCLE CONNECTION</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Deliberate contraction to prevent energy leaks.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[09] MECHANICAL LEVERAGE</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Changing COM (straddle vs full) to adjust intensity.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[10] ISOMETRIC SCALING</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Strength gained at specific angles (+/- 15 degrees).</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[11] INTENSITY (LOAD)</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">% of max force, increased by decreasing leverage.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[12] VOLUME (TOTAL TAX)</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Sets × Time. High intensity leads to Neural Fatigue.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[13] SCAPULAR DEPRESSION</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Pulling shoulders down to stabilize the joint.</p>
+                
+
+
+
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[14] FALSE GRIP</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Wrist flexed over bar to shorten forearm lever.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[15] ANTERIOR PELVIC TILT</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">"Piking" at hips; indicates core/glute weakness.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[16] PROPRIOCEPTION</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Spatial awareness; "feeling" hip height in space.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[17] PLYOMETRIC TRANSFER</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Converting static strength into explosive pop.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[18] NEURAL DRIVE</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Brain-to-muscle electrical signal efficiency.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[19] EXPLOSIVE TRANSFER</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Pop required to bypass Muscle-up sticking points.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[20] KINETIC INTEGRITY</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Making the body a "rigid log" to save energy.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[21] LEVERAGE DIFFERENTIAL</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">The "Tall Person Tax" due to limb length.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[22] PROGRESSIVE OVERLOAD</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Harder moves via angles or slower tempo.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[23] SCAPULAR STRENGTH</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Foundation required for all advanced holds.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[24] GREASING THE GROOVE</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">High frequency, sub-maximal practice for skill.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[25] STRAIGHT-ARM STRENGTH</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Locked joints acting as structural pillars.</p>
+            </div>
+
+            <div>
+                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[26] THE STICKING POINT</strong>
+                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">The failure inch; killed with targeted isometrics.</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+       
+        <p style="font-size: 0.6em; color: #444; margin-top: 25px;">© 2026 Cali-Biotech Command Systems.</p>
+    </div>
+</div> </body>
+</html>
+</div>
+<script>
+let isSystemReady = false;
+let isSimMode = false;
+
+function toggleSimMode() {
+    // 1. Update the global variable so other functions know we are simulating
+    isSimMode = document.getElementById("simMode").checked;
+    const container = document.getElementById("mainContainer");
+    
+    if (isSimMode) {
+        container.classList.add('sim-active');
+    } else {
+        container.classList.remove('sim-active');
+        loadSavedData(); // Returns to your real data
+    }
+
+    // 2. ONLY run analyze if the system is actually "Unlocked/Prepared"
+    // This prevents errors if you flip the switch before clicking the big button
+    if (isSystemReady) {
+        analyze();
+    }
+}
+
+function prepareSystem() {
+    // 1. Physically remove the red disclaimer box
+    const disclaimer = document.getElementById("safetyDisclaimer");
+    if (disclaimer) {
+        disclaimer.remove();
+    }
+
+    // 2. Existing logic to unlock the system
+    isSystemReady = true;
+    
+    // Physically remove the lock overlay to prevent layout glitches
+    const lock = document.getElementById("radar-lock");
+    if (lock) {
+        lock.remove();
+    }
+
+    // 3. Run the analysis
+    analyze();
+}
+function updateLabels() {
+    const isMet = document.getElementById("unitSystem").value === 'met';
+    document.getElementById("wLabel").innerText = isMet ? "Weight (kg)" : "Weight (lbs)";
+    document.getElementById("hMetric").style.display = isMet ? "block" : "none";
+    document.getElementById("hImperial").style.display = isMet ? "none" : "block";
+}
+
+const skills = [
+    { name: "Full Planche", p: 3.4, l: 0, s: 2.5, minEntry: 45 },
+    { name: "Straddle Planche", p: 2.8, l: 0, s: 2.0, minEntry: 30 },
+    { name: "Front Lever", p: 0, l: 2.6, s: 1.8, minEntry: 30 },
+    { name: "Iron Cross", p: 0, l: 3.0, s: 4.0, minEntry: 50 },
+    { name: "Maltese", p: 4.5, l: 0, s: 3.5, minEntry: 55 },
+    { name: "Muscle-up", p: 1.5, l: 1.6, s: 0, minEntry: 15 }
+];
+
+const recs = {
+    "Full Planche": "Planche Leans / PPPU",
+    "Straddle Planche": "Tuck Planche Holds",
+    "Front Lever": "Scapular Pulls / Negatives",
+    "Iron Cross": "Rings Fly / Cross Pulls",
+    "Maltese": "Zanetti Press / Ring Fly",
+    "Muscle-up": "High Pull-ups / Explosive Row"
+};
+
+let radarChart;
+const ctx = document.getElementById('skillRadar').getContext('2d');
+
+function initChart() {
+    const isMobile = window.innerWidth < 600;
+
+    radarChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: skills.map(s => s.name),
+            datasets: [
+                { 
+                    label: 'Reality', 
+                    data: [], 
+                    backgroundColor: 'rgba(76, 111, 255, 0.3)', 
+                    borderColor: '#4c6fff', 
+                    borderWidth: 4, 
+                    pointRadius: isMobile ? 3 : 5 
+                },
+                { 
+                    label: 'Potential', 
+                    data: [], 
+                    backgroundColor: 'rgba(0, 255, 204, 0.05)', 
+                    borderColor: '#00ffcc', 
+                    borderDash: [5, 5],
+                    borderWidth: 2 
+                }
+            ]
+        },
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            layout: {
+                padding: isMobile ? 10 : 20 
+            },
+            scales: { 
+                r: { 
+                    beginAtZero: true, 
+                    max: 100, 
+                    ticks: { display: false }, 
+                    grid: { color: '#333', lineWidth: 1 },
+                    angleLines: { color: '#444' },
+                    pointLabels: {
+                        color: '#fff',
+                        centerPointLabels: true, 
+                        font: {
+                            size: isMobile ? 10 : 15, 
+                            weight: 'bold',
+                            family: 'monospace'
+                        },
+                        padding: isMobile ? 8 : 15,
+                        // THIS BIT SPLITS THE WORDS ON MOBILE
+                        callback: function(label) {
+                            if (isMobile && /\s/.test(label)) {
+                                return label.split(/\s/); 
+                            }
+                            return label;
+                        }
+                    }
+                } 
+            }, 
+            plugins: { 
+                legend: { display: false }
+            }
+        }
+    });
+}
+function saveToLocal() {
+    if (isSimMode) return; 
+    const inputs = document.querySelectorAll('input, select');
+    const data = {};
+    inputs.forEach(input => { data[input.id] = input.value; });
+    localStorage.setItem('caliData', JSON.stringify(data));
+}
+
+function loadSavedData() {
+    // 1. Loads your numerical stats (Weight, Reps, etc.)
+    const saved = localStorage.getItem('caliData');
+    if (saved) {
+        const data = JSON.parse(saved);
+        Object.keys(data).forEach(id => { 
+            if(document.getElementById(id)) document.getElementById(id).value = data[id]; 
+        });
+        updateLabels();
+    }
+
+    // 2. Loads and displays your chronological training history
+    // We call displayNotes() here so the list appears on page load
+    if (document.getElementById("notesHistory")) {
+        displayNotes();
+    }
+}
+
+function logSession() {
+    const savedLogs = localStorage.getItem('caliLogs') ? JSON.parse(localStorage.getItem('caliLogs')) : [];
+    const sys = document.getElementById("unitSystem").value;
+    const u = sys === 'met' ? 'kg' : 'lbs';
+    
+    const rawBwInput = document.getElementById("weight").value;
+    const hasBw = rawBwInput && parseFloat(rawBwInput) > 0;
+    const bwForCalc = hasBw ? parseFloat(rawBwInput) : 75;
+
+    const getLiftData = (idW, idR) => {
+        const plate = parseFloat(document.getElementById(idW).value) || 0;
+        const reps = parseInt(document.getElementById(idR).value) || 0;
+        if (plate === 0 && reps === 0) return { display: "---" };
+        const total1RM = (bwForCalc + plate * (1 + reps/30)).toFixed(1);
+        return { display: `${plate}${u} x ${reps} (${total1RM}${u})` };
+    };
+
+    const entry = {
+        date: new Date().toLocaleDateString(),
+        bw: hasBw ? rawBwInput + u : "---",
+        pull: getLiftData("wpW", "wpR").display,
+        push: getLiftData("wdW", "wdR").display,
+        sa: getLiftData("saW", "saR").display
+    };
+
+    savedLogs.unshift(entry);
+    localStorage.setItem('caliLogs', JSON.stringify(savedLogs.slice(0, 8)));
+    renderLogs();
+}
+function renderLogs() {
+    const savedLogs = localStorage.getItem('caliLogs') ? JSON.parse(localStorage.getItem('caliLogs')) : [];
+    const container = document.getElementById("logBody");
+    
+    container.innerHTML = savedLogs.map((l, i) => `
+        <tr style="border-bottom: 1px solid #222; font-size: 0.85em;">
+            <td style="padding: 10px 5px; color: #888;">${l.date}</td>
+            <td style="padding: 10px 5px; color: #fff;">${l.bw}</td>
+            <td style="padding: 10px 5px; color: #00ffcc; font-family: monospace;">${l.pull}</td>
+            <td style="padding: 10px 5px; color: #00ffcc; font-family: monospace;">${l.push}</td>
+            <td style="padding: 10px 5px; color: #00ffcc; font-family: monospace;">${l.sa}</td>
+            <td style="padding: 10px 5px; text-align: center;">
+                <button onclick="deleteLog(${i})" style="background:none; border:none; color:#ff4444; cursor:pointer; font-weight:bold; font-size: 1.2em;">✕</button>
+            </td>
+        </tr>
+    `).join('');
+}
+function deleteLog(i) {
+    const savedLogs = JSON.parse(localStorage.getItem('caliLogs'));
+    savedLogs.splice(i, 1);
+    localStorage.setItem('caliLogs', JSON.stringify(savedLogs));
+    renderLogs();
+}
+
+function generateGoalBrief(vectors, bw, conv, u) {
+    let bottlenecks = [...vectors].sort((a, b) => a.val - b.val).slice(0, 2);
+    let brief = `<div style="margin-top: 8px; font-size: 0.6em; color: var(--potential); font-weight: bold; text-transform: uppercase;">Mission Requirements:</div>`;
+    
+    bottlenecks.forEach(b => {
+        let targetTotalWeight = b.req * bw;
+        let currentTotalWeight = b.raw * bw;
+        
+        // Use 'gap' consistently
+        let gap = (targetTotalWeight - currentTotalWeight) / conv;
+        
+        let exerciseName = "";
+        let equipment = "to belt/bar";
+
+        if (b.name === "Push") exerciseName = "Weighted Dip";
+        if (b.name === "Pull") exerciseName = "Weighted Pull-up";
+        if (b.name === "SA Strength") {
+            exerciseName = "Zanetti Raise";
+            gap = gap / 2; 
+            equipment = "per dumbbell";
+        }
+
+        brief += `<div class="rec-exercise" style="opacity:1; font-size:0.75em; margin-top:4px;">↑ **${exerciseName}**: Add +${Math.max(0, gap).toFixed(1)}${u} ${equipment}</div>`;
+    });
+    return brief;
+}
+
+function analyze() {
+    if(!isSystemReady) return;
+    if(!radarChart) initChart();
+    try {
+        const sys = document.getElementById("unitSystem").value;
+        const conv = sys === 'imp' ? 0.453592 : 1;
+        const u = sys === 'met' ? 'kg' : 'lbs';
+        
+        const weightInput = document.getElementById("weight").value;
+        const isWeightEmpty = !weightInput || parseFloat(weightInput) <= 0;
+        let bw = (parseFloat(weightInput) || 75) * conv;
+
+        let h = sys === 'met' ? (parseFloat(document.getElementById("hCm").value) || 170) : ((parseFloat(document.getElementById("hFt").value)||5)*30.48)+((parseFloat(document.getElementById("hIn").value)||7)*2.54);
+
+        if (isSimMode) {
+            document.getElementById("weight").value = 75;
+            document.getElementById("pullups").value = 28;
+            document.getElementById("pushups").value = 55;
+            document.getElementById("mu").value = 12;
+            document.getElementById("hang").value = 120;
+            document.getElementById("wpW").value = 45;
+            document.getElementById("wpR").value = 5;
+            document.getElementById("wdW").value = 65;
+            document.getElementById("wdR").value = 5;
+            document.getElementById("saW").value = 25;
+            document.getElementById("saR").value = 5;
+            document.getElementById("legRatio").value = "1.0";
+            document.getElementById("form").value = "1.0";
+            document.getElementById("cns").value = 10;
+        }
+
+        const pull1RM = (bw + (parseFloat(document.getElementById("wpW").value)||0)*conv * (1 + (parseInt(document.getElementById("wpR").value)||0)/30)) / bw;
+        const push1RM = (bw + (parseFloat(document.getElementById("wdW").value)||0)*conv * (1 + (parseInt(document.getElementById("wdR").value)||0)/30)) / bw;
+        let rawSa = (bw + (parseFloat(document.getElementById("saW").value)||0)*conv * (1 + (parseInt(document.getElementById("saR").value)||0)/30)) / bw;
+        const sa1RM = Math.max(rawSa, (push1RM * 0.75));
+
+        const torqueFactor = Math.pow(h / 170, 2.3) * (parseFloat(document.getElementById("legRatio").value) || 1.0);
+        const cnsVal = (parseInt(document.getElementById("cns").value) || 10) / 10;
+        const form = parseFloat(document.getElementById("form").value) || 1.0;
+
+        if (isSimMode) {
+            radarChart.data.datasets[0].label = 'SIMULATED TARGET';
+            radarChart.data.datasets[0].borderColor = '#00ffcc';
+        } else {
+            radarChart.data.datasets[0].label = 'REALITY';
+            radarChart.data.datasets[0].borderColor = '#4c6fff';
+            if (typeof saveToLocal === 'function') saveToLocal();
+        }
+
+        let skillPanel = document.getElementById("skillBars");
+        if (!document.getElementById("goalSelect")) {
+            skillPanel.innerHTML = `<div style="margin-bottom:20px;"><label style="color:var(--primary); font-size:0.7em; letter-spacing:2px;">MISSION_TARGET</label>
+            <select id="goalSelect" onchange="analyze()" style="background:#111; color:#fff; width:100%; border:1px solid #333; padding:10px; border-radius:5px; margin-top:5px;">
+                <option value="None">No Active Goal</option>${skills.map(s => `<option value="${s.name}">${s.name}</option>`).join('')}
+            </select></div><div id="barContainer"></div>`;
+        }
+
+        const activeGoal = document.getElementById("goalSelect").value;
+        let barHtml = ""; const curScores = []; const potScores = [];
+
+    skills.forEach(s => {
+
+            let vectors = [];
+
+            if (s.p > 0) vectors.push({ name: "Push (Dips)", val: (push1RM / (s.p * torqueFactor)) * 100, req: s.p * torqueFactor });
+
+            if (s.l > 0) vectors.push({ name: "Pull (Pullups)", val: (pull1RM / (s.l * torqueFactor)) * 100, req: s.l * torqueFactor });
+
+            if (s.s > 0) vectors.push({ name: "SA (Zanetti)", val: (sa1RM / (s.s * torqueFactor)) * 100, req: s.s * torqueFactor });
+
+           
+
+            const sig = (x) => 100 / (1 + Math.exp(-0.15 * (x - 52)));
+
+            let minVal = Math.min(...vectors.map(v => v.val));
+
+            let cur = sig(minVal) * cnsVal * form;
+
+            // FORCE ZERO if base requirements are not met
+
+if (s.l > 0 && pull1RM <= 1.0) cur = 0; // If skill needs pull and pull is 0
+
+if (s.p > 0 && push1RM <= 1.0) cur = 0; // If skill needs push and push is 0
+
+if (s.s > 0 && sa1RM <= 1.0) cur = 0;   // If skill needs straight arm and sa is 0
+
+
+            const rawPull = parseFloat(document.getElementById("pullups").value) || 0;
+            const rawPush = parseFloat(document.getElementById("pushups").value) || 0;
+            const rawMu = parseFloat(document.getElementById("mu").value) || 0;
+            
+            if (s.name === "Muscle Ups" && rawMu === 0) cur = 0;
+            if (s.name === "Pullups" && rawPull === 0) cur = 0;
+            if (s.name === "Dips" && rawPush === 0) cur = 0;
+
+            const isTarget = s.name === activeGoal;
+            curScores.push(cur.toFixed(1));
+            potScores.push(sig(Math.max(...vectors.map(v => v.val))).toFixed(1));
+
+            let recText = "";
+            if (isTarget) {
+                let weakest = vectors.reduce((prev, curr) => (prev.val < curr.val) ? prev : curr);
+                let neededPlate = ((weakest.req * bw) - bw) / conv;
+                recText = `CRITICAL PATH: Improve ${weakest.name}. Target 1RM: +${neededPlate.toFixed(1)}${u}.`;
+            }
+
+            barHtml += `<div class="skill-bar-container" style="opacity: ${activeGoal !== "None" && !isTarget ? '0.2' : '1'}; margin-bottom:15px;">
+                    <div class="skill-label" style="display:flex; justify-content:space-between; font-family:monospace; font-size:0.85em;">
+                        <span>${s.name.toUpperCase()}</span><span>${cur.toFixed(0)}%</span>
+                    </div>
+                    <div class="bar-bg" style="background:#111; height:6px; border-radius:10px; border:1px solid #333;">
+                        <div class="bar-fill" style="width: ${cur}%; height:100%; background: ${isTarget ? 'var(--potential)' : 'var(--primary)'}; border-radius:10px;"></div>
+                    </div>
+                    ${isTarget ? `<div style="font-size:0.7em; color:var(--potential); margin-top:5px; font-family:monospace;">> ${recText}</div>` : ''}
+                </div>`;
+        });
+
+        const pullPushRatio = (pull1RM / push1RM).toFixed(2);
+        const saIntegrity = (sa1RM / push1RM).toFixed(2);
+        const relPower = push1RM.toFixed(2);
+        const hasWeightedData = (parseFloat(document.getElementById("wdW").value) > 0 || parseFloat(document.getElementById("saW").value) > 0);
+        const hasRepData = (parseInt(document.getElementById("pullups").value) > 0);
+
+        let tStatus = torqueFactor > 1.08 ? "PENALTY" : "OPTIMAL";
+        let tDesc = torqueFactor > 1.08 ? `Height (${h.toFixed(0)}cm) creates lever disadvantage.` : `Optimal leverages for statics.`;
+        let bStatus = hasRepData ? (pullPushRatio < 0.85 ? "DEFICIT" : "BALANCED") : "STABLE";
+        let bDesc = hasRepData ? (pullPushRatio < 0.85 ? `Pull chain is ${((1-pullPushRatio)*100).toFixed(0)}% behind Push.` : `Scapular stabilizers are matched.`) : "Enter rep data.";
+        let sStatus = !hasWeightedData ? "INACTIVE" : (saIntegrity < 0.62 ? "TENDON LAG" : "NOMINAL");
+        let sDesc = !hasWeightedData ? "Enter data." : (saIntegrity < 0.62 ? "High injury risk." : "Density sufficient.");
+
+     // --- DEEP BIOMECHANICAL PROFILING (CLEAN TITLES) ---
+
+// 1. Scapular Ratio
+const scapularHealth = (pull1RM / push1RM).toFixed(2);
+const scapStatus = scapularHealth < 0.90 ? "DYSFUNCTION RISK" : "STRUCTURAL SYMMETRY";
+const scapColor = scapularHealth < 0.90 ? "#ff4444" : "#00ffcc";
+const scapDesc = scapularHealth < 0.90 
+    ? `Anterior dominance detected. Your pull-to-push ratio of ${scapularHealth} suggests the front of your body is significantly stronger than your back, increasing the risk of shoulder impingement.` 
+    : `Optimal scapular-humeral balance. Your posterior stabilizers are strong enough to safely offset high-intensity pushing loads.`;
+
+// 2. Tendon Integrity (Straight Arm)
+const tendonLoad = (sa1RM / push1RM).toFixed(2);
+const tendonStatus = tendonLoad < 0.65 ? "LOW DENSITY" : "ELASTIC STABILITY";
+const tendonColor = tendonLoad < 0.65 ? "#ff9900" : "#00ffcc";
+const tendonDesc = `Straight-arm to Bent-arm ratio is ${tendonLoad}. ${tendonLoad < 0.65 ? 'Your muscle strength is outpacing your tendon adaptation. Prioritize isometric holds to thicken connective tissue.' : 'Your distal tendon insertions are well-conditioned for your current muscle mass.'}`;
+
+// 3. Torque Disadvantage
+const leverEffect = (torqueFactor > 1.1) ? "LEVERAGE TAX" : "MECHANICAL EDGE";
+const leverDesc = `Based on your height of ${h.toFixed(0)}cm, you experience a ${((torqueFactor - 1) * 100).toFixed(1)}% increase in joint torque during static holds compared to the average gymnast profile.`;
+
+// 4. Neural Drive Efficiency
+const cnsEfficiency = (cnsVal * 100).toFixed(0);
+const cnsDesc = `Your Central Nervous System readiness is at ${cnsEfficiency}%. ${cnsVal < 0.8 ? 'Current motor unit recruitment is sub-optimal; consider a deload to restore neural firing speed.' : 'Your brain is effectively recruiting high-threshold motor units for maximum force.'}`;
+
+// 5. Explosive Transfer
+const vPull = (parseFloat(document.getElementById("mu").value) || 0);
+const hPull = (parseFloat(document.getElementById("pullups").value) || 0);
+const pullEfficiency = hPull > 0 ? (vPull / hPull).toFixed(2) : 0;
+const pullDesc = pullEfficiency < 0.4 ? "TRANSITION GAP: Your explosive power in the muscle-up transition is lower than your raw pulling endurance." : "POWER SYNC: You have a highly efficient transfer of momentum from the vertical pull into the dip phase.";
+
+// 6. Joint Shear Valuation
+const elbowShear = (sa1RM > push1RM * 0.8) ? "NOMINAL" : "SHEAR RISK";
+const elbowDesc = `High-intensity weighted dips without sufficient straight-arm support creates 'shear' forces at the elbow. ${elbowShear === "NOMINAL" ? 'Joint stress is distributed safely.' : 'High risk for medial epicondylitis (Golfer\'s Elbow).'}`;
+
+// 7. Relative Power Coefficient
+const relCoeff = (push1RM * 1.2 + pull1RM * 1.2).toFixed(2);
+const relDesc = `This is your systemic power-to-weight score. Your body is capable of generating ${relCoeff}x its own mass in total force across the primary planes of motion.`;
+
+// 8. Kinetic Chain Integrity
+const formTax = (1 - form) * 100;
+const kineticDesc = formTax > 0 ? `Energy Leakage: ${formTax.toFixed(0)}% of your force is being lost due to lack of total-body tension (core/glute engagement).` : `Perfect structural rigidity. Force is being transmitted through your skeleton with zero energy loss.`;
+
+
+let recommendationHtml = "";
+if (activeGoal !== "None") {
+    const skillIndex = skills.findIndex(s => s.name === activeGoal);
+    const currentSkillPct = parseFloat(curScores[skillIndex]);
+    
+    recommendationHtml = `
+            <div class="card" style="margin-top:20px; border: 1px solid var(--potential); background: rgba(0, 255, 204, 0.02);">
+                <h3 style="font-size:0.75em; letter-spacing:3px; color:var(--potential); margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">RECOMMENDED EXERCISES AND PROGRESSION</h3>
+                <div id="recoContainer">
+        `;
+
+    let protocol = [];
+    if (activeGoal.includes("Planche")) {
+        if (currentSkillPct < 35) protocol = ["Planche Leans (Protraction Focus)", "Scapula Push-ups", "Frog Stand (30s Hold)"];
+        else if (currentSkillPct < 65) protocol = ["Tuck Planche Max Effort", "Pseudo Planche Push-ups", "Dumbbell Straight Arm Raises"];
+        else protocol = ["Advanced Tuck / Straddle Negatives", "Planche Press to Handstand", "90 Degree Push-ups"];
+    } else if (activeGoal === "Front Lever") {
+        if (currentSkillPct < 35) protocol = ["Scapular Pull-ups", "Active Arch Hangs", "Tuck FL Pulls"];
+        else if (currentSkillPct < 65) protocol = ["Adv. Tuck FL Holds", "Front Lever Negatives", "Ice Cream Makers"];
+        else protocol = ["Straddle / Full FL Pull-to-Inverted", "Front Lever Rows", "Dragon Flags"];
+        } else if (activeGoal === "Maltese") {
+                if (currentSkillPct < 40) protocol = ["Maltese Leans (Low Bar)", "Planche Push-ups", "Dumbbell Maltese Press"];
+                else protocol = ["Maltese Negatives (Rings)", "Wide Arm Planche Holds", "Victorian Pull-ins"];
+    } else if (activeGoal === "Iron Cross") {
+        if (currentSkillPct < 35) protocol = ["Support Hold (External Rotation)", "Skin the Cat", "Rings Wide Support"];
+        else if (currentSkillPct < 65) protocol = ["Feet Assisted Cross Pulls", "Weighted Ring Flys", "Zanetti Press"];
+        else protocol = ["Iron Cross Negatives", "Blocked Cross Holds", "Full Zanetti (Bodyweight)"];
+    } else if (activeGoal === "Muscle-up") {
+        if (currentSkillPct < 50) protocol = ["Chest to Bar Explosive Pulls", "Tricep Extension Dips", "Transition Isometrics"];
+        else protocol = ["Weighted Muscle-ups", "Slow Negatives", "Russian Dips"];
+    }
+
+    protocol.forEach(ex => {
+        recommendationHtml += `
+            <div style="margin-bottom:10px; padding:12px; background: rgba(255,255,255,0.03); border-left: 2px solid var(--potential); display:flex; align-items:center; gap:10px;">
+                <span style="color:var(--potential); font-weight:bold; font-family:monospace;">>></span>
+                <span style="font-size:0.85em; color:#fff; font-family:monospace; text-transform: uppercase;">${ex}</span>
+            </div>`;
+    });
+    recommendationHtml += `</div></div>`;
+}
+
+// --- HEAT MAP LOGIC (RE-CONNECTED) ---
+const shoulders = document.querySelectorAll('#joint-shoulder-l, #joint-shoulder-r');
+const elbows = document.querySelectorAll('#joint-elbow-l, #joint-elbow-r');
+let riskMsg = "SYSTEMS NOMINAL";
+
+// 1. Shoulder Logic (tied to Scapular Balance)
+if (scapularHealth < 0.85) { 
+    shoulders.forEach(s => s.style.fill = "#ff4444"); 
+    riskMsg = "SHOULDER RISK"; 
+} else { 
+    shoulders.forEach(s => s.style.fill = "var(--potential)"); 
+}
+
+// 2. Elbow Logic (tied to Tendon Density/Shear)
+if (tendonLoad < 0.60) { 
+    elbows.forEach(e => e.style.fill = "#ff4444"); 
+    riskMsg = (riskMsg === "SHOULDER RISK") ? "MULTI JOINT ADVISORY" : "ELBOW RISK"; 
+} else { 
+    elbows.forEach(e => e.style.fill = "var(--potential)"); 
+}
+
+// 3. Update the UI Text for Risk
+const rMsg = document.getElementById("risk-msg");
+if (rMsg) { 
+    rMsg.innerText = riskMsg; 
+    rMsg.style.color = (riskMsg === "SYSTEMS NOMINAL") ? "var(--potential)" : "#ff4444"; 
+}
+
+
+// --- INJECTION ---
+let auditHtml = `<h3 style="font-size:0.75em; letter-spacing:3px; color:var(--primary); margin-bottom:20px; border-bottom:1px solid #333; padding-bottom:10px;">ADVANCED BIOMECHANICAL PROFILING</h3>`;
+
+const createInsight = (title, status, val, desc, color) => `<div class="insight-block" style="margin-bottom:15px; border-left:3px solid ${color}; padding-left:12px; background: rgba(255,255,255,0.02); padding-top:8px; padding-bottom:8px;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.8em; font-weight:bold; color:${color};">${title}</span>
+        <span style="font-size:0.6em; background:${color}; color:#000; padding:1px 4px; border-radius:2px; font-weight:bold;">${status}</span>
+    </div>
+    <div style="font-size:1em; color:#fff; font-family:monospace; margin:4px 0;">${val}</div>
+    <p style="font-size:0.65em; color:#bbb; margin:0; line-height:1.4;">${desc}</p>
+</div>`;
+
+auditHtml += createInsight("SCAPULAR BALANCE", scapStatus, scapularHealth, scapDesc, scapColor);
+auditHtml += createInsight("TENDON DENSITY", tendonStatus, tendonLoad, tendonDesc, tendonColor);
+auditHtml += createInsight("LEVERAGE DIFFERENTIAL", leverEffect, torqueFactor.toFixed(2) + "x", leverDesc, "#888");
+auditHtml += createInsight("NEURAL DRIVE", cnsEfficiency + "%", "CAPACITY", cnsDesc, "#4c6fff");
+auditHtml += createInsight("EXPLOSIVE TRANSFER", "PULL RATIO", pullEfficiency, pullDesc, "#ff9900");
+auditHtml += createInsight("JOINT SHEAR VALUATION", elbowShear, "ELBOW STRESS", elbowDesc, elbowShear === "NOMINAL" ? "#00ffcc" : "#ff4444");
+auditHtml += createInsight("SYSTEMIC OUTPUT", "POWER COEFF", relCoeff, relDesc, "var(--primary)");
+auditHtml += createInsight("KINETIC INTEGRITY", formTax > 0 ? "LEAKAGE DETECTED" : "INTEGRATED", form.toFixed(2), kineticDesc, formTax > 10 ? "#ff4444" : "#00ffcc");
+
+document.getElementById("aiFeedback").innerHTML = auditHtml + recommendationHtml;// --- RELENTLESS VOLUME AUDIT ---
+let pullSets = parseInt(document.getElementById("wpS").value) || 0;
+let pushSets = parseInt(document.getElementById("wdS").value) || 0;
+let saSets = parseInt(document.getElementById("saS")?.value) || 0;
+
+// Intensity Scaling (e.g., +30kg on a 75kg athlete = 1.4)
+const pullInt = pull1RM; 
+const pushInt = push1RM;
+
+// Math: Sets * (Intensity Squared)
+let pullLoad = pullSets * (pullInt * pullInt);
+let pushLoad = pushSets * (pushInt * pushInt);
+let totalTax = pullLoad + pushLoad + (saSets * 3);
+
+// 1. Determine Status and Color
+let vStatus = "OPTIMAL";
+let vColor = "#00ffcc";
+
+// Trigger DANGER if tax is high OR if total sets exceed 25
+if (totalTax > 40 || (pullSets + pushSets) > 25) {
+    vStatus = "OVERREACHING";
+    vColor = "#ff4444";
+} else if (totalTax > 25) {
+    vStatus = "HIGH LOAD";
+    vColor = "#ff9900";
+}
+
+// 2. Update the Bar Color and Width
+const vFill = document.getElementById("volume-fill");
+if (vFill) {
+    let volumePct = Math.min((totalTax / 45) * 100, 100); 
+    vFill.style.width = volumePct + "%";
+    vFill.style.background = vColor;
+}
+
+// 3. Update the Text (Fixes the "Still says Optimal" bug)
+const vStatusLabel = document.getElementById("recovery-status"); 
+if (vStatusLabel) {
+    vStatusLabel.innerText = vStatus;
+    vStatusLabel.style.color = vColor;
+}
+
+// 4. Update the Numeric Tax Display
+if (document.getElementById("volume-tax")) {
+    document.getElementById("volume-tax").innerText = totalTax.toFixed(1);
+}
+        // Injects ONLY the Biomechanical Report
+        
+        document.getElementById("barContainer").innerHTML = barHtml;
+        radarChart.data.datasets[0].data = curScores;
+        radarChart.data.datasets[1].data = potScores;
+        radarChart.update('none');
+
+    } catch (err) { console.error("Injection Error:", err); }
+}
+// Function 1: The actual image saver
+
+function shareReport() {
+
+    const target = document.getElementById("captureArea");
+
+    const btn = document.getElementById("shareBtn");
+
+    btn.innerText = "GENERATING...";
+
+   
+
+    html2canvas(target, {
+
+        backgroundColor: "#1f1f2e",
+
+        scale: 2 // Makes the image high quality
+
+    }).then(canvas => {
+
+        const link = document.createElement('a');
+
+        link.download = 'CaliBiotech_Report.png';
+
+        link.href = canvas.toDataURL();
+
+        link.click();
+
+        btn.innerText = "DOWNLOAD_REPORT.PNG";
+
+    });
+
+}
+
+function shareReport() {
+
+    const target = document.getElementById("captureArea");
+
+    const btn = document.getElementById("shareBtn");
+
+    btn.innerText = "GENERATING...";
+
+   
+
+    html2canvas(target, {
+
+        backgroundColor: "#1f1f2e",
+
+        scale: 2
+
+    }).then(canvas => {
+
+        const link = document.createElement('a');
+
+        link.download = 'CaliBiotech_Report.png';
+
+        link.href = canvas.toDataURL();
+
+        link.click();
+
+        btn.innerText = "DOWNLOAD_REPORT.PNG";
+
+    });
+
+}
+
+document.getElementById("shareBtn").style.display = "block";
+
+// Professional save function with real-time UI updates
+function saveNotes() {
+    const noteInput = document.getElementById("sessionNotes");
+    const noteText = noteInput.value.trim();
+    
+    if (!noteText) return; 
+
+    const timestamp = new Date().toLocaleDateString() + " | " + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    
+    let history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
+    history.unshift({ date: timestamp, text: noteText });
+    localStorage.setItem('cali_biotech_history', JSON.stringify(history));
+
+    noteInput.value = "";
+    displayNotes();
+
+    // Visual confirmation
+    const btn = event.currentTarget;
+    const originalText = "Commit Data";
+    btn.innerText = "Data Committed";
+    btn.style.background = "#00ffcc";
+    btn.style.color = "#000";
+    
+    setTimeout(() => {
+        btn.innerText = originalText;
+        btn.style.background = "var(--primary)";
+    }, 2000);
+}
+
+// Cleanly renders the archive entries
+function displayNotes() {
+    const history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
+    const container = document.getElementById("notesHistory");
+    if (!container) return;
+    
+    if (history.length === 0) {
+        container.innerHTML = `<div style="font-size: 0.7em; color: #444; letter-spacing: 2px; text-align: center; padding: 40px;">NO ARCHIVED ENTRIES</div>`;
+        return;
+    }
+
+    container.innerHTML = history.map((item, index) => `
+        <div style="margin-bottom: 15px; padding: 20px; background: rgba(255,255,255,0.01); border-left: 4px solid var(--primary); font-family: 'Inter', sans-serif; position: relative; border-radius: 2px;">
+            <div style="font-size: 0.6em; color: var(--primary); margin-bottom: 8px; font-weight: bold; letter-spacing: 1.5px; opacity: 0.8;">[${item.date}]</div>
+            <div style="font-size: 0.95em; color: #d1d1d1; padding-right: 30px; line-height: 1.6;">${item.text}</div>
+            <span onclick="deleteSingleNote(${index})" style="position: absolute; top: 15px; right: 15px; color: #555; cursor: pointer; font-size: 1.2em; transition: color 0.2s;" onmouseover="this.style.color='#ff4444'" onmouseout="this.style.color='#555'">&times;</span>
+        </div>
+    `).join('');
+}
+
+function deleteSingleNote(index) {
+    let history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
+    history.splice(index, 1);
+    localStorage.setItem('cali_biotech_history', JSON.stringify(history));
+    displayNotes();
+}
+
+function clearAllNotes() {
+    if (confirm("PROCEED? This will permanently erase all archived feedback data.")) {
+        localStorage.removeItem('cali_biotech_history');
+        displayNotes();
+    }
+
+
+// Initialize notes on load
+document.addEventListener('DOMContentLoaded', () => {
+    displayNotes();
+});
+
+
+
+
+    container.innerHTML = history.map((item, index) => `
+   <div class="card" style="margin-top: 30px; border: 1px solid #333; background: #1a1a1a; width: 100%; box-sizing: border-box;">
+    <h3 style="font-size: 0.8em; letter-spacing: 3px; color: var(--primary); margin-bottom: 20px; text-transform: uppercase;">Biotic Feedback Archive</h3>
+    
+    <textarea id="sessionNotes" placeholder="Record physiological feedback, RPE, or specific joint sensations..." 
+              style="width: 100%; height: 160px; background: #0a0a0a; color: #fff; border: 1px solid #333; padding: 20px; font-family: 'Inter', sans-serif; border-radius: 6px; line-height: 1.6; resize: vertical; box-sizing: border-box; outline: none; transition: border-color 0.3s ease;"></textarea>
+    
+    <div style="display: flex; gap: 15px; margin-top: 20px;">
+        <button onclick="saveNotes()" style="flex: 4; background: var(--primary); color: #000; border: none; padding: 14px; font-family: 'Monospace'; font-weight: 900; cursor: pointer; border-radius: 4px; letter-spacing: 1.5px; text-transform: uppercase;">Commit Data</button>
+        <button onclick="clearAllNotes()" style="flex: 1; background: rgba(255, 68, 68, 0.05); color: #ff4444; border: 1px solid rgba(255, 68, 68, 0.3); padding: 14px; font-family: 'Monospace'; font-size: 0.8em; cursor: pointer; border-radius: 4px; font-weight: bold; text-transform: uppercase;">Delete All</button>
+    </div>
+
+    <div id="notesHistory" style="margin-top: 30px; max-height: 500px; overflow-y: auto; border-top: 1px solid #222; padding-top: 20px;">
+        </div>
+</div>
+    `).join('');
+}
+
+
+
+</script>
+<div class="card" style="margin-top: 20px;">
+    <h3>LOG</h3>
+    <textarea id="sessionNotes" placeholder="Log physiological feedback, RPE, or joint status..." 
+              style="width: 100%; height: 80px; background: #111; color: #fff; border: 1px solid #333; padding: 10px; font-family: monospace; border-radius: 5px;"></textarea>
+    
+    <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <button onclick="saveNotes()" style="flex: 3; background: var(--primary); color: #000; border: none; padding: 10px; font-family: monospace; font-weight: bold; cursor: pointer; border-radius: 4px;">COMMIT DATA</button>
+        <button onclick="clearAllNotes()" style="flex: 1; background: rgba(255, 68, 68, 0.1); color: #ff4444; border: 1px solid #ff4444; padding: 10px; font-family: monospace; font-size: 0.7em; cursor: pointer; border-radius: 4px;">DELETE ALL</button>
+    </div>
+
+    <div id="notesHistory" style="margin-top: 20px; max-height: 250px; overflow-y: auto; border-top: 1px solid #333; padding-top: 10px;">
+        <div style="font-size: 0.6em; color: #666; letter-spacing: 2px;">NO FEEDBACK ENTRIES</div>
+    </div>
+</div>
+
+
+<footer style="margin-top: 50px; border-top: 1px solid #333; padding-top: 20px; font-size: 0.8em; color: #888; text-align: center;">
+    <p>
+        <a href="/about.html" style="color: #888; text-decoration: none; margin: 0 10px;">About Us</a> | 
+        <a href="/privacy-policy.html" style="color: #888; text-decoration: none; margin: 0 10px;">Privacy Policy</a> | 
+        <a href="/contact.html" style="color: #888; text-decoration: none; margin: 0 10px;">Contact Us</a> | 
+        <a href="/terms.html" style="color: #888; text-decoration: none; margin: 0 10px;">Terms & Conditions</a>
+    </p>
+    <p>&copy; 2026 Cali Biotech | Data-Driven Bodyweight Training</p>
 </footer>
 
-<footer class="disclaimer">
-© 2026 TaxPlan2026 |
-<a href="privacy.html">Privacy Policy</a> |
-<a href="terms.html">Terms</a> |
-<a href="about.html">About</a> |
-<a href="contact.html">Contact</a>
-</footer>
-
-<script src="script.js"></script>
 
 </body>
+
 </html>
