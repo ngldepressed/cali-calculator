@@ -991,8 +991,23 @@ function analyze() {
         let rawSa = (bw + (parseFloat(document.getElementById("saW").value)||0)*conv * (1 + (parseInt(document.getElementById("saR").value)||0)/30)) / bw;
         const sa1RM = Math.max(rawSa, (push1RM * 0.75));
 
-        const torqueFactor = Math.pow(h / 170, 2.3) * (parseFloat(document.getElementById("legRatio").value) || 1.0);
-        const cnsVal = (parseInt(document.getElementById("cns").value) || 10) / 10;
+
+     // --- Surface Detection ---
+const surfaceMultiplier = parseFloat(document.getElementById("surface").value) || 1.0;
+const isRings = surfaceMultiplier > 1.0;
+const ringTax = isRings ? 1.1 : 1.0;
+
+// --- Torque Calculation ---
+const torqueFactor = 
+    Math.pow(h / 170, 2.3) *
+    (parseFloat(document.getElementById("legRatio").value) || 1.0) *
+    surfaceMultiplier;
+
+// --- CNS Readiness ---
+let cnsVal = (parseInt(document.getElementById("cns").value) || 10) / 10;
+
+// Rings reduce neural efficiency
+cnsVal = cnsVal / ringTax;
         const form = parseFloat(document.getElementById("form").value) || 1.0;
 
         if (isSimMode) {
@@ -1096,7 +1111,14 @@ const scapDesc = scapularHealth < 0.90
     : `Optimal scapular-humeral balance. Your posterior stabilizers are strong enough to safely offset high-intensity pushing loads.`;
 
 // 2. Tendon Integrity (Straight Arm)
-const tendonLoad = (sa1RM / push1RM).toFixed(2);
+let tendonLoadRaw = sa1RM / push1RM;
+
+// Rings increase straight-arm tendon demand
+if (isRings) {
+    tendonLoadRaw *= 0.85; // makes ratio worse
+}
+
+const tendonLoad = tendonLoadRaw.toFixed(2);
 const tendonStatus = tendonLoad < 0.65 ? "LOW DENSITY" : "ELASTIC STABILITY";
 const tendonColor = tendonLoad < 0.65 ? "#ff9900" : "#00ffcc";
 const tendonDesc = `Straight-arm to Bent-arm ratio is ${tendonLoad}. ${tendonLoad < 0.65 ? 'Your muscle strength is outpacing your tendon adaptation. Prioritize isometric holds to thicken connective tissue.' : 'Your distal tendon insertions are well-conditioned for your current muscle mass.'}`;
@@ -1116,7 +1138,14 @@ const pullEfficiency = hPull > 0 ? (vPull / hPull).toFixed(2) : 0;
 const pullDesc = pullEfficiency < 0.4 ? "TRANSITION GAP: Your explosive power in the muscle-up transition is lower than your raw pulling endurance." : "POWER SYNC: You have a highly efficient transfer of momentum from the vertical pull into the dip phase.";
 
 // 6. Joint Shear Valuation
-const elbowShear = (sa1RM > push1RM * 0.8) ? "NOMINAL" : "SHEAR RISK";
+let elbowThreshold = 0.8;
+
+// Rings increase instability at elbow
+if (isRings) {
+    elbowThreshold = 0.9;
+}
+
+const elbowShear = (sa1RM > push1RM * elbowThreshold) ? "NOMINAL" : "SHEAR RISK";
 const elbowDesc = `High-intensity weighted dips without sufficient straight-arm support creates 'shear' forces at the elbow. ${elbowShear === "NOMINAL" ? 'Joint stress is distributed safely.' : 'High risk for medial epicondylitis (Golfer\'s Elbow).'}`;
 
 // 7. Relative Power Coefficient
@@ -1309,13 +1338,7 @@ function shareReport() {
 
 }
 
-function shareReport() {
 
-    const target = document.getElementById("captureArea");
-
-    const btn = document.getElementById("shareBtn");
-
-    btn.innerText = "GENERATING...";
 
    
 
@@ -1339,7 +1362,7 @@ function shareReport() {
 
     });
 
-}
+
 
 document.getElementById("shareBtn").style.display = "block";
 
