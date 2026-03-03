@@ -811,6 +811,16 @@ function prepareSystem() {
 }
 function updateLabels() {
     const isMet = document.getElementById("unitSystem").value === 'met';
+  const ratio = 2.20462;
+
+    // --- ADD THIS PART ---
+    const ids = ['weight', 'wpW', 'wdW', 'saW']; 
+    ids.forEach(id => {
+        let el = document.getElementById(id);
+        if (el && el.value) {
+            el.value = isMet ? (el.value / ratio).toFixed(1) : (el.value * ratio).toFixed(1);
+        }
+    });
     document.getElementById("wLabel").innerText = isMet ? "Weight (kg)" : "Weight (lbs)";
     document.getElementById("hMetric").style.display = isMet ? "block" : "none";
     document.getElementById("hImperial").style.display = isMet ? "none" : "block";
