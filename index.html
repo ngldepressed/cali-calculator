@@ -78,7 +78,14 @@ input, select, textarea {
         .card { background: #1f1f2e; padding: 18px; border-radius: 16px; border: 1px solid #333; }
         .card h3 { margin-top: 0; color: var(--primary); font-size: 0.75em; text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid #333; padding-bottom: 5px; }
         
-        label { display: block; margin-top: 8px; font-size: 0.65em; color: #888; text-transform: uppercase; font-weight: bold; }
+       label { 
+    display: block; 
+    margin-top: 8px; 
+    font-size: 0.8em; /* Much easier to read */
+    color: #bbb;      /* Brighter for better contrast */
+    text-transform: uppercase; 
+    font-weight: bold; 
+}
         input, select { width: 100%; padding: 10px; margin-top: 4px; border-radius: 8px; border: 1px solid #333; background: var(--bg); color: white; font-size: 0.85em; transition: 0.3s; }
         
         .inline-quad { display: grid; grid-template-columns: 1.2fr 0.8fr 0.8fr 1fr; gap: 5px; } 
@@ -281,44 +288,74 @@ input, select, textarea {
         <div class="card">
             <h3>Structure & Readiness</h3>
             <div class="inline-quad" style="grid-template-columns: 1fr 1fr;">
-                <div><label id="wLabel">Weight (kg)</label><input type="number" id="weight" value="75" oninput="analyze();"></div>
-                <div id="hMetric"><label>Height (cm)</label><input type="number" id="hCm" value="175" oninput="analyze();"></div>
+              <div>
+    <label for="weight" id="wLabel">Weight (kg)</label>
+    <input type="number" id="weight" value="75" oninput="analyze();">
+</div>
+               <div id="hMetric"><label for="hCm">Height (cm)</label><input type="number" id="hCm" value="175" oninput="analyze();"></div>
                 <div id="hImperial" style="display:none;"><label>Height (ft/in)</label>
                     <div style="display:flex; gap:5px;"><input type="number" id="hFt" value="5" oninput="analyze();"><input type="number" id="hIn" value="9" oninput="analyze();"></div>
                 </div>
             </div>
             <label>Surface Stability</label>
             <select id="surface" onchange="analyze();"><option value="1.0">Stable (Floor)</option><option value="1.25">Unstable (Rings)</option></select>
-            <label>CNS Readiness</label>
-            <input type="range" id="cns" min="1" max="10" value="9" oninput="analyze();">
+        <label for="cns">CNS Readiness</label>
+<input type="range" id="cns" min="1" max="10" value="9" 
+       oninput="analyze();" 
+       aria-valuemin="1" 
+       aria-valuemax="10" 
+       aria-valuenow="9" 
+       aria-label="CNS Readiness Level">
         </div>
 
         <div class="card">
             <h3>BW Basics & Skills</h3>
             <div class="inline-quad" style="grid-template-columns: 1fr 1fr;">
-                <div><label>Max Pullups</label><input type="number" id="pullups" value="15" oninput="analyze();"></div>
-                <div><label>Max Pushups</label><input type="number" id="pushups" value="35" oninput="analyze();"></div>
+               <div><label for="pullups">Max Pullups</label><input type="number" id="pullups" value="15" oninput="analyze();"></div>
+              <div><label for="pushups">Max Pushups</label><input type="number" id="pushups" value="35" oninput="analyze();"></div>
             </div>
             <div class="inline-quad" style="grid-template-columns: 1fr 1fr;">
-                <div><label>Muscle-Ups</label><input type="number" id="mu" value="5" oninput="analyze();"></div>
-                <div><label>Dead Hang (s)</label><input type="number" id="hang" value="60" oninput="analyze();"></div>
-            </div>
+               <div><label for="mu">Muscle-Ups</label><input type="number" id="mu" value="5" oninput="analyze();"></div>
+<div><label for="hang">Dead Hang (s)</label><input type="number" id="hang" value="60" oninput="analyze();"></div>            </div>
             <div class="inline-quad" style="grid-template-columns: 1.2fr 0.8fr;">
                 <div><label>Leg Inertia</label><select id="legRatio" onchange="analyze();"><option value="0.95">Short</option><option value="1.0" selected>Neutral</option><option value="1.1">Long/Heavy</option></select></div>
                 <div><label>Form</label><select id="form" onchange="analyze();"><option value="1.0">Elite</option><option value="0.7">Piked</option></select></div>
             </div>
         </div>
 
-        <div class="card">
-            <h3>Weighted Matrix</h3>
-            <div class="inline-quad"><div class="col-header">Weight</div><div class="col-header">Reps</div><div class="col-header">Sets</div><div class="col-header">RPE</div></div>
-            <label id="pullLabel">Weighted Pull-up</label>
-            <div class="inline-quad"><input type="number" id="wpW" value="25" oninput="analyze();"><input type="number" id="wpR" value="5" oninput="analyze();"><input type="number" id="wpS" value="3" oninput="analyze();"><input type="number" id="wpRPE" value="8" oninput="analyze();"></div>
-            <label id="dipLabel">Weighted Dip</label>
-            <div class="inline-quad"><input type="number" id="wdW" value="35" oninput="analyze();"><input type="number" id="wdR" value="5" oninput="analyze();"><input type="number" id="wdS" value="3" oninput="analyze();"><input type="number" id="wdRPE" value="8" oninput="analyze();"></div>
-            <label id="zanLabel">Zanetti Raise (SA)</label>
-            <div class="inline-quad"><input type="number" id="saW" value="12" oninput="analyze();"><input type="number" id="saR" value="8" oninput="analyze();"><input type="number" id="saS" value="3" oninput="analyze();"><input type="number" id="saRPE" value="9" oninput="analyze();"></div>
-        </div>
+       <div class="card">
+    <h3>Weighted Matrix</h3>
+    <div class="inline-quad">
+        <div class="col-header">Weight</div>
+        <div class="col-header">Reps</div>
+        <div class="col-header">Sets</div>
+        <div class="col-header">RPE</div>
+    </div>
+
+    <label id="pullLabel" for="wpW">Weighted Pull-up</label>
+    <div class="inline-quad">
+        <input type="number" id="wpW" aria-label="Weighted Pull-up Weight" value="25" oninput="analyze();">
+        <input type="number" id="wpR" aria-label="Weighted Pull-up Reps" value="5" oninput="analyze();">
+        <input type="number" id="wpS" aria-label="Weighted Pull-up Sets" value="3" oninput="analyze();">
+        <input type="number" id="wpRPE" aria-label="Weighted Pull-up RPE" value="8" oninput="analyze();">
+    </div>
+
+    <label id="dipLabel" for="wdW">Weighted Dip</label>
+    <div class="inline-quad">
+        <input type="number" id="wdW" aria-label="Weighted Dip Weight" value="35" oninput="analyze();">
+        <input type="number" id="wdR" aria-label="Weighted Dip Reps" value="5" oninput="analyze();">
+        <input type="number" id="wdS" aria-label="Weighted Dip Sets" value="3" oninput="analyze();">
+        <input type="number" id="wdRPE" aria-label="Weighted Dip RPE" value="8" oninput="analyze();">
+    </div>
+
+    <label id="zanLabel" for="saW">Zanetti Raise (SA)</label>
+    <div class="inline-quad">
+        <input type="number" id="saW" aria-label="Zanetti Raise Weight" value="12" oninput="analyze();">
+        <input type="number" id="saR" aria-label="Zanetti Raise Reps" value="8" oninput="analyze();">
+        <input type="number" id="saS" aria-label="Zanetti Raise Sets" value="3" oninput="analyze();">
+        <input type="number" id="saRPE" aria-label="Zanetti Raise RPE" value="9" oninput="analyze();">
+    </div>
+</div>
     </div>
 
    <div class="dashboard-row" id="captureArea">
