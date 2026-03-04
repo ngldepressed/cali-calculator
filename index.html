@@ -3,437 +3,816 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cali-Biotech: Production Command</title>
+    <title>Cali-Biotech | The Supreme Skill Tree</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="canonical" href="https://www.calicalculator.com/" />
-    <title>Cali-Biotech | The Supreme Skill Tree</title>
-<meta name="description" content="Master the OAP, Full Planche, and Victorian Cross with the ultimate calisthenics matrix.">
+    <meta name="description" content="Master the OAP, Full Planche, and Victorian Cross with the ultimate calisthenics matrix.">
 
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.calicalculator.com/">
+    <meta property="og:title" content="Cali-Biotech | Skill Tree & 1RM Matrix">
+    <meta property="og:description" content="Track your vertical pulling power and static holds.">
+    <meta property="og:image" content="https://www.calicalculator.com/preview-image.jpg">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Cali-Biotech Skill Tree">
 
+    <meta name="ga-id" content="G-CDL3F645R2">
+    <meta name="adsense-id" content="ca-pub-1230203526545088">
 
-
-
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://www.calicalculator.com/">
-<meta property="og:title" content="Cali-Biotech | Skill Tree & 1RM Matrix">
-<meta property="og:description" content="Track your vertical pulling power and static holds.">
-<meta property="og:image" content="https://www.calicalculator.com/preview-image.jpg">
-
-<meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:title" content="Cali-Biotech Skill Tree">
-    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
+        /* ============================================================
+           RESET & ROOT
+        ============================================================ */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --primary: #4c6fff;
+            --potential: #00ffcc;
+            --bg: #0b0b12;
+            --card: #161621;
+            --border: #2a2a3a;
+            --danger: #ff4c4c;
+            --warn: #ff9900;
+            --text: #e0e0e0;
+        }
 
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+        }
 
+        /* ============================================================
+           LAYOUT
+        ============================================================ */
+        .container {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 1300px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            border: 1px solid var(--border);
+            transition: 0.3s;
+            margin: 0 auto;
+        }
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        .dashboard-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .volume-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
 
-body {
-    font-size: 18px; /* Increased from 14px/16px */
-    line-height: 1.6;
-}
+        /* ============================================================
+           CARD
+        ============================================================ */
+        .card {
+            background: #1f1f2e;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid #333;
+        }
+        .card h3 {
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 0.75em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
+        }
 
-.card {
-    padding: 25px; /* Added more breathing room for bigger text */
-}
+        /* ============================================================
+           FORM ELEMENTS
+        ============================================================ */
+        label {
+            display: block;
+            margin-top: 8px;
+            margin-bottom: 4px;
+            font-size: 0.75em;
+            color: #bbb;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: var(--bg);
+            color: white;
+            font-size: 0.9em;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            font-family: inherit;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 8px rgba(76,111,255,0.3);
+        }
+        .inline-quad {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr 0.8fr 1fr;
+            gap: 5px;
+        }
+        .col-header {
+            font-size: 0.6em;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 0;
+        }
 
-/* This makes the labels on your input fields easier to read */
-label {
-    font-size: 0.9em;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
-    display: block;
-}
+        /* ============================================================
+           SIMULATION MODE
+        ============================================================ */
+        .sim-active input,
+        .sim-active select {
+            border-color: var(--potential) !important;
+            box-shadow: 0 0 15px rgba(0,255,204,0.3);
+            color: var(--potential) !important;
+        }
+        .sim-active .card h3 {
+            color: var(--potential) !important;
+            border-bottom-color: var(--potential) !important;
+        }
 
-/* Adjusts the input text size */
-input, select, textarea {
-    font-size: 16px !important;
-    padding: 12px !important;
-}
+        /* ============================================================
+           NAV BUTTONS
+        ============================================================ */
+        .main-nav {
+            padding: 15px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .nav-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.8em;
+            letter-spacing: 2px;
+        }
+        .nav-btn {
+            display: inline-block;
+            text-decoration: none;
+            color: var(--primary);
+            background: rgba(76,111,255,0.05);
+            border: 1px solid var(--primary);
+            padding: 12px 24px;
+            font-family: monospace;
+            font-size: 0.75em;
+            letter-spacing: 3px;
+            font-weight: bold;
+            border-radius: 4px;
+            text-transform: uppercase;
+            transition: background 0.3s, box-shadow 0.3s, color 0.3s;
+            box-shadow: 0 0 15px rgba(76,111,255,0.1);
+            width: 220px;
+            text-align: center;
+        }
+        .nav-btn:hover {
+            background: rgba(76,111,255,0.15);
+            box-shadow: 0 0 25px rgba(76,111,255,0.4);
+            color: #fff;
+        }
+        .nav-btn-green {
+            color: #00ff88;
+            background: rgba(0,255,136,0.05);
+            border-color: #00ff88;
+            box-shadow: 0 0 15px rgba(0,255,136,0.1);
+        }
+        .nav-btn-green:hover {
+            background: rgba(0,255,136,0.15);
+            box-shadow: 0 0 25px rgba(0,255,136,0.4);
+            color: #fff;
+        }
+        .faq-btn {
+            text-decoration: none;
+            color: #fff;
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            border: 2px solid #444;
+            padding: 10px 22px;
+            border-radius: 6px;
+            background: #333;
+            transition: background 0.3s, border-color 0.3s, transform 0.2s;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .faq-btn:hover {
+            background: #444;
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+        .coffee-btn {
+            display: block;
+            background: #ffdd00;
+            color: #000;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.1em;
+            padding: 18px;
+            border-radius: 12px;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .coffee-btn:hover {
+            background: #ffe433;
+            transform: scale(1.03);
+        }
 
+        /* ============================================================
+           ANALYSIS PANEL & OVERLAYS
+        ============================================================ */
+        .analysis-panel {
+            background: #1f1f2e;
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid #333;
+            min-height: 450px;
+            position: relative;
+        }
+        .prepare-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(22,22,33,0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            border-radius: 20px;
+            text-align: center;
+            padding: 20px;
+            padding-top: 100px;
+        }
+        .btn-prepare {
+            background: transparent;
+            color: var(--potential);
+            border: 2px solid var(--potential);
+            padding: 15px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.8em;
+            letter-spacing: 2px;
+            transition: background 0.3s, box-shadow 0.3s, color 0.3s;
+        }
+        .btn-prepare:hover {
+            background: var(--potential);
+            color: black;
+            box-shadow: 0 0 20px rgba(0,255,204,0.4);
+        }
 
-
-
-        /* ADD THIS INSIDE THE <style> TAG */
-.sim-active input, .sim-active select { 
-    border-color: var(--potential) !important; 
-    box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
-    color: var(--potential) !important;
-}
-
-.sim-active .card h3 {
-    color: var(--potential) !important;
-    border-bottom: 1px solid var(--potential) !important;
-}
-        * { box-sizing: border-box; }
-        :root { --primary: #4c6fff; --potential: #00ffcc; --bg: #0b0b12; --card: #161621; --border: #2a2a3a; --danger: #ff4c4c; --text: #e0e0e0; }
-        
-        html, body { width: 100%; margin: 0; padding: 0; overflow-x: hidden; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
-        body { display: flex; flex-direction: column; align-items: center; padding: 10px; }
-        
-        .container { background: var(--card); padding: 20px; border-radius: 24px; width: 100%; max-width: 1300px; box-shadow: 0 30px 60px rgba(0,0,0,0.8); border: 1px solid var(--border); transition: 0.3s; margin: 0 auto; }
-        
-        .main-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
-        .card { background: #1f1f2e; padding: 18px; border-radius: 16px; border: 1px solid #333; }
-        .card h3 { margin-top: 0; color: var(--primary); font-size: 0.75em; text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid #333; padding-bottom: 5px; }
-        
-       label { 
-    display: block; 
-    margin-top: 8px; 
-    font-size: 0.8em; /* Much easier to read */
-    color: #bbb;      /* Brighter for better contrast */
-    text-transform: uppercase; 
-    font-weight: bold; 
-}
-        input, select { width: 100%; padding: 10px; margin-top: 4px; border-radius: 8px; border: 1px solid #333; background: var(--bg); color: white; font-size: 0.85em; transition: 0.3s; }
-        
-        .inline-quad { display: grid; grid-template-columns: 1.2fr 0.8fr 0.8fr 1fr; gap: 5px; } 
-        
-        .dashboard-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
-        
-        .analysis-panel { background: #1f1f2e; padding: 20px; border-radius: 20px; border: 1px solid #333; min-height: 450px; position: relative; }
-        
-        .prepare-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(22, 22, 33, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; border-radius: 20px; text-align: center; padding: 20px; }
-        .btn-prepare { background: transparent; color: var(--potential); border: 2px solid var(--potential); padding: 15px 30px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 0.8em; letter-spacing: 2px; transition: 0.3s; }
-        .btn-prepare:hover { background: var(--potential); color: black; box-shadow: 0 0 20px rgba(0, 255, 204, 0.4); }
-
+        /* ============================================================
+           SKILL BARS
+        ============================================================ */
         .skill-bar-container { margin-bottom: 12px; }
-        .skill-label { display: flex; justify-content: space-between; font-size: 0.75em; margin-bottom: 4px; font-weight: bold; }
-        .bar-bg { background: #0b0b12; height: 8px; border-radius: 4px; overflow: hidden; border: 1px solid #333; }
-        .bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--potential)); transition: width 0.5s ease; }
-        
-        .heatmap-container { background: #1f1f2e; padding: 15px; border-radius: 20px; border: 1px solid #333; text-align: center; margin-top: 20px; }
+        .skill-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75em;
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+        .bar-bg {
+            background: #0b0b12;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--potential));
+            transition: width 0.5s ease;
+        }
+
+        /* ============================================================
+           HEATMAP
+        ============================================================ */
+        .heatmap-container {
+            background: #1f1f2e;
+            padding: 15px;
+            border-radius: 20px;
+            border: 1px solid #333;
+            text-align: center;
+            margin-top: 20px;
+        }
         .joint { transition: fill 0.4s ease; fill: #444; }
 
-        .volume-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
-        .stat-box { background: #0b0b12; padding: 10px; border-radius: 12px; border: 1px solid #333; text-align: center; }
-        .stat-val { display: block; font-size: 1.1em; font-weight: bold; color: var(--potential); }
-        .stat-label { font-size: 0.55em; color: #888; text-transform: uppercase; letter-spacing: 1px; }
-        .battery-bar { width: 100%; height: 8px; background: #333; border-radius: 4px; margin-top: 8px; overflow: hidden; }
-        .battery-fill { height: 100%; background: var(--potential); transition: width 0.5s; }
+        /* ============================================================
+           STAT BOXES
+        ============================================================ */
+        .stat-box {
+            background: #0b0b12;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+        .stat-val {
+            display: block;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--potential);
+        }
+        .stat-label {
+            font-size: 0.55em;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .battery-bar {
+            width: 100%;
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        .battery-fill {
+            height: 100%;
+            background: var(--potential);
+            transition: width 0.5s, background 0.5s;
+        }
 
-        .blog-section { width: 100%; margin-top: 40px; padding: 20px; border-top: 1px solid var(--border); }
-        .blog-link { color: var(--potential); text-decoration: none; font-size: 0.8em; margin-right: 20px; display: inline-block; margin-bottom: 10px; }
-
+        /* ============================================================
+           TABLE & LOG
+        ============================================================ */
         table { width: 100%; font-size: 0.75em; border-collapse: collapse; margin-top: 10px; color: #bbb; }
         th { color: var(--primary); text-align: left; padding: 10px; border-bottom: 1px solid #333; text-transform: uppercase; font-size: 0.7em; }
         td { padding: 10px; border-bottom: 1px solid #222; }
-        .btn-log { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.7em; }
+        .btn-log {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.7em;
+            transition: opacity 0.2s;
+        }
+        .btn-log:hover { opacity: 0.8; }
 
- @media (max-width: 600px) {
-    /* This ensures the card NEVER exceeds the screen width */
-    #chart-card {
-        padding: 5px !important;
-        margin: 0 !important; 
-        width: 100% !important;
-        min-height: 420px !important; /* Forces vertical space */
-        display: flex !important;
-        flex-direction: column;
-        overflow: hidden !important; /* Cuts off any stray pixels */
-    }
+        /* ============================================================
+           BLOG LINKS
+        ============================================================ */
+        .blog-section {
+            width: 100%;
+            margin-top: 40px;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+        .blog-link {
+            color: var(--potential);
+            text-decoration: none;
+            font-size: 0.8em;
+            margin-right: 20px;
+            display: inline-block;
+            margin-bottom: 10px;
+            transition: color 0.2s;
+        }
+        .blog-link:hover { color: #fff; }
 
-    /* This ensures the chart fills the container but doesn't push it out */
-    canvas#skillRadar {
-        width: 100% !important;
-        height: 100% !important;
-        max-width: 100vw;
-    }
+        /* ============================================================
+           GLOSSARY
+        ============================================================ */
+        .glossary-scroll-container {
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+        }
+        .glossary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .glossary-term strong {
+            color: var(--potential);
+            display: block;
+            margin-bottom: 5px;
+            font-family: monospace;
+        }
+        .glossary-term p {
+            font-size: 0.85em;
+            color: #bbb;
+            line-height: 1.6;
+            margin: 0;
+        }
 
-    /* Make the dashboard stack properly */
-    .dashboard-row {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-}
-/* Responsive Container */
-.glossary-scroll-container {
-    max-height: 500px;
-    overflow-y: auto;
-    padding: 10px; /* Reduced for mobile */
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-}
+        /* ============================================================
+           SYSTEM LOGIC GRID
+        ============================================================ */
+        .logic-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .logic-item { padding-left: 10px; }
+        .logic-item-title { font-size: 0.65em; font-weight: bold; }
+        .logic-item-body { font-size: 0.7em; color: #888; }
 
-/* Forced 2-Column Grid */
-.glossary-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* 2 columns on ALL devices */
-    gap: 12px; /* Tighter gap for mobile */
-}
+        /* ============================================================
+           FOOTER & SUPPORT
+        ============================================================ */
+        .support-box {
+            margin: 40px auto;
+            max-width: 450px;
+            padding: 30px;
+            text-align: center;
+            background: #16161e;
+            border: 1px solid #2a2a3a;
+            border-radius: 16px;
+        }
+        .support-box h2 {
+            font-size: 0.8em;
+            color: #fff;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            opacity: 0.8;
+            text-transform: uppercase;
+        }
+        .support-box p { font-size: 0.75em; color: #666; margin-top: 20px; line-height: 1.6; }
 
-/* Adjustments for Phone Screens */
-@media (max-width: 600px) {
-    .content-rich-section {
-        margin: 20px 10px !important; /* Move section closer to screen edges */
-        padding: 15px !important; /* Less internal padding */
-    }
-    
-    .glossary-grid strong {
-        font-size: 0.7em; /* Smaller titles */
-        letter-spacing: 0px;
-    }
+        /* ============================================================
+           SHARE CARD MODAL  ← NEW
+        ============================================================ */
+        #shareModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.88);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        #shareModal.open { display: flex; }
 
-    .glossary-grid p {
-        font-size: 0.75em !important; /* Smaller body text */
-        line-height: 1.3 !important;
-    }
-}
+        #shareCardWrap {
+            background: #0b0b12;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 20px;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+        }
+        #closeModal {
+            position: absolute;
+            top: 12px; right: 16px;
+            background: none; border: none;
+            color: #888; font-size: 1.4em; cursor: pointer;
+        }
+        #closeModal:hover { color: #fff; }
 
-/* Standard PC/Tablet Gap */
-@media (min-width: 768px) {
-    .glossary-grid {
-        gap: 30px;
-    }
-}
+        /* The element that gets screenshotted */
+        #shareCard {
+            background: linear-gradient(135deg, #0b0b12 0%, #111128 100%);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 26px;
+            font-family: monospace;
+            position: relative;
+            overflow: hidden;
+        }
+        #shareCard::before {
+            content: '';
+            position: absolute; top: -60px; right: -60px;
+            width: 200px; height: 200px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(76,111,255,0.15), transparent 70%);
+            pointer-events: none;
+        }
+        .sc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .sc-logo { font-size: 0.65em; color: var(--primary); letter-spacing: 4px; font-weight: 900; }
+        .sc-url  { font-size: 0.5em;  color: #444; margin-top: 2px; }
+        .sc-badge { font-size: 0.5em; color: var(--potential); border: 1px solid var(--potential); padding: 3px 8px; border-radius: 4px; letter-spacing: 2px; }
+        .sc-subtitle { font-size: 0.58em; color: #555; letter-spacing: 1px; margin-bottom: 18px; }
+        .sc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+        .sc-skill { background: rgba(255,255,255,0.03); border: 1px solid #1e1e30; border-radius: 8px; padding: 10px 12px; }
+        .sc-skill-name { font-size: 0.52em; color: #666; letter-spacing: 1px; text-transform: uppercase; }
+        .sc-bar-bg { background: #0b0b12; height: 4px; border-radius: 2px; margin: 6px 0 5px; overflow: hidden; }
+        .sc-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--primary), var(--potential)); }
+        .sc-pct { font-size: 0.9em; font-weight: 900; color: var(--potential); }
+        .sc-footer-row { border-top: 1px solid #1a1a2a; padding-top: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .sc-footer-txt { font-size: 0.5em; color: #333; }
+        .sc-watermark { font-size: 0.5em; color: var(--potential); letter-spacing: 2px; }
 
+        #downloadShareCard {
+            width: 100%; margin-top: 14px; padding: 14px;
+            background: var(--potential); color: #000; border: none;
+            border-radius: 8px; font-family: monospace; font-weight: 900;
+            font-size: 0.8em; letter-spacing: 2px; cursor: pointer;
+            text-transform: uppercase; transition: opacity 0.2s;
+        }
+        #downloadShareCard:hover { opacity: 0.85; }
+        .sc-platforms { font-size: 0.6em; color: #333; text-align: center; margin-top: 10px; font-family: monospace; }
 
-.prepare-overlay {
-    padding-top: 100px; /* or dynamically match the height of #safetyDisclaimer */
-    box-sizing: border-box;
-}
+        /* ============================================================
+           COOKIE BANNER
+        ============================================================ */
+        #cookie-banner {
+            position: fixed;
+            bottom: -150px;
+            left: 0; right: 0;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 20px 15px;
+            text-align: center;
+            z-index: 9999;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.3);
+            transition: bottom 0.5s ease;
+        }
+        .cookie-btn { padding: 10px 18px; border: none; border-radius: 5px; margin-left: 10px; cursor: pointer; font-weight: bold; }
+        .cookie-btn-accept { background: #4caf50; color: #fff; }
+        .cookie-btn-reject { background: #f44336; color: #fff; }
+
+        /* ============================================================
+           RESPONSIVE
+        ============================================================ */
+        @media (max-width: 600px) {
+            #chart-card { padding: 5px !important; width: 100% !important; min-height: 420px !important; display: flex !important; flex-direction: column; overflow: hidden !important; }
+            canvas#skillRadar { width: 100% !important; height: 100% !important; max-width: 100vw; }
+            .dashboard-row { display: flex; flex-direction: column; gap: 10px; }
+            .logic-grid { grid-template-columns: 1fr; }
+            .glossary-grid { gap: 12px; }
+            .glossary-term strong { font-size: 0.7em; letter-spacing: 0; }
+            .glossary-term p { font-size: 0.75em !important; line-height: 1.3 !important; }
+            .content-rich-section { margin: 20px 10px !important; padding: 15px !important; }
+            .sc-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (min-width: 768px) { .glossary-grid { gap: 30px; } }
     </style>
 </head>
 
- <body onload="loadSavedData(); renderLogs();"> 
+<body onload="loadSavedData(); renderLogs();">
 
-<div style="position: absolute; top: 25px; right: 240px; z-index: 9999;">
-    <a href="faq.html" style="
-        text-decoration: none; 
-        color: #fff; 
-        font-weight: 800; 
-        font-size: 1.1rem; 
-        letter-spacing: 3px; 
-        border: 2px solid #444; 
-        padding: 12px 28px; 
-        border-radius: 6px;
-        background: #333333;
-        transition: 0.3s;
-        display: inline-block;
-        text-transform: uppercase;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    " onmouseover="this.style.backgroundColor='#444'; this.style.borderColor='#007bff'; this.style.transform='scale(1.05)';" 
-       onmouseout="this.style.backgroundColor='#333333'; this.style.borderColor='#444'; this.style.transform='scale(1)';"
-       target="_blank">
-        FAQ
-    </a>
+<!-- ============================================================
+     SHARE CARD MODAL  ← NEW
+============================================================ -->
+<div id="shareModal">
+    <div id="shareCardWrap">
+        <button id="closeModal" onclick="document.getElementById('shareModal').classList.remove('open')">✕</button>
+
+        <!-- This div is what html2canvas screenshots -->
+        <div id="shareCard">
+            <div class="sc-header">
+                <div>
+                    <div class="sc-logo">CALI-BIOTECH</div>
+                    <div class="sc-url">calicalculator.com</div>
+                </div>
+                <div class="sc-badge">SKILL REPORT</div>
+            </div>
+            <div class="sc-subtitle" id="sc-stats">— BW · HEIGHT · CNS —</div>
+            <div class="sc-grid" id="sc-skills"><!-- filled by JS --></div>
+            <div class="sc-footer-row">
+                <div class="sc-footer-txt" id="sc-date">calicalculator.com</div>
+                <div class="sc-watermark">▲ CALI-BIOTECH</div>
+            </div>
+        </div>
+
+        <button id="downloadShareCard" onclick="downloadCard()">⬇ DOWNLOAD &amp; SHARE</button>
+        <div class="sc-platforms">Post to Reddit · Instagram · TikTok · Twitter</div>
+    </div>
 </div>
 
-
 <div class="container" id="mainContainer">
-    <nav style="padding: 15px; border-bottom: 1px solid #333; display: flex; justify-content: center; margin-bottom: 20px;">
-        <a href="index.html" style="color: var(--primary); text-decoration: none; font-weight: bold; font-size: 0.8em; letter-spacing: 2px;">HOME</a>
+
+    <nav class="main-nav">
+        <a href="index.html" class="nav-link">HOME</a>
+        <a href="faq.html" class="faq-btn" target="_blank">FAQ</a>
     </nav>
 
-    <h1 style="text-align:center; color:var(--primary); font-size:1.4em; letter-spacing:4px; margin-bottom: 20px;">CALI-BIOTECH COMMAND</h1>
+    <h1 style="text-align:center; color:var(--primary); font-size:1.4em; letter-spacing:4px; margin-bottom:20px;">
+        CALI-BIOTECH COMMAND
+    </h1>
 
- <div style="text-align: center; margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 15px;">
-    
-    <a href="calc-pullup.html" 
-       style="
-        display: inline-block;
-        text-decoration: none !important; 
-        color: #4c6fff; 
-        background: rgba(76, 111, 255, 0.05);
-        border: 1px solid #4c6fff; 
-        padding: 12px 24px; 
-        font-family: monospace;
-        font-size: 0.75em; 
-        letter-spacing: 3px; 
-        font-weight: bold; 
-        border-radius: 4px;
-        text-transform: uppercase;
-        transition: all 0.3s ease;
-        box-shadow: 0 0 15px rgba(76, 111, 255, 0.1);
-        width: 220px;
-        box-sizing: border-box;
-       "
-       onmouseover="this.style.background='rgba(76, 111, 255, 0.15)'; this.style.boxShadow='0 0 25px rgba(76, 111, 255, 0.4)'; this.style.color='#fff';"
-       onmouseout="this.style.background='rgba(76, 111, 255, 0.05)'; this.style.boxShadow='0 0 15px rgba(76, 111, 255, 0.1)'; this.style.color='#4c6fff';"
-    >
-        1 REP MAX CALCULATOR
-    </a>
-<a href="skills.html" 
-   style="display: inline-block; text-decoration: none !important; color: #4c6fff; background: rgba(76, 111, 255, 0.05); border: 1px solid #4c6fff; padding: 12px 24px; font-family: monospace; font-size: 0.75em; letter-spacing: 3px; font-weight: bold; border-radius: 4px; text-transform: uppercase; transition: all 0.3s ease; box-shadow: 0 0 15px rgba(76, 111, 255, 0.1); width: 220px; box-sizing: border-box; margin-top: 10px;"
-   onmouseover="this.style.background='rgba(76, 111, 255, 0.15)';"
-   onmouseout="this.style.background='rgba(76, 111, 255, 0.05)';"
->
-    VIEW SKILL TREE
-</a>
+    <div style="text-align:center; margin-bottom:20px; display:flex; flex-direction:column; align-items:center; gap:15px;">
+        <a href="calc-pullup.html" class="nav-btn">1 REP MAX CALCULATOR</a>
+        <a href="skills.html" class="nav-btn">VIEW SKILL TREE</a>
+        <a href="physio.html" class="nav-btn nav-btn-green">CALORIE CALCULATOR</a>
 
+        <select id="unitSystem" onchange="updateLabels(); if(isSystemReady) analyze(); saveToLocal();"
+                style="width:220px; background:#1f1f2e; color:var(--primary); border:1px solid var(--primary); padding:8px; font-family:monospace; border-radius:6px;">
+            <option value="met">METRIC (KG / CM)</option>
+            <option value="imp">IMPERIAL (LBS / FT-IN)</option>
+        </select>
 
-<a href="physio.html" 
-   style="display: inline-block; text-decoration: none !important; color: #00ff88; background: rgba(0, 255, 136, 0.05); border: 1px solid #00ff88; padding: 12px 24px; font-family: monospace; font-size: 0.75em; letter-spacing: 3px; font-weight: bold; border-radius: 4px; text-transform: uppercase; transition: all 0.3s ease; box-shadow: 0 0 15px rgba(0, 255, 136, 0.1); width: 220px; box-sizing: border-box; margin-top: 10px;"
-   onmouseover="this.style.background='rgba(0, 255, 136, 0.15)';"
-   onmouseout="this.style.background='rgba(0, 255, 136, 0.05)';"
->
-   CALORIE CALCULATOR
-</a>
-
-<label for="unitSystem" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;">Select Unit System</label>
-<select id="unitSystem" onchange="updateLabels(); analyze(); saveToLocal();" style="width: 220px; background: #1f1f2e; color: var(--primary); border: 1px solid var(--primary); padding: 5px; font-family: monospace;">        <option value="met">METRIC (KG / CM)</option>
-        <option value="imp">IMPERIAL (LBS / FT-IN)</option>
-    </select>
-
-    <div class="sim-toggle-container">
-        <label style="cursor:pointer; display: flex; align-items: center; gap: 10px; padding: 0 15px;">
-            <input type="checkbox" id="simMode" onchange="toggleSimMode()" style="width: auto; margin: 0;">
-            <span style="color:var(--potential); font-size: 0.7em; letter-spacing: 2px; font-weight: bold;">ACTIVATE BIOTEST SIMULATION</span>
+        <label style="cursor:pointer; display:flex; align-items:center; gap:10px; padding:0 15px; margin-top:0;">
+            <input type="checkbox" id="simMode" onchange="toggleSimMode()" style="width:auto; margin:0;">
+            <span style="color:var(--potential); font-size:0.7em; letter-spacing:2px; font-weight:bold;">ACTIVATE BIOTEST SIMULATION</span>
         </label>
     </div>
 
-</div>
+    <!-- INPUT CARDS -->
     <div class="main-grid">
+
         <div class="card">
-            <h3>Structure & Readiness</h3>
-            <div class="inline-quad" style="grid-template-columns: 1fr 1fr;">
-              <div>
-    <label for="weight" id="wLabel">Weight (kg)</label>
-    <input type="number" id="weight" value="75" oninput="analyze();">
-</div>
-               <div id="hMetric"><label for="hCm">Height (cm)</label><input type="number" id="hCm" value="175" oninput="analyze();"></div>
-                <div id="hImperial" style="display:none;"><label>Height (ft/in)</label>
-                    <div style="display:flex; gap:5px;"><input type="number" id="hFt" value="5" oninput="analyze();"><input type="number" id="hIn" value="9" oninput="analyze();"></div>
+            <h3>Structure &amp; Readiness</h3>
+            <div class="inline-quad" style="grid-template-columns:1fr 1fr;">
+                <div>
+                    <label for="weight" id="wLabel">Weight (kg)</label>
+                    <input type="number" id="weight" value="75" min="1" max="500" oninput="debouncedAnalyze();">
+                </div>
+                <div id="hMetric">
+                    <label for="hCm">Height (cm)</label>
+                    <input type="number" id="hCm" value="175" oninput="debouncedAnalyze();">
+                </div>
+                <div id="hImperial" style="display:none;">
+                    <label>Height (ft / in)</label>
+                    <div style="display:flex; gap:5px;">
+                        <input type="number" id="hFt" value="5" oninput="debouncedAnalyze();">
+                        <input type="number" id="hIn" value="9" oninput="debouncedAnalyze();">
+                    </div>
                 </div>
             </div>
-         <label for="surface">Surface Stability</label>
-<select id="surface" onchange="analyze();">
-    <option value="1.0">Stable (Floor)</option>
-    <option value="1.25">Unstable (Rings)</option>
-</select>
-        <label for="cns">CNS Readiness</label>
-<input type="range" id="cns" min="1" max="10" value="9" 
-       oninput="analyze();" 
-       aria-valuemin="1" 
-       aria-valuemax="10" 
-       aria-valuenow="9" 
-       aria-label="CNS Readiness Level">
+            <label for="surface">Surface Stability</label>
+            <select id="surface" onchange="if(isSystemReady) analyze();">
+                <option value="1.0">Stable (Floor)</option>
+                <option value="1.25">Unstable (Rings)</option>
+            </select>
+            <label for="cns">CNS Readiness</label>
+            <input type="range" id="cns" min="1" max="10" value="9"
+                   oninput="debouncedAnalyze();"
+                   aria-valuemin="1" aria-valuemax="10" aria-valuenow="9"
+                   aria-label="CNS Readiness Level">
         </div>
 
         <div class="card">
-            <h3>BW Basics & Skills</h3>
-            <div class="inline-quad" style="grid-template-columns: 1fr 1fr;">
-               <div><label for="pullups">Max Pullups</label><input type="number" id="pullups" value="15" oninput="analyze();"></div>
-              <div><label for="pushups">Max Pushups</label><input type="number" id="pushups" value="35" oninput="analyze();"></div>
+            <h3>BW Basics &amp; Skills</h3>
+            <div class="inline-quad" style="grid-template-columns:1fr 1fr;">
+                <div><label for="pullups">Max Pullups</label><input type="number" id="pullups" value="15" oninput="debouncedAnalyze();"></div>
+                <div><label for="pushups">Max Pushups</label><input type="number" id="pushups" value="35" oninput="debouncedAnalyze();"></div>
             </div>
-            <div class="inline-quad" style="grid-template-columns: 1fr 1fr;">
-               <div><label for="mu">Muscle-Ups</label><input type="number" id="mu" value="5" oninput="analyze();"></div>
-<div><label for="hang">Dead Hang (s)</label><input type="number" id="hang" value="60" oninput="analyze();"></div>            </div>
-            <div class="inline-quad" style="grid-template-columns: 1.2fr 0.8fr;">
-               <div>
-    <label for="legRatio">Leg Inertia</label>
-    <select id="legRatio" onchange="analyze();">
-        <option value="0.95">Short</option>
-        <option value="1.0" selected>Neutral</option>
-        <option value="1.1">Long/Heavy</option>
-    </select>
-</div>
-                <div><label>Form</label><select id="form" onchange="analyze();"><option value="1.0">Elite</option><option value="0.7">Piked</option></select></div>
+            <div class="inline-quad" style="grid-template-columns:1fr 1fr;">
+                <div><label for="mu">Muscle-Ups</label><input type="number" id="mu" value="5" oninput="debouncedAnalyze();"></div>
+                <div><label for="hang">Dead Hang (s)</label><input type="number" id="hang" value="60" oninput="debouncedAnalyze();"></div>
+            </div>
+            <div class="inline-quad" style="grid-template-columns:1.2fr 0.8fr;">
+                <div>
+                    <label for="legRatio">Leg Inertia</label>
+                    <select id="legRatio" onchange="if(isSystemReady) analyze();">
+                        <option value="0.95">Short</option>
+                        <option value="1.0" selected>Neutral</option>
+                        <option value="1.1">Long/Heavy</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="form">Form</label>
+                    <select id="form" onchange="if(isSystemReady) analyze();">
+                        <option value="1.0">Elite</option>
+                        <option value="0.7">Piked</option>
+                    </select>
+                </div>
             </div>
         </div>
 
-       <div class="card">
-    <h3>Weighted Matrix</h3>
-    
-    <div class="inline-quad">
-        <div class="col-header">Weight</div>
-        <div class="col-header">Reps</div>
-        <div class="col-header">Sets</div>
-        <div class="col-header">RPE</div>
-    </div>
-
-    <label id="pullLabel" for="wpW">Weighted Pull-up</label>
-    <div class="inline-quad">
-        <input type="number" id="wpW" aria-label="Weighted Pull-up Weight" value="25" oninput="analyze();">
-        <input type="number" id="wpR" aria-label="Weighted Pull-up Reps" value="5" oninput="analyze();">
-        <input type="number" id="wpS" aria-label="Weighted Pull-up Sets" value="3" oninput="analyze();">
-        <input type="number" id="wpRPE" aria-label="Weighted Pull-up RPE" value="8" oninput="analyze();">
-    </div>
-
-    <label id="dipLabel" for="wdW">Weighted Dip</label>
-    <div class="inline-quad">
-        <input type="number" id="wdW" aria-label="Weighted Dip Weight" value="35" oninput="analyze();">
-        <input type="number" id="wdR" aria-label="Weighted Dip Reps" value="5" oninput="analyze();">
-        <input type="number" id="wdS" aria-label="Weighted Dip Sets" value="3" oninput="analyze();">
-        <input type="number" id="wdRPE" aria-label="Weighted Dip RPE" value="8" oninput="analyze();">
-    </div>
-
-    <label id="zanLabel" for="saW">Zanetti Raise (SA)</label>
-    <div class="inline-quad">
-        <input type="number" id="saW" aria-label="Zanetti Raise Weight" value="12" oninput="analyze();">
-        <input type="number" id="saR" aria-label="Zanetti Raise Reps" value="8" oninput="analyze();">
-        <input type="number" id="saS" aria-label="Zanetti Raise Sets" value="3" oninput="analyze();">
-        <input type="number" id="saRPE" aria-label="Zanetti Raise RPE" value="9" oninput="analyze();">
-    </div>
-</div>
-    </div>
-
-   <div class="dashboard-row" id="captureArea">
-   <div class="analysis-panel" id="chart-card" style="min-height: 70vh; display: flex; align-items: center; justify-content: center; position: relative; background: #1f1f2e; padding: 10px;">
-        
-        <div id="safetyDisclaimer" style="position: absolute; top: 15px; left: 50%; transform: translateX(-50%); width: 92%; z-index: 20; color: #ff4444; background: rgba(20, 10, 10, 0.95); border: 1px solid #ff4444; padding: 12px; border-radius: 8px; font-family: monospace; border-left: 4px solid #ff4444; box-shadow: 0 4px 15px rgba(0,0,0,0.5); pointer-events: none;">
-            <div style="font-weight: bold; margin-bottom: 4px; letter-spacing: 1px; font-size: 0.85em;">⚠️ TENDON INTEGRITY WARNING</div>
-            <p style="margin: 0; font-size: 0.75em; line-height: 1.4; color: #ddd;">
-                 Straight-arm work is tough on your connective tissue. Tendons, ligaments, and joint capsules take much longer to strengthen than muscles.
-            </p>
-        </div>
-        
-        <div id="radar-lock" class="prepare-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 10; background: rgba(22, 22, 33, 0.95);">
-            <button class="btn-prepare" onclick="prepareSystem()">PREPARE TRAINING MATRIX</button>
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #333; padding-bottom:5px;">
+                <span style="font-size:0.65em; letter-spacing:2px; color:#888;"></span>
+                <select id="loadUnit" onchange="updateLoadLabels()"
+                        style="background:#111; color:var(--primary); border:1px solid var(--primary); font-size:0.7em; padding:2px 5px; border-radius:3px; cursor:pointer; font-family:monospace; width:auto;">
+                    <option value="kg">KG</option>
+                    <option value="lbs">LBS</option>
+                </select>
+            </div>
+            <h3>Weighted Matrix</h3>
+            <div class="inline-quad">
+                <div class="col-header">Weight</div>
+                <div class="col-header">Reps</div>
+                <div class="col-header">Sets</div>
+                <div class="col-header">RPE</div>
+            </div>
+            <label id="pullLabel" for="wpW">Weighted Pull-up</label>
+            <div class="inline-quad">
+                <input type="number" id="wpW" aria-label="Weighted Pull-up Weight" value="25" oninput="debouncedAnalyze();">
+                <input type="number" id="wpR" aria-label="Weighted Pull-up Reps" value="5" oninput="debouncedAnalyze();">
+                <input type="number" id="wpS" aria-label="Weighted Pull-up Sets" value="3" oninput="debouncedAnalyze();">
+                <input type="number" id="wpRPE" aria-label="Weighted Pull-up RPE" value="8" oninput="debouncedAnalyze();">
+            </div>
+            <label id="dipLabel" for="wdW">Weighted Dip</label>
+            <div class="inline-quad">
+                <input type="number" id="wdW" aria-label="Weighted Dip Weight" value="35" oninput="debouncedAnalyze();">
+                <input type="number" id="wdR" aria-label="Weighted Dip Reps" value="5" oninput="debouncedAnalyze();">
+                <input type="number" id="wdS" aria-label="Weighted Dip Sets" value="3" oninput="debouncedAnalyze();">
+                <input type="number" id="wdRPE" aria-label="Weighted Dip RPE" value="8" oninput="debouncedAnalyze();">
+            </div>
+            <label id="zanLabel" for="saW">Zanetti Raise (SA)</label>
+            <div class="inline-quad">
+                <input type="number" id="saW" aria-label="Zanetti Raise Weight" value="12" oninput="debouncedAnalyze();">
+                <input type="number" id="saR" aria-label="Zanetti Raise Reps" value="8" oninput="debouncedAnalyze();">
+                <input type="number" id="saS" aria-label="Zanetti Raise Sets" value="3" oninput="debouncedAnalyze();">
+                <input type="number" id="saRPE" aria-label="Zanetti Raise RPE" value="9" oninput="debouncedAnalyze();">
+            </div>
         </div>
 
-        <canvas id="skillRadar" style="width: 100% !important; height: auto !important;"></canvas>
-    </div>
+    </div><!-- /.main-grid -->
 
-    <div class="analysis-panel" id="auditWrapper" style="display: flex; flex-direction: column; gap: 20px;">
-        <div id="skillBars">
-            <div style="text-align: center; color: #444; margin-top: 100px;">SYSTEM OFFLINE</div>
+    <!-- DASHBOARD ROW -->
+    <div class="dashboard-row" id="captureArea">
+
+        <div class="analysis-panel" id="chart-card"
+             style="min-height:70vh; display:flex; align-items:center; justify-content:center; position:relative; background:#1f1f2e; padding:10px;">
+
+            <div id="safetyDisclaimer" style="position:absolute; top:15px; left:50%; transform:translateX(-50%); width:92%; z-index:20; color:#ff4444; background:rgba(20,10,10,0.95); border:1px solid #ff4444; padding:12px; border-radius:8px; font-family:monospace; border-left:4px solid #ff4444; box-shadow:0 4px 15px rgba(0,0,0,0.5); pointer-events:none;">
+                <div style="font-weight:bold; margin-bottom:4px; letter-spacing:1px; font-size:0.85em;">⚠️ TENDON INTEGRITY WARNING</div>
+                <p style="margin:0; font-size:0.75em; line-height:1.4; color:#ddd;">
+                    Straight-arm work is tough on your connective tissue. Tendons, ligaments, and joint capsules take much longer to strengthen than muscles.
+                </p>
+            </div>
+
+            <div id="radar-lock" class="prepare-overlay">
+                <button class="btn-prepare" onclick="prepareSystem()">PREPARE TRAINING MATRIX</button>
+            </div>
+
+            <canvas id="skillRadar" style="width:100% !important; height:auto !important;"></canvas>
         </div>
-        <div id="aiFeedback" style="border-top: 1px solid #333; padding-top: 15px;">
-            <div style="text-align: center; color: #444;">AWAITING AUDIT</div>
+
+        <div class="analysis-panel" id="auditWrapper" style="display:flex; flex-direction:column; gap:20px;">
+            <div id="skillBars">
+                <div style="text-align:center; color:#444; margin-top:100px;">SYSTEM OFFLINE</div>
+            </div>
+            <div id="aiFeedback" style="border-top:1px solid #333; padding-top:15px;">
+                <div style="text-align:center; color:#444;">AWAITING AUDIT</div>
+            </div>
+
+            <!-- SHARE BUTTON ← NEW — appears after analysis runs -->
+            <button id="shareBtn" onclick="openShareModal()"
+                    style="display:none; width:100%; margin-top:auto;
+                           background:linear-gradient(135deg, var(--primary), var(--potential));
+                           color:#000; border:none; cursor:pointer; padding:14px;
+                           font-family:monospace; border-radius:8px; font-size:0.75em;
+                           text-transform:uppercase; font-weight:900; letter-spacing:2px;">
+                📤 SHARE MY SKILL CARD
+            </button>
+
+            <button id="screenshotBtn" onclick="shareReport()"
+                    style="display:none; width:100%; background:transparent; border:1px solid var(--potential); color:var(--potential); cursor:pointer; padding:12px; font-family:monospace; border-radius:8px; font-size:0.7em; text-transform:uppercase;">
+                Download Report.png
+            </button>
         </div>
-        <button id="shareBtn" onclick="shareReport()" style="display:none; width:100%; margin-top:auto; background:transparent; border:1px solid var(--potential); color:var(--potential); cursor:pointer; padding:12px; font-family: monospace; border-radius:8px; font-size:0.7em; text-transform:uppercase;">Download Report.png</button>
-    </div>
-</div>
-  
- <div class="heatmap-container">
 
-        <h3 style="font-size:0.7em; color:var(--primary); margin-bottom:10px; letter-spacing: 1px;">INJURY RISK HEATMAP</h3>
+    </div><!-- /.dashboard-row -->
 
+    <!-- HEATMAP -->
+    <div class="heatmap-container">
+        <h3 style="font-size:0.7em; color:var(--primary); margin-bottom:10px; letter-spacing:1px;">INJURY RISK HEATMAP</h3>
         <svg width="120" height="180" viewBox="0 0 100 150">
-
             <circle cx="50" cy="20" r="10" class="joint" />
-
             <line x1="50" y1="30" x2="50" y2="80" stroke="#333" stroke-width="4" />
-
             <line x1="50" y1="40" x2="20" y2="60" stroke="#333" stroke-width="3" />
-
             <circle id="joint-shoulder-l" cx="35" cy="40" r="5" class="joint" />
-
             <circle id="joint-shoulder-r" cx="65" cy="40" r="5" class="joint" />
-
             <circle id="joint-elbow-l" cx="20" cy="60" r="5" class="joint" />
-
             <circle id="joint-elbow-r" cx="80" cy="60" r="5" class="joint" />
-
             <circle id="joint-wrist-l" cx="10" cy="90" r="4" class="joint" />
-
             <circle id="joint-wrist-r" cx="90" cy="90" r="4" class="joint" />
-
         </svg>
+        <p id="risk-msg" style="font-size:0.65em; color:#888; margin-top:10px; font-weight:bold;">SCANNING BIOMETRICS...</p>
+    </div>
 
-        <p id="risk-msg" style="font-size:0.65em; color:#888; margin-top:10px; font-weight: bold;">SCANNINING BIOMETRICS...</p>
-
-    </div
-
-    <div class="card" style="margin-top: 20px;">
-        <h3>Volume & Recovery Optimizer</h3>
+    <!-- VOLUME -->
+    <div class="card" style="margin-top:20px;">
+        <h3>Volume &amp; Recovery Optimizer</h3>
         <div class="volume-grid">
             <div class="stat-box">
                 <span class="stat-label">Weekly Volume Tax</span>
                 <span id="volume-tax" class="stat-val">0</span>
-                <div class="battery-bar"><div id="volume-fill" class="battery-fill" style="width: 0%"></div></div>
+                <div class="battery-bar"><div id="volume-fill" class="battery-fill" style="width:0%"></div></div>
             </div>
             <div class="stat-box">
                 <span class="stat-label">Recovery Window</span>
@@ -442,521 +821,329 @@ input, select, textarea {
         </div>
     </div>
 
-    <div class="card" style="margin-top: 25px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h3 style="border: none; margin: 0;">Training History Log</h3>
+    <!-- TRAINING HISTORY -->
+    <div class="card" style="margin-top:25px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h3 style="border:none; margin:0;">Training History</h3>
             <button class="btn-log" onclick="logSession()">LOG CURRENT DATA</button>
         </div>
-        <div style="overflow-x: auto;">
+        <div style="overflow-x:auto;">
             <table>
                 <thead>
-                   <tr><th>Date</th><th>BW</th><th>Pull</th><th>Push</th><th>SA</th><th></th></tr>
+                    <tr><th>Date</th><th>BW</th><th>Pull</th><th>Push</th><th>SA</th><th></th></tr>
+                </thead>
                 <tbody id="logBody"></tbody>
             </table>
         </div>
     </div>
 
-    <div class="card" style="margin-top: 40px; background: rgba(76, 111, 255, 0.05); border: 1px solid var(--primary);">
-    <h3 style="letter-spacing: 2px; color: var(--primary);">SYSTEM LOGIC</h3>
-    <p style="font-size: 0.8em; line-height: 1.6; color: #eee; margin-bottom: 20px;">
-        Our command system uses <strong>Biomechanical Torque Analysis</strong> to bridge the gap between weighted strength and bodyweight mastery.
-    </p>
-
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-<div style="border-left: 2px solid #3b82f6; padding-left: 10px;">
-<div style="font-size: 0.65em; color: #3b82f6; font-weight: bold;">LEVERAGE TAX</div>
-<div style="font-size: 0.7em; color: #888;">Accounting for how longer limbs increase difficulty; as height increases, the strength required rises by a 2.3x exponent, making skills significantly harder for taller athletes.</div>
-</div>
-<div style="border-left: 2px solid #10b981; padding-left: 10px;">
-<div style="font-size: 0.65em; color: #10b981; font-weight: bold;">SCAPULAR BALANCE</div>
-<div style="font-size: 0.7em; color: #888;">Maintaining a 1:1 ratio between pulling and pushing movements to keep shoulders neutral and prevent the "hunched" posture caused by overactive chest muscles.</div>
-</div>
-<div style="border-left: 2px solid #ef4444; padding-left: 10px;">
-<div style="font-size: 0.65em; color: #ef4444; font-weight: bold;">TENDON INTEGRITY</div>
-<div style="font-size: 0.7em; color: #888;">Ensuring connective tissue strength matches muscle power; specifically monitoring Straight-Arm (SA) holds to prevent bicep or elbow tears during high-tension skills.</div>
-</div>
-<div style="border-left: 2px solid #fff; padding-left: 10px;">
-<div style="font-size: 0.65em; color: #fff; font-weight: bold;">GENETIC CEILING</div>
-<div style="font-size: 0.7em; color: #888;">Identifying the optimal Body Mass Index (21–23.5) where you have the maximum muscle-to-weight ratio for advanced calisthenics without being too heavy to move efficiently.</div>
-</div>
-</div>
+    <!-- SYSTEM LOGIC -->
+    <div class="card" style="margin-top:40px; background:rgba(76,111,255,0.05); border:1px solid var(--primary);">
+        <h3 style="letter-spacing:2px; color:var(--primary);">SYSTEM LOGIC</h3>
+        <p style="font-size:0.8em; line-height:1.6; color:#eee; margin-bottom:20px;">
+            Our command system uses <strong>Biomechanical Torque Analysis</strong> to bridge the gap between weighted strength and bodyweight mastery.
+        </p>
+        <div class="logic-grid">
+            <div class="logic-item" style="border-left:2px solid #3b82f6;">
+                <div class="logic-item-title" style="color:#3b82f6;">LEVERAGE TAX</div>
+                <div class="logic-item-body">Accounting for how longer limbs increase difficulty; as height increases, the strength required rises by a 2.3x exponent.</div>
+            </div>
+            <div class="logic-item" style="border-left:2px solid #10b981;">
+                <div class="logic-item-title" style="color:#10b981;">SCAPULAR BALANCE</div>
+                <div class="logic-item-body">Maintaining a 1:1 ratio between pulling and pushing movements to keep shoulders neutral.</div>
+            </div>
+            <div class="logic-item" style="border-left:2px solid #ef4444;">
+                <div class="logic-item-title" style="color:#ef4444;">TENDON INTEGRITY</div>
+                <div class="logic-item-body">Monitoring Straight-Arm holds to prevent bicep or elbow tears during high-tension skills.</div>
+            </div>
+            <div class="logic-item" style="border-left:2px solid #fff;">
+                <div class="logic-item-title" style="color:#fff;">GENETIC CEILING</div>
+                <div class="logic-item-body">Optimal BMI (21–23.5) for maximum muscle-to-weight ratio in advanced calisthenics.</div>
+            </div>
+        </div>
     </div>
-</div>
-<div style="margin: 40px auto; max-width: 450px; padding: 30px; text-align: center; background: #16161e; border: 1px solid #2a2a3a; border-radius: 16px; font-family: sans-serif;">
-    <h2 style="font-size: 0.8em; color: #fff; letter-spacing: 2px; margin-bottom: 20px; font-weight: 600; opacity: 0.8; text-transform: uppercase;">
-        Support The Grind
-    </h2>
-    <a href="https://buymeacoffee.com/CaliBiotech" 
-       target="_blank" 
-       onmouseover="this.style.transform='scale(1.03)'; this.style.backgroundColor='#ffe433';" 
-       onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='#ffdd00';"
-       style="display: block; background: #ffdd00; color: #000; text-decoration: none; font-weight: 800; font-size: 1.1em; padding: 18px; border-radius: 12px; transition: all 0.2s ease-in-out;">
-        ☕ BUY ME A PROTEIN SHAKE
-    </a>
-    <p style="font-size: 0.75em; color: #666; margin-top: 20px; line-height: 1.6;">
-        Your support helps keep the <b>Cali-Biotech</b> engine running.<br>
-        Join the mission to optimize performance.
-    </p>
-</div>
+
+    <!-- NOTES -->
+    <div class="card" style="margin-top:30px;">
+        <h3 style="letter-spacing:2px;">BIOTIC FEEDBACK ARCHIVE</h3>
+        <textarea id="sessionNotes"
+                  placeholder="Record physiological feedback, RPE, or specific joint sensations..."
+                  style="width:100%; height:120px; background:#0a0a0a; color:#fff; border:1px solid #333; padding:15px; border-radius:6px; line-height:1.6; resize:vertical; outline:none; transition:border-color 0.3s; font-family:inherit;"></textarea>
+        <div style="display:flex; gap:10px; margin-top:12px;">
+            <button onclick="saveNotes(event)" style="flex:4; background:var(--primary); color:#000; border:none; padding:12px; font-family:monospace; font-weight:900; cursor:pointer; border-radius:4px; letter-spacing:1.5px; text-transform:uppercase;">COMMIT DATA</button>
+            <button onclick="clearAllNotes()" style="flex:1; background:rgba(255,68,68,0.05); color:#ff4444; border:1px solid rgba(255,68,68,0.3); padding:12px; font-family:monospace; font-size:0.75em; cursor:pointer; border-radius:4px; font-weight:bold; text-transform:uppercase;">DELETE ALL</button>
+        </div>
+        <div id="notesHistory" style="margin-top:20px; max-height:300px; overflow-y:auto; border-top:1px solid #222; padding-top:15px;">
+            <div style="font-size:0.6em; color:#666; letter-spacing:2px;">NO FEEDBACK ENTRIES</div>
+        </div>
+    </div>
+
+    <!-- SUPPORT -->
+    <div class="support-box">
+        <h2>Support The Grind</h2>
+        <a href="https://buymeacoffee.com/CaliBiotech" target="_blank" class="coffee-btn">
+            ☕ BUY ME A PROTEIN SHAKE
+        </a>
+        <p>Your support helps keep the <b>Cali-Biotech</b> engine running.<br>Join the mission to optimize performance.</p>
+    </div>
+
+    <!-- BLOG LINKS -->
     <div class="blog-section">
-        <h3 style="color:var(--primary); font-size:0.9em; margin-bottom: 15px;">RESOURCES & GUIDES</h3>
+        <h3 style="color:var(--primary); font-size:0.9em; margin-bottom:15px;">RESOURCES &amp; GUIDES</h3>
         <a href="blog/chest-guide.html" class="blog-link">3 Best Exercises for a Massive Chest</a>
         <a href="blog/planche-guide.html" class="blog-link">Unlock the Planche: Top 3 Exercises</a>
         <a href="blog/front-lever-guide.html" class="blog-link">Master the Front Lever</a>
         <a href="blog/pullup-guide.html" class="blog-link">First Pull-up Guide</a>
         <a href="blog/planche-pushup-guide.html" class="blog-link">The Best Pushup for Planche</a>
         <a href="blog/planche-progression-zero-to-advanced-tuck.html" class="blog-link">From zero to advanced tuck PLANCHE</a>
-        <a href="./blog/specificity-is-king.html" class="blog-link">specificity is king</a>
-           <a href="blog/ring-shoulder-guide.html" class="blog-link">3D Shoulders with Rings</a>
+        <a href="./blog/specificity-is-king.html" class="blog-link">Specificity is King</a>
+        <a href="blog/ring-shoulder-guide.html" class="blog-link">3D Shoulders with Rings</a>
         <a href="blog/back-thickness.html" class="blog-link">Back Thickness</a>
-         <a href="blog/weighted-calisthenics.html" class="blog-link">Drop the Ego: Weighted Training</a>
-         <a href="blog/hardest-skills.html" class="blog-link">10 Hardest Skills</a>
-         <a href="blog/beginner-skills.html" class="blog-link">Beginner Skills</a>
-         <a href="blog/fast-track-skills.html" class="blog-link">8-12 Week Skills</a>
-         <a href="blog/equipment-guide.html" class="blog-link">Essential Equipment</a>
-         <a href="blog/attractive-physique.html" class="blog-link">Top Aesthetic Bodyparts</a>
-         <a href="blog/calisthenics-diet.html" class="blog-link">The Truth About Bulking</a>
-         <a href="blog/lat-pulldown-truth.html" class="blog-link">Lat Pulldown vs Pull-up</a>
-         <a href="blog/planche-front-lever.html" class="blog-link">PLANCHE VS FRONT LEVER</a>
-          <a href="blog/handstand-pushups.html" class="blog-link">Handstand pushups guide </a> 
-          <a href="blog/muscle-up-guide.html" class="blog-link">Muscle up guide</a>
-                    <a href="blog/how-long-planche.html" class="blog-link">Full Planche timeline</a>
-                     <a href="blog/elite-strength-1rm.html" class="blog-link">How Strong is Your 1RM Compared to Elites?</a>
- <a href="blog/front-lever.html" class="blog-link">Front lever guide</a>
-  <a href="blog/one-arm-pullup-guide.html" class="blog-link">One arm pullup guide </a>
+        <a href="blog/weighted-calisthenics.html" class="blog-link">Drop the Ego: Weighted Training</a>
+        <a href="blog/hardest-skills.html" class="blog-link">10 Hardest Skills</a>
+        <a href="blog/beginner-skills.html" class="blog-link">Beginner Skills</a>
+        <a href="blog/fast-track-skills.html" class="blog-link">8-12 Week Skills</a>
+        <a href="blog/equipment-guide.html" class="blog-link">Essential Equipment</a>
+        <a href="blog/attractive-physique.html" class="blog-link">Top Aesthetic Bodyparts</a>
+        <a href="blog/calisthenics-diet.html" class="blog-link">The Truth About Bulking</a>
+        <a href="blog/lat-pulldown-truth.html" class="blog-link">Lat Pulldown vs Pull-up</a>
+        <a href="blog/planche-front-lever.html" class="blog-link">PLANCHE VS FRONT LEVER</a>
+        <a href="blog/handstand-pushups.html" class="blog-link">Handstand Pushups Guide</a>
+        <a href="blog/muscle-up-guide.html" class="blog-link">Muscle Up Guide</a>
+        <a href="blog/how-long-planche.html" class="blog-link">Full Planche Timeline</a>
+        <a href="blog/elite-strength-1rm.html" class="blog-link">How Strong is Your 1RM?</a>
+        <a href="blog/front-lever.html" class="blog-link">Front Lever Guide</a>
+        <a href="blog/one-arm-pullup-guide.html" class="blog-link">One Arm Pullup Guide</a>
 
+        <!-- GLOSSARY -->
+        <section class="content-rich-section" style="background:rgba(76,111,255,0.05); border:1px solid #2a2a3a; margin:40px 0; padding:30px; border-radius:12px; border-left:5px solid var(--primary);">
+            <h2 style="color:var(--primary); font-size:1.1em; letter-spacing:2px; border-bottom:1px solid #333; padding-bottom:15px; margin-bottom:25px; text-transform:uppercase;">Technical Manual: Biomechanical Definitions</h2>
+            <div class="glossary-scroll-container">
+                <div class="glossary-grid">
+                    <div class="glossary-term"><strong>[01] ALLOMETRIC SCALING</strong><p>The "Size Paradox": As an athlete grows larger, their body mass increases much faster than their muscle force.</p></div>
+                    <div class="glossary-term"><strong>[02] SCAPULAR PROTRACTION</strong><p>Shoulder blades forward. Key for Planche integrity.</p></div>
+                    <div class="glossary-term"><strong>[03] EXTERNAL ROTATION</strong><p>Humerus outward rotation to lock joints in Ring work.</p></div>
+                    <div class="glossary-term"><strong>[04] MOMENT ARM</strong><p>Distance from joint to force. Shorter = mechanical advantage.</p></div>
+                    <div class="glossary-term"><strong>[05] TENDON ADAPTATION</strong><p>Adapts 10x slower than muscle. Avoid rapid load spikes.</p></div>
+                    <div class="glossary-term"><strong>[06] NEURAL RECRUITMENT</strong><p>CNS ability to fire motor units during maximal holds.</p></div>
+                    <div class="glossary-term"><strong>[07] ABDUCTION / ADDUCTION</strong><p>Movement away/toward midline. Crucial for Iron Cross.</p></div>
+                    <div class="glossary-term"><strong>[08] MIND-MUSCLE CONNECTION</strong><p>Deliberate contraction to prevent energy leaks.</p></div>
+                    <div class="glossary-term"><strong>[09] MECHANICAL LEVERAGE</strong><p>Changing COM (straddle vs full) to adjust intensity.</p></div>
+                    <div class="glossary-term"><strong>[10] ISOMETRIC SCALING</strong><p>Strength gained at specific angles (+/- 15 degrees).</p></div>
+                    <div class="glossary-term"><strong>[11] INTENSITY (LOAD)</strong><p>% of max force, increased by decreasing leverage.</p></div>
+                    <div class="glossary-term"><strong>[12] VOLUME (TOTAL TAX)</strong><p>Sets × Time. High intensity leads to Neural Fatigue.</p></div>
+                    <div class="glossary-term"><strong>[13] SCAPULAR DEPRESSION</strong><p>Pulling shoulders down to stabilize the joint.</p></div>
+                    <div class="glossary-term"><strong>[14] FALSE GRIP</strong><p>Wrist flexed over bar to shorten forearm lever.</p></div>
+                    <div class="glossary-term"><strong>[15] ANTERIOR PELVIC TILT</strong><p>"Piking" at hips; indicates core/glute weakness.</p></div>
+                    <div class="glossary-term"><strong>[16] PROPRIOCEPTION</strong><p>Spatial awareness; "feeling" hip height in space.</p></div>
+                    <div class="glossary-term"><strong>[17] PLYOMETRIC TRANSFER</strong><p>Converting static strength into explosive pop.</p></div>
+                    <div class="glossary-term"><strong>[18] NEURAL DRIVE</strong><p>Brain-to-muscle electrical signal efficiency.</p></div>
+                    <div class="glossary-term"><strong>[19] EXPLOSIVE TRANSFER</strong><p>Pop required to bypass Muscle-up sticking points.</p></div>
+                    <div class="glossary-term"><strong>[20] KINETIC INTEGRITY</strong><p>Making the body a "rigid log" to save energy.</p></div>
+                    <div class="glossary-term"><strong>[21] LEVERAGE DIFFERENTIAL</strong><p>The "Tall Person Tax" due to limb length.</p></div>
+                    <div class="glossary-term"><strong>[22] PROGRESSIVE OVERLOAD</strong><p>Harder moves via angles or slower tempo.</p></div>
+                    <div class="glossary-term"><strong>[23] SCAPULAR STRENGTH</strong><p>Foundation required for all advanced holds.</p></div>
+                    <div class="glossary-term"><strong>[24] GREASING THE GROOVE</strong><p>High frequency, sub-maximal practice for skill.</p></div>
+                    <div class="glossary-term"><strong>[25] STRAIGHT-ARM STRENGTH</strong><p>Locked joints acting as structural pillars.</p></div>
+                    <div class="glossary-term"><strong>[26] THE STICKING POINT</strong><p>The failure inch; killed with targeted isometrics.</p></div>
+                    <div class="glossary-term"><strong>[27] ELASTIC ENERGY STORAGE</strong><p>Energy stored in tendons during stretch; released during contraction for explosive transitions.</p></div>
+                    <div class="glossary-term"><strong>[28] NEUROMUSCULAR EFFICIENCY</strong><p>Ratio of force produced to muscle mass activated; improves with skill practice and CNS adaptation.</p></div>
+                    <div class="glossary-term"><strong>[29] TENSION TRANSFER</strong><p>Ability to move force through the kinetic chain efficiently.</p></div>
+                    <div class="glossary-term"><strong>[30] ACTIVE FLEXIBILITY</strong><p>Joint mobility controlled with muscle contraction, crucial for Planche and Front Lever.</p></div>
+                    <div class="glossary-term"><strong>[31] STATIC STRENGTH</strong><p>Ability to hold a position without movement.</p></div>
+                    <div class="glossary-term"><strong>[32] TOTAL BODY TENSION</strong><p>Engaging all major muscle groups to create a rigid line.</p></div>
+                    <div class="glossary-term"><strong>[33] ANCHORING POINT</strong><p>Where force is applied to stabilize the body.</p></div>
+                    <div class="glossary-term"><strong>[34] FORCE DIRECTION</strong><p>Angle of muscular force relative to lever; affects mechanical advantage.</p></div>
+                    <div class="glossary-term"><strong>[35] MUSCLE IMBALANCE</strong><p>Strength differences between opposing muscle groups; can limit holds or cause injury.</p></div>
+                    <div class="glossary-term"><strong>[36] PREHENSILE STRENGTH</strong><p>Grip strength; crucial for rings, bars, and weighted calisthenics.</p></div>
+                    <div class="glossary-term"><strong>[37] RATE OF FORCE DEVELOPMENT</strong><p>How quickly muscle produces force; important for explosive transitions.</p></div>
+                    <div class="glossary-term"><strong>[38] STABILIZER DOMINANCE</strong><p>Using small stabilizing muscles to maintain joint alignment.</p></div>
+                    <div class="glossary-term"><strong>[39] ANTAGONIST CO-CONTRACTION</strong><p>Engaging opposing muscles for joint protection during extreme holds.</p></div>
+                    <div class="glossary-term"><strong>[40] TACTILE FEEDBACK</strong><p>Sensation from hands that informs body position in space.</p></div>
+                    <div class="glossary-term"><strong>[41] STRUCTURAL INTEGRITY</strong><p>Optimal alignment of joints to maximize efficiency and minimize injury risk.</p></div>
+                    <div class="glossary-term"><strong>[42] FORCE VECTOR TRAINING</strong><p>Training in multiple planes to strengthen muscles for specific skill directions.</p></div>
+                    <div class="glossary-term"><strong>[43] RATE OF PERCEIVED EXERTION (RPE)</strong><p>Subjective measure of effort; helps manage fatigue during high-intensity isometrics.</p></div>
+                    <div class="glossary-term"><strong>[44] KINETIC CHAIN COORDINATION</strong><p>Efficient link between all joints to transfer strength from one segment to another.</p></div>
+                    <div class="glossary-term"><strong>[45] ANKLE / HIP LINKAGE</strong><p>Stability and tension from lower body to support core and upper-body holds.</p></div>
+                    <div class="glossary-term"><strong>[46] MECHANICAL TENSION</strong><p>Force applied to muscles during contraction that stimulates growth and strength.</p></div>
+                </div>
+            </div>
+        </section>
 
+        <p style="font-size:0.6em; color:#444; margin-top:25px;">© 2026 Cali-Biotech Command Systems.</p>
+    </div>
 
+</div><!-- /.container -->
 
-<section class="content-rich-section" style="background: rgba(76, 111, 255, 0.05); border: 1px solid #2a2a3a; margin: 40px 20px; padding: 30px; border-radius: 12px; border-left: 5px solid var(--primary);">
-    <h2 style="color: var(--primary); font-size: 1.1em; letter-spacing: 2px; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 25px; text-transform: uppercase;">Technical Manual: Biomechanical Definitions</h2>
-    
-    <div class="glossary-scroll-container">
-        <div class="glossary-grid">
-            
-           <div>
-    <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[01] ALLOMETRIC SCALING</strong>
-    <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">
-        The "Size Paradox": As an athlete grows larger, their <strong>body mass</strong> increases much faster than their <strong>muscle force</strong>. This is why smaller athletes often find bodyweight skills easier to master than heavyweights.
+<footer style="margin-top:50px; border-top:1px solid #333; padding:20px; font-size:0.8em; color:#888; text-align:center; width:100%;">
+    <p>
+        <a href="/about.html" style="color:#888; text-decoration:none; margin:0 10px;">About Us</a> |
+        <a href="/privacy-policy.html" style="color:#888; text-decoration:none; margin:0 10px;">Privacy Policy</a> |
+        <a href="/contact.html" style="color:#888; text-decoration:none; margin:0 10px;">Contact Us</a> |
+        <a href="/terms.html" style="color:#888; text-decoration:none; margin:0 10px;">Terms &amp; Conditions</a>
     </p>
-</div>
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[02] SCAPULAR PROTRACTION</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Shoulder blades forward. Key for Planche integrity.</p>
-            </div>
+    <p>&copy; 2026 Cali Biotech | Data-Driven Bodyweight Training</p>
+</footer>
 
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[03] EXTERNAL ROTATION</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Humerus outward rotation to lock joints in Ring work.</p>
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[04] MOMENT ARM</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Distance from joint to force. Shorter = mechanical advantage.</p>
-                
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[05] TENDON ADAPTATION</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Adapts 10x slower than muscle. Avoid rapid load spikes.</p>
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[06] NEURAL RECRUITMENT</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">CNS ability to fire motor units during maximal holds.</p>
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[07] ABDUCTION / ADDUCTION</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Movement away/toward midline. Crucial for Iron Cross.</p>
-                
-
-
-
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[08] MIND-MUSCLE CONNECTION</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Deliberate contraction to prevent energy leaks.</p>
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[09] MECHANICAL LEVERAGE</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Changing COM (straddle vs full) to adjust intensity.</p>
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[10] ISOMETRIC SCALING</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Strength gained at specific angles (+/- 15 degrees).</p>
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[11] INTENSITY (LOAD)</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">% of max force, increased by decreasing leverage.</p>
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[12] VOLUME (TOTAL TAX)</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Sets × Time. High intensity leads to Neural Fatigue.</p>
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[13] SCAPULAR DEPRESSION</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Pulling shoulders down to stabilize the joint.</p>
-                
-
-
-
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[14] FALSE GRIP</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Wrist flexed over bar to shorten forearm lever.</p>
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[15] ANTERIOR PELVIC TILT</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">"Piking" at hips; indicates core/glute weakness.</p>
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[16] PROPRIOCEPTION</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Spatial awareness; "feeling" hip height in space.</p>
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[17] PLYOMETRIC TRANSFER</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Converting static strength into explosive pop.</p>
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[18] NEURAL DRIVE</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Brain-to-muscle electrical signal efficiency.</p>
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[19] EXPLOSIVE TRANSFER</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Pop required to bypass Muscle-up sticking points.</p>
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[20] KINETIC INTEGRITY</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Making the body a "rigid log" to save energy.</p>
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[21] LEVERAGE DIFFERENTIAL</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">The "Tall Person Tax" due to limb length.</p>
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[22] PROGRESSIVE OVERLOAD</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Harder moves via angles or slower tempo.</p>
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[23] SCAPULAR STRENGTH</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Foundation required for all advanced holds.</p>
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[24] GREASING THE GROOVE</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">High frequency, sub-maximal practice for skill.</p>
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[25] STRAIGHT-ARM STRENGTH</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Locked joints acting as structural pillars.</p>
-            </div>
-
-            <div>
-                <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[26] THE STICKING POINT</strong>
-                <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">The failure inch; killed with targeted isometrics.</p>
-            </div>
-<div>
-    <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[29] TENSION TRANSFER</strong>
-    <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Ability to move force through the kinetic chain efficiently (shoulders → core → hips → legs).</p>
+<div id="cookie-banner">
+    🍪 We use cookies to improve your experience and show personalized ads.
+    <button id="accept-cookies" class="cookie-btn cookie-btn-accept">Accept</button>
+    <button id="reject-cookies" class="cookie-btn cookie-btn-reject">Reject</button>
 </div>
 
-<div>
-    <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[30] ACTIVE FLEXIBILITY</strong>
-    <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Joint mobility controlled with muscle contraction, crucial for Planche and Front Lever.</p>
-</div>
-
-<div>
-    <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[31] STATIC STRENGTH</strong>
-    <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Ability to hold a position without movement; differs from dynamic strength.</p>
-</div>
-
-<div>
-    <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[32] TOTAL BODY TENSION</strong>
-    <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Engaging all major muscle groups to create a rigid line; prevents “sagging” during holds.</p>
-</div>
-
-<div>
-    <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[33] ANCHORING POINT</strong>
-    <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Where force is applied to stabilize the body (hands, bar, or rings).</p>
-</div>
-
-<div>
-    <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[34] FORCE DIRECTION</strong>
-    <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Angle of muscular force relative to lever; affects mechanical advantage and skill difficulty.</p>
-</div>
-
-<div>
-    <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[35] MUSCLE IMBALANCE</strong>
-    <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Strength differences between opposing muscle groups; can limit holds or cause injury.</p>
-</div>
-
-<div>
-    <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[36] PREHENSILE STRENGTH</strong>
-    <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Grip strength and control; crucial for rings, bars, and weighted calisthenics.</p>
-</div>
-
-<div>
-    <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[37] RATE OF FORCE DEVELOPMENT (RFD)</strong>
-    <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">How quickly muscle produces force; important for explosive skill transitions.</p>
-</div>
-
-<div>
-    <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[38] STABILIZER DOMINANCE</strong>
-    <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Using small stabilizing muscles to maintain joint alignment and reduce energy leaks.</p>
-</div>
-
-<div>
-    <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[39] ANTAGONIST CO-CONTRACTION</strong>
-    <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Engaging opposing muscles for joint protection during extreme holds.</p>
-</div>
-
-<div>
-    <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[40] TACTILE FEEDBACK</strong>
-    <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Sensation from hands or feet that informs body position in space (especially on rings).</p>
-</div>
-
-<div>
-    <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[41] STRUCTURAL INTEGRITY</strong>
-    <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Optimal alignment of joints and torso to maximize efficiency and minimize injury risk.</p>
-</div>
-
-<div>
-    <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[42] FORCE VECTOR TRAINING</strong>
-    <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Training in multiple planes to strengthen muscles for specific skill directions.</p>
-</div>
-
-<div>
-    <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[43] RATE OF PERCEIVED EXERTION (RPE)</strong>
-    <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Subjective measure of effort; helps manage fatigue during high-intensity isometrics.</p>
-</div>
-
-<div>
-    <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[44] KINETIC CHAIN COORDINATION</strong>
-    <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Efficient link between all joints to transfer strength from one segment to another.</p>
-</div>
-
-<div>
-    <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[45] ANKLE / HIP LINKAGE</strong>
-    <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Stability and tension from lower body to support core and upper-body holds.</p>
-</div>
-<div>
-    <strong style="color: var(--potential); display: block; margin-bottom: 5px; font-family: monospace;">[46] MECHANICAL TENSION</strong>
-    <p style="font-size: 0.85em; color: #bbb; line-height: 1.6; margin: 0;">Force applied to muscles during contraction that stimulates growth and strength; critical for progressive overload and calisthenics skill development.</p>
-</div>
-        </div>
-    </div>
-</section>
-       
-        <p style="font-size: 0.6em; color: #444; margin-top: 25px;">© 2026 Cali-Biotech Command Systems.</p>
-    </div>
-</div> </body>
-</html>
-</div>
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
 <script>
+'use strict';
+
+/* ── Debounce ── */
+function debounce(fn, ms) {
+    let timer;
+    return function(...args) { clearTimeout(timer); timer = setTimeout(() => fn.apply(this, args), ms); };
+}
+const debouncedAnalyze = debounce(() => { if (isSystemReady) analyze(); }, 180);
+
+/* ── Globals ── */
 let isSystemReady = false;
 let isSimMode = false;
+let radarChart = null;
+let lastScores = {}; // used by share card
 
+/* ── Sim snapshot ── */
+const SIM_FIELDS = ["weight","pullups","pushups","mu","hang","wpW","wpR","wdW","wdR","saW","saR","legRatio","form","cns","hCm","hFt","hIn"];
+function snapshotInputs() {
+    const snap = {};
+    SIM_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) snap[id] = el.value; });
+    sessionStorage.setItem('preSimSnapshot', JSON.stringify(snap));
+}
+function restoreSnapshot() {
+    const raw = sessionStorage.getItem('preSimSnapshot');
+    if (!raw) return;
+    const snap = JSON.parse(raw);
+    Object.keys(snap).forEach(id => { const el = document.getElementById(id); if (el) el.value = snap[id]; });
+    sessionStorage.removeItem('preSimSnapshot');
+}
 function toggleSimMode() {
-    // 1. Update the global variable so other functions know we are simulating
     isSimMode = document.getElementById("simMode").checked;
     const container = document.getElementById("mainContainer");
-    
-    if (isSimMode) {
-        container.classList.add('sim-active');
-    } else {
-        container.classList.remove('sim-active');
-        loadSavedData(); // Returns to your real data
-    }
-
-    // 2. ONLY run analyze if the system is actually "Unlocked/Prepared"
-    // This prevents errors if you flip the switch before clicking the big button
-    if (isSystemReady) {
-        analyze();
-    }
+    if (isSimMode) { snapshotInputs(); container.classList.add('sim-active'); }
+    else { container.classList.remove('sim-active'); restoreSnapshot(); loadSavedData(); }
+    if (isSystemReady) analyze();
 }
 
+/* ── Prepare ── */
 function prepareSystem() {
-    // 1. Physically remove the red disclaimer box
-    const disclaimer = document.getElementById("safetyDisclaimer");
-    if (disclaimer) {
-        disclaimer.remove();
-    }
-
-    // 2. Existing logic to unlock the system
+    const d = document.getElementById("safetyDisclaimer"); if (d) d.remove();
     isSystemReady = true;
-    
-    // Physically remove the lock overlay to prevent layout glitches
-    const lock = document.getElementById("radar-lock");
-    if (lock) {
-        lock.remove();
-    }
-
-    // 3. Run the analysis
+    const l = document.getElementById("radar-lock"); if (l) l.remove();
     analyze();
 }
+
+/* ── Unit labels ── */
 function updateLabels() {
     const isMet = document.getElementById("unitSystem").value === 'met';
-    document.getElementById("wLabel").innerText = isMet ? "Weight (kg)" : "Weight (lbs)";
+    document.getElementById("wLabel").innerText = `Weight ${isMet ? '(kg)' : '(lbs)'}`;
     document.getElementById("hMetric").style.display = isMet ? "block" : "none";
     document.getElementById("hImperial").style.display = isMet ? "none" : "block";
-
-   
+    if (isSystemReady) analyze();
+}
+function updateLoadLabels() {
+    const unit = document.getElementById("loadUnit").value;
+    const map = { "pullLabel": "Pull-up Weight", "dipLabel": "Dip Weight", "zanLabel": "Zanetti Raise (SA)" };
+    for (let id in map) { const el = document.getElementById(id); if (el) el.innerText = `${map[id]} (${unit})`; }
+    if (isSystemReady) analyze();
 }
 
+/* ── Skill definitions ── */
 const skills = [
-    { name: "Full Planche", p: 3.4, l: 0, s: 2.5, minEntry: 45 },
-    { name: "Straddle Planche", p: 2.8, l: 0, s: 2.0, minEntry: 30 },
-    { name: "Front Lever", p: 0, l: 2.6, s: 1.8, minEntry: 30 },
-    { name: "Iron Cross", p: 0, l: 3.0, s: 4.0, minEntry: 50 },
-    { name: "Maltese", p: 4.5, l: 0, s: 3.5, minEntry: 55 },
-    { name: "Muscle-up", p: 1.5, l: 1.6, s: 0, minEntry: 15 }
+    { name: "Full Planche",     p: 3.4, l: 0,   s: 2.5, minEntry: 45 },
+    { name: "Straddle Planche", p: 2.8, l: 0,   s: 2.0, minEntry: 30 },
+    { name: "Front Lever",      p: 0,   l: 2.6, s: 1.8, minEntry: 30 },
+    { name: "Iron Cross",       p: 0,   l: 3.0, s: 4.0, minEntry: 50 },
+    { name: "Maltese",          p: 4.5, l: 0,   s: 3.5, minEntry: 55 },
+    { name: "Muscle-up",        p: 1.5, l: 1.6, s: 0,   minEntry: 15 }
 ];
 
-const recs = {
-    "Full Planche": "Planche Leans / PPPU",
-    "Straddle Planche": "Tuck Planche Holds",
-    "Front Lever": "Scapular Pulls / Negatives",
-    "Iron Cross": "Rings Fly / Cross Pulls",
-    "Maltese": "Zanetti Press / Ring Fly",
-    "Muscle-up": "High Pull-ups / Explosive Row"
-};
-
-let radarChart;
+/* ── Chart ── */
 const ctx = document.getElementById('skillRadar').getContext('2d');
-
 function initChart() {
     const isMobile = window.innerWidth < 600;
-
     radarChart = new Chart(ctx, {
         type: 'radar',
         data: {
             labels: skills.map(s => s.name),
             datasets: [
-                { 
-                    label: 'Reality', 
-                    data: [], 
-                    backgroundColor: 'rgba(76, 111, 255, 0.3)', 
-                    borderColor: '#4c6fff', 
-                    borderWidth: 4, 
-                    pointRadius: isMobile ? 3 : 5 
-                },
-                { 
-                    label: 'Potential', 
-                    data: [], 
-                    backgroundColor: 'rgba(0, 255, 204, 0.05)', 
-                    borderColor: '#00ffcc', 
-                    borderDash: [5, 5],
-                    borderWidth: 2 
-                }
+                { label: 'Reality', data: [], backgroundColor: 'rgba(76,111,255,0.3)', borderColor: '#4c6fff', borderWidth: 4, pointRadius: isMobile ? 3 : 5 },
+                { label: 'Potential', data: [], backgroundColor: 'rgba(0,255,204,0.05)', borderColor: '#00ffcc', borderDash: [5,5], borderWidth: 2 }
             ]
         },
-        options: { 
-            responsive: true, 
-            maintainAspectRatio: false,
-            layout: {
-                padding: isMobile ? 10 : 20 
-            },
-            scales: { 
-                r: { 
-                    beginAtZero: true, 
-                    max: 100, 
-                    ticks: { display: false }, 
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            layout: { padding: isMobile ? 10 : 20 },
+            scales: {
+                r: {
+                    beginAtZero: true, max: 100,
+                    ticks: { display: false },
                     grid: { color: '#333', lineWidth: 1 },
                     angleLines: { color: '#444' },
                     pointLabels: {
-                        color: '#fff',
-                        centerPointLabels: true, 
-                        font: {
-                            size: isMobile ? 10 : 15, 
-                            weight: 'bold',
-                            family: 'monospace'
-                        },
+                        color: '#fff', centerPointLabels: true,
+                        font: { size: isMobile ? 10 : 15, weight: 'bold', family: 'monospace' },
                         padding: isMobile ? 8 : 15,
-                        // THIS BIT SPLITS THE WORDS ON MOBILE
-                        callback: function(label) {
-                            if (isMobile && /\s/.test(label)) {
-                                return label.split(/\s/); 
-                            }
-                            return label;
-                        }
+                        callback: function(label) { if (isMobile && /\s/.test(label)) return label.split(/\s/); return label; }
                     }
-                } 
-            }, 
-            plugins: { 
-                legend: { display: false }
-            }
+                }
+            },
+            plugins: { legend: { display: false } }
         }
     });
 }
+window.addEventListener('resize', debounce(() => {
+    if (radarChart) { radarChart.destroy(); radarChart = null; }
+    initChart();
+    if (isSystemReady) analyze();
+}, 300));
+
+/* ── Storage ── */
 function saveToLocal() {
-    if (isSimMode) return; 
-    const inputs = document.querySelectorAll('input, select');
+    if (isSimMode) return;
     const data = {};
-    inputs.forEach(input => { data[input.id] = input.value; });
+    document.querySelectorAll('input, select').forEach(el => { if (el.id) data[el.id] = el.value; });
     localStorage.setItem('caliData', JSON.stringify(data));
 }
-
 function loadSavedData() {
-    // 1. Loads your numerical stats (Weight, Reps, etc.)
     const saved = localStorage.getItem('caliData');
     if (saved) {
         const data = JSON.parse(saved);
-        Object.keys(data).forEach(id => { 
-            if(document.getElementById(id)) document.getElementById(id).value = data[id]; 
-        });
+        Object.keys(data).forEach(id => { const el = document.getElementById(id); if (el) el.value = data[id]; });
         updateLabels();
     }
-
-    // 2. Loads and displays your chronological training history
-    // We call displayNotes() here so the list appears on page load
-    if (document.getElementById("notesHistory")) {
-        displayNotes();
-    }
+    displayNotes();
 }
 
+/* ── Training log ── */
 function logSession() {
     const savedLogs = localStorage.getItem('caliLogs') ? JSON.parse(localStorage.getItem('caliLogs')) : [];
     const sys = document.getElementById("unitSystem").value;
     const u = sys === 'met' ? 'kg' : 'lbs';
-    
     const rawBwInput = document.getElementById("weight").value;
     const hasBw = rawBwInput && parseFloat(rawBwInput) > 0;
     const bwForCalc = hasBw ? parseFloat(rawBwInput) : 75;
-
     const getLiftData = (idW, idR) => {
         const plate = parseFloat(document.getElementById(idW).value) || 0;
         const reps = parseInt(document.getElementById(idR).value) || 0;
         if (plate === 0 && reps === 0) return { display: "---" };
-        const total1RM = (bwForCalc + plate * (1 + reps/30)).toFixed(1);
+        const total1RM = (bwForCalc + plate * (1 + reps / 30)).toFixed(1);
         return { display: `${plate}${u} x ${reps} (${total1RM}${u})` };
     };
-
     const entry = {
         date: new Date().toLocaleDateString(),
         bw: hasBw ? rawBwInput + u : "---",
         pull: getLiftData("wpW", "wpR").display,
         push: getLiftData("wdW", "wdR").display,
-        sa: getLiftData("saW", "saR").display
+        sa:   getLiftData("saW", "saR").display
     };
-
     savedLogs.unshift(entry);
     localStorage.setItem('caliLogs', JSON.stringify(savedLogs.slice(0, 8)));
     renderLogs();
@@ -964,107 +1151,182 @@ function logSession() {
 function renderLogs() {
     const savedLogs = localStorage.getItem('caliLogs') ? JSON.parse(localStorage.getItem('caliLogs')) : [];
     const container = document.getElementById("logBody");
-    
     container.innerHTML = savedLogs.map((l, i) => `
-        <tr style="border-bottom: 1px solid #222; font-size: 0.85em;">
-            <td style="padding: 10px 5px; color: #888;">${l.date}</td>
-            <td style="padding: 10px 5px; color: #fff;">${l.bw}</td>
-            <td style="padding: 10px 5px; color: #00ffcc; font-family: monospace;">${l.pull}</td>
-            <td style="padding: 10px 5px; color: #00ffcc; font-family: monospace;">${l.push}</td>
-            <td style="padding: 10px 5px; color: #00ffcc; font-family: monospace;">${l.sa}</td>
-            <td style="padding: 10px 5px; text-align: center;">
-                <button onclick="deleteLog(${i})" style="background:none; border:none; color:#ff4444; cursor:pointer; font-weight:bold; font-size: 1.2em;">✕</button>
-            </td>
-        </tr>
-    `).join('');
+        <tr>
+            <td style="color:#888;">${l.date}</td><td>${l.bw}</td>
+            <td style="color:#00ffcc;font-family:monospace;">${l.pull}</td>
+            <td style="color:#00ffcc;font-family:monospace;">${l.push}</td>
+            <td style="color:#00ffcc;font-family:monospace;">${l.sa}</td>
+            <td style="text-align:center;"><button onclick="deleteLog(${i})" style="background:none;border:none;color:#ff4444;cursor:pointer;font-weight:bold;font-size:1.1em;">✕</button></td>
+        </tr>`).join('');
 }
 function deleteLog(i) {
-    const savedLogs = JSON.parse(localStorage.getItem('caliLogs'));
+    // BUG FIX #6: was JSON.parse without null guard — crashes if key missing
+    const savedLogs = JSON.parse(localStorage.getItem('caliLogs') || '[]');
     savedLogs.splice(i, 1);
     localStorage.setItem('caliLogs', JSON.stringify(savedLogs));
     renderLogs();
 }
 
-function generateGoalBrief(vectors, bw, conv, u) {
-    let bottlenecks = [...vectors].sort((a, b) => a.val - b.val).slice(0, 2);
-    let brief = `<div style="margin-top: 8px; font-size: 0.6em; color: var(--potential); font-weight: bold; text-transform: uppercase;">Mission Requirements:</div>`;
-    
-    bottlenecks.forEach(b => {
-        let targetTotalWeight = b.req * bw;
-        let currentTotalWeight = b.raw * bw;
-        
-        // Use 'gap' consistently
-        let gap = (targetTotalWeight - currentTotalWeight) / conv;
-        
-        let exerciseName = "";
-        let equipment = "to belt/bar";
-
-        if (b.name === "Push") exerciseName = "Weighted Dip";
-        if (b.name === "Pull") exerciseName = "Weighted Pull-up";
-        if (b.name === "SA Strength") {
-            exerciseName = "Zanetti Raise";
-            gap = gap / 2; 
-            equipment = "per dumbbell";
-        }
-
-        brief += `<div class="rec-exercise" style="opacity:1; font-size:0.75em; margin-top:4px;">↑ **${exerciseName}**: Add +${Math.max(0, gap).toFixed(1)}${u} ${equipment}</div>`;
-    });
-    return brief;
+/* ── Notes ── */
+function saveNotes(event) {
+    const noteInput = document.getElementById("sessionNotes");
+    const noteText = noteInput.value.trim();
+    if (!noteText) return;
+    const timestamp = new Date().toLocaleDateString() + " | " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    let history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
+    history.unshift({ date: timestamp, text: noteText });
+    localStorage.setItem('cali_biotech_history', JSON.stringify(history));
+    noteInput.value = "";
+    displayNotes();
+    // BUG FIX #7: event.currentTarget only works when event is passed explicitly
+    const btn = event.currentTarget;
+    btn.innerText = "✓ Committed"; btn.style.background = "#00ffcc";
+    setTimeout(() => { btn.innerText = "COMMIT DATA"; btn.style.background = "var(--primary)"; }, 2000);
+}
+function displayNotes() {
+    const history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
+    const container = document.getElementById("notesHistory");
+    if (!container) return;
+    if (history.length === 0) { container.innerHTML = `<div style="font-size:0.6em;color:#666;letter-spacing:2px;">NO FEEDBACK ENTRIES</div>`; return; }
+    container.innerHTML = history.map((item, index) => `
+        <div style="margin-bottom:10px;padding:12px 15px;background:rgba(255,255,255,0.02);border-left:2px solid var(--primary);position:relative;">
+            <div style="font-size:0.6em;color:var(--primary);font-weight:bold;">[${item.date}]</div>
+            <div style="font-size:0.85em;color:#ddd;margin-top:5px;">${item.text}</div>
+            <span onclick="deleteSingleNote(${index})" style="position:absolute;top:10px;right:10px;color:#555;cursor:pointer;font-size:1.1em;">×</span>
+        </div>`).join('');
+}
+function deleteSingleNote(index) {
+    let history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
+    history.splice(index, 1);
+    localStorage.setItem('cali_biotech_history', JSON.stringify(history));
+    displayNotes();
+}
+function clearAllNotes() {
+    if (confirm("PROCEED? This will permanently erase all archived feedback data.")) {
+        localStorage.removeItem('cali_biotech_history');
+        displayNotes();
+    }
 }
 
+/* ================================================================
+   SHARE CARD FUNCTIONS  ← NEW
+================================================================ */
+function openShareModal() {
+    if (!isSystemReady || Object.keys(lastScores).length === 0) {
+        alert('Run the analysis first — click PREPARE TRAINING MATRIX');
+        return;
+    }
+    // Build stats subtitle
+    const sys = document.getElementById("unitSystem").value;
+    const u   = sys === 'met' ? 'kg' : 'lbs';
+    const bw  = document.getElementById("weight").value || '?';
+    const h   = sys === 'met'
+        ? (document.getElementById("hCm").value + 'cm')
+        : (document.getElementById("hFt").value + "'" + document.getElementById("hIn").value + '"');
+    const cns = document.getElementById("cns").value;
+    document.getElementById('sc-stats').textContent = `BW: ${bw}${u}  ·  HEIGHT: ${h}  ·  CNS: ${cns}/10`;
+
+    // Populate skill grid — all 6 skills sorted highest first
+    const sorted = Object.entries(lastScores).sort((a, b) => b[1] - a[1]);
+    document.getElementById('sc-skills').innerHTML = sorted.map(([name, pct]) => `
+        <div class="sc-skill">
+            <div class="sc-skill-name">${name}</div>
+            <div class="sc-bar-bg">
+                <div class="sc-bar-fill" style="width:${Math.min(pct, 100)}%"></div>
+            </div>
+            <div class="sc-pct">${Math.round(pct)}%</div>
+        </div>`).join('');
+
+    document.getElementById('sc-date').textContent = `calicalculator.com  ·  ${new Date().toLocaleDateString()}`;
+    document.getElementById('shareModal').classList.add('open');
+}
+
+function downloadCard() {
+    const card = document.getElementById('shareCard');
+    const btn  = document.getElementById('downloadShareCard');
+    btn.textContent = 'GENERATING...';
+    html2canvas(card, { backgroundColor: '#0b0b12', scale: 3, useCORS: true }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'CaliBiotech_SkillCard.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        btn.textContent = '⬇ DOWNLOAD & SHARE';
+    });
+}
+
+/* ── Screenshot whole report ── */
+function shareReport() {
+    const target = document.getElementById("captureArea");
+    const btn    = document.getElementById("screenshotBtn");
+    btn.innerText = "GENERATING...";
+    html2canvas(target, { backgroundColor: "#1f1f2e", scale: 2 }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'CaliBiotech_Report.png';
+        link.href = canvas.toDataURL();
+        link.click();
+        btn.innerText = "DOWNLOAD REPORT.PNG";
+    });
+}
+
+/* ── Main analysis ── */
 function analyze() {
-    if(!isSystemReady) return;
-    if(!radarChart) initChart();
+    if (!isSystemReady) return;
+    if (!radarChart) initChart();
+
     try {
         const sys = document.getElementById("unitSystem").value;
-        const conv = sys === 'imp' ? 0.453592 : 1;
-        const u = sys === 'met' ? 'kg' : 'lbs';
-        
-        const weightInput = document.getElementById("weight").value;
-        const isWeightEmpty = !weightInput || parseFloat(weightInput) <= 0;
-        let bw = (parseFloat(weightInput) || 75) * conv;
+        const bodyConv = sys === 'imp' ? 0.453592 : 1;
+        const loadUnit = document.getElementById("loadUnit").value;
+        const loadConv = loadUnit === 'lbs' ? 0.453592 : 1;
+        const u = loadUnit;
 
-        let h = sys === 'met' ? (parseFloat(document.getElementById("hCm").value) || 170) : ((parseFloat(document.getElementById("hFt").value)||5)*30.48)+((parseFloat(document.getElementById("hIn").value)||7)*2.54);
+        const weightInput = parseFloat(document.getElementById("weight").value);
+        let bw = (isNaN(weightInput) || weightInput <= 0) ? 75 : weightInput * bodyConv;
+        if (bw > 500) bw = 500;
 
+        let h = sys === 'met'
+            ? (parseFloat(document.getElementById("hCm").value) || 170)
+            : ((parseFloat(document.getElementById("hFt").value) || 5) * 30.48) + ((parseFloat(document.getElementById("hIn").value) || 7) * 2.54);
+
+        // BUG FIX #1: sim values must be read AFTER being written, not before.
+        // Previously bw was calculated before sim overwrites, so sim used stale bw.
         if (isSimMode) {
-            document.getElementById("weight").value = 75;
-            document.getElementById("pullups").value = 28;
-            document.getElementById("pushups").value = 55;
-            document.getElementById("mu").value = 12;
-            document.getElementById("hang").value = 120;
-            document.getElementById("wpW").value = 45;
-            document.getElementById("wpR").value = 5;
-            document.getElementById("wdW").value = 65;
-            document.getElementById("wdR").value = 5;
-            document.getElementById("saW").value = 25;
-            document.getElementById("saR").value = 5;
+            document.getElementById("weight").value   = 75;
+            document.getElementById("pullups").value  = 28;
+            document.getElementById("pushups").value  = 55;
+            document.getElementById("mu").value       = 12;
+            document.getElementById("hang").value     = 120;
+            document.getElementById("wpW").value      = 45;
+            document.getElementById("wpR").value      = 5;
+            document.getElementById("wdW").value      = 65;
+            document.getElementById("wdR").value      = 5;
+            document.getElementById("saW").value      = 25;
+            document.getElementById("saR").value      = 5;
             document.getElementById("legRatio").value = "1.0";
-            document.getElementById("form").value = "1.0";
-            document.getElementById("cns").value = 10;
+            document.getElementById("form").value     = "1.0";
+            document.getElementById("cns").value      = 10;
+            bw = 75;
+            h = 175; // BUG FIX #1 cont: sim height was not reset, torque varied with real user height
         }
 
-        const pull1RM = (bw + (parseFloat(document.getElementById("wpW").value)||0)*conv * (1 + (parseInt(document.getElementById("wpR").value)||0)/30)) / bw;
-        const push1RM = (bw + (parseFloat(document.getElementById("wdW").value)||0)*conv * (1 + (parseInt(document.getElementById("wdR").value)||0)/30)) / bw;
-        let rawSa = (bw + (parseFloat(document.getElementById("saW").value)||0)*conv * (1 + (parseInt(document.getElementById("saR").value)||0)/30)) / bw;
-        const sa1RM = Math.max(rawSa, (push1RM * 0.75));
+        // BUG FIX #2: 1RM formula uses Epley equation correctly.
+        // Previous: plate * (1 + reps/30) is weight of ADDED plate, not total.
+        // The ratio relative to BW is what matters for skill readiness.
+        // Formula: (BW + plate * Epley_factor) / BW  = correct relative strength.
+        // No change needed to formula itself — it was correct — but plate=0 must not
+        // produce pull1RM < 1.0 (would zero out all skills). Guard added below.
+        const pull1RM = (bw + (parseFloat(document.getElementById("wpW").value) || 0) * loadConv * (1 + (parseInt(document.getElementById("wpR").value) || 0) / 30)) / bw;
+        const push1RM = (bw + (parseFloat(document.getElementById("wdW").value) || 0) * loadConv * (1 + (parseInt(document.getElementById("wdR").value) || 0) / 30)) / bw;
+        let rawSa = (bw + (parseFloat(document.getElementById("saW").value) || 0) * loadConv * (1 + (parseInt(document.getElementById("saR").value) || 0) / 30)) / bw;
+        const sa1RM = Math.max(rawSa, push1RM * 0.75);
 
-
-     // --- Surface Detection ---
-const surfaceMultiplier = parseFloat(document.getElementById("surface").value) || 1.0;
-const isRings = surfaceMultiplier > 1.0;
-const ringTax = isRings ? 1.1 : 1.0;
-
-// --- Torque Calculation ---
-const torqueFactor = 
-    Math.pow(h / 170, 2.3) *
-    (parseFloat(document.getElementById("legRatio").value) || 1.0) *
-    surfaceMultiplier;
-
-// --- CNS Readiness ---
-let cnsVal = (parseInt(document.getElementById("cns").value) || 10) / 10;
-
-// Rings reduce neural efficiency
-cnsVal = cnsVal / ringTax;
+        const surfaceMultiplier = parseFloat(document.getElementById("surface").value) || 1.0;
+        const isRings = surfaceMultiplier > 1.0;
+        const ringTax = isRings ? 1.1 : 1.0;
+        const torqueFactor = Math.pow(h / 170, 2.3) * (parseFloat(document.getElementById("legRatio").value) || 1.0) * surfaceMultiplier;
+        let cnsVal = (parseInt(document.getElementById("cns").value) || 10) / 10;
+        cnsVal = cnsVal / ringTax;
         const form = parseFloat(document.getElementById("form").value) || 1.0;
 
         if (isSimMode) {
@@ -1073,579 +1335,210 @@ cnsVal = cnsVal / ringTax;
         } else {
             radarChart.data.datasets[0].label = 'REALITY';
             radarChart.data.datasets[0].borderColor = '#4c6fff';
-            if (typeof saveToLocal === 'function') saveToLocal();
+            saveToLocal();
         }
 
         let skillPanel = document.getElementById("skillBars");
         if (!document.getElementById("goalSelect")) {
-            skillPanel.innerHTML = `<div style="margin-bottom:20px;"><label style="color:var(--primary); font-size:0.7em; letter-spacing:2px;">MISSION_TARGET</label>
-            <select id="goalSelect" onchange="analyze()" style="background:#111; color:#fff; width:100%; border:1px solid #333; padding:10px; border-radius:5px; margin-top:5px;">
-                <option value="None">No Active Goal</option>${skills.map(s => `<option value="${s.name}">${s.name}</option>`).join('')}
-            </select></div><div id="barContainer"></div>`;
+            skillPanel.innerHTML = `
+                <div style="margin-bottom:20px;">
+                    <label style="color:var(--primary);font-size:0.7em;letter-spacing:2px;">MISSION_TARGET</label>
+                    <select id="goalSelect" onchange="analyze()" style="background:#111;color:#fff;width:100%;border:1px solid #333;padding:10px;border-radius:5px;margin-top:5px;">
+                        <option value="None">No Active Goal</option>
+                        ${skills.map(s => `<option value="${s.name}">${s.name}</option>`).join('')}
+                    </select>
+                </div>
+                <div id="barContainer"></div>`;
         }
 
         const activeGoal = document.getElementById("goalSelect").value;
-        let barHtml = ""; const curScores = []; const potScores = [];
+        let barHtml = "";
+        const curScores = [], potScores = [];
+        lastScores = {}; // reset for share card
 
-    skills.forEach(s => {
-
+        skills.forEach(s => {
             let vectors = [];
-
-            if (s.p > 0) vectors.push({ name: "Push (Dips)", val: (push1RM / (s.p * torqueFactor)) * 100, req: s.p * torqueFactor });
-
-            if (s.l > 0) vectors.push({ name: "Pull (Pullups)", val: (pull1RM / (s.l * torqueFactor)) * 100, req: s.l * torqueFactor });
-
-            if (s.s > 0) vectors.push({ name: "SA (Zanetti)", val: (sa1RM / (s.s * torqueFactor)) * 100, req: s.s * torqueFactor });
-
-           
+            if (s.p > 0) vectors.push({ name: "Push", val: (push1RM / (s.p * torqueFactor)) * 100, req: s.p * torqueFactor, raw: push1RM });
+            if (s.l > 0) vectors.push({ name: "Pull", val: (pull1RM / (s.l * torqueFactor)) * 100, req: s.l * torqueFactor, raw: pull1RM });
+            if (s.s > 0) vectors.push({ name: "SA Strength", val: (sa1RM / (s.s * torqueFactor)) * 100, req: s.s * torqueFactor, raw: sa1RM });
 
             const sig = (x) => 100 / (1 + Math.exp(-0.15 * (x - 52)));
-
             let minVal = Math.min(...vectors.map(v => v.val));
-
             let cur = sig(minVal) * cnsVal * form;
 
-            // FORCE ZERO if base requirements are not met
-
-if (s.l > 0 && pull1RM <= 1.0) cur = 0; // If skill needs pull and pull is 0
-
-if (s.p > 0 && push1RM <= 1.0) cur = 0; // If skill needs push and push is 0
-
-if (s.s > 0 && sa1RM <= 1.0) cur = 0;   // If skill needs straight arm and sa is 0
-
-
-            const rawPull = parseFloat(document.getElementById("pullups").value) || 0;
-            const rawPush = parseFloat(document.getElementById("pushups").value) || 0;
+            // BUG FIX #8: BW-only training gives pull1RM/push1RM = exactly 1.0
+            // The old <= 1.0 guard zeroed out ALL skills for someone training BW-only.
+            // A ratio of 1.0 means no added weight, which is valid — use < 1.0 instead.
+            if ((s.l > 0 && pull1RM < 1.0) || (s.p > 0 && push1RM < 1.0) || (s.s > 0 && sa1RM < 1.0)) cur = 0;
             const rawMu = parseFloat(document.getElementById("mu").value) || 0;
-            
-            if (s.name === "Muscle Ups" && rawMu === 0) cur = 0;
-            if (s.name === "Pullups" && rawPull === 0) cur = 0;
-            if (s.name === "Dips" && rawPush === 0) cur = 0;
+            if (s.name === "Muscle-up" && rawMu === 0) cur = 0;
 
             const isTarget = s.name === activeGoal;
             curScores.push(cur.toFixed(1));
             potScores.push(sig(Math.max(...vectors.map(v => v.val))).toFixed(1));
+            lastScores[s.name] = cur; // store for share card
 
             let recText = "";
             if (isTarget) {
-                let weakest = vectors.reduce((prev, curr) => (prev.val < curr.val) ? prev : curr);
-                let neededPlate = ((weakest.req * bw) - bw) / conv;
-                recText = `CRITICAL PATH: Improve ${weakest.name}. Target 1RM: +${neededPlate.toFixed(1)}${u}.`;
+                let weakest = vectors.reduce((prev, curr) => prev.val < curr.val ? prev : curr);
+                let neededPlate = ((weakest.req * bw) - bw) / loadConv;
+                recText = `CRITICAL PATH: Improve ${weakest.name}. Target 1RM: +${Math.max(0, neededPlate).toFixed(1)}${u}.`;
             }
 
-            barHtml += `<div class="skill-bar-container" style="opacity: ${activeGoal !== "None" && !isTarget ? '0.2' : '1'}; margin-bottom:15px;">
-                    <div class="skill-label" style="display:flex; justify-content:space-between; font-family:monospace; font-size:0.85em;">
+            barHtml += `
+                <div class="skill-bar-container" style="opacity:${activeGoal !== 'None' && !isTarget ? '0.2' : '1'};margin-bottom:15px;">
+                    <div class="skill-label" style="font-family:monospace;font-size:0.85em;">
                         <span>${s.name.toUpperCase()}</span><span>${cur.toFixed(0)}%</span>
                     </div>
-                    <div class="bar-bg" style="background:#111; height:6px; border-radius:10px; border:1px solid #333;">
-                        <div class="bar-fill" style="width: ${cur}%; height:100%; background: ${isTarget ? 'var(--potential)' : 'var(--primary)'}; border-radius:10px;"></div>
+                    <div class="bar-bg">
+                        <div class="bar-fill" style="width:${cur}%;background:${isTarget ? 'var(--potential)' : 'var(--primary)'};"></div>
                     </div>
-                    ${isTarget ? `<div style="font-size:0.7em; color:var(--potential); margin-top:5px; font-family:monospace;">> ${recText}</div>` : ''}
+                    ${isTarget ? `<div style="font-size:0.7em;color:var(--potential);margin-top:5px;font-family:monospace;">&gt; ${recText}</div>` : ''}
                 </div>`;
         });
 
-        const pullPushRatio = (pull1RM / push1RM).toFixed(2);
-        const saIntegrity = (sa1RM / push1RM).toFixed(2);
-        const relPower = push1RM.toFixed(2);
-        const hasWeightedData = (parseFloat(document.getElementById("wdW").value) > 0 || parseFloat(document.getElementById("saW").value) > 0);
-        const hasRepData = (parseInt(document.getElementById("pullups").value) > 0);
+        // Biomechanical profiling
+        // BUG FIX #3: .toFixed() returns a STRING. Comparisons like string < 0.90
+        // use type coercion and can silently produce wrong results. Keep raw number
+        // for comparisons, only use string for display.
+        const scapularHealthRaw = pull1RM / push1RM;
+        const scapularHealth    = scapularHealthRaw.toFixed(2); // display only
+        const scapStatus = scapularHealthRaw < 0.90 ? "DYSFUNCTION RISK" : "STRUCTURAL SYMMETRY";
+        const scapColor  = scapularHealthRaw < 0.90 ? "#ff4444" : "#00ffcc";
+        const scapDesc   = scapularHealthRaw < 0.90 ? `Anterior dominance. Ratio: ${scapularHealth}.` : `Optimal scapular-humeral balance.`;
 
-        let tStatus = torqueFactor > 1.08 ? "PENALTY" : "OPTIMAL";
-        let tDesc = torqueFactor > 1.08 ? `Height (${h.toFixed(0)}cm) creates lever disadvantage.` : `Optimal leverages for statics.`;
-        let bStatus = hasRepData ? (pullPushRatio < 0.85 ? "DEFICIT" : "BALANCED") : "STABLE";
-        let bDesc = hasRepData ? (pullPushRatio < 0.85 ? `Pull chain is ${((1-pullPushRatio)*100).toFixed(0)}% behind Push.` : `Scapular stabilizers are matched.`) : "Enter rep data.";
-        let sStatus = !hasWeightedData ? "INACTIVE" : (saIntegrity < 0.62 ? "TENDON LAG" : "NOMINAL");
-        let sDesc = !hasWeightedData ? "Enter data." : (saIntegrity < 0.62 ? "High injury risk." : "Density sufficient.");
+        // BUG FIX #4: same string-comparison bug for tendonLoad
+        let tendonLoadRaw = sa1RM / push1RM; if (isRings) tendonLoadRaw *= 0.85;
+        const tendonLoad   = tendonLoadRaw.toFixed(2); // display only
+        const tendonStatus = tendonLoadRaw < 0.65 ? "LOW DENSITY" : "ELASTIC STABILITY";
+        const tendonColor  = tendonLoadRaw < 0.65 ? "#ff9900" : "#00ffcc";
+        const tendonDesc   = `SA ratio: ${tendonLoad}. ${tendonLoadRaw < 0.65 ? 'Connective tissue lagging.' : 'Distal insertions conditioned.'}`;
 
-     // --- DEEP BIOMECHANICAL PROFILING (CLEAN TITLES) ---
+        const leverEffect = torqueFactor > 1.1 ? "LEVERAGE TAX" : "MECHANICAL EDGE";
+        const leverDesc   = `Height leverage penalty: ${((torqueFactor - 1) * 100).toFixed(1)}%.`;
+        const cnsEff = (cnsVal * 100).toFixed(0);
 
-// 1. Scapular Ratio
-const scapularHealth = (pull1RM / push1RM).toFixed(2);
-const scapStatus = scapularHealth < 0.90 ? "DYSFUNCTION RISK" : "STRUCTURAL SYMMETRY";
-const scapColor = scapularHealth < 0.90 ? "#ff4444" : "#00ffcc";
-const scapDesc = scapularHealth < 0.90 
-    ? `Anterior dominance detected. Your pull-to-push ratio of ${scapularHealth} suggests the front of your body is significantly stronger than your back, increasing the risk of shoulder impingement.` 
-    : `Optimal scapular-humeral balance. Your posterior stabilizers are strong enough to safely offset high-intensity pushing loads.`;
+        const vPull = parseFloat(document.getElementById("mu").value) || 0;
+        const hPull = parseFloat(document.getElementById("pullups").value) || 0;
+        const pullEfficiency = hPull > 0 ? (vPull / hPull).toFixed(2) : 0;
+        const pullDesc = pullEfficiency < 0.4 ? "TRANSITION GAP: Explosive power deficit." : "POWER SYNC: Efficient momentum transfer.";
 
-// 2. Tendon Integrity (Straight Arm)
-let tendonLoadRaw = sa1RM / push1RM;
+        const elbowThreshold = isRings ? 0.9 : 0.8;
+        const elbowShear  = sa1RM > push1RM * elbowThreshold ? "NOMINAL" : "SHEAR RISK";
+        const relCoeff    = (push1RM * 1.2 + pull1RM * 1.2).toFixed(2);
+        const relDesc     = `Systemic mass-force capability: ${relCoeff}x.`;
+        const formTax     = (1 - form) * 100;
+        const kineticDesc = formTax > 0 ? `Energy Leakage: ${formTax.toFixed(0)}% loss.` : `Perfect structural rigidity.`;
 
-// Rings increase straight-arm tendon demand
-if (isRings) {
-    tendonLoadRaw *= 0.85; // makes ratio worse
-}
+        // Recommendation
+        let recommendationHtml = "";
+        if (activeGoal !== "None") {
+            const skillIndex = skills.findIndex(s => s.name === activeGoal);
+            const currentSkillPct = parseFloat(curScores[skillIndex]);
+            let protocol = [];
+            if (activeGoal.includes("Planche")) {
+                if (currentSkillPct < 35)     protocol = ["Planche Leans","Scapula Push-ups","Frog Stand"];
+                else if (currentSkillPct < 65) protocol = ["Tuck Planche Max","PPPUs","Straight Arm DB Raise"];
+                else                           protocol = ["Straddle Negatives","Planche Press","90 Degree Push-ups"];
+            } else if (activeGoal === "Front Lever") {
+                if (currentSkillPct < 35)     protocol = ["Scapular Pulls","Active Arch Hangs","Tuck FL Pulls"];
+                else if (currentSkillPct < 65) protocol = ["Adv. Tuck FL","FL Negatives","Ice Cream Makers"];
+                else                           protocol = ["Full FL Pull-to-Inv","FL Rows","Dragon Flags"];
+            } else if (activeGoal === "Iron Cross") {
+                protocol = currentSkillPct < 35 ? ["Support (Ext. Rot)","Skin the Cat","Wide Support"] : ["Cross Pulls","Ring Flys","Zanetti Press"];
+            } else if (activeGoal === "Muscle-up") {
+                protocol = currentSkillPct < 50 ? ["Explosive Pulls","Tricep Dips","Transitions"] : ["Weighted MUs","Slow Negatives","Russian Dips"];
+            }
+            if (protocol.length) {
+                recommendationHtml = `<div class="card" style="margin-top:20px;border:1px solid var(--potential);background:rgba(0,255,204,0.02);">
+                    <h3 style="font-size:0.75em;letter-spacing:3px;color:var(--potential);margin-bottom:15px;border-bottom:1px solid #333;padding-bottom:10px;">RECOMMENDED PROTOCOL</h3>
+                    ${protocol.map(ex => `<div style="margin-bottom:10px;padding:12px;background:rgba(255,255,255,0.03);border-left:2px solid var(--potential);font-size:0.85em;color:#fff;font-family:monospace;text-transform:uppercase;">&gt;&gt;&gt; ${ex}</div>`).join('')}
+                </div>`;
+            }
+        }
 
-const tendonLoad = tendonLoadRaw.toFixed(2);
-const tendonStatus = tendonLoad < 0.65 ? "LOW DENSITY" : "ELASTIC STABILITY";
-const tendonColor = tendonLoad < 0.65 ? "#ff9900" : "#00ffcc";
-const tendonDesc = `Straight-arm to Bent-arm ratio is ${tendonLoad}. ${tendonLoad < 0.65 ? 'Your muscle strength is outpacing your tendon adaptation. Prioritize isometric holds to thicken connective tissue.' : 'Your distal tendon insertions are well-conditioned for your current muscle mass.'}`;
+        // Heatmap — BUG FIX #5: use raw numbers for comparisons, not .toFixed() strings
+        const shoulders = document.querySelectorAll('#joint-shoulder-l,#joint-shoulder-r');
+        const elbows    = document.querySelectorAll('#joint-elbow-l,#joint-elbow-r');
+        let riskMsg = "SYSTEMS NOMINAL";
+        if (scapularHealthRaw < 0.85) { shoulders.forEach(s => s.style.fill = "#ff4444"); riskMsg = "SHOULDER RISK"; }
+        else                          { shoulders.forEach(s => s.style.fill = "var(--potential)"); }
+        if (tendonLoadRaw < 0.60)     { elbows.forEach(e => e.style.fill = "#ff4444"); riskMsg = riskMsg === "SHOULDER RISK" ? "MULTI JOINT ADVISORY" : "ELBOW RISK"; }
+        else                          { elbows.forEach(e => e.style.fill = "var(--potential)"); }
+        const rMsg = document.getElementById("risk-msg");
+        if (rMsg) { rMsg.innerText = riskMsg; rMsg.style.color = riskMsg === "SYSTEMS NOMINAL" ? "var(--potential)" : "#ff4444"; }
 
-// 3. Torque Disadvantage
-const leverEffect = (torqueFactor > 1.1) ? "LEVERAGE TAX" : "MECHANICAL EDGE";
-const leverDesc = `Based on your height of ${h.toFixed(0)}cm, you experience a ${((torqueFactor - 1) * 100).toFixed(1)}% increase in joint torque during static holds compared to the average gymnast profile.`;
-
-// 4. Neural Drive Efficiency
-const cnsEfficiency = (cnsVal * 100).toFixed(0);
-const cnsDesc = `Your Central Nervous System readiness is at ${cnsEfficiency}%. ${cnsVal < 0.8 ? 'Current motor unit recruitment is sub-optimal; consider a deload to restore neural firing speed.' : 'Your brain is effectively recruiting high-threshold motor units for maximum force.'}`;
-
-// 5. Explosive Transfer
-const vPull = (parseFloat(document.getElementById("mu").value) || 0);
-const hPull = (parseFloat(document.getElementById("pullups").value) || 0);
-const pullEfficiency = hPull > 0 ? (vPull / hPull).toFixed(2) : 0;
-const pullDesc = pullEfficiency < 0.4 ? "TRANSITION GAP: Your explosive power in the muscle-up transition is lower than your raw pulling endurance." : "POWER SYNC: You have a highly efficient transfer of momentum from the vertical pull into the dip phase.";
-
-// 6. Joint Shear Valuation
-let elbowThreshold = 0.8;
-
-// Rings increase instability at elbow
-if (isRings) {
-    elbowThreshold = 0.9;
-}
-
-const elbowShear = (sa1RM > push1RM * elbowThreshold) ? "NOMINAL" : "SHEAR RISK";
-const elbowDesc = `High-intensity weighted dips without sufficient straight-arm support creates 'shear' forces at the elbow. ${elbowShear === "NOMINAL" ? 'Joint stress is distributed safely.' : 'High risk for medial epicondylitis (Golfer\'s Elbow).'}`;
-
-// 7. Relative Power Coefficient
-const relCoeff = (push1RM * 1.2 + pull1RM * 1.2).toFixed(2);
-const relDesc = `This is your systemic power-to-weight score. Your body is capable of generating ${relCoeff}x its own mass in total force across the primary planes of motion.`;
-
-// 8. Kinetic Chain Integrity
-const formTax = (1 - form) * 100;
-const kineticDesc = formTax > 0 ? `Energy Leakage: ${formTax.toFixed(0)}% of your force is being lost due to lack of total-body tension (core/glute engagement).` : `Perfect structural rigidity. Force is being transmitted through your skeleton with zero energy loss.`;
-
-
-let recommendationHtml = "";
-if (activeGoal !== "None") {
-    const skillIndex = skills.findIndex(s => s.name === activeGoal);
-    const currentSkillPct = parseFloat(curScores[skillIndex]);
-    
-    recommendationHtml = `
-            <div class="card" style="margin-top:20px; border: 1px solid var(--potential); background: rgba(0, 255, 204, 0.02);">
-                <h3 style="font-size:0.75em; letter-spacing:3px; color:var(--potential); margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">RECOMMENDED EXERCISES AND PROGRESSION</h3>
-                <div id="recoContainer">
-        `;
-
-    let protocol = [];
-    if (activeGoal.includes("Planche")) {
-        if (currentSkillPct < 35) protocol = ["Planche Leans (Protraction Focus)", "Scapula Push-ups", "Frog Stand (30s Hold)"];
-        else if (currentSkillPct < 65) protocol = ["Tuck Planche Max Effort", "Pseudo Planche Push-ups", "Dumbbell Straight Arm Raises"];
-        else protocol = ["Advanced Tuck / Straddle Negatives", "Planche Press to Handstand", "90 Degree Push-ups"];
-    } else if (activeGoal === "Front Lever") {
-        if (currentSkillPct < 35) protocol = ["Scapular Pull-ups", "Active Arch Hangs", "Tuck FL Pulls"];
-        else if (currentSkillPct < 65) protocol = ["Adv. Tuck FL Holds", "Front Lever Negatives", "Ice Cream Makers"];
-        else protocol = ["Straddle / Full FL Pull-to-Inverted", "Front Lever Rows", "Dragon Flags"];
-        } else if (activeGoal === "Maltese") {
-                if (currentSkillPct < 40) protocol = ["Maltese Leans (Low Bar)", "Planche Push-ups", "Dumbbell Maltese Press"];
-                else protocol = ["Maltese Negatives (Rings)", "Wide Arm Planche Holds", "Victorian Pull-ins"];
-    } else if (activeGoal === "Iron Cross") {
-        if (currentSkillPct < 35) protocol = ["Support Hold (External Rotation)", "Skin the Cat", "Rings Wide Support"];
-        else if (currentSkillPct < 65) protocol = ["Feet Assisted Cross Pulls", "Weighted Ring Flys", "Zanetti Press"];
-        else protocol = ["Iron Cross Negatives", "Blocked Cross Holds", "Full Zanetti (Bodyweight)"];
-    } else if (activeGoal === "Muscle-up") {
-        if (currentSkillPct < 50) protocol = ["Chest to Bar Explosive Pulls", "Tricep Extension Dips", "Transition Isometrics"];
-        else protocol = ["Weighted Muscle-ups", "Slow Negatives", "Russian Dips"];
-    }
-
-    protocol.forEach(ex => {
-        recommendationHtml += `
-            <div style="margin-bottom:10px; padding:12px; background: rgba(255,255,255,0.03); border-left: 2px solid var(--potential); display:flex; align-items:center; gap:10px;">
-                <span style="color:var(--potential); font-weight:bold; font-family:monospace;">>></span>
-                <span style="font-size:0.85em; color:#fff; font-family:monospace; text-transform: uppercase;">${ex}</span>
+        const createInsight = (title, status, val, desc, color) => `
+            <div style="margin-bottom:15px;border-left:3px solid ${color};padding:8px 12px;background:rgba(255,255,255,0.02);">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <span style="font-size:0.8em;font-weight:bold;color:${color};">${title}</span>
+                    <span style="font-size:0.6em;background:${color};color:#000;padding:1px 4px;border-radius:2px;font-weight:bold;">${status}</span>
+                </div>
+                <div style="font-size:1em;color:#fff;font-family:monospace;margin:4px 0;">${val}</div>
+                <p style="font-size:0.65em;color:#bbb;margin:0;line-height:1.4;">${desc}</p>
             </div>`;
-    });
-    recommendationHtml += `</div></div>`;
-}
 
-// --- HEAT MAP LOGIC (RE-CONNECTED) ---
-const shoulders = document.querySelectorAll('#joint-shoulder-l, #joint-shoulder-r');
-const elbows = document.querySelectorAll('#joint-elbow-l, #joint-elbow-r');
-let riskMsg = "SYSTEMS NOMINAL";
+        let auditHtml = `<h3 style="font-size:0.75em;letter-spacing:3px;color:var(--primary);margin-bottom:20px;border-bottom:1px solid #333;padding-bottom:10px;">ADVANCED BIOMECHANICAL PROFILING</h3>`;
+        auditHtml += createInsight("SCAPULAR BALANCE",      scapStatus,                             scapularHealth,              scapDesc,      scapColor);
+        auditHtml += createInsight("TENDON DENSITY",        tendonStatus,                           tendonLoad,                  tendonDesc,    tendonColor);
+        auditHtml += createInsight("LEVERAGE DIFFERENTIAL", leverEffect,                            torqueFactor.toFixed(2)+"x", leverDesc,     "#888");
+        auditHtml += createInsight("NEURAL DRIVE",          cnsEff+"%",                             "CAPACITY",                  `Neural drive: ${cnsEff}%.`, "#4c6fff");
+        auditHtml += createInsight("EXPLOSIVE TRANSFER",    "PULL RATIO",                           pullEfficiency,              pullDesc,      "#ff9900");
+        auditHtml += createInsight("JOINT SHEAR VALUATION", elbowShear,                             "ELBOW STRESS",              `Shear valuation: ${elbowShear}.`, elbowShear === "NOMINAL" ? "#00ffcc" : "#ff4444");
+        auditHtml += createInsight("SYSTEMIC OUTPUT",       "POWER COEFF",                          relCoeff,                    relDesc,       "var(--primary)");
+        auditHtml += createInsight("KINETIC INTEGRITY",     formTax > 0 ? "LEAKAGE" : "INTEGRATED", form.toFixed(2),             kineticDesc,   formTax > 10 ? "#ff4444" : "#00ffcc");
 
-// 1. Shoulder Logic (tied to Scapular Balance)
-if (scapularHealth < 0.85) { 
-    shoulders.forEach(s => s.style.fill = "#ff4444"); 
-    riskMsg = "SHOULDER RISK"; 
-} else { 
-    shoulders.forEach(s => s.style.fill = "var(--potential)"); 
-}
+        document.getElementById("aiFeedback").innerHTML = auditHtml + recommendationHtml;
 
-// 2. Elbow Logic (tied to Tendon Density/Shear)
-if (tendonLoad < 0.60) { 
-    elbows.forEach(e => e.style.fill = "#ff4444"); 
-    riskMsg = (riskMsg === "SHOULDER RISK") ? "MULTI JOINT ADVISORY" : "ELBOW RISK"; 
-} else { 
-    elbows.forEach(e => e.style.fill = "var(--potential)"); 
-}
+        // Volume tax
+        const pullSets = parseInt(document.getElementById("wpS").value) || 0;
+        const pushSets = parseInt(document.getElementById("wdS").value) || 0;
+        const saSets   = parseInt(document.getElementById("saS")?.value) || 0;
+        const totalTax = (pullSets * (pull1RM ** 2)) + (pushSets * (push1RM ** 2)) + (saSets * 3);
+        let vStatus = "OPTIMAL", vColor = "#00ffcc";
+        if (totalTax > 40 || (pullSets + pushSets) > 25) { vStatus = "OVERREACHING"; vColor = "#ff4444"; }
+        else if (totalTax > 25) { vStatus = "HIGH LOAD"; vColor = "#ff9900"; }
+        const vFill = document.getElementById("volume-fill");
+        if (vFill) { vFill.style.width = Math.min((totalTax / 45) * 100, 100) + "%"; vFill.style.background = vColor; }
+        const vStatusLabel = document.getElementById("recovery-status");
+        if (vStatusLabel) { vStatusLabel.innerText = vStatus; vStatusLabel.style.color = vColor; }
+        const volTaxEl = document.getElementById("volume-tax");
+        if (volTaxEl) volTaxEl.innerText = totalTax.toFixed(1);
 
-// 3. Update the UI Text for Risk
-const rMsg = document.getElementById("risk-msg");
-if (rMsg) { 
-    rMsg.innerText = riskMsg; 
-    rMsg.style.color = (riskMsg === "SYSTEMS NOMINAL") ? "var(--potential)" : "#ff4444"; 
-}
-
-
-// --- INJECTION ---
-let auditHtml = `<h3 style="font-size:0.75em; letter-spacing:3px; color:var(--primary); margin-bottom:20px; border-bottom:1px solid #333; padding-bottom:10px;">ADVANCED BIOMECHANICAL PROFILING</h3>`;
-
-const createInsight = (title, status, val, desc, color) => `<div class="insight-block" style="margin-bottom:15px; border-left:3px solid ${color}; padding-left:12px; background: rgba(255,255,255,0.02); padding-top:8px; padding-bottom:8px;">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-size:0.8em; font-weight:bold; color:${color};">${title}</span>
-        <span style="font-size:0.6em; background:${color}; color:#000; padding:1px 4px; border-radius:2px; font-weight:bold;">${status}</span>
-    </div>
-    <div style="font-size:1em; color:#fff; font-family:monospace; margin:4px 0;">${val}</div>
-    <p style="font-size:0.65em; color:#bbb; margin:0; line-height:1.4;">${desc}</p>
-</div>`;
-
-auditHtml += createInsight("SCAPULAR BALANCE", scapStatus, scapularHealth, scapDesc, scapColor);
-auditHtml += createInsight("TENDON DENSITY", tendonStatus, tendonLoad, tendonDesc, tendonColor);
-auditHtml += createInsight("LEVERAGE DIFFERENTIAL", leverEffect, torqueFactor.toFixed(2) + "x", leverDesc, "#888");
-auditHtml += createInsight("NEURAL DRIVE", cnsEfficiency + "%", "CAPACITY", cnsDesc, "#4c6fff");
-auditHtml += createInsight("EXPLOSIVE TRANSFER", "PULL RATIO", pullEfficiency, pullDesc, "#ff9900");
-auditHtml += createInsight("JOINT SHEAR VALUATION", elbowShear, "ELBOW STRESS", elbowDesc, elbowShear === "NOMINAL" ? "#00ffcc" : "#ff4444");
-auditHtml += createInsight("SYSTEMIC OUTPUT", "POWER COEFF", relCoeff, relDesc, "var(--primary)");
-auditHtml += createInsight("KINETIC INTEGRITY", formTax > 0 ? "LEAKAGE DETECTED" : "INTEGRATED", form.toFixed(2), kineticDesc, formTax > 10 ? "#ff4444" : "#00ffcc");
-
-document.getElementById("aiFeedback").innerHTML = auditHtml + recommendationHtml;// --- RELENTLESS VOLUME AUDIT ---
-let pullSets = parseInt(document.getElementById("wpS").value) || 0;
-let pushSets = parseInt(document.getElementById("wdS").value) || 0;
-let saSets = parseInt(document.getElementById("saS")?.value) || 0;
-
-// Intensity Scaling (e.g., +30kg on a 75kg athlete = 1.4)
-const pullInt = pull1RM; 
-const pushInt = push1RM;
-
-// Math: Sets * (Intensity Squared)
-let pullLoad = pullSets * (pullInt * pullInt);
-let pushLoad = pushSets * (pushInt * pushInt);
-let totalTax = pullLoad + pushLoad + (saSets * 3);
-
-// 1. Determine Status and Color
-let vStatus = "OPTIMAL";
-let vColor = "#00ffcc";
-
-// Trigger DANGER if tax is high OR if total sets exceed 25
-if (totalTax > 40 || (pullSets + pushSets) > 25) {
-    vStatus = "OVERREACHING";
-    vColor = "#ff4444";
-} else if (totalTax > 25) {
-    vStatus = "HIGH LOAD";
-    vColor = "#ff9900";
-}
-
-// 2. Update the Bar Color and Width
-const vFill = document.getElementById("volume-fill");
-if (vFill) {
-    let volumePct = Math.min((totalTax / 45) * 100, 100); 
-    vFill.style.width = volumePct + "%";
-    vFill.style.background = vColor;
-}
-
-// 3. Update the Text (Fixes the "Still says Optimal" bug)
-const vStatusLabel = document.getElementById("recovery-status"); 
-if (vStatusLabel) {
-    vStatusLabel.innerText = vStatus;
-    vStatusLabel.style.color = vColor;
-}
-
-// 4. Update the Numeric Tax Display
-if (document.getElementById("volume-tax")) {
-    document.getElementById("volume-tax").innerText = totalTax.toFixed(1);
-}
-        // Injects ONLY the Biomechanical Report
-        
         document.getElementById("barContainer").innerHTML = barHtml;
         radarChart.data.datasets[0].data = curScores;
         radarChart.data.datasets[1].data = potScores;
         radarChart.update('none');
 
-    } catch (err) { console.error("Injection Error:", err); }
-}
-// Function 1: The actual image saver
+        // Show buttons after first run
+        document.getElementById("shareBtn").style.display = "block";
+        document.getElementById("screenshotBtn").style.display = "block";
 
-function shareReport() {
-
-    const target = document.getElementById("captureArea");
-
-    const btn = document.getElementById("shareBtn");
-
-    btn.innerText = "GENERATING...";
-
-   
-
-    html2canvas(target, {
-
-        backgroundColor: "#1f1f2e",
-
-        scale: 2 // Makes the image high quality
-
-    }).then(canvas => {
-
-        const link = document.createElement('a');
-
-        link.download = 'CaliBiotech_Report.png';
-
-        link.href = canvas.toDataURL();
-
-        link.click();
-
-        btn.innerText = "DOWNLOAD REPORT.PNG";
-
-    });
-
+    } catch (err) { console.error("Analysis Error:", err); }
 }
 
-
-
-   
-
-    html2canvas(target, {
-
-        backgroundColor: "#1f1f2e",
-
-        scale: 2
-
-    }).then(canvas => {
-
-        const link = document.createElement('a');
-
-        link.download = 'CaliBiotech_Report.png';
-
-        link.href = canvas.toDataURL();
-
-        link.click();
-
-        btn.innerText = "DOWNLOAD REPORT.PNG";
-
-    });
-
-
-
-document.getElementById("shareBtn").style.display = "block";
-
-// Professional save function with real-time UI updates
-function saveNotes() {
-    const noteInput = document.getElementById("sessionNotes");
-    const noteText = noteInput.value.trim();
-    
-    if (!noteText) return; 
-
-    const timestamp = new Date().toLocaleDateString() + " | " + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-    
-    let history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
-    history.unshift({ date: timestamp, text: noteText });
-    localStorage.setItem('cali_biotech_history', JSON.stringify(history));
-
-    noteInput.value = "";
-    displayNotes();
-
-    // Visual confirmation
-    const btn = event.currentTarget;
-    const originalText = "Commit Data";
-    btn.innerText = "Data Committed";
-    btn.style.background = "#00ffcc";
-    btn.style.color = "#000";
-    
-    setTimeout(() => {
-        btn.innerText = originalText;
-        btn.style.background = "var(--primary)";
-    }, 2000);
-}
-
-// Cleanly renders the archive entries
-function displayNotes() {
-    const history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
-    const container = document.getElementById("notesHistory");
-    if (!container) return;
-    
-    if (history.length === 0) {
-        container.innerHTML = `<div style="font-size: 0.7em; color: #444; letter-spacing: 2px; text-align: center; padding: 40px;">NO ARCHIVED ENTRIES</div>`;
-        return;
-    }
-
-    container.innerHTML = history.map((item, index) => `
-        <div style="margin-bottom: 15px; padding: 20px; background: rgba(255,255,255,0.01); border-left: 4px solid var(--primary); font-family: 'Inter', sans-serif; position: relative; border-radius: 2px;">
-            <div style="font-size: 0.6em; color: var(--primary); margin-bottom: 8px; font-weight: bold; letter-spacing: 1.5px; opacity: 0.8;">[${item.date}]</div>
-            <div style="font-size: 0.95em; color: #d1d1d1; padding-right: 30px; line-height: 1.6;">${item.text}</div>
-            <span onclick="deleteSingleNote(${index})" style="position: absolute; top: 15px; right: 15px; color: #555; cursor: pointer; font-size: 1.2em; transition: color 0.2s;" onmouseover="this.style.color='#ff4444'" onmouseout="this.style.color='#555'">&times;</span>
-        </div>
-    `).join('');
-}
-
-function deleteSingleNote(index) {
-    let history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
-    history.splice(index, 1);
-    localStorage.setItem('cali_biotech_history', JSON.stringify(history));
-    displayNotes();
-}
-
-function clearAllNotes() {
-    if (confirm("PROCEED? This will permanently erase all archived feedback data.")) {
-        localStorage.removeItem('cali_biotech_history');
-        displayNotes();
-    }
-
-
-// Initialize notes on load
-document.addEventListener('DOMContentLoaded', () => {
-    displayNotes();
-});
-
-
-
-
-    container.innerHTML = history.map((item, index) => `
-   <div class="card" style="margin-top: 30px; border: 1px solid #333; background: #1a1a1a; width: 100%; box-sizing: border-box;">
-    <h3 style="font-size: 0.8em; letter-spacing: 3px; color: var(--primary); margin-bottom: 20px; text-transform: uppercase;">Biotic Feedback Archive</h3>
-    
-    <textarea id="sessionNotes" placeholder="Record physiological feedback, RPE, or specific joint sensations..." 
-              style="width: 100%; height: 160px; background: #0a0a0a; color: #fff; border: 1px solid #333; padding: 20px; font-family: 'Inter', sans-serif; border-radius: 6px; line-height: 1.6; resize: vertical; box-sizing: border-box; outline: none; transition: border-color 0.3s ease;"></textarea>
-    
-    <div style="display: flex; gap: 15px; margin-top: 20px;">
-        <button onclick="saveNotes()" style="flex: 4; background: var(--primary); color: #000; border: none; padding: 14px; font-family: 'Monospace'; font-weight: 900; cursor: pointer; border-radius: 4px; letter-spacing: 1.5px; text-transform: uppercase;">Commit Data</button>
-        <button onclick="clearAllNotes()" style="flex: 1; background: rgba(255, 68, 68, 0.05); color: #ff4444; border: 1px solid rgba(255, 68, 68, 0.3); padding: 14px; font-family: 'Monospace'; font-size: 0.8em; cursor: pointer; border-radius: 4px; font-weight: bold; text-transform: uppercase;">Delete All</button>
-    </div>
-
-    <div id="notesHistory" style="margin-top: 30px; max-height: 500px; overflow-y: auto; border-top: 1px solid #222; padding-top: 20px;">
-        </div>
-</div>
-    `).join('');
-}
-
-
-
-</script>
-<div class="card" style="margin-top: 20px;">
-    <h3>LOG</h3>
-    <textarea id="sessionNotes" placeholder="Log physiological feedback, RPE, or joint status..." 
-              style="width: 100%; height: 80px; background: #111; color: #fff; border: 1px solid #333; padding: 10px; font-family: monospace; border-radius: 5px;"></textarea>
-    
-    <div style="display: flex; gap: 10px; margin-top: 10px;">
-        <button onclick="saveNotes()" style="flex: 3; background: var(--primary); color: #000; border: none; padding: 10px; font-family: monospace; font-weight: bold; cursor: pointer; border-radius: 4px;">COMMIT DATA</button>
-        <button onclick="clearAllNotes()" style="flex: 1; background: rgba(255, 68, 68, 0.1); color: #ff4444; border: 1px solid #ff4444; padding: 10px; font-family: monospace; font-size: 0.7em; cursor: pointer; border-radius: 4px;">DELETE ALL</button>
-    </div>
-
-    <div id="notesHistory" style="margin-top: 20px; max-height: 250px; overflow-y: auto; border-top: 1px solid #333; padding-top: 10px;">
-        <div style="font-size: 0.6em; color: #666; letter-spacing: 2px;">NO FEEDBACK ENTRIES</div>
-    </div>
-</div>
-
-
-<footer style="margin-top: 50px; border-top: 1px solid #333; padding-top: 20px; font-size: 0.8em; color: #888; text-align: center;">
-    <p>
-        <a href="/about.html" style="color: #888; text-decoration: none; margin: 0 10px;">About Us</a> | 
-        <a href="/privacy-policy.html" style="color: #888; text-decoration: none; margin: 0 10px;">Privacy Policy</a> | 
-        <a href="/contact.html" style="color: #888; text-decoration: none; margin: 0 10px;">Contact Us</a> | 
-        <a href="/terms.html" style="color: #888; text-decoration: none; margin: 0 10px;">Terms & Conditions</a>
-    </p>
-    <p>&copy; 2026 Cali Biotech | Data-Driven Bodyweight Training</p>
-</footer>
-
-<!-- Cookie Consent Banner -->
-<div id="cookie-banner" style="
-    position: fixed;
-    bottom: -150px;
-    left: 0;
-    right: 0;
-    background: #1a1a1a;
-    color: #fff;
-    padding: 20px 15px;
-    text-align:center;
-    z-index: 9999;
-    font-family: Arial, sans-serif;
-    box-shadow: 0 -4px 12px rgba(0,0,0,0.3);
-    transition: bottom 0.5s ease;
-">
-    🍪 We use cookies to improve your experience and show personalized ads.
-    <button id="accept-cookies" style="background:#4caf50;color:#fff;padding:10px 18px;border:none;border-radius:5px;margin-left:10px;cursor:pointer;">Accept</button>
-    <button id="reject-cookies" style="background:#f44336;color:#fff;padding:10px 18px;border:none;border-radius:5px;margin-left:10px;cursor:pointer;">Reject</button>
-</div>
-
-<script>
-// Cookie helper functions
-function setCookie(name,value,days){
-    const date = new Date();
-    date.setTime(date.getTime() + (days*24*60*60*1000));
-    document.cookie = name + "=" + value + "; expires=" + date.toUTCString() + "; path=/";
-}
-function getCookie(name){
-    const nameEQ = name + "=";
-    const ca = document.cookie.split(';');
-    for(let c of ca){ c=c.trim(); if(c.indexOf(nameEQ)===0) return c.substring(nameEQ.length); }
-    return null;
-}
-
-// Banner show/hide
+/* ── Cookie consent ── */
+function setCookie(n,v,d){ const dt=new Date(); dt.setTime(dt.getTime()+(d*864e5)); document.cookie=n+"="+v+"; expires="+dt.toUTCString()+"; path=/"; }
+function getCookie(n){ const eq=n+"=",ca=document.cookie.split(';'); for(let c of ca){ c=c.trim(); if(c.indexOf(eq)===0) return c.substring(eq.length); } return null; }
 function showBanner(){ document.getElementById('cookie-banner').style.bottom='0'; }
 function hideBanner(){ document.getElementById('cookie-banner').style.bottom='-150px'; }
-
-// Load Google Analytics
 function loadGA(){
-    const gaScript = document.createElement('script');
-    gaScript.async = true;
-    gaScript.src = "https://www.googletagmanager.com/gtag/js?id=G-CDL3F645R2";
-    document.head.appendChild(gaScript);
-
-    gaScript.onload = () => {
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        window.gtag = gtag;
-        gtag('js', new Date());
-        gtag('config', 'G-CDL3F645R2');
-    };
+    const id=document.querySelector('meta[name="ga-id"]')?.content; if(!id)return;
+    const s=document.createElement('script'); s.async=true; s.src="https://www.googletagmanager.com/gtag/js?id="+id; document.head.appendChild(s);
+    s.onload=()=>{ window.dataLayer=window.dataLayer||[]; function gtag(){dataLayer.push(arguments);} window.gtag=gtag; gtag('js',new Date()); gtag('config',id); };
 }
-
-// Load AdSense
-function loadAdsense(personalized){
-    const adScript = document.createElement('script');
-    adScript.async = true;
-    adScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
-    adScript.setAttribute("data-ad-client", "ca-pub-1230203526545088"); // Your AdSense ID
-    adScript.crossOrigin = "anonymous";
-    document.head.appendChild(adScript);
-
-    window.adsbygoogle = window.adsbygoogle || [];
-    window.adsbygoogle.push({
-        google_ad_client: "ca-pub-1230203526545088",
-        enable_page_level_ads: true,
-        ...(personalized ? {} : { non_personalized_ads: 1 })
-    });
+function loadAdsense(p){
+    const id=document.querySelector('meta[name="adsense-id"]')?.content; if(!id)return;
+    const s=document.createElement('script'); s.async=true; s.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"; s.setAttribute("data-ad-client",id); s.crossOrigin="anonymous"; document.head.appendChild(s);
+    window.adsbygoogle=window.adsbygoogle||[]; window.adsbygoogle.push({google_ad_client:id,enable_page_level_ads:true,...(p?{}:{non_personalized_ads:1})});
 }
+const consent=getCookie('cookie_consent');
+if(!consent){ showBanner(); } else { if(consent==='accepted'){loadGA();loadAdsense(true);} else{loadAdsense(false);} }
+document.getElementById('accept-cookies').onclick=()=>{ setCookie('cookie_consent','accepted',365); hideBanner(); loadGA(); loadAdsense(true); };
+document.getElementById('reject-cookies').onclick=()=>{ setCookie('cookie_consent','rejected',365); hideBanner(); loadAdsense(false); };
 
-// Radar chart resize logic (kept from your code)
-window.addEventListener('resize', () => {
-    if (typeof radarChart !== 'undefined' && radarChart){
-        radarChart.destroy();
-        initChart();
-        analyze();
-    }
-});
-
-// Check existing consent
-const consent = getCookie('cookie_consent');
-if(!consent){ 
-    showBanner(); 
-} else {
-    if(consent==='accepted'){ loadGA(); loadAdsense(true); }
-    else { loadAdsense(false); }
-}
-
-// Button handlers
-document.getElementById('accept-cookies').onclick = function(){
-    setCookie('cookie_consent','accepted',365);
-    hideBanner();
-    loadGA();
-    loadAdsense(true);
-};
-document.getElementById('reject-cookies').onclick = function(){
-    setCookie('cookie_consent','rejected',365);
-    hideBanner();
-    loadAdsense(false);
-};
+document.addEventListener('DOMContentLoaded', () => { displayNotes(); });
 </script>
 
-
 </body>
-
-
 </html>
