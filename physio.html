@@ -1,574 +1,809 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CDL3F645R2"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-CDL3F645R2');
-    </script>
-
-
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1230203526545088"
-     crossorigin="anonymous"></script>
-
-
-
-
-     <meta name="description" content="Advanced Cali-Biotech Calorie Calculator. Estimate Body Fat using Navy Formula and TDEE via Mifflin-St Jeor for calisthenics athletes.">
-<meta name="keywords" content="Calisthenics Calculator, TDEE, Body Fat Navy Formula, Lean Mass Calculator">
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calorie Calculator | Cali-Biotech</title>    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <title>Calorie Calculator </title>
+    <link rel="canonical" href="https://www.calicalculator.com/physio.html">
+    <meta name="description" content="Advanced Cali-Biotech Calorie Calculator. Estimate Body Fat using Navy Formula and TDEE via Mifflin-St Jeor for calisthenics athletes.">
+    <meta name="robots" content="index, follow">
+    <meta name="ga-id" content="G-CDL3F645R2">
+    <meta name="adsense-id" content="ca-pub-1230203526545088">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+
     <style>
-        :root { 
-            --primary: #00ff88; 
-            --bg: #0d1117; 
-            --card: #161b22; 
-            --elite: #ff3e3e; 
-            --text: #e6edf3; 
-            --border: #30363d;
-        }
-        
-        body { 
-            background-color: var(--bg); 
-            color: var(--text); 
-            font-family: 'Inter', sans-serif; 
-            margin: 0; 
-            padding: 20px; 
-            background-image: radial-gradient(var(--border) 0.5px, transparent 0.5px);
-            background-size: 30px 30px;
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --green:     #00ff88;
+            --green-dim: rgba(0,255,136,0.08);
+            --red:       #ff3e3e;
+            --yellow:    #f1c40f;
+            --orange:    #e67e22;
+            --bg:        #07070f;
+            --surface:   #0f0f1a;
+            --card:      #111118;
+            --card-hi:   #18181f;
+            --border:    #1c1c28;
+            --border-hi: #2a2a3a;
+            --text:      #c8c8d8;
+            --text-dim:  #50506a;
+            --mono:      'Space Mono', monospace;
+            --sans:      'Syne', sans-serif;
+            --radius:    10px;
+            --radius-lg: 18px;
+            --ease:      0.2s ease;
         }
 
-        /* Biotech Scanning Line */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: rgba(0, 255, 136, 0.08);
-            z-index: 9999;
-            animation: scan 10s linear infinite;
-            pointer-events: none;
-        }
+        html { scroll-behavior: smooth; font-size: 17px; }
 
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-        
-        .header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
-        .header h1 { 
-            font-family: 'JetBrains Mono', monospace; 
-            letter-spacing: 10px; 
-            font-size: 1.6rem; 
-            color: var(--primary); 
-            text-transform: uppercase;
-            text-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
-        }
-
-        .main-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 20px; 
-            max-width: 1600px; 
-            margin: 0 auto;
-        }
-
-        .branch { 
-            background: rgba(22, 27, 34, 0.7); 
-            padding: 25px; 
-            border-radius: 8px; 
-            border: 1px solid var(--border);
-            backdrop-filter: blur(5px);
-        }
-
-        .branch-header { 
-            font-family: 'JetBrains Mono', monospace; 
-            color: var(--primary); 
-            font-size: 0.85rem; 
-            letter-spacing: 3px; 
-            margin-bottom: 25px; 
-            text-align: center; 
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 12px; 
-            text-transform: uppercase;
-        }
-
-        label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem; 
-            color: var(--primary); 
-            text-transform: uppercase;
-            margin: 15px 0 5px 0; 
-            display: block;
-            letter-spacing: 2px; 
-            opacity: 0.8;
-        }
-
-        input, select {
-            width: 100%;
-            background: var(--card);
-            border: 1px solid var(--border);
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
             color: var(--text);
-            padding: 12px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            border-radius: 4px;
-            box-sizing: border-box;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.1);
+        /* ── GRID BACKGROUND ── */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image:
+                linear-gradient(rgba(0,255,136,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,255,136,0.025) 1px, transparent 1px);
+            background-size: 36px 36px;
+            pointer-events: none;
+            z-index: 0;
         }
 
-        /* Result Stats Styling */
-        .stat-node {
-            background: var(--card);
-            border: 1px solid var(--border);
-            padding: 15px;
-            margin-top: 15px;
-            border-radius: 4px;
+        /* ── SCAN LINE ── */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -2px; left: 0;
+            width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--green), transparent);
+            opacity: 0.35;
+            animation: scan 12s linear infinite;
+            pointer-events: none;
+            z-index: 9998;
+        }
+        @keyframes scan { 0% { top: -2px; } 100% { top: 100vh; } }
+
+        /* ── PAGE ── */
+        .page {
+            position: relative;
+            z-index: 1;
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 0 16px 80px;
+        }
+
+        /* ── NAV ── */
+        .top-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 20px 0 24px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 36px;
+        }
+        .nav-logo {
+            font-family: var(--mono);
+            font-size: 0.82em;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: var(--green);
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+        .back-link {
+            font-family: var(--mono);
+            font-size: 1.1em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--text-dim);
+            border: 1px solid var(--border-hi);
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: color var(--ease), border-color var(--ease);
+        }
+        .back-link:hover { color: var(--green); border-color: var(--green); }
+
+        /* ── HEADER ── */
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .page-header h1 {
+            font-family: var(--mono);
+            font-size: clamp(1.3em, 4vw, 1.8em);
+            font-weight: 700;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 0 0 30px rgba(0,255,136,0.15);
+        }
+        .page-header p {
+            font-family: var(--mono);
+            font-size: 1.1em;
+            color: var(--text-dim);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 8px;
         }
 
-        .stat-node h3 { font-size: 0.7rem; margin: 0; color: #ccc; text-transform: uppercase; }
-        .stat-node span { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; color: var(--primary); font-weight: bold; }
+        /* ── MAIN GRID ── */
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 14px;
+        }
 
-        .protocol-box {
-            grid-column: 1 / -1;
-            margin-top: 20px;
-            background: rgba(22, 27, 34, 0.7);
-            padding: 30px;
-            border-radius: 8px;
+        /* ── CARD ── */
+        .card {
+            background: var(--card);
             border: 1px solid var(--border);
-            border-left: 5px solid var(--primary);
+            border-radius: var(--radius-lg);
+            padding: 26px;
+        }
+        .card-title {
+            font-family: var(--mono);
+            font-size: 0.9em;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--green);
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+            border-bottom: 1px solid var(--border);
         }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th { font-family: 'JetBrains Mono', monospace; text-align: left; font-size: 0.65rem; color: var(--primary); padding-bottom: 10px; text-transform: uppercase; }
-        td { padding: 12px 0; border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #bbb; }
-
-        .footer-nav { margin: 60px 0; text-align: center; }
-        .back-btn { 
-            font-family: 'JetBrains Mono', monospace; 
-            text-decoration: none; 
-            color: var(--text); 
-            border: 1px solid var(--border); 
-            padding: 12px 40px; 
-            font-size: 0.75rem; 
-            border-radius: 4px;
-            transition: 0.3s;
+        /* ── FORM ── */
+        .field-label {
+            display: block;
+            font-family: var(--mono);
+            font-size: 0.88em;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+            margin-top: 14px;
         }
-        .back-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(0, 255, 136, 0.05); }
+        .field-label:first-of-type { margin-top: 0; }
 
-        #imperialHeight { display: none; gap: 10px; }
+        input[type="number"], select {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 1.1em;
+            padding: 10px 13px;
+            outline: none;
+            transition: border-color var(--ease), box-shadow var(--ease);
+            -moz-appearance: textfield;
+        }
+        input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+        input[type="number"]:focus, select:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(0,255,136,0.08);
+        }
 
+        .height-imperial {
+            display: none;
+            gap: 8px;
+        }
+        .height-imperial.visible { display: flex; }
+
+        .field-note {
+            font-family: var(--mono);
+            font-size: 0.75em;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ── STAT NODES ── */
+        .stat-node {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            transition: border-color var(--ease);
+        }
+        .stat-node:hover { border-color: var(--border-hi); }
+        .stat-node:last-child { margin-bottom: 0; }
+        .stat-name {
+            font-family: var(--mono);
+            font-size: 0.9em;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+        .stat-val {
+            font-family: var(--mono);
+            font-size: 1.1em;
+            font-weight: 700;
+            color: var(--green);
+        }
+        .stat-val.dim { color: var(--text-dim); }
+
+        /* ── FULL WIDTH PANELS ── */
+        .full-panel {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-bottom: 14px;
+        }
+        .full-panel.accent-green { border-left: 3px solid var(--green); }
+        .full-panel.accent-dim   { border-left: 3px solid var(--border-hi); }
+
+        /* ── PROTOCOL TABLE ── */
+        .protocol-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+        .protocol-table th {
+            font-family: var(--mono);
+            font-size: 0.9em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--green);
+            text-align: left;
+            padding: 0 0 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .protocol-table td {
+            font-family: var(--mono);
+            font-size: 0.88em;
+            color: var(--text-dim);
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .protocol-table tr:last-child td { border-bottom: none; }
+        .protocol-table td:first-child { color: var(--text); }
+        .protocol-table td:nth-child(2) { color: var(--green); font-weight: 700; }
+
+        /* ── METHODOLOGY GRID ── */
+        .method-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 20px;
+        }
+        .method-item {
+            padding: 16px 18px;
+            background: rgba(0,255,136,0.02);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+        .method-item h4 {
+            font-family: var(--mono);
+            font-size: 0.8em;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--green);
+            margin-bottom: 8px;
+        }
+        .method-item p, .method-item li {
+            font-size: 0.88em;
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+        .method-item ul { padding-left: 14px; }
+        .formula-block {
+            font-family: var(--mono);
+            font-size: 0.8em;
+            color: var(--green);
+            background: var(--bg);
+            padding: 10px 14px;
+            border-radius: 6px;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── DISCLAIMER ── */
+        .disclaimer {
+            font-family: var(--mono);
+            font-size: 0.9em;
+            color: var(--text-dim);
+            line-height: 1.7;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            margin-top: 20px;
+        }
+        .disclaimer strong { color: var(--red); }
+
+        /* ── GLOSSARY ── */
+        .glossary-list { list-style: none; margin-top: 14px; }
+        .glossary-list li {
+            font-size: 0.88em;
+            color: var(--text-dim);
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            line-height: 1.6;
+        }
+        .glossary-list li:last-child { border-bottom: none; }
+        .glossary-list strong { color: var(--text); font-family: var(--mono); }
+
+        /* ── MACRO DIST ── */
+        .macro-dist {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .macro-tag {
+            font-family: var(--mono);
+            font-size: 1.1em;
+            letter-spacing: 1px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border-hi);
+            color: var(--text-dim);
+        }
+        .macro-tag.protein { border-color: rgba(255,62,62,0.4); color: var(--red); }
+        .macro-tag.carbs   { border-color: rgba(241,196,15,0.4); color: var(--yellow); }
+        .macro-tag.fats    { border-color: rgba(230,126,34,0.4); color: var(--orange); }
+
+        /* ── FOOTER ── */
+        .site-footer {
+            background: var(--card);
+            border-top: 1px solid var(--border);
+            padding: 40px 0 24px;
+            margin-top: 60px;
+        }
+        .footer-inner {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .footer-nav a {
+            font-family: var(--mono);
+            font-size: 1.1em;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--text-dim);
+            transition: color var(--ease);
+        }
+        .footer-nav a:hover { color: var(--green); }
+        .footer-copy {
+            font-family: var(--mono);
+            font-size: 0.88em;
+            color: var(--text-dim);
+            text-align: center;
+            opacity: 0.5;
+            letter-spacing: 1px;
+        }
+
+        /* ── COOKIE BANNER ── */
+        #cookie-banner {
+            position: fixed; bottom: -100px; left: 0; right: 0;
+            background: var(--card);
+            border-top: 1px solid var(--border-hi);
+            padding: 14px 20px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            transition: bottom 0.4s ease;
+        }
+        #cookie-banner p {
+            font-family: var(--mono);
+            font-size: 0.8em;
+            color: var(--text-dim);
+            letter-spacing: 0.5px;
+        }
+        .ck-btn {
+            font-family: var(--mono);
+            font-size: 1.1em;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: opacity var(--ease);
+        }
+        .ck-btn:hover { opacity: 0.85; }
+        .ck-accept { background: #1a5c36; color: var(--green); }
+        .ck-reject { background: var(--surface); color: var(--text-dim); border: 1px solid var(--border-hi); }
+
+        /* ── RESPONSIVE ── */
         @media (max-width: 900px) {
             .main-grid { grid-template-columns: 1fr; }
+            .method-grid { grid-template-columns: 1fr; }
         }
-
-/* Dark High-Contrast Footer */
-.site-footer {
-    background-color: #1a1a1a; /* Deep Charcoal - looks better than pure black */
-    color: #eeeeee;
-    padding: 60px 20px;
-    margin-top: 60px;
-    border-top: 4px solid var(--primary); /* Thick brand-color line at the top */
-    font-family: sans-serif;
-}
-
-.footer-container {
-    max-width: 900px;
-    margin: 0 auto;
-    line-height: 1.7;
-}
-
-.footer-section h3 {
-    color: var(--primary); /* Your primary color will pop against the dark bg */
-    margin-bottom: 15px;
-    font-size: 1.2rem;
-    font-weight: bold;
-}
-
-.footer-section ul {
-    list-style: none;
-    padding: 0;
-}
-
-.footer-section li {
-    margin-bottom: 8px;
-    border-bottom: 1px solid #333; /* Subtle separators for list items */
-    padding-bottom: 5px;
-}
-
-.share-buttons {
-    display: flex;
-    gap: 12px;
-    margin-top: 15px;
-}
-
-.share-btn {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-/* Button colors adjusted for Dark Background */
-.twitter { 
-    background-color: #ffffff; 
-    color: #000000; 
-}
-
-.copy { 
-    background-color: var(--primary); 
-    color: white; 
-}
-
-.share-btn:hover {
-    transform: scale(1.05);
-    filter: brightness(1.1);
-}
-
-
-
-
-
     </style>
 </head>
 <body>
 
-<div class="header"><h1>CALORIE CALCULATOR</h1></div>
+<!-- COOKIE BANNER -->
+<div id="cookie-banner" role="banner">
+    <p>We use cookies to personalise ads and improve your experience.</p>
+    <button class="ck-btn ck-accept" id="accept-cookies">Accept</button>
+    <button class="ck-btn ck-reject" id="reject-cookies">Reject</button>
+</div>
+
+<div class="page">
+
+    <!-- NAV -->
+    <nav class="top-nav" aria-label="Site navigation">
+        <a href="index.html" class="nav-logo">Home</a>
+        <a href="skills.html" class="back-link">← Back to Skills</a>
+    </nav>
+
+    <!-- HEADER -->
+    <header class="page-header">
+        <h1>Calorie Calculator</h1>
+        <p>Navy Body Fat · Mifflin-St Jeor TDEE · LBM Protein Scaling</p>
+    </header>
+
+    <!-- MAIN GRID -->
     <div class="main-grid">
-        
-        <div class="branch">
-            <div class="branch-header">Biometric Data</div>
-            
-            <label>Unit System</label>
+
+        <!-- BIOMETRICS -->
+        <div class="card">
+            <div class="card-title">Biometric Data</div>
+
+            <label class="field-label" for="unitSystem">Unit System</label>
             <select id="unitSystem" onchange="toggleUnits()">
-                <option value="met">METRIC (KG/CM)</option>
-                <option value="imp">IMPERIAL (LBS/FT)</option>
+                <option value="met">Metric (kg / cm)</option>
+                <option value="imp">Imperial (lbs / ft-in)</option>
             </select>
 
-            <label id="weightLabel">Weight (KG)</label>
-<input type="number" id="weight" placeholder="0" oninput="calculate()">
+            <label class="field-label" for="weight" id="weightLabel">Weight (kg)</label>
+            <input type="number" id="weight" placeholder="75" min="1" max="500" oninput="calculate()">
 
-            <label id="heightLabel">Height (CM)</label>
+            <label class="field-label" id="heightLabel">Height</label>
             <div id="metricHeight">
-<input type="number" id="hCm" placeholder="0" oninput="calculate()">
+                <input type="number" id="hCm" placeholder="175" oninput="calculate()">
             </div>
-            <div id="imperialHeight">
-                <input type="number" id="hFt" placeholder="FT" oninput="calculate()">
-                <input type="number" id="hIn" placeholder="IN" oninput="calculate()">
+            <div class="height-imperial" id="imperialHeight">
+                <input type="number" id="hFt" placeholder="ft" oninput="calculate()">
+                <input type="number" id="hIn" placeholder="in" oninput="calculate()">
             </div>
 
-            <label>Age</label>
-<input type="number" id="age" placeholder="25" oninput="calculate()">
+            <label class="field-label" for="age">Age</label>
+            <input type="number" id="age" placeholder="25" min="10" max="100" oninput="calculate()">
         </div>
 
-    <div class="branch">
-    <div class="branch-header">Navy Measurements</div>
-    
-<label id="neckLabel">Neck Circumference (CM)</label>
-<input type="number" id="neck" placeholder="0" oninput="calculate()">
+        <!-- NAVY MEASUREMENTS -->
+        <div class="card">
+            <div class="card-title">Navy Measurements</div>
 
-<label id="waistLabel">Waist Circumference (CM)</label>
-<input type="number" id="waist" placeholder="0" oninput="calculate()">
+            <label class="field-label" for="neck" id="neckLabel">Neck Circumference (cm)</label>
+            <input type="number" id="neck" placeholder="37" oninput="calculate()">
 
+            <label class="field-label" for="waist" id="waistLabel">Waist Circumference (cm)</label>
+            <input type="number" id="waist" placeholder="80" oninput="calculate()">
 
-    <label>Activity Coefficient</label>
-    <select id="activity" onchange="calculate()">
-        <option value="1.2">Sedentary (Office)</option>
-        <option value="1.375">Light (1-2 days/wk)</option>
-        <option value="1.55" selected>Moderate (3-5 days/wk)</option>
-        <option value="1.725">Heavy (6-7 days/wk)</option>
-        <option value="1.9">Professional Athlete</option>
-    </select>
+            <label class="field-label" for="activity">Activity Level</label>
+            <select id="activity" onchange="calculate()">
+                <option value="1.2">Sedentary (desk / minimal)</option>
+                <option value="1.375">Light (1–2 sessions/wk)</option>
+                <option value="1.55" selected>Moderate (3–5 sessions/wk)</option>
+                <option value="1.725">Heavy (6–7 sessions/wk)</option>
+                <option value="1.9">Professional Athlete</option>
+            </select>
 
-    <div style="margin-top: 25px; font-size: 0.6rem; color: #666; font-family: 'JetBrains Mono'; line-height: 1.4;">
-        * Measurement precision critical for Navy Formula accuracy. Measure waist at navel level.
-    </div>
-</div>
-
-      <div class="branch">
-    <div class="branch-header">Analysis Output</div>
-    
-    <div class="stat-node">
-        <h3>Body Fat</h3>
-        <span id="bf-val">--%</span>
-    </div>
-
-    <div class="stat-node">
-        <h3>Maintenance</h3>
-        <span id="tdee-val">-- kcal</span>
-    </div>
-
-    <div class="stat-node" style="border-right: 3px solid var(--elite);">
-        <h3>Protein (Build)</h3>
-        <span id="prot-val">--g</span>
-    </div>
-
-    <div class="stat-node" style="border-right: 3px solid #f1c40f;">
-        <h3>Carbs (Fuel)</h3>
-        <span id="carb-val">--g</span>
-    </div>
-
-    <div class="stat-node" style="border-right: 3px solid #e67e22;">
-        <h3>Fats (Hormones)</h3>
-        <span id="fat-val">--g</span>
-    </div>
-</div>
-
-        <div class="protocol-box">
-            <div class="branch-header" style="border:none; text-align: left;">Calorie & Macro Protocols</div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Objective</th>
-                        <th>Kcal/Day</th>
-                        <th>Protein</th>
-                        <th>Primary Effect</th>
-                    </tr>
-                </thead>
-                <tbody id="protocol-body">
-                    </tbody>
-            </table>
+            <p class="field-note">Measure waist at navel level. Measurement precision is critical for Navy Formula accuracy.</p>
         </div>
 
-        <div class="protocol-box" style="border-left: 5px solid #555; margin-top: 40px;">
-    <div class="branch-header" style="border:none; text-align: left;">System Architecture & Methodology</div>
-    
-    <div class="protocol-grid">
-        <div class="protocol-item">
-            <h4>1. Basal Metabolic Rate (BMR)</h4>
-            <p>Utilizes the <strong>Mifflin-St Jeor Equation</strong>, recognized as the current gold standard for metabolic estimation:</p>
-            <p style="font-family: 'JetBrains Mono'; color: var(--primary); font-size: 0.65rem; background: #000; padding: 10px; border-radius: 4px;">
-                BMR = (10 × W) + (6.25 × H) - (5 × A) + 5
-            </p>
+        <!-- OUTPUT -->
+        <div class="card">
+            <div class="card-title">Analysis Output</div>
+
+            <div class="stat-node">
+                <span class="stat-name">Body Fat</span>
+                <span class="stat-val dim" id="bf-val">—</span>
+            </div>
+            <div class="stat-node">
+                <span class="stat-name">Lean Body Mass</span>
+                <span class="stat-val dim" id="lm-val">—</span>
+            </div>
+            <div class="stat-node">
+                <span class="stat-name">Maintenance (TDEE)</span>
+                <span class="stat-val dim" id="tdee-val">—</span>
+            </div>
+            <div class="stat-node" style="border-left:2px solid var(--red);">
+                <span class="stat-name">Protein (Build)</span>
+                <span class="stat-val dim" id="prot-val">—</span>
+            </div>
+            <div class="stat-node" style="border-left:2px solid var(--yellow);">
+                <span class="stat-name">Carbs (Fuel)</span>
+                <span class="stat-val dim" id="carb-val">—</span>
+            </div>
+            <div class="stat-node" style="border-left:2px solid var(--orange);">
+                <span class="stat-name">Fats (Hormones)</span>
+                <span class="stat-val dim" id="fat-val">—</span>
+            </div>
         </div>
 
-        <div class="protocol-item">
-            <h4>2. Total Daily Energy Expenditure (TDEE)</h4>
-            <p>Calculated by applying an activity multiplier to your BMR. This accounts for the <strong>Thermogenic Effect of Activity</strong>:</p>
-            <ul style="padding-left: 15px;">
-                <li>Sedentary: BMR × 1.2</li>
-                <li>Moderate: BMR × 1.55</li>
-                <li>Athlete: BMR × 1.9</li>
-            </ul>
-        </div>
+    </div><!-- /.main-grid -->
 
-        <div class="protocol-item">
-            <h4>3. Protein Scaling (Lean Mass Logic)</h4>
-            <p>Unlike standard calculators, we scale protein based on <strong>Lean Body Mass (LBM)</strong> to optimize power-to-weight ratios:</p>
-            <p style="font-family: 'JetBrains Mono'; color: var(--primary); font-size: 0.65rem; background: #000; padding: 10px; border-radius: 4px;">
-                Target = LBM (kg) × 2.2g
-            </p>
-        </div>
-
-        <div class="protocol-item">
-            <h4>4. Phase Differentials</h4>
-            <p><strong>Lean Bulk:</strong> +10% surplus for muscle synthesis without excess fat storage.<br>
-               <strong>Lean Cut:</strong> -15% deficit for fat oxidation while preserving neural strength.</p>
-        </div>
+    <!-- PROTOCOL TABLE -->
+    <div class="full-panel accent-green">
+        <div class="card-title">Calorie &amp; Macro Protocols</div>
+        <table class="protocol-table">
+            <thead>
+                <tr>
+                    <th>Objective</th>
+                    <th>kcal / Day</th>
+                    <th>Protein</th>
+                    <th>Primary Effect</th>
+                </tr>
+            </thead>
+            <tbody id="protocol-body">
+                <tr>
+                    <td colspan="4" style="font-family:var(--mono); font-size:0.82em; color:var(--text-dim); text-align:center; padding:20px 0;">
+                        Enter your biometric data above to generate protocols.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
-    <hr style="border: 0; border-top: 1px solid var(--border); margin: 25px 0;">
-
-    <div style="font-size: 0.65rem; color: #666; line-height: 1.5; font-family: 'JetBrains Mono';">
-        <strong style="color: var(--elite);">[ MEDICAL DISCLAIMER ]</strong>: 
-        This tool provides estimates based on statistical averages (Mifflin-St Jeor study, 1990). Variables such as TEF (Thermic Effect of Food) and NEAT (Non-Exercise Activity Thermogenesis) create individual margins of error. Results are for informational and performance-tracking purposes only. Consult with a medical professional or certified nutritionist before beginning any high-intensity training or restrictive dieting protocol. Use of this system constitutes acknowledgment that you are training at your own risk.
-    </div>
-</div>
-
-    </div>
-
-    <div class="footer-nav"><a href="skills.html" class="back-btn">← BACK_TO_SKILLS</a></div>
-
-    <script>
-      function toggleUnits() {
-    const sys = document.getElementById("unitSystem").value;
-    const mHeight = document.getElementById("metricHeight");
-    const iHeight = document.getElementById("imperialHeight");
-
-    // Update Main Biometric Labels
-    document.getElementById("heightLabel").innerText = sys === 'met' ? "Height (CM)" : "Height (FT / IN)";
-    document.getElementById("weightLabel").innerText = sys === 'met' ? "Weight (KG)" : "Weight (LBS)";
-
-    // NEW: Update Navy Measurement Labels
-    document.getElementById("neckLabel").innerText = sys === 'met' ? "Neck Circumference (CM)" : "Neck Circumference (IN)";
-    document.getElementById("waistLabel").innerText = sys === 'met' ? "Waist Circumference (CM)" : "Waist Circumference (IN)";
-    
-    mHeight.style.display = sys === 'met' ? "block" : "none";
-    iHeight.style.display = sys === 'met' ? "none" : "flex";
-    
-    calculate();
-}
-
-      function calculate() {
-    // 1. Grab Weight First (The Gatekeeper)
-    const weightInput = parseFloat(document.getElementById("weight").value);
-    
-    // EXIT if no weight (Keeps UI clean)
-    if (!weightInput || weightInput === 0) {
-        const ids = ["bf-val", "lm-val", "tdee-val", "prot-val", "carb-val", "fat-val"];
-        ids.forEach(id => {
-            const el = document.getElementById(id);
-            if(el) el.innerText = "--";
-        });
-        const protBody = document.getElementById("protocol-body");
-        if(protBody) protBody.innerHTML = "";
-        return; 
-    }
-
-    // 2. Grab ALL other inputs (Vital: This was missing/out of order before)
-    const sys = document.getElementById("unitSystem").value;
-    const age = parseFloat(document.getElementById("age").value) || 25;
-    const activity = parseFloat(document.getElementById("activity").value) || 1.2;
-    let neck = parseFloat(document.getElementById("neck").value) || 0;
-    let waist = parseFloat(document.getElementById("waist").value) || 0;
-
-    // 3. Height & Unit Logic
-    let height;
-    if (sys === 'met') {
-        height = parseFloat(document.getElementById("hCm").value) || 170; 
-    } else {
-        const ft = parseFloat(document.getElementById("hFt").value) || 5;
-        const inch = parseFloat(document.getElementById("hIn").value) || 7;
-        height = (ft * 30.48) + (inch * 2.54);
-        
-        // Convert neck/waist for the formula
-        neck = neck * 2.54;
-        waist = waist * 2.54;
-    }
-
-    const weightKg = sys === 'imp' ? weightInput * 0.453592 : weightInput;
-
-    // 4. Body Fat Logic (US Navy Formula)
-    let bodyFat;
-    if (waist <= neck || waist < 10) {
-        bodyFat = 15; // Standard athlete fallback
-        document.getElementById("bf-val").innerText = "ESTIMATED 15%";
-        document.getElementById("bf-val").style.color = "#888"; 
-    } else {
-        bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height)) - 450;
-        document.getElementById("bf-val").innerText = Math.max(3, Math.min(50, bodyFat)).toFixed(1) + "%";
-        document.getElementById("bf-val").style.color = "var(--primary)"; 
-    }
-
-    // 5. Main Math (Mifflin-St Jeor & Macros)
-    const safeBF = Math.max(3, Math.min(50, bodyFat)); 
-    const leanMass = weightKg * (1 - (safeBF / 100));
-    const bmr = (10 * weightKg) + (6.25 * height) - (5 * age) + 5;
-    const tdee = bmr * activity;
-    const protein = leanMass * 2.2; 
-
-    const proteinKcal = protein * 4;
-    const fatKcal = tdee * 0.25;
-    const fatGrams = fatKcal / 9;
-    const carbKcal = tdee - (proteinKcal + fatKcal);
-    const carbGrams = Math.max(0, carbKcal / 4);
-
-    // 6. UPDATE UI (Mapping values to your HTML IDs)
-    document.getElementById("tdee-val").innerText = Math.round(tdee) + " kcal";
-    document.getElementById("prot-val").innerText = Math.round(protein) + "g";
-    document.getElementById("carb-val").innerText = Math.round(carbGrams) + "g";
-    document.getElementById("fat-val").innerText = Math.round(fatGrams) + "g";
-
-    const displayLBM = sys === 'imp' ? (leanMass * 2.20462).toFixed(1) + " lbs" : leanMass.toFixed(1) + " kg";
-    const lmElem = document.getElementById("lm-val");
-    if(lmElem) lmElem.innerText = displayLBM;
-
-    // 7. Protocols Table (The part you didn't want trimmed)
-    const protBody = document.getElementById("protocol-body");
-    const rows = [
-        { name: "Lean Bulk (+10%)", kcal: tdee * 1.1, p: protein, note: "Optimal Muscle/Leverage Ratio" },
-        { name: "Maintenance", kcal: tdee, p: protein, note: "Body Recomposition" },
-        { name: "Lean Cut (-15%)", kcal: tdee * 0.85, p: protein * 1.1, note: "Skill Power-to-Weight Optimization" }
-    ];
-
-    if(protBody) {
-        protBody.innerHTML = rows.map(r => `
-            <tr>
-                <td>${r.name}</td>
-                <td>${Math.round(r.kcal)}</td>
-                <td>${Math.round(r.p)}g</td>
-                <td>${r.note}</td>
-            </tr>
-        `).join('');
-    }
-}
-// window.onload = calculate;   
-
-
-
- </script>
-
-    <footer class="site-footer">
-    <div class="footer-container">
-        <h2>Nutritional Guidelines & Methodology</h2>
-        
-        <div class="footer-section">
-            <h3>Glossary of Terms</h3>
-            <ul>
-                <li><strong>BMR:</strong> Calories burned at rest for vital functions.</li>
-                <li><strong>TDEE:</strong> Total calories burned daily including activity.</li>
-                <li><strong>Lean Body Mass:</strong> Total weight minus body fat.</li>
-            </ul>
-        </div>
-
-        <footer class="site-footer">
-        <div class="footer-container">
-            <h2>Nutritional Guidelines & Methodology</h2>
-            
-            <div class="footer-section">
-                <h3>Glossary of Terms</h3>
-                <ul>
-                    <li><strong>BMR:</strong> Calories burned at rest for vital functions.</li>
-                    <li><strong>TDEE:</strong> Total calories burned daily including activity.</li>
-                    <li><strong>Lean Body Mass:</strong> Total weight minus body fat.</li>
+    <!-- METHODOLOGY -->
+    <div class="full-panel accent-dim">
+        <div class="card-title">System Architecture &amp; Methodology</div>
+        <div class="method-grid">
+            <div class="method-item">
+                <h4>1. Basal Metabolic Rate</h4>
+                <p>Uses the <strong style="color:var(--text)">Mifflin-St Jeor Equation</strong> — the current gold standard for metabolic estimation:</p>
+                <div class="formula-block">BMR = (10 × W) + (6.25 × H) − (5 × A) + 5</div>
+            </div>
+            <div class="method-item">
+                <h4>2. TDEE Calculation</h4>
+                <p>Activity multiplier applied to BMR to account for the Thermogenic Effect of Activity:</p>
+                <ul style="margin-top:8px;">
+                    <li>Sedentary → BMR × 1.2</li>
+                    <li>Moderate → BMR × 1.55</li>
+                    <li>Athlete → BMR × 1.9</li>
                 </ul>
             </div>
-
-            <div class="footer-section">
-                <h3>Macronutrient Distribution</h3>
-                <p><strong>Protein:</strong> 10-35% | <strong>Carbs:</strong> 45-65% | <strong>Fats:</strong> 20-35%</p>
-                <p>Focus on whole food sources and maintain cholesterol below 300mg/day.</p>
+            <div class="method-item">
+                <h4>3. Protein — Lean Mass Logic</h4>
+                <p>Protein scaled from <strong style="color:var(--text)">Lean Body Mass</strong> to optimise power-to-weight ratio for calisthenics athletes:</p>
+                <div class="formula-block">Target = LBM (kg) × 2.2g</div>
             </div>
-
-            <div class="footer-section">
-                <h3>Fat Loss Logic</h3>
-                <p>A 3,500 calorie deficit equals ~1lb of fat loss. We recommend a safe deficit of 500-1,000 calories per day for sustainable results.</p>
+            <div class="method-item">
+                <h4>4. Phase Differentials</h4>
+                <p><strong style="color:var(--text)">Lean Bulk:</strong> +10% surplus for muscle synthesis without excess fat storage.<br><br>
+                   <strong style="color:var(--text)">Lean Cut:</strong> −15% deficit for fat oxidation while preserving neural strength output.</p>
             </div>
+        </div>
+        <div class="disclaimer">
+            <strong>[ Medical Disclaimer ]</strong> — This tool provides estimates based on statistical averages (Mifflin-St Jeor, 1990). Variables such as TEF and NEAT create individual margins of error. Results are for informational purposes only. Consult a medical professional before beginning any high-intensity or restrictive protocol. Use constitutes acknowledgment of training at your own risk.
+        </div>
+    </div>
 
-            <hr style="border: 0; border-top: 1px solid #333; margin: 40px 0 20px 0;">
-            
-         <nav style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-                <a href="about.html" style="color: var(--primary); font-family: 'JetBrains Mono'; font-size: 0.7rem; text-decoration: none; text-transform: uppercase;">About</a>
- <a href="privacy-policy.html" style="color: var(--primary); font-family: 'JetBrains Mono'; font-size: 0.7rem; text-decoration: none; text-transform: uppercase;">Privacy Policy</a>                <a href="terms.html" style="color: var(--primary); font-family: 'JetBrains Mono'; font-size: 0.7rem; text-decoration: none; text-transform: uppercase;">Terms</a>
-                <a href="contact.html" style="color: var(--primary); font-family: 'JetBrains Mono'; font-size: 0.7rem; text-decoration: none; text-transform: uppercase;">Contact</a>
-            </nav>
-
-            <p style="text-align: center; margin-top: 20px; font-family: 'JetBrains Mono'; font-size: 0.6rem; color: #555;">
-                © 2026 CALI-BIOTECH // 
+    <!-- GLOSSARY + MACROS -->
+    <div class="full-panel" style="display:grid; grid-template-columns:1fr 1fr; gap:28px;">
+        <div>
+            <div class="card-title">Glossary of Terms</div>
+            <ul class="glossary-list">
+                <li><strong>BMR</strong> — Calories burned at complete rest to sustain vital functions.</li>
+                <li><strong>TDEE</strong> — Total daily calories burned including all physical activity.</li>
+                <li><strong>Lean Body Mass</strong> — Total bodyweight minus fat mass.</li>
+                <li><strong>Navy Formula</strong> — Body fat estimation using circumference measurements.</li>
+                <li><strong>TEF</strong> — Thermic Effect of Food; calories burned during digestion.</li>
+                <li><strong>NEAT</strong> — Non-Exercise Activity Thermogenesis; incidental movement energy.</li>
+            </ul>
+        </div>
+        <div>
+            <div class="card-title">Macronutrient Distribution</div>
+            <p style="font-size:0.9em; color:var(--text-dim); line-height:1.7; margin-bottom:14px;">
+                Recommended intake ranges for general athletic performance. Calisthenics athletes typically bias toward higher protein and moderate carbohydrates.
+            </p>
+            <div class="macro-dist">
+                <span class="macro-tag protein">Protein 10–35%</span>
+                <span class="macro-tag carbs">Carbs 45–65%</span>
+                <span class="macro-tag fats">Fats 20–35%</span>
+            </div>
+            <p style="font-size:0.88em; color:var(--text-dim); line-height:1.7; margin-top:16px;">
+                A 3,500 kcal deficit ≈ 1 lb of fat lost. A safe sustainable deficit is 500–1,000 kcal/day. Focus on whole food sources and keep cholesterol below 300mg/day.
             </p>
         </div>
-    </footer>
-</body>
+    </div>
 
-       
+</div><!-- /.page -->
+
+<!-- FOOTER -->
+<footer class="site-footer">
+    <div class="footer-inner">
+        <nav class="footer-nav">
+            <a href="about.html">About</a>
+            <a href="privacy-policy.html">Privacy Policy</a>
+            <a href="terms.html">Terms</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <p class="footer-copy">© 2026 Cali-Biotech · Data-Driven Bodyweight Training</p>
     </div>
 </footer>
 
+<script>
+'use strict';
 
+/* ── HELPERS ── */
+const $ = id => document.getElementById(id);
+const set = (id, val, active = true) => {
+    const el = $(id); if (!el) return;
+    el.textContent = val;
+    el.className = active ? 'stat-val' : 'stat-val dim';
+};
 
+/* ── UNIT TOGGLE ── */
+function toggleUnits() {
+    const imp = $('unitSystem').value === 'imp';
+    $('weightLabel').textContent = imp ? 'Weight (lbs)' : 'Weight (kg)';
+    $('heightLabel').textContent = imp ? 'Height (ft / in)' : 'Height (cm)';
+    $('neckLabel').textContent   = imp ? 'Neck Circumference (in)' : 'Neck Circumference (cm)';
+    $('waistLabel').textContent  = imp ? 'Waist Circumference (in)' : 'Waist Circumference (cm)';
+    $('metricHeight').style.display = imp ? 'none' : 'block';
+    $('imperialHeight').classList.toggle('visible', imp);
+    calculate();
+}
+
+/* ── CALCULATE ── */
+function calculate() {
+    const weightRaw = parseFloat($('weight').value);
+
+    // Require weight to proceed
+    if (!weightRaw || weightRaw <= 0) {
+        ['bf-val','lm-val','tdee-val','prot-val','carb-val','fat-val']
+            .forEach(id => set(id, '—', false));
+        $('protocol-body').innerHTML = `<tr><td colspan="4" style="font-family:var(--mono);font-size:0.82em;color:var(--text-dim);text-align:center;padding:20px 0;">Enter your biometric data above to generate protocols.</td></tr>`;
+        return;
+    }
+
+    const sys      = $('unitSystem').value;
+    const imp      = sys === 'imp';
+    const age      = parseFloat($('age').value)      || 25;
+    const activity = parseFloat($('activity').value) || 1.55;
+
+    // Height → cm
+    let heightCm;
+    if (imp) {
+        const ft  = parseFloat($('hFt').value) || 5;
+        const ins = parseFloat($('hIn').value) || 7;
+        heightCm  = ft * 30.48 + ins * 2.54;
+    } else {
+        heightCm = parseFloat($('hCm').value) || 170;
+    }
+
+    // Weight → kg
+    const weightKg = imp ? weightRaw * 0.453592 : weightRaw;
+
+    // Circumferences → cm
+    let neck  = parseFloat($('neck').value)  || 0;
+    let waist = parseFloat($('waist').value) || 0;
+    if (imp) { neck *= 2.54; waist *= 2.54; }
+
+    // ── Body Fat (US Navy Formula) ──
+    let bodyFat;
+    const validMeasurements = waist > neck && neck > 10 && waist > 10;
+    if (validMeasurements) {
+        bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(heightCm)) - 450;
+        bodyFat = Math.max(3, Math.min(50, bodyFat));
+        set('bf-val', bodyFat.toFixed(1) + '%');
+    } else {
+        bodyFat = 15; // athlete fallback
+        set('bf-val', '~15% (est.)');
+    }
+
+    // ── Lean Body Mass ──
+    const lbmKg     = weightKg * (1 - bodyFat / 100);
+    const lbmDisplay = imp
+        ? (lbmKg * 2.20462).toFixed(1) + ' lbs'
+        : lbmKg.toFixed(1) + ' kg';
+    set('lm-val', lbmDisplay);
+
+    // ── BMR + TDEE (Mifflin-St Jeor) ──
+    const bmr  = 10 * weightKg + 6.25 * heightCm - 5 * age + 5;
+    const tdee = bmr * activity;
+
+    // ── Macros ──
+    const protein  = lbmKg * 2.2;
+    const fatGrams = (tdee * 0.25) / 9;
+    const carbGrams = Math.max(0, (tdee - protein * 4 - fatGrams * 9) / 4);
+
+    // ── Update UI ──
+    set('tdee-val', Math.round(tdee) + ' kcal');
+    set('prot-val', Math.round(protein) + 'g');
+    set('carb-val', Math.round(carbGrams) + 'g');
+    set('fat-val',  Math.round(fatGrams) + 'g');
+
+    // ── Protocols Table ──
+    const rows = [
+        { label: 'Lean Bulk (+10%)',   kcal: tdee * 1.10,  prot: protein,       note: 'Optimal muscle / leverage ratio' },
+        { label: 'Maintenance',         kcal: tdee,          prot: protein,       note: 'Body recomposition' },
+        { label: 'Lean Cut (−15%)',     kcal: tdee * 0.85,  prot: protein * 1.1, note: 'Skill power-to-weight optimisation' },
+    ];
+
+    $('protocol-body').innerHTML = rows.map(r => `
+        <tr>
+            <td>${r.label}</td>
+            <td>${Math.round(r.kcal)}</td>
+            <td>${Math.round(r.prot)}g</td>
+            <td>${r.note}</td>
+        </tr>`).join('');
+}
+
+/* ── COOKIES ── */
+const setCookie = (n, v, d) => {
+    const dt = new Date(); dt.setTime(dt.getTime() + d * 864e5);
+    document.cookie = `${n}=${v}; expires=${dt.toUTCString()}; path=/`;
+};
+const getCookie = n => {
+    const eq = n + '=';
+    return document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith(eq))?.substring(eq.length) ?? null;
+};
+
+function loadGA() {
+    const id = document.querySelector('meta[name="ga-id"]')?.content;
+    if (!id) return;
+    const s = document.createElement('script');
+    s.async = true; s.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+    document.head.appendChild(s);
+    s.onload = () => {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag; gtag('js', new Date()); gtag('config', id);
+    };
+}
+function loadAdsense(personalised) {
+    const id = document.querySelector('meta[name="adsense-id"]')?.content;
+    if (!id) return;
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+    s.setAttribute('data-ad-client', id);
+    s.crossOrigin = 'anonymous';
+    document.head.appendChild(s);
+    (window.adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: id,
+        enable_page_level_ads: true,
+        ...(personalised ? {} : { non_personalized_ads: 1 })
+    });
+}
+
+const showBanner = () => { $('cookie-banner').style.bottom = '0'; };
+const hideBanner = () => { $('cookie-banner').style.bottom = '-100px'; };
+
+const consent = getCookie('cookie_consent');
+if (!consent)                    { showBanner(); }
+else if (consent === 'accepted') { loadGA(); loadAdsense(true); }
+else                             { loadAdsense(false); }
+
+$('accept-cookies').onclick = () => { setCookie('cookie_consent','accepted',365); hideBanner(); loadGA(); loadAdsense(true); };
+$('reject-cookies').onclick = () => { setCookie('cookie_consent','rejected',365); hideBanner(); loadAdsense(false); };
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', calculate);
+</script>
 </body>
 </html>
