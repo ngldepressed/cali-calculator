@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CDL3F645R2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-CDL3F645R2');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1230203526545088" crossorigin="anonymous"></script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cali-Biotech | Free Calisthenics Skill Calculator — Planche, Front Lever & More</title>
@@ -19,7 +28,6 @@
     <meta name="twitter:description" content="Free calisthenics skill calculator. Find out if you're ready for Planche, Front Lever, Iron Cross and more — based on your actual strength data.">
     <meta name="ga-id" content="G-CDL3F645R2">
     <meta name="adsense-id" content="ca-pub-1230203526545088">
-    <!-- Tells Google this page is indexable and all links should be followed -->
     <meta name="robots" content="index, follow">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -86,7 +94,6 @@
             gap: 20px;
             margin-top: 30px;
         }
-
 
         /* ============================================================
            CARD
@@ -300,11 +307,6 @@
         .joint { transition: fill 0.4s ease; fill: #444; }
 
         /* ============================================================
-           STAT BOXES
-        ============================================================ */
-
-
-        /* ============================================================
            TABLE & LOG
         ============================================================ */
         table { width: 100%; font-size: 0.75em; border-collapse: collapse; margin-top: 10px; color: #bbb; }
@@ -342,6 +344,16 @@
             transition: color 0.2s;
         }
         .blog-link:hover { color: #fff; }
+        .blog-category-label {
+            font-size: 0.6em;
+            color: #555;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            font-family: monospace;
+            border-bottom: 1px solid #1a1a2a;
+            padding-bottom: 6px;
+        }
 
         /* ============================================================
            GLOSSARY
@@ -407,7 +419,7 @@
         .support-box p { font-size: 0.75em; color: #666; margin-top: 20px; line-height: 1.6; }
 
         /* ============================================================
-           SHARE CARD MODAL  ← NEW
+           SHARE CARD MODAL
         ============================================================ */
         #shareModal {
             display: none;
@@ -438,7 +450,6 @@
         }
         #closeModal:hover { color: #fff; }
 
-        /* The element that gets screenshotted */
         #shareCard {
             background: linear-gradient(135deg, #0b0b12 0%, #111128 100%);
             border: 1px solid var(--border);
@@ -500,13 +511,11 @@
         .cookie-btn-accept { background: #4caf50; color: #fff; }
         .cookie-btn-reject { background: #f44336; color: #fff; }
 
-        /* ── Skill gap table ── */
         #skillGapTable th { font-size: 0.62em; color: var(--primary); letter-spacing: 1px; }
         #skillGapTable td { font-size: 0.78em; padding: 10px 8px; vertical-align: middle; }
         #skillGapTable tr:last-child td { border-bottom: none; }
         #skillGapTable tr:hover td { background: rgba(255,255,255,0.02); }
 
-        /* ── Progress chart card ── */
         #progressCard canvas { display: block; }
 
         /* ============================================================
@@ -529,14 +538,10 @@
 
 <body onload="loadSavedData(); renderLogs();">
 
-<!-- ============================================================
-     SHARE CARD MODAL  ← NEW
-============================================================ -->
+<!-- SHARE CARD MODAL -->
 <div id="shareModal">
     <div id="shareCardWrap">
-        <button id="closeModal" onclick="document.getElementById('shareModal').classList.remove('open')">✕</button>
-
-        <!-- This div is what html2canvas screenshots -->
+        <button id="closeModal" onclick="document.getElementById('shareModal').classList.remove('open')">&#10005;</button>
         <div id="shareCard">
             <div class="sc-header">
                 <div>
@@ -549,11 +554,10 @@
             <div class="sc-grid" id="sc-skills"><!-- filled by JS --></div>
             <div class="sc-footer-row">
                 <div class="sc-footer-txt" id="sc-date">calicalculator.com</div>
-                <div class="sc-watermark">▲ CALI-BIOTECH</div>
+                <div class="sc-watermark">&#9650; CALI-BIOTECH</div>
             </div>
         </div>
-
-        <button id="downloadShareCard" onclick="downloadCard()">⬇ DOWNLOAD &amp; SHARE</button>
+        <button id="downloadShareCard" onclick="downloadCard()">&#11015; DOWNLOAD &amp; SHARE</button>
         <div class="sc-platforms">Post to Reddit · Instagram · TikTok · Twitter</div>
     </div>
 </div>
@@ -698,7 +702,6 @@
 
         <div class="analysis-panel" id="chart-card"
              style="min-height:70vh; display:flex; align-items:center; justify-content:center; position:relative; background:#1f1f2e; padding:10px;">
-
             <canvas id="skillRadar" style="width:100% !important; height:auto !important;"></canvas>
         </div>
 
@@ -717,7 +720,7 @@
                                color:#000; border:none; cursor:pointer; padding:14px;
                                font-family:monospace; border-radius:8px; font-size:0.75em;
                                text-transform:uppercase; font-weight:900; letter-spacing:2px;">
-                    📤 SHARE MY SKILL CARD
+                    &#128228; SHARE MY SKILL CARD
                 </button>
                 <button id="screenshotBtn" onclick="shareReport()"
                         style="width:100%; background:transparent; border:1px solid var(--potential); color:var(--potential); cursor:pointer; padding:12px; font-family:monospace; border-radius:8px; font-size:0.7em; text-transform:uppercase;">
@@ -744,8 +747,6 @@
         </svg>
         <p id="risk-msg" style="font-size:0.65em; color:#888; margin-top:10px; font-weight:bold;">SCANNING BIOMETRICS...</p>
     </div>
-
-
 
     <!-- TRAINING HISTORY -->
     <div class="card" style="margin-top:25px;">
@@ -844,55 +845,61 @@
         </div>
     </div>
 
-    <!-- SUPPORT -->
-    <div class="support-box">
-        <h2>Support The Grind</h2>
-        <a href="https://buymeacoffee.com/CaliBiotech" target="_blank" class="coffee-btn">
-            ☕ BUY ME A PROTEIN SHAKE
-        </a>
-        <p>Your support helps keep the <b>Cali-Biotech</b> engine running.<br>Join the mission to optimize performance.</p>
-    </div>
-
-
-    <!-- BLOG LINKS -->
+    <!-- ============================================================
+         BLOG LINKS — categorized
+    ============================================================ -->
     <div class="blog-section">
-        <h3 style="color:var(--primary); font-size:0.9em; margin-bottom:15px;">RESOURCES &amp; GUIDES</h3>
-        <a href="blog/chest-guide.html" class="blog-link">3 Best Exercises for a Massive Chest</a>
-        <a href="blog/planche-guide.html" class="blog-link">Unlock the Planche: Top 3 Exercises</a>
-        <a href="blog/front-lever-guide.html" class="blog-link">Master the Front Lever</a>
-        <a href="blog/pullup-guide.html" class="blog-link">First Pull-up Guide</a>
-        <a href="blog/planche-pushup-guide.html" class="blog-link">The Best Pushup for Planche</a>
-        <a href="blog/planche-progression-zero-to-advanced-tuck.html" class="blog-link">From zero to advanced tuck PLANCHE</a>
-        <a href="./blog/specificity-is-king.html" class="blog-link">Specificity is King</a>
-        <a href="blog/ring-shoulder-guide.html" class="blog-link">3D Shoulders with Rings</a>
-        <a href="blog/back-thickness.html" class="blog-link">Back Thickness</a>
-        <a href="blog/weighted-calisthenics.html" class="blog-link">Drop the Ego: Weighted Training</a>
-        <a href="blog/hardest-skills.html" class="blog-link">10 Hardest Skills</a>
-        <a href="blog/beginner-skills.html" class="blog-link">Beginner Skills</a>
-        <a href="blog/fast-track-skills.html" class="blog-link">8-12 Week Skills</a>
-        <a href="blog/equipment-guide.html" class="blog-link">Essential Equipment</a>
-        <a href="blog/attractive-physique.html" class="blog-link">Top Aesthetic Bodyparts</a>
-        <a href="blog/calisthenics-diet.html" class="blog-link">The Truth About Bulking</a>
-        <a href="blog/lat-pulldown-truth.html" class="blog-link">Lat Pulldown vs Pull-up</a>
-        <a href="blog/planche-front-lever.html" class="blog-link">PLANCHE VS FRONT LEVER</a>
-        <a href="blog/handstand-pushups.html" class="blog-link">Handstand Pushups Guide</a>
-        <a href="blog/muscle-up-guide.html" class="blog-link">Muscle Up Guide</a>
-        <a href="blog/how-long-planche.html" class="blog-link">Full Planche Timeline</a>
-        <a href="blog/elite-strength-1rm.html" class="blog-link">How Strong is Your 1RM?</a>
-        <a href="blog/front-lever.html" class="blog-link">Front Lever Guide</a>
-        <a href="blog/one-arm-pullup-guide.html" class="blog-link">One Arm Pullup Guide</a>
- <a href="blog/gymnast-vs-calisthenics.html" class="blog-link">Gymnast vs  Calisthenics</a>
-  <a href="blog/dips-vs-bench-press.html" class="blog-link">Dips vs Bench press</a>
-  <a href="blog/climber-back-vs-calisthenics.html" class="blog-link">Climber vs Cali</a>
-    <a href="blog/powerlifting-vs-weighted-calisthenics.html" class="blog-link">Powerlifting vs Cali</a>
-    <a href="blog/recovery-and-tendon-health.html" class="blog-link">Recovery and Tendon health </a>
-        <a href="blog/tall-athlete-planche-guide.html" class="blog-link">Why Taller Athletes Fail the Planche</a>
+        <h3 style="color:var(--primary); font-size:0.9em; margin-bottom:20px; letter-spacing:2px;">RESOURCES &amp; GUIDES</h3>
 
+        <!-- SKILL GUIDES -->
+        <div style="margin-bottom:24px;">
+            <div class="blog-category-label">&#9658; SKILL GUIDES</div>
+            <a href="blog/planche-guide.html" class="blog-link">Unlock the Planche</a>
+            <a href="blog/planche-progression-zero-to-advanced-tuck.html" class="blog-link">Zero to Advanced Tuck</a>
+            <a href="blog/planche-pushup-guide.html" class="blog-link">Best Pushup for Planche</a>
+            <a href="blog/how-long-planche.html" class="blog-link">Full Planche Timeline</a>
+            <a href="blog/tall-athlete-planche-guide.html" class="blog-link">Why Taller Athletes Fail the Planche</a>
+            <a href="blog/front-lever.html" class="blog-link">Front Lever Guide</a>
+            <a href="blog/front-lever-guide.html" class="blog-link">Master the Front Lever</a>
+            <a href="blog/planche-front-lever.html" class="blog-link">Planche vs Front Lever</a>
+            <a href="blog/muscle-up-guide.html" class="blog-link">Muscle Up Guide</a>
+            <a href="blog/handstand-pushups.html" class="blog-link">Handstand Pushups Guide</a>
+            <a href="blog/one-arm-pullup-guide.html" class="blog-link">One Arm Pullup Guide</a>
+        </div>
 
+        <!-- STRENGTH & TRAINING -->
+        <div style="margin-bottom:24px;">
+            <div class="blog-category-label">&#9658; STRENGTH &amp; TRAINING</div>
+            <a href="blog/beginner-skills.html" class="blog-link">Beginner Skills</a>
+            <a href="blog/pullup-guide.html" class="blog-link">First Pull-up Guide</a>
+            <a href="blog/fast-track-skills.html" class="blog-link">8–12 Week Skills</a>
+            <a href="blog/hardest-skills.html" class="blog-link">10 Hardest Skills</a>
+            <a href="blog/weighted-calisthenics.html" class="blog-link">Drop the Ego: Weighted Training</a>
+            <a href="blog/specificity-is-king.html" class="blog-link">Specificity is King</a>
+            <a href="blog/elite-strength-1rm.html" class="blog-link">How Strong is Your 1RM?</a>
+            <a href="blog/recovery-and-tendon-health.html" class="blog-link">Recovery &amp; Tendon Health</a>
+        </div>
 
+        <!-- MUSCLE & AESTHETICS -->
+        <div style="margin-bottom:24px;">
+            <div class="blog-category-label">&#9658; MUSCLE &amp; AESTHETICS</div>
+            <a href="blog/chest-guide.html" class="blog-link">3 Best Exercises for a Massive Chest</a>
+            <a href="blog/ring-shoulder-guide.html" class="blog-link">3D Shoulders with Rings</a>
+            <a href="blog/back-thickness.html" class="blog-link">Back Thickness</a>
+            <a href="blog/attractive-physique.html" class="blog-link">Top Aesthetic Bodyparts</a>
+            <a href="blog/calisthenics-diet.html" class="blog-link">The Truth About Bulking</a>
+        </div>
 
-
-
+        <!-- COMPARISONS -->
+        <div style="margin-bottom:24px;">
+            <div class="blog-category-label">&#9658; COMPARISONS &amp; BREAKDOWNS</div>
+            <a href="blog/gymnast-vs-calisthenics.html" class="blog-link">Gymnast vs Calisthenics</a>
+            <a href="blog/dips-vs-bench-press.html" class="blog-link">Dips vs Bench Press</a>
+            <a href="blog/climber-back-vs-calisthenics.html" class="blog-link">Climber vs Cali</a>
+            <a href="blog/powerlifting-vs-weighted-calisthenics.html" class="blog-link">Powerlifting vs Cali</a>
+            <a href="blog/lat-pulldown-truth.html" class="blog-link">Lat Pulldown vs Pull-up</a>
+            <a href="blog/equipment-guide.html" class="blog-link">Essential Equipment</a>
+        </div>
 
         <!-- GLOSSARY -->
         <section class="content-rich-section" style="background:rgba(76,111,255,0.05); border:1px solid #2a2a3a; margin:40px 0; padding:30px; border-radius:12px; border-left:5px solid var(--primary);">
@@ -949,7 +956,16 @@
             </div>
         </section>
 
-        <p style="font-size:0.6em; color:#444; margin-top:25px;">© 2026 Cali-Biotech Command Systems.</p>
+        <p style="font-size:0.6em; color:#444; margin-top:25px;">&#169; 2026 Cali-Biotech Command Systems.</p>
+    </div>
+
+    <!-- SUPPORT — below blog section -->
+    <div class="support-box">
+        <h2>Support The Grind</h2>
+        <a href="https://buymeacoffee.com/CaliBiotech" target="_blank" class="coffee-btn">
+            &#9749; BUY ME A PROTEIN SHAKE
+        </a>
+        <p>Your support helps keep the <b>Cali-Biotech</b> engine running.<br>Join the mission to optimize performance.</p>
     </div>
 
 </div><!-- /.container -->
@@ -965,7 +981,7 @@
 </footer>
 
 <div id="cookie-banner">
-    🍪 We use cookies to improve your experience and show personalized ads.
+    &#127850; We use cookies to improve your experience and show personalized ads.
     <button id="accept-cookies" class="cookie-btn cookie-btn-accept">Accept</button>
     <button id="reject-cookies" class="cookie-btn cookie-btn-reject">Reject</button>
 </div>
@@ -976,20 +992,17 @@
 <script>
 'use strict';
 
-/* ── Debounce ── */
 function debounce(fn, ms) {
     let timer;
     return function(...args) { clearTimeout(timer); timer = setTimeout(() => fn.apply(this, args), ms); };
 }
 const debouncedAnalyze = debounce(() => { if (isSystemReady) analyze(); }, 180);
 
-/* ── Globals ── */
 let isSystemReady = false;
 let isSimMode = false;
 let radarChart = null;
-let lastScores = {}; // used by share card
+let lastScores = {};
 
-/* ── Sim snapshot ── */
 const SIM_FIELDS = ["weight","pullups","pushups","mu","hang","wpW","wpR","wdW","wdR","saW","saR","legRatio","form","cns","hCm","hFt","hIn"];
 function snapshotInputs() {
     const snap = {};
@@ -1011,14 +1024,11 @@ function toggleSimMode() {
     if (isSystemReady) analyze();
 }
 
-/* ── Auto-start: no gate needed ── */
 function prepareSystem() {
-    // kept for backward compatibility if called anywhere
     isSystemReady = true;
     analyze();
 }
 
-/* ── Unit labels ── */
 function updateLabels() {
     const isMet = document.getElementById("unitSystem").value === 'met';
     document.getElementById("wLabel").innerText = `Weight ${isMet ? '(kg)' : '(lbs)'}`;
@@ -1033,7 +1043,6 @@ function updateLoadLabels() {
     analyze();
 }
 
-/* ── Skill definitions ── */
 const skills = [
     { name: "Full Planche",     p: 3.4, l: 0,   s: 2.5, minEntry: 45 },
     { name: "Straddle Planche", p: 2.8, l: 0,   s: 2.0, minEntry: 30 },
@@ -1043,7 +1052,6 @@ const skills = [
     { name: "Muscle-up",        p: 1.5, l: 1.6, s: 0,   minEntry: 15 }
 ];
 
-/* ── Chart ── */
 const ctx = document.getElementById('skillRadar').getContext('2d');
 function initChart() {
     const isMobile = window.innerWidth < 600;
@@ -1083,7 +1091,6 @@ window.addEventListener('resize', debounce(() => {
     if (isSystemReady) analyze();
 }, 300));
 
-/* ── Storage ── */
 function saveToLocal() {
     if (isSimMode) return;
     const data = {};
@@ -1100,7 +1107,6 @@ function loadSavedData() {
     displayNotes();
 }
 
-/* ── Training log ── */
 function logSession() {
     const savedLogs = localStorage.getItem('caliLogs') ? JSON.parse(localStorage.getItem('caliLogs')) : [];
     const sys = document.getElementById("unitSystem").value;
@@ -1136,18 +1142,16 @@ function renderLogs() {
             <td style="color:#00ffcc;font-family:monospace;">${l.pull}</td>
             <td style="color:#00ffcc;font-family:monospace;">${l.push}</td>
             <td style="color:#00ffcc;font-family:monospace;">${l.sa}</td>
-            <td style="text-align:center;"><button onclick="deleteLog(${i})" style="background:none;border:none;color:#ff4444;cursor:pointer;font-weight:bold;font-size:1.1em;">✕</button></td>
+            <td style="text-align:center;"><button onclick="deleteLog(${i})" style="background:none;border:none;color:#ff4444;cursor:pointer;font-weight:bold;font-size:1.1em;">&#10005;</button></td>
         </tr>`).join('');
 }
 function deleteLog(i) {
-    // BUG FIX #6: was JSON.parse without null guard — crashes if key missing
     const savedLogs = JSON.parse(localStorage.getItem('caliLogs') || '[]');
     savedLogs.splice(i, 1);
     localStorage.setItem('caliLogs', JSON.stringify(savedLogs));
     renderLogs();
 }
 
-/* ── Notes ── */
 function saveNotes(event) {
     const noteInput = document.getElementById("sessionNotes");
     const noteText = noteInput.value.trim();
@@ -1158,7 +1162,6 @@ function saveNotes(event) {
     localStorage.setItem('cali_biotech_history', JSON.stringify(history));
     noteInput.value = "";
     displayNotes();
-    // BUG FIX #7: event.currentTarget only works when event is passed explicitly
     const btn = event.currentTarget;
     btn.innerText = "✓ Committed"; btn.style.background = "#00ffcc";
     setTimeout(() => { btn.innerText = "COMMIT DATA"; btn.style.background = "var(--primary)"; }, 2000);
@@ -1172,7 +1175,7 @@ function displayNotes() {
         <div style="margin-bottom:10px;padding:12px 15px;background:rgba(255,255,255,0.02);border-left:2px solid var(--primary);position:relative;">
             <div style="font-size:0.6em;color:var(--primary);font-weight:bold;">[${item.date}]</div>
             <div style="font-size:0.85em;color:#ddd;margin-top:5px;">${item.text}</div>
-            <span onclick="deleteSingleNote(${index})" style="position:absolute;top:10px;right:10px;color:#555;cursor:pointer;font-size:1.1em;">×</span>
+            <span onclick="deleteSingleNote(${index})" style="position:absolute;top:10px;right:10px;color:#555;cursor:pointer;font-size:1.1em;">&#215;</span>
         </div>`).join('');
 }
 function deleteSingleNote(index) {
@@ -1188,15 +1191,11 @@ function clearAllNotes() {
     }
 }
 
-/* ================================================================
-   SHARE CARD FUNCTIONS  ← NEW
-================================================================ */
 function openShareModal() {
     if (!isSystemReady || Object.keys(lastScores).length === 0) {
         alert('Run the analysis first — click PREPARE TRAINING MATRIX');
         return;
     }
-    // Build stats subtitle
     const sys = document.getElementById("unitSystem").value;
     const u   = sys === 'met' ? 'kg' : 'lbs';
     const bw  = document.getElementById("weight").value || '?';
@@ -1205,8 +1204,6 @@ function openShareModal() {
         : (document.getElementById("hFt").value + "'" + document.getElementById("hIn").value + '"');
     const cns = document.getElementById("cns").value;
     document.getElementById('sc-stats').textContent = `BW: ${bw}${u}  ·  HEIGHT: ${h}  ·  CNS: ${cns}/10`;
-
-    // Populate skill grid — all 6 skills sorted highest first
     const sorted = Object.entries(lastScores).sort((a, b) => b[1] - a[1]);
     document.getElementById('sc-skills').innerHTML = sorted.map(([name, pct]) => `
         <div class="sc-skill">
@@ -1216,7 +1213,6 @@ function openShareModal() {
             </div>
             <div class="sc-pct">${Math.round(pct)}%</div>
         </div>`).join('');
-
     document.getElementById('sc-date').textContent = `calicalculator.com  ·  ${new Date().toLocaleDateString()}`;
     document.getElementById('shareModal').classList.add('open');
 }
@@ -1234,7 +1230,6 @@ function downloadCard() {
     });
 }
 
-/* ── Screenshot whole report ── */
 function shareReport() {
     const target = document.getElementById("captureArea");
     const btn    = document.getElementById("screenshotBtn");
@@ -1248,7 +1243,6 @@ function shareReport() {
     });
 }
 
-/* ── Main analysis ── */
 function analyze() {
     if (!isSystemReady) return;
     if (!radarChart) initChart();
@@ -1268,8 +1262,6 @@ function analyze() {
             ? (parseFloat(document.getElementById("hCm").value) || 170)
             : ((parseFloat(document.getElementById("hFt").value) || 5) * 30.48) + ((parseFloat(document.getElementById("hIn").value) || 7) * 2.54);
 
-        // BUG FIX #1: sim values must be read AFTER being written, not before.
-        // Previously bw was calculated before sim overwrites, so sim used stale bw.
         if (isSimMode) {
             document.getElementById("weight").value   = 75;
             document.getElementById("pullups").value  = 28;
@@ -1286,15 +1278,9 @@ function analyze() {
             document.getElementById("form").value     = "1.0";
             document.getElementById("cns").value      = 10;
             bw = 75;
-            h = 175; // BUG FIX #1 cont: sim height was not reset, torque varied with real user height
+            h = 175;
         }
 
-        // BUG FIX #2: 1RM formula uses Epley equation correctly.
-        // Previous: plate * (1 + reps/30) is weight of ADDED plate, not total.
-        // The ratio relative to BW is what matters for skill readiness.
-        // Formula: (BW + plate * Epley_factor) / BW  = correct relative strength.
-        // No change needed to formula itself — it was correct — but plate=0 must not
-        // produce pull1RM < 1.0 (would zero out all skills). Guard added below.
         const pull1RM = (bw + (parseFloat(document.getElementById("wpW").value) || 0) * loadConv * (1 + (parseInt(document.getElementById("wpR").value) || 0) / 30)) / bw;
         const push1RM = (bw + (parseFloat(document.getElementById("wdW").value) || 0) * loadConv * (1 + (parseInt(document.getElementById("wdR").value) || 0) / 30)) / bw;
         let rawSa = (bw + (parseFloat(document.getElementById("saW").value) || 0) * loadConv * (1 + (parseInt(document.getElementById("saR").value) || 0) / 30)) / bw;
@@ -1333,7 +1319,7 @@ function analyze() {
         const activeGoal = document.getElementById("goalSelect").value;
         let barHtml = "";
         const curScores = [], potScores = [];
-        lastScores = {}; // reset for share card
+        lastScores = {};
 
         skills.forEach(s => {
             let vectors = [];
@@ -1345,9 +1331,6 @@ function analyze() {
             let minVal = Math.min(...vectors.map(v => v.val));
             let cur = sig(minVal) * cnsVal * form;
 
-            // BUG FIX #8: BW-only training gives pull1RM/push1RM = exactly 1.0
-            // The old <= 1.0 guard zeroed out ALL skills for someone training BW-only.
-            // A ratio of 1.0 means no added weight, which is valid — use < 1.0 instead.
             if ((s.l > 0 && pull1RM < 1.0) || (s.p > 0 && push1RM < 1.0) || (s.s > 0 && sa1RM < 1.0)) cur = 0;
             const rawMu = parseFloat(document.getElementById("mu").value) || 0;
             if (s.name === "Muscle-up" && rawMu === 0) cur = 0;
@@ -1355,7 +1338,7 @@ function analyze() {
             const isTarget = s.name === activeGoal;
             curScores.push(cur.toFixed(1));
             potScores.push(sig(Math.max(...vectors.map(v => v.val))).toFixed(1));
-            lastScores[s.name] = cur; // store for share card
+            lastScores[s.name] = cur;
 
             let recText = "";
             if (isTarget) {
@@ -1376,247 +1359,186 @@ function analyze() {
                 </div>`;
         });
 
-        // Biomechanical profiling
-        // BUG FIX #3: .toFixed() returns a STRING. Comparisons like string < 0.90
-        // use type coercion and can silently produce wrong results. Keep raw number
-        // for comparisons, only use string for display.
-        // ── METRIC 1: PUSH/PULL BALANCE ──
-        // Compares weighted pull 1RM vs weighted dip 1RM.
-        // Ideal ratio is 0.90–1.10. Below 0.90 = chest/dip dominant, injury risk.
         const scapularHealthRaw = pull1RM / push1RM;
         const scapularHealth    = scapularHealthRaw.toFixed(2);
         let scapStatus, scapColor, scapDesc, scapWhat, scapFix;
         if (scapularHealthRaw < 0.80) {
-            scapStatus = "⚠ IMBALANCED";
-            scapColor  = "#ff4444";
-            scapWhat   = "Your pushing strength (weighted dip) is significantly stronger than your pulling strength (weighted pull-up). This creates shoulder impingement risk over time.";
-            scapFix    = "Prioritise pull-up volume. Aim for a 1:1 ratio — every dip session should be matched with equal pull intensity.";
+            scapStatus = "⚠ IMBALANCED"; scapColor = "#ff4444";
+            scapWhat = "Your pushing strength (weighted dip) is significantly stronger than your pulling strength (weighted pull-up). This creates shoulder impingement risk over time.";
+            scapFix  = "Prioritise pull-up volume. Aim for a 1:1 ratio — every dip session should be matched with equal pull intensity.";
         } else if (scapularHealthRaw < 0.90) {
-            scapStatus = "⚡ SLIGHT IMBALANCE";
-            scapColor  = "#ff9900";
-            scapWhat   = "Pushing is slightly stronger than pulling. Common in calisthenics athletes who train dips more than pulls.";
-            scapFix    = "Add 1–2 extra pull-up sets per session until the ratio normalises above 0.90.";
+            scapStatus = "⚡ SLIGHT IMBALANCE"; scapColor = "#ff9900";
+            scapWhat = "Pushing is slightly stronger than pulling. Common in calisthenics athletes who train dips more than pulls.";
+            scapFix  = "Add 1–2 extra pull-up sets per session until the ratio normalises above 0.90.";
         } else if (scapularHealthRaw <= 1.10) {
-            scapStatus = "✓ BALANCED";
-            scapColor  = "#00ffcc";
-            scapWhat   = "Your pull and push strength are well balanced. This protects your rotator cuff and keeps your shoulders healthy for advanced skills.";
-            scapFix    = "Maintain current push/pull split. Monitor each month.";
+            scapStatus = "✓ BALANCED"; scapColor = "#00ffcc";
+            scapWhat = "Your pull and push strength are well balanced. This protects your rotator cuff and keeps your shoulders healthy for advanced skills.";
+            scapFix  = "Maintain current push/pull split. Monitor each month.";
         } else {
-            scapStatus = "⚡ PULL DOMINANT";
-            scapColor  = "#ff9900";
-            scapWhat   = "Pulling is significantly stronger than pushing. Uncommon — usually means dip/press volume needs increasing for full skill transfer.";
-            scapFix    = "Add weighted dip volume. A 1:1 ratio is the target for skill transfer.";
+            scapStatus = "⚡ PULL DOMINANT"; scapColor = "#ff9900";
+            scapWhat = "Pulling is significantly stronger than pushing. Uncommon — usually means dip/press volume needs increasing for full skill transfer.";
+            scapFix  = "Add weighted dip volume. A 1:1 ratio is the target for skill transfer.";
         }
         scapDesc = `Pull÷Push ratio: ${scapularHealth} (ideal: 0.90–1.10)`;
 
-        // ── METRIC 2: TENDON/CONNECTIVE TISSUE READINESS ──
-        // SA (Zanetti raise) tests straight-arm strength relative to push strength.
-        // If SA is too low relative to push, connective tissue is the weak link for Planche/Cross.
-        // If SA is extremely high relative to push, loading may exceed structural safety.
         let tendonLoadRaw = sa1RM / push1RM;
-        if (isRings) tendonLoadRaw *= 0.85; // rings increase straight-arm stress
+        if (isRings) tendonLoadRaw *= 0.85;
         const tendonLoad = tendonLoadRaw.toFixed(2);
         let tendonStatus, tendonColor, tendonWhat, tendonFix;
         if (tendonLoadRaw < 0.55) {
-            tendonStatus = "⚠ UNDER-CONDITIONED";
-            tendonColor  = "#ff4444";
-            tendonWhat   = "Your straight-arm (SA) strength is far below your push strength. Tendons and ligaments haven't adapted to the loads your muscles can produce. High Planche/Cross injury risk.";
-            tendonFix    = "Reduce SA load and rebuild slowly. Add 3–5 min daily of straight-arm support holds and scapular push-ups before progressing weight.";
+            tendonStatus = "⚠ UNDER-CONDITIONED"; tendonColor = "#ff4444";
+            tendonWhat = "Your straight-arm (SA) strength is far below your push strength. Tendons and ligaments haven't adapted to the loads your muscles can produce. High Planche/Cross injury risk.";
+            tendonFix  = "Reduce SA load and rebuild slowly. Add 3–5 min daily of straight-arm support holds and scapular push-ups before progressing weight.";
         } else if (tendonLoadRaw < 0.65) {
-            tendonStatus = "⚡ DEVELOPING";
-            tendonColor  = "#ff9900";
-            tendonWhat   = "SA strength is developing but not yet at the level needed to safely handle advanced straight-arm skills at your current push strength.";
-            tendonFix    = "Increase SA Zanetti raise weight slowly (+1–2kg per 2 weeks). Don't rush — tendons adapt 10x slower than muscle.";
+            tendonStatus = "⚡ DEVELOPING"; tendonColor = "#ff9900";
+            tendonWhat = "SA strength is developing but not yet at the level needed to safely handle advanced straight-arm skills at your current push strength.";
+            tendonFix  = "Increase SA Zanetti raise weight slowly (+1–2kg per 2 weeks). Don't rush — tendons adapt 10x slower than muscle.";
         } else if (tendonLoadRaw <= 1.10) {
-            tendonStatus = "✓ CONDITIONED";
-            tendonColor  = "#00ffcc";
-            tendonWhat   = "Your connective tissue has adapted well to the straight-arm demands relative to your push output. Safe to progress advanced skills.";
-            tendonFix    = "Continue current SA training. Re-check monthly as push strength grows.";
+            tendonStatus = "✓ CONDITIONED"; tendonColor = "#00ffcc";
+            tendonWhat = "Your connective tissue has adapted well to the straight-arm demands relative to your push output. Safe to progress advanced skills.";
+            tendonFix  = "Continue current SA training. Re-check monthly as push strength grows.";
         } else {
-            tendonStatus = "⚠ OVERLOAD RISK";
-            tendonColor  = "#ff4444";
-            tendonWhat   = "SA load is very high relative to push strength — this can indicate form compensation or excessive SA volume beyond what your structure can safely handle.";
-            tendonFix    = "Reduce SA weight. Focus on push strength development to rebalance the ratio below 1.10.";
+            tendonStatus = "⚠ OVERLOAD RISK"; tendonColor = "#ff4444";
+            tendonWhat = "SA load is very high relative to push strength — this can indicate form compensation or excessive SA volume beyond what your structure can safely handle.";
+            tendonFix  = "Reduce SA weight. Focus on push strength development to rebalance the ratio below 1.10.";
         }
         const tendonDesc = `SA÷Push ratio: ${tendonLoad}${isRings ? " (ring penalty applied)" : ""} (ideal: 0.65–1.10)`;
 
-        // ── METRIC 3: HEIGHT/LEVERAGE PENALTY ──
         const heightCm = h;
         const leverPct = ((torqueFactor - 1) * 100).toFixed(1);
         let leverEffect, leverColor, leverWhat, leverFix;
         if (torqueFactor < 1.05) {
-            leverEffect = "✓ MECHANICAL EDGE";
-            leverColor  = "#00ffcc";
-            leverWhat   = `At ${Math.round(heightCm)}cm, your limb length gives you a natural mechanical advantage for calisthenics skills.`;
-            leverFix    = "Use this advantage — your strength-to-lever ratio means you can progress skills faster than taller athletes.";
+            leverEffect = "✓ MECHANICAL EDGE"; leverColor = "#00ffcc";
+            leverWhat = `At ${Math.round(heightCm)}cm, your limb length gives you a natural mechanical advantage for calisthenics skills.`;
+            leverFix  = "Use this advantage — your strength-to-lever ratio means you can progress skills faster than taller athletes.";
         } else if (torqueFactor < 1.20) {
-            leverEffect = "⚡ SLIGHT TAX";
-            leverColor  = "#ff9900";
-            leverWhat   = `At ${Math.round(heightCm)}cm, you carry a ${leverPct}% leverage penalty. You need slightly more strength than a shorter athlete to achieve the same skill.`;
-            leverFix    = "Compensate with higher relative strength targets in your weighted matrix. Every 5cm above 170cm adds roughly 10–15% more required strength.";
+            leverEffect = "⚡ SLIGHT TAX"; leverColor = "#ff9900";
+            leverWhat = `At ${Math.round(heightCm)}cm, you carry a ${leverPct}% leverage penalty. You need slightly more strength than a shorter athlete to achieve the same skill.`;
+            leverFix  = "Compensate with higher relative strength targets in your weighted matrix. Every 5cm above 170cm adds roughly 10–15% more required strength.";
         } else {
-            leverEffect = "⚠ TALL ATHLETE TAX";
-            leverColor  = "#ff4444";
-            leverWhat   = `At ${Math.round(heightCm)}cm, you carry a ${leverPct}% leverage penalty. Full Planche and Iron Cross require significantly more strength than the standard benchmarks.`;
-            leverFix    = "Accept longer timelines. Target weighted pull-up and dip ratios 20–30% above standard benchmarks to compensate for limb length.";
+            leverEffect = "⚠ TALL ATHLETE TAX"; leverColor = "#ff4444";
+            leverWhat = `At ${Math.round(heightCm)}cm, you carry a ${leverPct}% leverage penalty. Full Planche and Iron Cross require significantly more strength than the standard benchmarks.`;
+            leverFix  = "Accept longer timelines. Target weighted pull-up and dip ratios 20–30% above standard benchmarks to compensate for limb length.";
         }
         const leverDesc = `Torque factor: ${torqueFactor.toFixed(2)}x (penalty: +${leverPct}%)`;
 
-        // ── METRIC 4: CNS / RECOVERY READINESS ──
-        // CNS slider reflects how fresh/recovered the athlete is today.
-        // This directly scales ALL skill scores — a tired athlete performs less.
         const cnsRaw = parseInt(document.getElementById("cns").value) || 10;
         const cnsEff = (cnsVal * 100).toFixed(0);
         let cnsStatus, cnsColor, cnsWhat, cnsFix;
         if (cnsRaw <= 3) {
-            cnsStatus = "⚠ DEPLETED";
-            cnsColor  = "#ff4444";
-            cnsWhat   = "CNS is heavily fatigued. At this level your skill scores are reduced by ~${Math.round((1-cnsVal)*100)}%. Training at max intensity today risks regression and injury.";
-            cnsFix    = "Take a full rest day or do light technique work only. Sleep 8–9 hours. Reassess tomorrow.";
+            cnsStatus = "⚠ DEPLETED"; cnsColor = "#ff4444";
+            cnsWhat = `CNS is heavily fatigued. At this level your skill scores are reduced significantly. Training at max intensity today risks regression and injury.`;
+            cnsFix  = "Take a full rest day or do light technique work only. Sleep 8–9 hours. Reassess tomorrow.";
         } else if (cnsRaw <= 6) {
-            cnsStatus = "⚡ FATIGUED";
-            cnsColor  = "#ff9900";
-            cnsWhat   = `CNS readiness at ${cnsRaw}/10. Your skill output is reduced by ~${Math.round((1-cnsVal)*100)}% from peak. Skill work is possible but don't attempt new personal bests.`;
-            cnsFix    = "Train at 70–80% intensity. Prioritise technique drills over max effort holds. Increase sleep and reduce overall session volume.";
+            cnsStatus = "⚡ FATIGUED"; cnsColor = "#ff9900";
+            cnsWhat = `CNS readiness at ${cnsRaw}/10. Your skill output is reduced by ~${Math.round((1-cnsVal)*100)}% from peak. Skill work is possible but don't attempt new personal bests.`;
+            cnsFix  = "Train at 70–80% intensity. Prioritise technique drills over max effort holds. Increase sleep and reduce overall session volume.";
         } else if (cnsRaw <= 8) {
-            cnsStatus = "✓ READY";
-            cnsColor  = "#00ffcc";
-            cnsWhat   = `CNS at ${cnsRaw}/10 — solid training session ahead. Skill scores reflect ~${cnsEff}% of your true capacity. Safe to train at high intensity.`;
-            cnsFix    = "Normal session. Can attempt skill progressions and personal bests.";
+            cnsStatus = "✓ READY"; cnsColor = "#00ffcc";
+            cnsWhat = `CNS at ${cnsRaw}/10 — solid training session ahead. Skill scores reflect ~${cnsEff}% of your true capacity. Safe to train at high intensity.`;
+            cnsFix  = "Normal session. Can attempt skill progressions and personal bests.";
         } else {
-            cnsStatus = "✓ PEAK";
-            cnsColor  = "#00ffcc";
-            cnsWhat   = `CNS fully fresh at ${cnsRaw}/10. This is your maximum output day. Skill scores reflect full capacity. Ideal for testing new progressions.`;
-            cnsFix    = "Push for new personal bests. Attempt your hardest skill progressions today.";
+            cnsStatus = "✓ PEAK"; cnsColor = "#00ffcc";
+            cnsWhat = `CNS fully fresh at ${cnsRaw}/10. This is your maximum output day. Skill scores reflect full capacity. Ideal for testing new progressions.`;
+            cnsFix  = "Push for new personal bests. Attempt your hardest skill progressions today.";
         }
         const cnsDesc = `CNS at ${cnsRaw}/10 — scaling all skill scores to ${cnsEff}% of maximum`;
 
-        // ── METRIC 5: EXPLOSIVE TRANSFER (MU/PULLUP RATIO) ──
-        // Muscle-ups require explosive pulling power beyond raw strength.
-        // Ratio of MUs to max pullups shows how efficiently strength converts to explosiveness.
         const vPull = parseFloat(document.getElementById("mu").value) || 0;
         const hPull = parseFloat(document.getElementById("pullups").value) || 0;
         const pullEfficiencyRaw = hPull > 0 ? vPull / hPull : 0;
         const pullEfficiency = pullEfficiencyRaw.toFixed(2);
         let expStatus, expColor, expWhat, expFix;
         if (hPull === 0) {
-            expStatus = "— NO DATA";
-            expColor  = "#555";
-            expWhat   = "Enter your max pullup count to calculate explosive transfer.";
-            expFix    = "Fill in Max Pullups in BW Basics.";
+            expStatus = "— NO DATA"; expColor = "#555";
+            expWhat = "Enter your max pullup count to calculate explosive transfer.";
+            expFix  = "Fill in Max Pullups in BW Basics.";
         } else if (vPull === 0) {
-            expStatus = "⚠ NOT TESTED";
-            expColor  = "#ff9900";
-            expWhat   = `You have ${hPull} max pullups but no muscle-ups logged. Either you haven't trained them, or your explosive power hasn't been tested yet.`;
-            expFix    = "Add explosive pull training: high pulls, chest-to-bar, jump muscle-up negatives. Explosive transfer is trainable separately from raw strength.";
+            expStatus = "⚠ NOT TESTED"; expColor = "#ff9900";
+            expWhat = `You have ${hPull} max pullups but no muscle-ups logged. Either you haven't trained them, or your explosive power hasn't been tested yet.`;
+            expFix  = "Add explosive pull training: high pulls, chest-to-bar, jump muscle-up negatives.";
         } else if (pullEfficiencyRaw < 0.25) {
-            expStatus = "⚠ LOW TRANSFER";
-            expColor  = "#ff4444";
-            expWhat   = `${vPull} muscle-ups vs ${hPull} pullups (ratio: ${pullEfficiency}). Your strength isn't converting efficiently to explosive movement. You're strong but slow at the transition point.`;
-            expFix    = "Train explosive pulling: band-assisted fast pullups, chest-to-bar, plyo ring rows. The muscle-up sticking point is a technique and speed issue, not just strength.";
+            expStatus = "⚠ LOW TRANSFER"; expColor = "#ff4444";
+            expWhat = `${vPull} muscle-ups vs ${hPull} pullups (ratio: ${pullEfficiency}). Your strength isn't converting efficiently to explosive movement.`;
+            expFix  = "Train explosive pulling: band-assisted fast pullups, chest-to-bar, plyo ring rows.";
         } else if (pullEfficiencyRaw < 0.40) {
-            expStatus = "⚡ DEVELOPING";
-            expColor  = "#ff9900";
-            expWhat   = `${vPull} muscle-ups vs ${hPull} pullups (ratio: ${pullEfficiency}). Decent transfer but room to improve. Most elite athletes hit 0.50+ ratio.`;
-            expFix    = "Continue muscle-up specific training. Add weighted muscle-ups once you can do 5+ clean reps.";
+            expStatus = "⚡ DEVELOPING"; expColor = "#ff9900";
+            expWhat = `${vPull} muscle-ups vs ${hPull} pullups (ratio: ${pullEfficiency}). Decent transfer but room to improve.`;
+            expFix  = "Continue muscle-up specific training. Add weighted muscle-ups once you can do 5+ clean reps.";
         } else {
-            expStatus = "✓ EFFICIENT";
-            expColor  = "#00ffcc";
-            expWhat   = `${vPull} muscle-ups vs ${hPull} pullups (ratio: ${pullEfficiency}). Strong explosive transfer — your strength converts well into dynamic movement.`;
-            expFix    = "Maintain explosive training. Progress to weighted muscle-ups and ring muscle-ups.";
+            expStatus = "✓ EFFICIENT"; expColor = "#00ffcc";
+            expWhat = `${vPull} muscle-ups vs ${hPull} pullups (ratio: ${pullEfficiency}). Strong explosive transfer.`;
+            expFix  = "Maintain explosive training. Progress to weighted muscle-ups and ring muscle-ups.";
         }
         const expDesc = `Muscle-ups ÷ Max Pullups: ${pullEfficiency} (target: 0.40+)`;
 
-        // ── METRIC 6: ELBOW/JOINT SHEAR ──
-        // Checks BOTH directions: too low SA = elbow not ready, too high = overloading.
         const elbowThreshold = isRings ? 0.9 : 0.8;
         const elbowRatio = sa1RM / push1RM;
         let elbowStatus, elbowColor, elbowWhat, elbowFix;
         if (elbowRatio < 0.55) {
-            elbowStatus = "⚠ SHEAR RISK";
-            elbowColor  = "#ff4444";
-            elbowWhat   = "Straight-arm strength is too low relative to your push capacity. Your elbows and bicep tendons are being asked to hold positions your muscles aren't ready for — high injury risk on skill work.";
-            elbowFix    = "Stop straight-arm skill progressions temporarily. Rebuild SA base with slow, controlled scapular push-ups and support holds before adding load.";
+            elbowStatus = "⚠ SHEAR RISK"; elbowColor = "#ff4444";
+            elbowWhat = "Straight-arm strength is too low relative to your push capacity. High injury risk on skill work.";
+            elbowFix  = "Stop straight-arm skill progressions temporarily. Rebuild SA base with slow scapular push-ups and support holds.";
         } else if (elbowRatio < elbowThreshold) {
-            elbowStatus = "⚡ MONITOR";
-            elbowColor  = "#ff9900";
-            elbowWhat   = `SA-to-push ratio: ${elbowRatio.toFixed(2)}. Elbow stress is elevated${isRings ? " (ring instability adds extra demand)" : ""}. Not dangerous but needs watching as you progress.`;
-            elbowFix    = "Don't rush straight-arm progressions. Add daily elbow-health work: dead hangs, wrist circles, forearm stretching.";
+            elbowStatus = "⚡ MONITOR"; elbowColor = "#ff9900";
+            elbowWhat = `SA-to-push ratio: ${elbowRatio.toFixed(2)}. Elbow stress is elevated${isRings ? " (ring instability adds extra demand)" : ""}. Not dangerous but needs watching.`;
+            elbowFix  = "Don't rush straight-arm progressions. Add daily elbow-health work: dead hangs, wrist circles, forearm stretching.";
         } else if (elbowRatio <= 1.10) {
-            elbowStatus = "✓ NOMINAL";
-            elbowColor  = "#00ffcc";
-            elbowWhat   = `SA-to-push ratio: ${elbowRatio.toFixed(2)}. Elbow loading is within safe range${isRings ? " even accounting for ring instability" : ""}. Connective tissue is handling the demand well.`;
-            elbowFix    = "Continue current loading. Recheck monthly.";
+            elbowStatus = "✓ NOMINAL"; elbowColor = "#00ffcc";
+            elbowWhat = `SA-to-push ratio: ${elbowRatio.toFixed(2)}. Elbow loading is within safe range.`;
+            elbowFix  = "Continue current loading. Recheck monthly.";
         } else {
-            elbowStatus = "⚠ OVERLOAD";
-            elbowColor  = "#ff4444";
-            elbowWhat   = `SA-to-push ratio: ${elbowRatio.toFixed(2)} — very high. This means straight-arm loading is exceeding what your push capacity can balance. Can indicate form breakdown or excessive SA volume.`;
-            elbowFix    = "Reduce SA load and increase press volume to rebalance. Check elbow hyperextension during holds.";
+            elbowStatus = "⚠ OVERLOAD"; elbowColor = "#ff4444";
+            elbowWhat = `SA-to-push ratio: ${elbowRatio.toFixed(2)} — very high. Straight-arm loading is exceeding what your push capacity can balance.`;
+            elbowFix  = "Reduce SA load and increase press volume to rebalance.";
         }
         const elbowDesc = `SA÷Push ratio: ${elbowRatio.toFixed(2)} (safe range: ${elbowThreshold}–1.10)`;
 
-        // ── METRIC 7: OVERALL STRENGTH INDEX ──
-        // Pull1RM and push1RM are BW-relative ratios. Combined they indicate overall
-        // calisthenics capacity. Elite benchmark is pull+push combined > 3.5x BW.
         const relCoeffRaw = pull1RM + push1RM;
         const relCoeff    = relCoeffRaw.toFixed(2);
         const eliteBench  = 3.5;
         const relPct      = Math.min(Math.round((relCoeffRaw / eliteBench) * 100), 100);
         let relStatus, relColor, relWhat, relFix;
         if (relCoeffRaw < 2.2) {
-            relStatus = "⚠ FOUNDATIONAL";
-            relColor  = "#ff4444";
-            relWhat   = `Combined strength index: ${relCoeff}x bodyweight (${relPct}% of elite benchmark). At this level, focus on building base strength before attempting advanced skills.`;
-            relFix    = "Target: pull-up with 30%+ BW added, dip with 50%+ BW added. Build for 3–6 months before attempting Planche or Front Lever.";
+            relStatus = "⚠ FOUNDATIONAL"; relColor = "#ff4444";
+            relWhat = `Combined strength index: ${relCoeff}x bodyweight (${relPct}% of elite benchmark). Focus on building base strength before attempting advanced skills.`;
+            relFix  = "Target: pull-up with 30%+ BW added, dip with 50%+ BW added.";
         } else if (relCoeffRaw < 2.8) {
-            relStatus = "⚡ INTERMEDIATE";
-            relColor  = "#ff9900";
-            relWhat   = `Combined strength index: ${relCoeff}x bodyweight (${relPct}% of elite benchmark). Solid foundation — Tuck Planche and Tuck Front Lever are within reach.`;
-            relFix    = "Push both weighted pull and dip to 50%+ BW added. That's the threshold where advanced skills become achievable.";
+            relStatus = "⚡ INTERMEDIATE"; relColor = "#ff9900";
+            relWhat = `Combined strength index: ${relCoeff}x bodyweight (${relPct}% of elite benchmark). Tuck Planche and Tuck Front Lever are within reach.`;
+            relFix  = "Push both weighted pull and dip to 50%+ BW added.";
         } else if (relCoeffRaw < 3.5) {
-            relStatus = "✓ ADVANCED";
-            relColor  = "#00ffcc";
-            relWhat   = `Combined strength index: ${relCoeff}x bodyweight (${relPct}% of elite benchmark). Strong base — Straddle Planche and Front Lever are realistic targets.`;
-            relFix    = "Continue progressive overload. Full Planche and Iron Cross require pushing this index above 3.5x.";
+            relStatus = "✓ ADVANCED"; relColor = "#00ffcc";
+            relWhat = `Combined strength index: ${relCoeff}x bodyweight (${relPct}% of elite benchmark). Straddle Planche and Front Lever are realistic targets.`;
+            relFix  = "Continue progressive overload. Full Planche and Iron Cross require pushing this index above 3.5x.";
         } else {
-            relStatus = "✓ ELITE";
-            relColor  = "#00ffcc";
-            relWhat   = `Combined strength index: ${relCoeff}x bodyweight — at or above elite benchmark. Full Planche and Iron Cross are structurally achievable at your current strength base.`;
-            relFix    = "Strength is no longer the limiting factor. Focus on skill-specific technique, CNS readiness, and tendon conditioning.";
+            relStatus = "✓ ELITE"; relColor = "#00ffcc";
+            relWhat = `Combined strength index: ${relCoeff}x bodyweight — at or above elite benchmark. Full Planche and Iron Cross are structurally achievable.`;
+            relFix  = "Strength is no longer the limiting factor. Focus on skill-specific technique, CNS readiness, and tendon conditioning.";
         }
         const relDesc = `Pull + Push combined: ${relCoeff}x BW (elite benchmark: ${eliteBench}x BW)`;
 
-        // ── METRIC 8: FORM / KINETIC INTEGRITY ──
-        // Form dropdown: Elite (1.0) = full ROM, no compensation.
-        //                Piked (0.7) = hip compensation, reduces effective output by 30%.
-        // Also cross-references push/pull balance for a fuller picture.
         const formTax = (1 - form) * 100;
-        const pushPullGap = Math.abs(scapularHealthRaw - 1.0) * 100;
         let kineticStatus, kineticColor, kineticWhat, kineticFix;
         if (form < 1.0 && scapularHealthRaw < 0.90) {
-            kineticStatus = "⚠ COMPENSATING";
-            kineticColor  = "#ff4444";
-            kineticWhat   = `Piked form (${formTax.toFixed(0)}% output loss) combined with push/pull imbalance. Both issues together significantly limit skill transfer and increase injury risk.`;
-            kineticFix    = "Fix form first: film yourself from the side. Hip pike is almost always a core/glute weakness. Fix the imbalance with pull-focused training simultaneously.";
+            kineticStatus = "⚠ COMPENSATING"; kineticColor = "#ff4444";
+            kineticWhat = `Piked form (${formTax.toFixed(0)}% output loss) combined with push/pull imbalance. Both issues significantly limit skill transfer.`;
+            kineticFix  = "Fix form first. Hip pike is almost always a core/glute weakness. Fix the imbalance with pull-focused training simultaneously.";
         } else if (form < 1.0) {
-            kineticStatus = "⚡ FORM TAX";
-            kineticColor  = "#ff9900";
-            kineticWhat   = `Piked form detected — you're losing ${formTax.toFixed(0)}% of your effective strength output through hip compensation. Your skill scores are reduced accordingly.`;
-            kineticFix    = "Core and glute work is the fix: hollow body holds, L-sit progressions, glute bridges. Full body tension eliminates the pike.";
+            kineticStatus = "⚡ FORM TAX"; kineticColor = "#ff9900";
+            kineticWhat = `Piked form detected — you're losing ${formTax.toFixed(0)}% of your effective strength output through hip compensation.`;
+            kineticFix  = "Core and glute work: hollow body holds, L-sit progressions, glute bridges.";
         } else if (scapularHealthRaw >= 0.90 && scapularHealthRaw <= 1.10) {
-            kineticStatus = "✓ INTEGRATED";
-            kineticColor  = "#00ffcc";
-            kineticWhat   = "Elite form with balanced push/pull. Force is transferring efficiently through the full kinetic chain with no detected energy leaks.";
-            kineticFix    = "Maintain form standards as you increase load. Film sets regularly — form breaks down as weight increases.";
+            kineticStatus = "✓ INTEGRATED"; kineticColor = "#00ffcc";
+            kineticWhat = "Elite form with balanced push/pull. Force is transferring efficiently through the full kinetic chain.";
+            kineticFix  = "Maintain form standards as you increase load. Film sets regularly.";
         } else {
-            kineticStatus = "✓ GOOD FORM";
-            kineticColor  = "#00ffcc";
-            kineticWhat   = "Full form quality detected. Strength is transferring efficiently through your movement patterns.";
-            kineticFix    = "Keep monitoring form as you increase weighted loads.";
+            kineticStatus = "✓ GOOD FORM"; kineticColor = "#00ffcc";
+            kineticWhat = "Full form quality detected. Strength is transferring efficiently through your movement patterns.";
+            kineticFix  = "Keep monitoring form as you increase weighted loads.";
         }
         const kineticDesc = form < 1.0 ? `Piked form: −${formTax.toFixed(0)}% output` : "Full ROM — no energy leaks detected";
 
-        // Recommendation
         let recommendationHtml = "";
         if (activeGoal !== "None") {
             const skillIndex = skills.findIndex(s => s.name === activeGoal);
@@ -1643,7 +1565,6 @@ function analyze() {
             }
         }
 
-        // Heatmap — BUG FIX #5: use raw numbers for comparisons, not .toFixed() strings
         const shoulders = document.querySelectorAll('#joint-shoulder-l,#joint-shoulder-r');
         const elbows    = document.querySelectorAll('#joint-elbow-l,#joint-elbow-r');
         let riskMsg = "SYSTEMS NOMINAL";
@@ -1654,7 +1575,6 @@ function analyze() {
         const rMsg = document.getElementById("risk-msg");
         if (rMsg) { rMsg.innerText = riskMsg; rMsg.style.color = riskMsg === "SYSTEMS NOMINAL" ? "var(--potential)" : "#ff4444"; }
 
-        // Human-readable profiling card builder
         const createInsight = (title, status, metric, what, fix, color) => `
             <div style="margin-bottom:14px;border:1px solid ${color}22;border-left:3px solid ${color};border-radius:8px;padding:12px 14px;background:rgba(255,255,255,0.02);">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
@@ -1664,81 +1584,63 @@ function analyze() {
                 <div style="font-size:0.65em;color:#888;font-family:monospace;margin-bottom:10px;letter-spacing:0.5px;">${metric}</div>
                 <div style="font-size:0.8em;color:#ddd;line-height:1.6;margin-bottom:8px;">${what}</div>
                 <div style="font-size:0.75em;color:${color};line-height:1.5;padding:8px 10px;background:${color}10;border-radius:5px;">
-                    <span style="font-weight:900;letter-spacing:1px;font-size:0.85em;">FIX → </span>${fix}
+                    <span style="font-weight:900;letter-spacing:1px;font-size:0.85em;">FIX &#8594; </span>${fix}
                 </div>
             </div>`;
 
         let auditHtml = `<h3 style="font-size:0.75em;letter-spacing:3px;color:var(--primary);margin-bottom:16px;border-bottom:1px solid #333;padding-bottom:10px;">BIOMECHANICAL PROFILING</h3>`;
-        auditHtml += createInsight("Push/Pull Balance",       scapStatus,  scapDesc,    scapWhat,    scapFix,    scapColor);
-        auditHtml += createInsight("Tendon Readiness",        tendonStatus,tendonDesc,  tendonWhat,  tendonFix,  tendonColor);
-        auditHtml += createInsight("Height Leverage",         leverEffect, leverDesc,   leverWhat,   leverFix,   leverColor);
-        auditHtml += createInsight("CNS & Recovery",          cnsStatus,   cnsDesc,     cnsWhat,     cnsFix,     cnsColor);
-        auditHtml += createInsight("Explosive Transfer",      expStatus,   expDesc,     expWhat,     expFix,     expColor);
-        auditHtml += createInsight("Elbow & Joint Health",    elbowStatus, elbowDesc,   elbowWhat,   elbowFix,   elbowColor);
-        auditHtml += createInsight("Overall Strength Index",  relStatus,   relDesc,     relWhat,     relFix,     relColor);
-        auditHtml += createInsight("Form & Kinetic Integrity",kineticStatus,kineticDesc,kineticWhat, kineticFix, kineticColor);
+        auditHtml += createInsight("Push/Pull Balance",       scapStatus,   scapDesc,    scapWhat,    scapFix,    scapColor);
+        auditHtml += createInsight("Tendon Readiness",        tendonStatus, tendonDesc,  tendonWhat,  tendonFix,  tendonColor);
+        auditHtml += createInsight("Height Leverage",         leverEffect,  leverDesc,   leverWhat,   leverFix,   leverColor);
+        auditHtml += createInsight("CNS & Recovery",          cnsStatus,    cnsDesc,     cnsWhat,     cnsFix,     cnsColor);
+        auditHtml += createInsight("Explosive Transfer",      expStatus,    expDesc,     expWhat,     expFix,     expColor);
+        auditHtml += createInsight("Elbow & Joint Health",    elbowStatus,  elbowDesc,   elbowWhat,   elbowFix,   elbowColor);
+        auditHtml += createInsight("Overall Strength Index",  relStatus,    relDesc,     relWhat,     relFix,     relColor);
+        auditHtml += createInsight("Form & Kinetic Integrity",kineticStatus,kineticDesc, kineticWhat, kineticFix, kineticColor);
 
         document.getElementById("aiFeedback").innerHTML = auditHtml + recommendationHtml;
-
-
-
         document.getElementById("barContainer").innerHTML = barHtml;
         radarChart.data.datasets[0].data = curScores;
         radarChart.data.datasets[1].data = potScores;
         radarChart.update('none');
 
-        // Render skill gap table
         renderSkillGapTable(pull1RM, push1RM, sa1RM, torqueFactor, bw, loadConv);
 
-        // Share buttons always visible after auto-run
         const sb = document.getElementById("shareBtns");
         if (sb) sb.style.display = "flex";
 
     } catch (err) { console.error("Analysis Error:", err); }
 }
 
-
-/* ════════════════════════════════════════
-   SKILL GAP TABLE
-════════════════════════════════════════ */
 function renderSkillGapTable(pull1RM, push1RM, sa1RM, torqueFactor, bw, loadConv) {
     const tbody = document.getElementById('skillGapBody');
     if (!tbody) return;
-
     const loadUnit = document.getElementById('loadUnit').value;
     const u = loadUnit;
 
     const rows = skills.map(s => {
-        // What user currently has (BW-relative ratios)
         const haveArr = [];
         if (s.l > 0) haveArr.push({ name: 'Pull', have: pull1RM, need: s.l * torqueFactor });
         if (s.p > 0) haveArr.push({ name: 'Push', have: push1RM, need: s.p * torqueFactor });
         if (s.s > 0) haveArr.push({ name: 'SA',   have: sa1RM,   need: s.s * torqueFactor });
 
-        // Weakest vector is the bottleneck
         const bottleneck = haveArr.reduce((a, b) => (a.have / a.need) < (b.have / b.need) ? a : b);
         const pct = Math.min(Math.round((bottleneck.have / bottleneck.need) * 100), 100);
-
-        // Current added plate the user is lifting
         const currentPlateKg = Math.max(0, (bottleneck.have * bw) - bw) / loadConv;
-
-        // Next milestone = next 10% step toward the goal (capped at 100%)
         const nextPct     = Math.min(pct + 10, 100);
         const nextRatio   = bottleneck.need * (nextPct / 100);
         const nextPlateKg = Math.max(0, (nextRatio * bw) - bw) / loadConv;
 
-        // Readiness colour + label
         let color, label;
         if (pct >= 90)      { color = '#00ffcc'; label = 'READY'; }
         else if (pct >= 65) { color = '#4c6fff'; label = 'CLOSE'; }
         else if (pct >= 40) { color = '#ff9900'; label = 'BUILDING'; }
         else                 { color = '#ff4444'; label = 'EARLY'; }
 
-        // Next target text — what to aim for in the gym
         const moveName = { Pull: 'weighted pull-up', Push: 'weighted dip', SA: 'SA raise' }[bottleneck.name] || bottleneck.name;
         let nextTargetText;
         if (pct >= 100) {
-            nextTargetText = '✓ Strength met';
+            nextTargetText = '&#10003; Strength met';
         } else if (nextPlateKg <= currentPlateKg + 0.5) {
             nextTargetText = `Maintain +${currentPlateKg.toFixed(0)}${u} ${moveName}`;
         } else {
@@ -1763,20 +1665,15 @@ function renderSkillGapTable(pull1RM, push1RM, sa1RM, torqueFactor, bw, loadConv
     tbody.innerHTML = rows.join('');
 }
 
-/* ════════════════════════════════════════
-   PROGRESS LINE CHART
-════════════════════════════════════════ */
 let progressChartInstance = null;
 
 function renderProgressChart() {
-    const logs = JSON.parse(localStorage.getItem('caliLogs') || '[]').reverse(); // oldest first
+    const logs = JSON.parse(localStorage.getItem('caliLogs') || '[]').reverse();
     const metric = document.getElementById('progressMetric')?.value || 'pull';
     const emptyMsg = document.getElementById('progressEmpty');
     const canvas = document.getElementById('progressChart');
     if (!canvas) return;
 
-    // Extract 1RM values from stored log strings like "25kg x 5 (91.7kg)"
-    // Format: "WEIGHTunit x REPS (1RM_VAL unit)"
     function extract1RM(str) {
         if (!str || str === '---') return null;
         const match = str.match(/\(([0-9.]+)/);
@@ -1823,28 +1720,16 @@ function renderProgressChart() {
             maintainAspectRatio: false,
             plugins: {
                 legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: ctx => ` ${ctx.parsed.y.toFixed(1)} kg total 1RM`
-                    }
-                }
+                tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y.toFixed(1)} kg total 1RM` } }
             },
             scales: {
-                x: {
-                    ticks: { color: '#555', font: { size: 10, family: 'monospace' } },
-                    grid: { color: '#1a1a2a' }
-                },
-                y: {
-                    ticks: { color: '#555', font: { size: 10, family: 'monospace' } },
-                    grid: { color: '#1a1a2a' },
-                    title: { display: true, text: 'Total 1RM (kg)', color: '#555', font: { size: 10 } }
-                }
+                x: { ticks: { color: '#555', font: { size: 10, family: 'monospace' } }, grid: { color: '#1a1a2a' } },
+                y: { ticks: { color: '#555', font: { size: 10, family: 'monospace' } }, grid: { color: '#1a1a2a' }, title: { display: true, text: 'Total 1RM (kg)', color: '#555', font: { size: 10 } } }
             }
         }
     });
 }
 
-/* ── Cookie consent ── */
 function setCookie(n,v,d){ const dt=new Date(); dt.setTime(dt.getTime()+(d*864e5)); document.cookie=n+"="+v+"; expires="+dt.toUTCString()+"; path=/"; }
 function getCookie(n){ const eq=n+"=",ca=document.cookie.split(';'); for(let c of ca){ c=c.trim(); if(c.indexOf(eq)===0) return c.substring(eq.length); } return null; }
 function showBanner(){ document.getElementById('cookie-banner').style.bottom='0'; }
@@ -1866,7 +1751,6 @@ document.getElementById('reject-cookies').onclick=()=>{ setCookie('cookie_consen
 
 document.addEventListener('DOMContentLoaded', () => {
     displayNotes();
-    // Auto-run analysis immediately on page load
     isSystemReady = true;
     initChart();
     analyze();
