@@ -9,170 +9,183 @@
       gtag('config', 'G-CDL3F645R2');
     </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js?client=ca-pub-1230203526545088" crossorigin="anonymous"></script>
-    
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Complete One-Arm Pull-Up Guide | CaliCalculator</title>
-    
+    <title>The One-Arm Pull-Up: What the Guides Don't Warn You About | CaliCalculator</title>
+
     <link rel="canonical" href="https://www.calicalculator.com/blog/one-arm-pullup-guide.html" />
-    <meta name="description" content="A 3-Phase plan to master the one-arm pull-up. Detailed progressions, form cues, and injury prevention.">
-    
+    <meta name="description" content="A real 3-phase guide to your first one-arm pull-up — including the elbow problem nobody talks about and why most people plateau before they start.">
+
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; background-color: #000000; color: #ffffff; max-width: 800px; margin: 0 auto; padding: 20px; }
-        
-        .planche-header { text-align: center; margin-bottom: 30px; }
-        .hero-image { display: block; margin: 0 auto; max-width: 100%; height: auto; }
-        
-        h1, h2, h3 { color: #3498db; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 30px; }
-        
-        .phase-container { background: #0a0a0a; padding: 25px; border: 1px solid #222; border-radius: 8px; margin-bottom: 30px; border-top: 4px solid #3498db; }
-        .phase-tag { color: #3498db; font-weight: bold; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; }
-
-        .faq-section { margin-top: 50px; padding: 25px; border: 1px solid #222; border-radius: 8px; background-color: #080808; }
-        .faq-q { color: #3498db; font-weight: bold; margin-top: 20px; display: block; border-left: 3px solid #3498db; padding-left: 10px; }
-        .faq-a { margin-bottom: 10px; color: #ddd; }
-
+        :root { --primary: #3498db; --bg: #000000; --card: #111111; --text: #eeeeee; --accent: #f1c40f; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.7; background-color: var(--bg); color: var(--text); max-width: 850px; margin: 0 auto; padding: 20px; }
+        h1, h2, h3 { color: var(--primary); border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 35px; }
+        h3 { font-size: 1.1rem; color: var(--accent); border-bottom: none; margin-top: 25px; }
+        p { margin-bottom: 1.2em; }
+        .tech-note { color: #888; font-size: 0.9rem; border-left: 2px solid #333; padding-left: 15px; margin: 15px 0; }
+        .aesthetic-tip { background: #0a0a0a; padding: 20px; border: 1px solid var(--primary); border-radius: 8px; margin: 25px 0; color: #ffffff; font-style: italic; position: relative; }
+        .phase-block { background: #0d0d0d; border: 1px solid #222; border-left: 3px solid var(--primary); border-radius: 8px; padding: 20px 25px; margin: 25px 0; }
+        .phase-block h3 { color: var(--primary); margin-top: 0; border: none; font-size: 1.15rem; }
+        .phase-label { display: inline-block; background: var(--primary); color: #000; font-size: 0.75rem; font-weight: bold; letter-spacing: 1px; padding: 3px 10px; border-radius: 4px; margin-bottom: 10px; }
+        .warning-block { background: #120000; border: 1px solid #5c1111; border-radius: 8px; padding: 18px 22px; margin: 25px 0; }
+        .warning-block p { margin: 0; color: #f7a8a8; font-size: 0.95rem; }
+        .warning-block strong { color: #ff6b6b; }
+        .faq-section { margin-top: 40px; padding: 25px; background: #080808; border-radius: 12px; border: 1px solid #222; }
+        .faq-q { color: var(--primary); font-weight: bold; margin-top: 20px; display: block; }
         .footer-nav { margin-top: 50px; text-align: center; border-top: 1px solid #333; padding-top: 20px; }
         .footer-nav a { color: #777; text-decoration: none; margin: 0 10px; font-size: 0.9em; }
-        
-        strong { color: #3498db; }
-        .check-mark { color: #2ecc71; }
-        ul { padding-left: 20px; }
-        li { margin-bottom: 8px; }
+        strong { color: var(--primary); }
+        .highlight { color: var(--accent); font-weight: bold; }
+        ul li { margin-bottom: 8px; }
+
+        /* Phase timeline */
+        .phase-timeline { display: flex; gap: 0; margin: 30px 0; }
+        .phase-step { flex: 1; padding: 15px; background: #0d0d0d; border: 1px solid #1e1e1e; text-align: center; }
+        .phase-step:first-child { border-radius: 8px 0 0 8px; border-right: none; }
+        .phase-step:last-child { border-radius: 0 8px 8px 0; border-left: none; }
+        .phase-step .num { font-size: 1.8rem; font-weight: bold; color: var(--primary); display: block; }
+        .phase-step .label { font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .phase-step .title { font-size: 0.95rem; color: var(--text); margin-top: 5px; }
     </style>
 </head>
 <body>
 
-    <header class="planche-header">
-        <img src="../planche.png" alt="One Arm Pull Up Silhouette" class="hero-image">
-        <h1>The Complete One-Arm Pull-Up Guide</h1>
-        <h3>A 3-Phase Plan to Build Toward Your First Strict One-Arm Pull-Up</h3>
+    <header>
+        <p style="color: var(--primary); font-weight: bold; letter-spacing: 2px; margin-bottom: 5px;">STRENGTH PROGRESSION SERIES</p>
+        <h1 style="font-size: 2.4rem; line-height: 1.2; border: none;">The One-Arm Pull-Up: What the Guides Don't Warn You About</h1>
         <p><em style="color: #888;">By CaliCalculator Team • March 2026</em></p>
     </header>
 
     <article>
-        <p>The one-arm pull-up is one of the most impressive feats of upper body strength. It demands exceptional pulling power, grip strength, shoulder stability, core control, and tendon resilience. Unlike regular pull-ups, you cannot rely on symmetrical force distribution. Every weakness gets exposed.</p>
-        
-        <p>This guide breaks the journey into three logical phases:</p>
-        <ul>
-            <li><strong>Phase 1:</strong> Baseline Strength</li>
-            <li><strong>Phase 2:</strong> Assisted & Eccentric Development</li>
-            <li><strong>Phase 3:</strong> Specific One-Arm Practice</li>
-        </ul>
 
-        <h2>Warm-Up Routine (Do This Before Every Session)</h2>
-        <p>Never attempt heavy weighted pull-ups or one-arm work cold. Your elbows and shoulders must be prepared.</p>
-        <ul>
-            <li><strong>General Warm-Up (5 mins):</strong> Jump rope, Arm circles, Band pull-aparts (x20), Scapular push-ups (x15).</li>
-            <li><strong>Scapular Pull-Ups (2×10):</strong> Pull shoulder blades down and back. Do NOT bend elbows.</li>
-            <li><strong>Dead Hang (30s):</strong> Activate grip and decompress shoulders.</li>
-            <li><strong>Light Pull-Ups (2×5):</strong> Smooth, controlled reps.</li>
-        </ul>
+        <p>Let me be upfront: I spent about eight months convinced I was "close" to a one-arm pull-up before I actually understood what close meant.</p>
 
-        <div class="phase-container">
-            <span class="phase-tag">Phase 1: Baseline Strength</span>
-            <h3>Goal: Build raw pulling strength.</h3>
-            <p><strong>Standard:</strong> 5×5 Weighted Pull-Ups with 25–30 kg (55–66 lbs) OR 50% of bodyweight.</p>
-            <p><strong>Exercise: Weighted Pull-Ups (5×5)</strong></p>
-            <ul>
-                <li>"Pull elbows to your ribs."</li>
-                <li>"Chest tall, core tight."</li>
-                <li>"Control the descent (2–3 seconds)."</li>
-            </ul>
+        <p>I had 15 clean pull-ups. I was training weighted. I felt strong. And then I'd grab the bar with one hand and go absolutely nowhere. My elbow would flare, my body would spin like a helicopter, and I'd drop off the bar wondering if I was just built wrong.</p>
+
+        <p>I wasn't. I was just missing a few things nobody had told me clearly. This guide is the one I wish I'd had.</p>
+
+        <h2>First, Are You Actually Ready?</h2>
+
+        <p>Before anything else — be honest with yourself here, because most people aren't.</p>
+
+        <p>The real prerequisite isn't "being able to do a lot of pull-ups." It's <strong>weighted pull-ups.</strong> Specifically, you want to be able to do 5 sets of 5 reps with around 25–30kg (55–66lbs) added, or roughly half your bodyweight hanging from a belt.</p>
+
+        <p>If that sounds insane, that's okay. It's supposed to. The one-arm pull-up is a maximal strength feat. Your body needs a very large reserve of pulling strength before it can express that much force through a single arm and shoulder. Rushing past this phase is why most people end up with medial elbow pain six weeks in.</p>
+
+        <p class="tech-note"><strong>Body weight matters more than people like to admit.</strong> Every extra kilo of body fat is extra work for that one arm. This isn't about aesthetics — it's physics. If you're carrying significant excess weight, losing some of it will do more for your one-arm pull-up than any assistance exercise.</p>
+
+        <h2>The Three Phases</h2>
+
+        <div class="phase-timeline">
+            <div class="phase-step">
+                <span class="num">1</span>
+                <span class="label">Phase One</span>
+                <div class="title">Build the Engine</div>
+            </div>
+            <div class="phase-step">
+                <span class="num">2</span>
+                <span class="label">Phase Two</span>
+                <div class="title">One Side at a Time</div>
+            </div>
+            <div class="phase-step">
+                <span class="num">3</span>
+                <span class="label">Phase Three</span>
+                <div class="title">Actual Attempts</div>
+            </div>
         </div>
 
-        
-
-        <div class="phase-container">
-            <span class="phase-tag">Phase 2: Assisted & Eccentric Development</span>
-            <h3>Goal: Unilateral development.</h3>
-            <p><strong>Exercise: Assisted One-Arm Pull-Ups (3×10 total reps)</strong></p>
-            <ul>
-                <li>Use resistance bands for help.</li>
-                <li>"Keep shoulder packed down."</li>
-                <li>"Minimal rotation."</li>
-            </ul>
-            <p><strong>Exercise: One-Arm Negatives (2 Sets per Arm)</strong></p>
-            <ul>
-                <li>5–8 second descent from chin-over-bar position.</li>
-                <li>"Fight gravity. Slow is strength."</li>
-            </ul>
+        <div class="phase-block">
+            <span class="phase-label">PHASE 1</span>
+            <h3>Build the Engine</h3>
+            <p>This is weighted pull-up work. Nothing fancy.</p>
+            <p><strong>5×5 weighted pull-ups</strong>, two to three times a week. Use a dip belt, not a backpack — weight needs to hang clean. Grip width should be close to shoulder-width, not wide, because you're training for a single-arm line of pull eventually.</p>
+            <p>One thing most people skip: <strong>control the descent.</strong> Two to three seconds down. Every time. The eccentric portion of the pull-up builds the tendon resilience you'll need later, and it's where most of the real strength gains happen. Going up fast and dropping down is ego training, not productive training.</p>
+            <p style="margin-bottom:0;">Do this phase until the standard is met. It might take three months. It might take six. Don't move on until you're there.</p>
         </div>
 
-        <div class="phase-container">
-            <span class="phase-tag">Phase 3: Specific One-Arm Practice</span>
-            <h3>Goal: Maximal neural effort.</h3>
-            <p><strong>Exercise: One-Arm Pull-Up Attempts (2–3 per arm)</strong></p>
-            <ul>
-                <li>Rest 2–3 minutes between attempts.</li>
-                <li>Grip hard and engage scapula first.</li>
-            </ul>
-            <p><strong>Exercise: Assisted Chin-Ups (3×5)</strong></p>
-            <ul>
-                <li>Palm facing you. Builds critical elbow flexor strength.</li>
-            </ul>
+        <div class="phase-block">
+            <span class="phase-label">PHASE 2</span>
+            <h3>One Side at a Time</h3>
+            <p>This is where it gets interesting and also where most people get hurt if they're impatient.</p>
+            <p><strong>Assisted one-arm pull-ups with a resistance band</strong> are your main tool here. The band takes a percentage of your weight on the way up, letting you feel the unilateral movement pattern without maxing out your tendons on day one. Start with a heavier band and work down over weeks and months.</p>
+            <p>Pair this with <strong>one-arm negatives.</strong> Jump or step to chin-over-bar position, take one hand off, and lower yourself as slowly as possible. Five to eight seconds is the goal. This is brutally effective and brutally hard. Two sets per arm is enough — these are high-stress on the elbow and you don't need more volume, you need more quality.</p>
+            <p style="margin-bottom:0;">Two things to watch for: rotation and shoulder shrugging. Your body will want to spin to compensate. Fight it. Squeeze your glutes, make a fist with your non-working hand, stay as square as you can. And keep the working shoulder packed down — if it starts rising toward your ear, you've lost control of the movement.</p>
         </div>
 
-        <h2>Technical Mastery: Form Breakdown</h2>
+        <div class="phase-block">
+            <span class="phase-label">PHASE 3</span>
+            <h3>Actual Attempts</h3>
+            <p>This phase requires a mindset shift. You're not training volume anymore — you're training your nervous system to fire maximally through a single arm.</p>
+            <p><strong>Two to three attempts per arm, per session. That's it.</strong> Full rest between attempts — at least two minutes, probably three. Treat each one like a max effort lift, because it is.</p>
+            <p style="margin-bottom:0;">The attempt itself: grip hard before you pull, depress the scapula first, then initiate the pull from the lat. Don't yank. The first few inches are the hardest — if you lose the shoulder position in the first inch, the rep is over. Most people get their first one-arm pull-up and it looks ugly. That's fine. You can clean it up once you can do it at all.</p>
+        </div>
+
+        <h2>The Elbow Problem Nobody Warns You About</h2>
+
+        <p>I want to spend more time on this than most guides do, because it's the thing that kills progress for most people.</p>
+
+        <p>Medial epicondyle pain — "golfer's elbow" — is extremely common in one-arm pull-up training. It's an overuse injury to the tendons on the inside of your elbow, and it does not go away if you train through it. It gets worse.</p>
+
+        <div class="warning-block">
+            <p><strong>Signs you're heading there:</strong> a dull ache on the inside of the elbow after training, sensitivity to touch on the bony inner part, pain when you flex your wrist or pronate your forearm.<br><br>If you feel this, deload immediately. Two weeks of backing off now is better than four months off later.</p>
+        </div>
+
+        <p>Prevention is better than treatment: add <strong>forearm extensor work</strong> (reverse curls, wrist roller) from the beginning, not after it hurts. And don't train one-arm work more than three times a week. The tendons need recovery time that muscles don't.</p>
+
+        <h2>The Rotation Problem (And the Fix)</h2>
+
+        <p>When you pull with one arm, your body naturally wants to rotate toward that arm. It's just physics — the force is asymmetrical. Controlling that rotation is a skill in itself.</p>
+
+        <p>The fix isn't just "core tightness," though that helps. It's <strong>full-body tension.</strong> Before you pull:</p>
         <ul>
-            <li><strong>Scapular Engagement:</strong> Always shoulder depression first.</li>
-            <li><strong>Core Stability:</strong> Tight abs prevent excessive twisting.</li>
-            <li><strong>Grip Strength:</strong> Crush the bar; weak grip limits output.</li>
+            <li>Make a tight fist with your non-working hand</li>
+            <li>Squeeze your glutes hard</li>
+            <li>Brace your abs like you're about to take a punch</li>
         </ul>
 
-        <h2>Injury Prevention Guide</h2>
-        <p>One-arm pull-up training stresses: Elbows (medial epicondyle), Biceps tendon, Rotator cuff, and Lats.</p>
-        <ul>
-            <li><span class="check-mark">✔</span> Train 2–3 times per week max</li>
-            <li><span class="check-mark">✔</span> Add forearm extensor work (reverse curls)</li>
-            <li><span class="check-mark">✔</span> Do light band tricep pushdowns for elbow balance</li>
-            <li><span class="check-mark">✔</span> If pain persists, deload immediately</li>
-        </ul>
+        <p>The whole body stiffens into a single unit, and the rotation has less to work with. This is also why people who deadlift or do heavy barbell work sometimes find rotation easier to control — they're already used to generating full-body tension on demand.</p>
 
-        <h2>How Long Does It Take?</h2>
-        <p>If you hit the 5×5 weighted standard and weigh under 90 kg (198 lbs), you may achieve a one-arm pull-up in <strong>4–8 months</strong>. Heavier athletes may take longer.</p>
+        <div class="aesthetic-tip">
+            "The one-arm pull-up is one of those goals that will teach you as much about <strong>patience and injury management</strong> as it does about strength. You'll probably stall. You'll probably have to take time off at some point. You'll definitely underestimate how long it takes."
+        </div>
+
+        <h2>Realistic Timeline</h2>
+
+        <p>If you hit the weighted pull-up standard and you're under 90kg (198lbs), most people are looking at <span class="highlight">four to eight months</span> of consistent Phase 2 and 3 work before the first successful rep. Heavier athletes or people with existing elbow issues can expect longer.</p>
+
+        <p>The honest answer is: it varies enormously. Some people get it in three months, some take two years. The difference is almost never talent — it's usually consistency, injury management, and whether they actually did Phase 1 properly instead of skipping ahead.</p>
 
         <section class="faq-section">
-            <h2 style="border:none; margin-top:0;">FAQ: One-Arm Pull-Up Training</h2>
-            
-            <span class="faq-q">1. Should I train with a Pull-Up (overhand) or Chin-Up (underhand) grip?</span>
-            <p class="faq-a">Most athletes find the Chin-Up (supinated) grip easier initially because it allows more bicep recruitment. However, the One-Arm Pull-Up (pronated/neutral) is considered the "true" standard. Training both helps build overall joint resilience.</p>
+            <h2 style="border:none; margin-top:0;">Questions People Actually Ask</h2>
 
-            <span class="faq-q">2. Why does my body spin uncontrollably during the pull?</span>
-            <p class="faq-a">Spinning is caused by a lack of rotational core stability and lats engagement. To fix this, focus on squeezing your glutes and your non-working arm's fist during the pull to create full-body tension.</p>
+            <span class="faq-q">Chin-up or pull-up grip?</span>
+            <p>Chin-up (palm facing you) is easier to learn on because the bicep contributes more. But the pull-up grip is the real standard. Train both, get comfortable with both. They build slightly different things and both are worth having.</p>
 
-            <span class="faq-q">3. Can I use a towel or a second hand on the wrist for assistance?</span>
-            <p class="faq-a">Yes, "Archer Pull-ups" or holding a towel with the non-working hand are valid progressions. However, resistance bands provide more consistent, measurable scaling for Phase 2 and 3.</p>
+            <span class="faq-q">Should I use chalk?</span>
+            <p>Yes. A slipping grip causes your nervous system to reduce force output to protect you from falling. This isn't a mental thing — it's a reflexive safety mechanism. Chalk removes that limiting factor entirely.</p>
 
-            <span class="faq-q">4. I have "Golfer's Elbow" (inner elbow pain). Should I keep training?</span>
-            <p class="faq-a">No. One-arm work puts extreme torque on the medial epicondyle. If you feel sharp pain, stop immediately. Focus on "Phase 1" weighted pull-ups or high-volume rows until the connective tissue heals.</p>
+            <span class="faq-q">Can I train this and Front Lever on the same day?</span>
+            <p>You can, but don't max out on both. Pick one to prioritize each session and treat the other as secondary work. Both are high-intensity for the tendons and connective tissue has a finite recovery budget.</p>
 
-            <span class="faq-q">5. Does grip width on the weighted pull-up matter for OAP?</span>
-            <p class="faq-a">Yes. Training weighted pull-ups with a narrower grip (closer to shoulder width) better mimics the line of pull needed for a one-arm execution.</p>
+            <span class="faq-q">What if I plateau for months?</span>
+            <p>Reassess your weighted pull-up numbers first. Most plateaus in one-arm training come from not having enough base strength — not from a problem with one-arm specific work. Go back and get stronger before adding more one-arm volume.</p>
 
-            <span class="faq-q">6. How important is body fat percentage for this move?</span>
-            <p class="faq-a">Extremely important. Because this is a pure relative strength feat, every extra pound of non-functional mass (body fat) exponentially increases the difficulty of the lift.</p>
-
-            <span class="faq-q">7. Should I use chalk?</span>
-            <p class="faq-a">Absolutely. Your grip is the "contact point" for the entire chain of force. If your hand is slipping even slightly, your nervous system will "downregulate" (reduce) the power sent to your lats to protect you from falling.</p>
-
-            <span class="faq-q">8. Can I train OAP and Front Lever on the same day?</span>
-            <p class="faq-a">You can, as they are both pulling movements. However, since both are high-intensity for the tendons, ensure you aren't doing max effort on both in the same session. Alternate which one you prioritize first.</p>
-        </section>
-
-        <section style="margin: 60px 0; text-align: center; padding: 40px; background: #080808; border: 1px solid #111; border-radius: 8px;">
-            <h3 style="color: #fff; margin-bottom: 10px;">Check Your 1RM Standard</h3>
-            <p style="color: #888; margin-bottom: 25px; font-size: 0.9em;">Are you strong enough for Phase 2? Calculate your 1RM Total Load.</p>
-            <a href="../calc-pullup.html" style="display: inline-block; text-decoration: none !important; color: #4c6fff; border: 1px solid #4c6fff; padding: 12px 24px; font-family: monospace; font-size: 0.75em; letter-spacing: 3px; font-weight: bold; border-radius: 4px; text-transform: uppercase;">1 REP MAX CALCULATOR</a>
+            <span class="faq-q">Is bodyweight important?</span>
+            <p><span class="highlight">Extremely.</span> This is a pure relative strength feat. Every extra pound of non-functional mass exponentially increases difficulty. Getting to 10–13% body fat while maintaining strength will do more for your first rep than almost any training tweak.</p>
         </section>
 
     </article>
 
+    <p style="margin-top:30px; color:#666; font-size:0.9rem;">For supplementary reading on tendon adaptation and connective tissue training, see Bohm et al. (2015): <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4415314/" target="_blank" rel="noopener noreferrer" style="color:var(--primary);">"Human tendon adaptation in response to mechanical loading"</a>, <em>Skeletal Muscle</em>.</p>
+
     <footer class="footer-nav">
-        <p>© 2026 CaliCalculator. One-Arm Strength Mastery.</p>
-        <a href="../index.html">Home</a> | 
-        <a href="../faq.html">FAQ</a> | 
-        <a href="../about.html">About Us</a>
+        <p></p>
+        <a href="../index.html">Home</a> |
+        <a href="../faq.html">FAQ</a> |
+        <a href="../about.html">About Us</a> |
+        <a href="../privacy-policy.html">Privacy Policy</a> |
+        <a href="../terms.html">Terms</a>
     </footer>
 
 </body>
