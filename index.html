@@ -1308,7 +1308,7 @@ function analyze() {
         if (!document.getElementById("goalSelect")) {
             skillPanel.innerHTML = `
                 <div style="margin-bottom:20px;">
-                    <label style="color:var(--primary);font-size:0.7em;letter-spacing:2px;">MISSION_TARGET</label>
+                    <label style="color:var(--primary);font-size:0.7em;letter-spacing:2px;">MISSION TARGET</label>
                     <select id="goalSelect" onchange="analyze()" style="background:#111;color:#fff;width:100%;border:1px solid #333;padding:10px;border-radius:5px;margin-top:5px;">
                         <option value="None">No Active Goal</option>
                         ${skills.map(s => `<option value="${s.name}">${s.name}</option>`).join('')}
