@@ -32,10 +32,12 @@
   <url><loc>https://www.calicalculator.com/blog/attractive-physique.html</loc><priority>0.8</priority></url>
   <url><loc>https://www.calicalculator.com/blog/calisthenics-diet.html</loc><priority>0.8</priority></url>
   <url><loc>https://www.calicalculator.com/blog/lat-pulldown-truth.html</loc><priority>0.8</priority></url>
-
-  <url><loc>https://www.calicalculator.com/blog/about.html</loc><priority>0.5</priority></url>
-  <url><loc>https://www.calicalculator.com/blog/contact.html</loc><priority>0.5</priority></url>
-  <url><loc>https://www.calicalculator.com/blog/privacy.html</loc><priority>0.3</priority></url>
-  <url><loc>https://www.calicalculator.com/blog/terms.html</loc><priority>0.3</priority></url>
+ <url><loc>https://www.calicalculator.com/blog/one-arm-pullup-guide.html</loc><priority>0.8</priority></url>
+<url><loc>https://www.calicalculator.com/blog/front-lever.html</loc><priority>0.8</priority></url>
+  
+  <url><loc>https://www.calicalculator.com/about.html</loc><priority>0.5</priority></url>
+  <url><loc>https://www.calicalculator.com/contact.html</loc><priority>0.5</priority></url>
+  <url><loc>https://www.calicalculator.com/privacy-policy.html</loc><priority>0.3</priority></url>
+  <url><loc>https://www.calicalculator.com/terms.html</loc><priority>0.3</priority></url>
 
 </urlset>
