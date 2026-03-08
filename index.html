@@ -528,6 +528,10 @@
             .sc-grid { grid-template-columns: 1fr 1fr; }
         }
         @media (min-width: 768px) { .glossary-grid { gap: 30px; } }
+    @keyframes prPop {
+        0%   { transform:translateX(-50%) scale(0.5); opacity:0; }
+        100% { transform:translateX(-50%) scale(1);   opacity:1; }
+    }
     </style>
 </head>
 
@@ -567,9 +571,25 @@
     <h1 style="text-align:center; color:var(--primary); font-size:1.4em; letter-spacing:4px; margin-bottom:4px;">
         CALI-BIOTECH
     </h1>
-    <p style="text-align:center; color:#888; font-size:0.75em; letter-spacing:2px; margin-bottom:20px; font-family:monospace;">
+    <p style="text-align:center; color:#888; font-size:0.75em; letter-spacing:2px; margin-bottom:8px; font-family:monospace;">
         FREE CALISTHENICS SKILL CALCULATOR — PLANCHE · FRONT LEVER · IRON CROSS
     </p>
+    <p style="text-align:center; color:#aaa; font-size:0.8em; margin-bottom:6px; max-width:480px; margin-left:auto; margin-right:auto; line-height:1.6;">
+        Enter your weighted lifts below to instantly see how close you are to planche, front lever, iron cross and more — plus exactly what to train today.
+    </p>
+    <div style="text-align:center; margin-bottom:18px;">
+        <label style="font-size:0.65em;color:#666;letter-spacing:2px;display:block;margin-bottom:6px;">WHAT'S YOUR GOAL SKILL?</label>
+        <select id="goalSelectTop" onchange="syncGoalSelectors('goalSelectTop'); if(isSystemReady) analyze();"
+                style="background:#111;color:var(--primary);border:1px solid var(--primary);padding:8px 16px;font-family:monospace;border-radius:6px;font-size:0.85em;cursor:pointer;">
+            <option value="None">— Pick a skill —</option>
+            <option value="Straddle Planche">Straddle Planche</option>
+            <option value="Full Planche">Full Planche</option>
+            <option value="Front Lever">Front Lever</option>
+            <option value="Iron Cross">Iron Cross</option>
+            <option value="Maltese">Maltese</option>
+            <option value="Muscle-up">Muscle-up</option>
+        </select>
+    </div>
 
     <div style="text-align:center; margin-bottom:20px; display:flex; flex-direction:column; align-items:center; gap:15px;">
         <a href="calc-pullup.html" class="nav-btn">1 REP MAX CALCULATOR</a>
@@ -615,11 +635,22 @@
                 <option value="1.0">Stable (Floor)</option>
                 <option value="1.25">Unstable (Rings)</option>
             </select>
-            <label for="cns">CNS Readiness</label>
-            <input type="range" id="cns" min="1" max="10" value="9"
-                   oninput="debouncedAnalyze();"
-                   aria-valuemin="1" aria-valuemax="10" aria-valuenow="9"
-                   aria-label="CNS Readiness Level">
+            <label for="scoringMode">Scoring Mode</label>
+            <select id="scoringMode" onchange="if(isSystemReady) analyze();" style="margin-bottom:4px;">
+                <option value="strict">⚖️ Strict (Research-Based)</option>
+                <option value="rewarding">🎯 Rewarding (Encouraging)</option>
+            </select>
+            <div id="scoringModeHint" style="font-size:0.62em;color:#888;letter-spacing:1px;margin-bottom:8px;line-height:1.5;">
+                Strict uses Frinks survey data &amp; community benchmarks. Rewarding uses the same shape but thresholds ~18% lower.
+            </div>
+            <label for="cns">How fresh do you feel today? <span id="cnsLabel" style="color:var(--primary);font-weight:bold;">7 / 10</span></label>
+            <input type="range" id="cns" min="1" max="10" value="7"
+                   oninput="document.getElementById('cnsLabel').textContent = this.value + ' / 10'; debouncedAnalyze();"
+                   aria-valuemin="1" aria-valuemax="10" aria-valuenow="7"
+                   aria-label="Freshness / CNS Readiness">
+            <div style="display:flex;justify-content:space-between;font-size:0.6em;color:#555;font-family:monospace;margin-top:2px;margin-bottom:4px;">
+                <span>💀 Wrecked</span><span>😐 Normal</span><span>⚡ Peak</span>
+            </div>
         </div>
 
         <div class="card">
@@ -634,18 +665,18 @@
             </div>
             <div class="inline-quad" style="grid-template-columns:1.2fr 0.8fr;">
                 <div>
-                    <label for="legRatio">Leg Inertia</label>
+                    <label for="legRatio">Leg Length <span style="font-size:0.8em;color:#555;">(affects leverage)</span></label>
                     <select id="legRatio" onchange="if(isSystemReady) analyze();">
-                        <option value="0.95">Short</option>
-                        <option value="1.0" selected>Neutral</option>
-                        <option value="1.1">Long/Heavy</option>
+                        <option value="0.95">Short legs</option>
+                        <option value="1.0" selected>Average</option>
+                        <option value="1.1">Long legs</option>
                     </select>
                 </div>
                 <div>
-                    <label for="form">Form</label>
+                    <label for="form">Planche Form</label>
                     <select id="form" onchange="if(isSystemReady) analyze();">
-                        <option value="1.0">Elite</option>
-                        <option value="0.7">Piked</option>
+                        <option value="1.0">Straight (Elite)</option>
+                        <option value="0.7">Piked / Bent</option>
                     </select>
                 </div>
             </div>
@@ -664,8 +695,8 @@
             <div class="inline-quad">
                 <div class="col-header">Weight</div>
                 <div class="col-header">Reps</div>
-                <div class="col-header">Sets</div>
-                <div class="col-header">RPE</div>
+                <div class="col-header" style="color:#555;" title="Logged for records only — does not affect skill scores">Sets</div>
+                <div class="col-header" style="color:#555;" title="Logged for records only — does not affect skill scores">RPE</div>
             </div>
             <label id="pullLabel" for="wpW">Weighted Pull-up</label>
             <div class="inline-quad">
@@ -681,12 +712,18 @@
                 <input type="number" id="wdS" aria-label="Weighted Dip Sets" value="3" oninput="debouncedAnalyze();">
                 <input type="number" id="wdRPE" aria-label="Weighted Dip RPE" value="8" oninput="debouncedAnalyze();">
             </div>
-            <label id="zanLabel" for="saW">Zanetti Raise (SA)</label>
+            <label id="zanLabel" for="saW">
+                Zanetti Press (SA Raise)
+                <span title="Lie on a flat bench holding dumbbells straight above your chest. Keeping arms almost straight, lower them in an arc toward your head — then press back up using your shoulders. Like a front raise combined with a press, with near-zero elbow bend throughout. Builds the exact straight-arm strength needed for Iron Cross &amp; Maltese." style="cursor:help;color:#666;font-size:0.85em;"> ⓘ what's this?</span>
+            </label>
             <div class="inline-quad">
                 <input type="number" id="saW" aria-label="Zanetti Raise Weight" value="12" oninput="debouncedAnalyze();">
                 <input type="number" id="saR" aria-label="Zanetti Raise Reps" value="8" oninput="debouncedAnalyze();">
                 <input type="number" id="saS" aria-label="Zanetti Raise Sets" value="3" oninput="debouncedAnalyze();">
                 <input type="number" id="saRPE" aria-label="Zanetti Raise RPE" value="9" oninput="debouncedAnalyze();">
+            </div>
+            <div style="font-size:0.65em;color:#555;font-family:monospace;margin-top:3px;margin-bottom:2px;">
+                Never done this? Enter 0 — it just means Iron Cross &amp; Maltese scores will show your potential, not current readiness.
             </div>
         </div>
 
@@ -726,6 +763,15 @@
 
     </div><!-- /.dashboard-row -->
 
+    <!-- TODAY'S TRAINING FOCUS -->
+    <div class="card" id="trainingFocusCard" style="margin-top:25px; border-left:3px solid var(--primary);">
+        <h3 style="letter-spacing:2px; color:var(--primary); margin-bottom:4px;">TODAY'S TRAINING FOCUS</h3>
+        <p style="font-size:0.7em;color:#666;margin-bottom:14px;font-family:monospace;">Based on your weakest link — what to actually train today</p>
+        <div id="trainingFocusBody" style="font-family:monospace; font-size:0.8em; color:#ccc; line-height:2;">
+            <span style="color:#444;">— run the analysis to get your focus —</span>
+        </div>
+    </div>
+
     <!-- HEATMAP -->
     <div class="heatmap-container">
         <h3 style="font-size:0.7em; color:var(--primary); margin-bottom:10px; letter-spacing:1px;">INJURY RISK HEATMAP</h3>
@@ -733,6 +779,9 @@
             <circle cx="50" cy="20" r="10" class="joint" />
             <line x1="50" y1="30" x2="50" y2="80" stroke="#333" stroke-width="4" />
             <line x1="50" y1="40" x2="20" y2="60" stroke="#333" stroke-width="3" />
+            <line x1="50" y1="40" x2="80" y2="60" stroke="#333" stroke-width="3" />
+            <line x1="20" y1="60" x2="10" y2="90" stroke="#333" stroke-width="2" />
+            <line x1="80" y1="60" x2="90" y2="90" stroke="#333" stroke-width="2" />
             <circle id="joint-shoulder-l" cx="35" cy="40" r="5" class="joint" />
             <circle id="joint-shoulder-r" cx="65" cy="40" r="5" class="joint" />
             <circle id="joint-elbow-l" cx="20" cy="60" r="5" class="joint" />
@@ -773,7 +822,7 @@
                     </tr>
                 </thead>
                 <tbody id="skillGapBody">
-                    <tr><td colspan="5" style="text-align:center; color:#444; padding:20px;">Run the analysis to see your skill gaps</td></tr>
+                    <tr><td colspan="3" style="text-align:center; color:#444; padding:20px;">Run the analysis to see your skill gaps</td></tr>
                 </tbody>
             </table>
         </div>
@@ -790,7 +839,7 @@
                     style="background:#111; color:var(--primary); border:1px solid var(--primary); font-size:0.7em; padding:4px 8px; border-radius:4px; cursor:pointer; font-family:monospace; width:auto;">
                 <option value="pull">Weighted Pull-up</option>
                 <option value="push">Weighted Dip</option>
-                <option value="sa">SA Raise</option>
+                <option value="sa">Zanetti Press</option>
             </select>
         </div>
         <div style="position:relative; height:180px;">
@@ -827,13 +876,14 @@
 
     <!-- NOTES -->
     <div class="card" style="margin-top:30px;">
-        <h3 style="letter-spacing:2px;">BIOTIC FEEDBACK ARCHIVE</h3>
+        <h3 style="letter-spacing:2px;">SESSION NOTES</h3>
+        <p style="font-size:0.7em;color:#666;margin-bottom:10px;font-family:monospace;">How did your body feel? Any pain, fatigue, or PRs worth remembering?</p>
         <textarea id="sessionNotes"
-                  placeholder="Record physiological feedback, RPE, or specific joint sensations..."
+                  placeholder="e.g. Left elbow felt tight on dips. Hit a new PR on pull-ups. Shoulder felt solid..."
                   style="width:100%; height:120px; background:#0a0a0a; color:#fff; border:1px solid #333; padding:15px; border-radius:6px; line-height:1.6; resize:vertical; outline:none; transition:border-color 0.3s; font-family:inherit;"></textarea>
         <div style="display:flex; gap:10px; margin-top:12px;">
-            <button onclick="saveNotes(event)" style="flex:4; background:var(--primary); color:#000; border:none; padding:12px; font-family:monospace; font-weight:900; cursor:pointer; border-radius:4px; letter-spacing:1.5px; text-transform:uppercase;">COMMIT DATA</button>
-            <button onclick="clearAllNotes()" style="flex:1; background:rgba(255,68,68,0.05); color:#ff4444; border:1px solid rgba(255,68,68,0.3); padding:12px; font-family:monospace; font-size:0.75em; cursor:pointer; border-radius:4px; font-weight:bold; text-transform:uppercase;">DELETE ALL</button>
+            <button onclick="saveNotes(event)" style="flex:4; background:var(--primary); color:#000; border:none; padding:12px; font-family:monospace; font-weight:900; cursor:pointer; border-radius:4px; letter-spacing:1.5px; text-transform:uppercase;">SAVE NOTE</button>
+            <button onclick="clearAllNotes()" style="flex:1; background:rgba(255,68,68,0.05); color:#ff4444; border:1px solid rgba(255,68,68,0.3); padding:12px; font-family:monospace; font-size:0.75em; cursor:pointer; border-radius:4px; font-weight:bold; text-transform:uppercase;">CLEAR ALL</button>
         </div>
         <div id="notesHistory" style="margin-top:20px; max-height:300px; overflow-y:auto; border-top:1px solid #222; padding-top:15px;">
             <div style="font-size:0.6em; color:#666; letter-spacing:2px;">NO FEEDBACK ENTRIES</div>
@@ -873,8 +923,8 @@
             <a href="blog/specificity-is-king.html" class="blog-link">Specificity is King</a>
             <a href="blog/elite-strength-1rm.html" class="blog-link">How Strong is Your 1RM?</a>
             <a href="blog/recovery-and-tendon-health.html" class="blog-link">Recovery &amp; Tendon Health</a>
-                        <a href="blog/heavy-weighted-pullup-philosophy.html" class="blog-link">Weighted Pull-Up Progression: How to Reach 3 Plates Without Elbow Pain</a>
-                  </div>
+            <a href="blog/heavy-weighted-pullup-philosophy.html" class="blog-link">Weighted Pull-Up Progression: How to Reach 3 Plates Without Elbow Pain</a>
+        </div>
 
         <!-- MUSCLE & AESTHETICS -->
         <div style="margin-bottom:24px;">
@@ -895,8 +945,8 @@
             <a href="blog/powerlifting-vs-weighted-calisthenics.html" class="blog-link">Powerlifting vs Cali</a>
             <a href="blog/lat-pulldown-truth.html" class="blog-link">Lat Pulldown vs Pull-up</a>
             <a href="blog/equipment-guide.html" class="blog-link">Essential Equipment</a>
-                        <a href="blog/weighted-pullup-program-critique.html" class="blog-link"> Russian Pull-Up Program vs Conjugate for Weighted Work</a>
-  </div>
+            <a href="blog/weighted-pullup-program-critique.html" class="blog-link">Russian Pull-Up Program vs Conjugate for Weighted Work</a>
+        </div>
 
         <!-- GLOSSARY -->
         <section class="content-rich-section" style="background:rgba(76,111,255,0.05); border:1px solid #2a2a3a; margin:40px 0; padding:30px; border-radius:12px; border-left:5px solid var(--primary);">
@@ -989,6 +1039,15 @@
 <script>
 'use strict';
 
+function syncGoalSelectors(sourceId) {
+    const val = document.getElementById(sourceId)?.value;
+    if (!val) return;
+    ['goalSelectTop','goalSelect'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.id !== sourceId) el.value = val;
+    });
+}
+
 function debounce(fn, ms) {
     let timer;
     return function(...args) { clearTimeout(timer); timer = setTimeout(() => fn.apply(this, args), ms); };
@@ -1021,11 +1080,6 @@ function toggleSimMode() {
     if (isSystemReady) analyze();
 }
 
-function prepareSystem() {
-    isSystemReady = true;
-    analyze();
-}
-
 function updateLabels() {
     const isMet = document.getElementById("unitSystem").value === 'met';
     document.getElementById("wLabel").innerText = `Weight ${isMet ? '(kg)' : '(lbs)'}`;
@@ -1035,19 +1089,144 @@ function updateLabels() {
 }
 function updateLoadLabels() {
     const unit = document.getElementById("loadUnit").value;
-    const map = { "pullLabel": "Pull-up Weight", "dipLabel": "Dip Weight", "zanLabel": "Zanetti Raise (SA)" };
+    const map = { "pullLabel": "Pull-up Weight", "dipLabel": "Dip Weight", "zanLabel": "Zanetti Press Weight" };
     for (let id in map) { const el = document.getElementById(id); if (el) el.innerText = `${map[id]} (${unit})`; }
     analyze();
 }
 
-const skills = [
-    { name: "Full Planche",     p: 3.4, l: 0,   s: 2.5, minEntry: 45 },
-    { name: "Straddle Planche", p: 2.8, l: 0,   s: 2.0, minEntry: 30 },
-    { name: "Front Lever",      p: 0,   l: 2.6, s: 1.8, minEntry: 30 },
-    { name: "Iron Cross",       p: 0,   l: 3.0, s: 4.0, minEntry: 50 },
-    { name: "Maltese",          p: 4.5, l: 0,   s: 3.5, minEntry: 55 },
-    { name: "Muscle-up",        p: 1.5, l: 1.6, s: 0,   minEntry: 15 }
-];
+// ============================================================
+// BENCHMARK TABLES
+// Plate kg at each 10% milestone for a 75 kg / 175 cm reference athlete.
+// Rows index 0–9 = 10 % … 100 %.
+// bwScale and htScale stretch these live for different athletes.
+// ============================================================
+// ── BENCHMARK SYSTEM v2 ──────────────────────────────────────────────────────
+// All thresholds expressed as % of bodyweight ADDED (plate weight ÷ BW × 100).
+// Based on: Frinks survey 322-person data (Front Lever), community consensus
+// (Planche), calisthenics forums and coaches (Iron Cross / Maltese / Muscle-up).
+// Each array = [10%, 20%...100%] readiness milestones as % BW needed.
+//
+// HEIGHT ADJUSTMENT: effectivePct = rawPct / Math.pow(h/170, 1.5)
+//   Taller athletes need proportionally more strength (longer levers).
+//   This replaces the old bwScale*htScale plate-kg approach — no drift.
+//
+// TWO MODES:
+//   strict    — real survey thresholds; conservative
+//   rewarding — thresholds × 0.82; same data shape, slightly encouraging
+
+// ── RESEARCH SOURCES ────────────────────────────────────────────────────────
+// Front Lever : Frinks 322-person survey (r/bodyweightfitness) + Overcoming
+//               Gravity (Steven Low) + Heavyweight Cali blog.
+//               60-65% BW pull → ~60% of people hold FL. 80-90% BW pull →
+//               OG minimum. 90%+ BW pull → 80% success (Frinks).
+//
+// Iron Cross  : GravGear guide + BodyweightTribe breakdown.
+//               50% BW pull + 100% BW dip = ENTRY prerequisites to start
+//               training the cross — not achievement. Full cross needs more.
+//               SA raises (ring flies / pelican curls) are the primary driver.
+//
+// Planche     : StrongFirst forum (straddle planche pusher had ~180% BW bench
+//               ≈ 140-150% BW dip), BodyweightWarrior (40% BW pull = pre-
+//               intermediate baseline). No survey data; community consensus.
+//
+// Maltese     : No survey data. Treated as "beyond planche" — requires solid
+//               iron cross as prerequisite; dip thresholds extrapolated.
+//
+// Muscle-up   : Symmetric pull/dip, community widely agrees ~50% BW pull
+//               (+37 kg at 75 kg) is strong enough for clean muscle-ups.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const _STRICT = {
+    "Straddle Planche": {
+        // Dip: 140-150% BW for straddle planche level (StrongFirst data point)
+        // 40% BW pull = pre-intermediate baseline (BodyweightWarrior)
+        // SA: proprioceptive, contributes 30% weight
+        dip:  [16, 26, 37, 50, 63, 77, 90, 103, 118, 135],
+        sa:   [ 5,  8, 12, 16, 20, 25, 30,  35,  41,  48],
+        w: { p: 0.70, s: 0.30 }
+    },
+    "Full Planche": {
+        // ~160-175% BW dip for full planche (extrapolated from straddle data)
+        dip:  [25, 38, 53, 68, 85, 103, 120, 138, 155, 170],
+        sa:   [ 7, 11, 16, 21, 26,  32,  38,  44,  51,  58],
+        w: { p: 0.70, s: 0.30 }
+    },
+    "Front Lever": {
+        // Frinks 322-person survey + OG (Steven Low): 80-90% BW pull = full FL
+        // 60-65% BW pull → 60% success rate. 90%+ → 80% success.
+        pull: [12, 18, 25, 33, 42, 52, 62, 72, 82, 92],
+        sa:   [ 4,  7, 10, 14, 18, 23, 28, 33, 39, 46],
+        w: { l: 0.70, s: 0.30 }
+    },
+    "Iron Cross": {
+        // GravGear: 100% BW dip + 50% BW pull = ENTRY PREREQUISITES only.
+        // Full cross needs considerably more. Thresholds pushed up accordingly.
+        // SA (ring flies/pelican curls) = primary driver, weighted 44%.
+        dip:  [20, 32, 46, 62, 80,  98, 115, 130, 143, 155],
+        pull: [14, 21, 29, 38, 50,  62,  72,  81,  89,  96],
+        sa:   [ 9, 14, 19, 25, 32,  39,  46,  53,  60,  68],
+        w: { p: 0.28, l: 0.28, s: 0.44 }
+    },
+    "Maltese": {
+        // No survey data. Requires solid iron cross as prerequisite.
+        // Extrapolated as significantly harder than planche in all vectors.
+        dip:  [35, 52, 72, 92, 114, 135, 152, 166, 177, 188],
+        pull: [20, 30, 40, 51,  62,  72,  80,  87,  93,  97],
+        sa:   [13, 20, 28, 36,  44,  53,  61,  68,  73,  78],
+        w: { p: 0.35, l: 0.25, s: 0.40 }
+    },
+    "Muscle-up": {
+        // Community consensus: ~40-50% BW pull = clean muscle-up territory
+        dip:  [ 7, 12, 17, 23, 30, 38, 47, 56, 65, 73],
+        pull: [ 7, 12, 17, 23, 30, 38, 47, 56, 65, 73],
+        w: { p: 0.50, l: 0.50 }
+    }
+};
+
+// Rewarding version: 18% easier thresholds (same shape, slightly more forgiving)
+const _REWARDING = {};
+for (const [skill, data] of Object.entries(_STRICT)) {
+    _REWARDING[skill] = { w: data.w };
+    ['dip','pull','sa'].forEach(k => {
+        if (data[k]) _REWARDING[skill][k] = data[k].map(v => Math.round(v * 0.82 * 10) / 10);
+    });
+}
+
+const BENCHMARKS = { strict: _STRICT, rewarding: _REWARDING };
+
+// Convenience: use active mode
+function getMode() { return document.getElementById('scoringMode')?.value || 'strict'; }
+function SKILL_BENCHMARKS_ACTIVE() { return BENCHMARKS[getMode()]; }
+
+// Skills list — derived from strict keys so radar & bars stay in sync
+const skills = Object.keys(_STRICT).map(name => ({ name }));
+
+// Height-based leverage adjustment (taller = harder, shorter = easier)
+// Replaces old bwScale*htScale — applied to athlete's % BW, not to the table
+function heightAdj(h) { return Math.pow((h || 170) / 170, 1.5); }
+
+// Lookup: given athlete's effective % BW, what readiness % do they score?
+// table = 10-element array of % BW thresholds at [10,20,...,100] milestones
+function lookupScore(pct, table) {
+    if (!table || pct == null) return null;
+    if (pct <= 0) return 0;
+    if (pct >= table[9]) return 100;
+    for (let i = 0; i < 10; i++) {
+        if (pct <= table[i]) {
+            const lo = i === 0 ? 0 : table[i - 1];
+            const hi = table[i];
+            return i * 10 + ((pct - lo) / (hi - lo)) * 10;
+        }
+    }
+    return 100;
+}
+
+// Legacy shim — used by renderSkillGapTable
+function benchmarkScore(plateEq, table, bwScale, htScale) {
+    if (!table || plateEq == null) return null;
+    const pct = bwScale > 0 ? (plateEq / (75 * bwScale)) * 100 : 0;
+    return lookupScore(pct / htScale, table);
+}
 
 const ctx = document.getElementById('skillRadar').getContext('2d');
 function initChart() {
@@ -1057,8 +1236,8 @@ function initChart() {
         data: {
             labels: skills.map(s => s.name),
             datasets: [
-                { label: 'Reality', data: [], backgroundColor: 'rgba(76,111,255,0.3)', borderColor: '#4c6fff', borderWidth: 4, pointRadius: isMobile ? 3 : 5 },
-                { label: 'Potential', data: [], backgroundColor: 'rgba(0,255,204,0.05)', borderColor: '#00ffcc', borderDash: [5,5], borderWidth: 2 }
+                { label: 'Reality',   data: [], backgroundColor: 'rgba(76,111,255,0.3)', borderColor: '#4c6fff', borderWidth: 4, pointRadius: isMobile ? 3 : 5 },
+                { label: 'Potential', data: [], backgroundColor: 'rgba(0,255,204,0.05)',  borderColor: '#00ffcc', borderDash: [5,5], borderWidth: 2 }
             ]
         },
         options: {
@@ -1100,6 +1279,32 @@ function loadSavedData() {
         const data = JSON.parse(saved);
         Object.keys(data).forEach(id => { const el = document.getElementById(id); if (el) el.value = data[id]; });
         updateLabels();
+        // Sync CNS label after restore
+        const cns = document.getElementById('cns');
+        const cnsLabel = document.getElementById('cnsLabel');
+        if (cns && cnsLabel) cnsLabel.textContent = cns.value + ' / 10';
+        // Sync top goal selector (always exists, unlike dynamic goalSelect)
+        const gst = document.getElementById('goalSelectTop');
+        if (gst && data['goalSelectTop']) gst.value = data['goalSelectTop'];
+
+        // Seed caliPRs silently if empty — prevents false PR banner on first analyze()
+        // We read raw inputs and set baseline so checkLivePR won't fire on page load
+        if (!localStorage.getItem('caliPRs')) {
+            const sys = document.getElementById('unitSystem')?.value || 'met';
+            const loadConv = sys === 'met' ? 1 : 0.453592;
+            const bw = parseFloat(data['weight'] || 75);
+            const calcEq = (wId, rId) => {
+                const w = parseFloat(data[wId] || 0) * loadConv;
+                const r = parseInt(data[rId] || 0);
+                return w > 0 ? bw + w * (1 + r / 30) : 0;
+            };
+            const seedPRs = {
+                pull: calcEq('wpW','wpR'),
+                push: calcEq('wdW','wdR'),
+                sa:   calcEq('saW','saR')
+            };
+            localStorage.setItem('caliPRs', JSON.stringify(seedPRs));
+        }
     }
     displayNotes();
 }
@@ -1108,28 +1313,87 @@ function logSession() {
     const savedLogs = localStorage.getItem('caliLogs') ? JSON.parse(localStorage.getItem('caliLogs')) : [];
     const sys = document.getElementById("unitSystem").value;
     const u = sys === 'met' ? 'kg' : 'lbs';
+    const loadConv = sys === 'met' ? 1 : 0.453592;
     const rawBwInput = document.getElementById("weight").value;
     const hasBw = rawBwInput && parseFloat(rawBwInput) > 0;
     const bwForCalc = hasBw ? parseFloat(rawBwInput) : 75;
     const getLiftData = (idW, idR) => {
         const plate = parseFloat(document.getElementById(idW).value) || 0;
-        const reps = parseInt(document.getElementById(idR).value) || 0;
-        if (plate === 0 && reps === 0) return { display: "---" };
-        const total1RM = (bwForCalc + plate * (1 + reps / 30)).toFixed(1);
-        return { display: `${plate}${u} x ${reps} (${total1RM}${u})` };
+        const reps  = parseInt(document.getElementById(idR).value)  || 0;
+        if (plate === 0 && reps === 0) return { display: "---", raw1RM: 0 };
+        const plateKg = plate * loadConv;
+        const raw1RM = parseFloat((bwForCalc + plateKg * (1 + reps / 30)).toFixed(1));
+        return { display: `${plate}${u} x ${reps} (${raw1RM}${u})`, raw1RM };
     };
+    const pullData = getLiftData("wpW", "wpR");
+    const pushData = getLiftData("wdW", "wdR");
+    const saData   = getLiftData("saW", "saR");
+
+    // Determine session focus: which movement is relatively strongest today
+    const focusValues = { pull: pullData.raw1RM, push: pushData.raw1RM, sa: saData.raw1RM };
+    const sessionFocus = Object.entries(focusValues).reduce((a,b) => a[1] > b[1] ? a : b)[0];
+    localStorage.setItem('caliLastFocus', sessionFocus);
+    localStorage.setItem('caliLastLogDate', new Date().toDateString());
+
+    // PR detection: compare against stored bests
+    const prs = JSON.parse(localStorage.getItem('caliPRs') || '{}');
+    const newPRs = [];
+    if (pullData.raw1RM > 0 && pullData.raw1RM > (prs.pull || 0)) { newPRs.push('Weighted Pull-up'); prs.pull = pullData.raw1RM; }
+    if (pushData.raw1RM > 0 && pushData.raw1RM > (prs.push || 0)) { newPRs.push('Weighted Dip');    prs.push = pushData.raw1RM; }
+    if (saData.raw1RM   > 0 && saData.raw1RM   > (prs.sa   || 0)) { newPRs.push('Zanetti Press');   prs.sa   = saData.raw1RM;   }
+    localStorage.setItem('caliPRs', JSON.stringify(prs));
+
     const entry = {
         date: new Date().toLocaleDateString(),
-        bw: hasBw ? rawBwInput + u : "---",
-        pull: getLiftData("wpW", "wpR").display,
-        push: getLiftData("wdW", "wdR").display,
-        sa:   getLiftData("saW", "saR").display
+        bw:   hasBw ? rawBwInput + u : "---",
+        pull: pullData.display,
+        push: pushData.display,
+        sa:   saData.display,
+        raw:  { pull: pullData.raw1RM, push: pushData.raw1RM, sa: saData.raw1RM }
     };
     savedLogs.unshift(entry);
-    localStorage.setItem('caliLogs', JSON.stringify(savedLogs.slice(0, 8)));
+    localStorage.setItem('caliLogs', JSON.stringify(savedLogs.slice(0, 30)));
     renderLogs();
     renderProgressChart();
+
+    // Show PR celebration if any
+    if (newPRs.length > 0) showPRBanner(newPRs);
 }
+function showPRBanner(movements) {
+    // Remove any existing banner
+    const existing = document.getElementById('prBanner');
+    if (existing) existing.remove();
+
+    const banner = document.createElement('div');
+    banner.id = 'prBanner';
+    banner.style.cssText = `
+        position:fixed; top:20px; left:50%; transform:translateX(-50%);
+        background:linear-gradient(135deg,#00ffcc,#4c6fff);
+        color:#000; padding:14px 28px; border-radius:10px;
+        font-family:monospace; font-weight:900; font-size:0.9em;
+        letter-spacing:2px; z-index:9999; text-align:center;
+        box-shadow:0 4px 30px rgba(0,255,204,0.4);
+        animation: prPop 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+    `;
+    banner.innerHTML = `🏆 NEW PR! ${movements.join(' + ')}<br><span style="font-size:0.75em;font-weight:normal;letter-spacing:1px;">Personal Record Logged</span>`;
+    document.body.appendChild(banner);
+    setTimeout(() => { banner.style.transition='opacity 0.6s'; banner.style.opacity='0'; setTimeout(()=>banner.remove(),600); }, 3500);
+}
+
+// Passive PR check on analyze() — detects improvement without requiring LOG SESSION
+function checkLivePR(pullEq, pushEq, saEq) {
+    const prs = JSON.parse(localStorage.getItem('caliPRs') || '{}');
+    const newPRs = [];
+    let updated = false;
+    if (pullEq > 0 && pullEq > (prs.pull || 0) + 0.5) { newPRs.push('Weighted Pull-up'); prs.pull = pullEq; updated = true; }
+    if (pushEq > 0 && pushEq > (prs.push || 0) + 0.5) { newPRs.push('Weighted Dip');    prs.push = pushEq; updated = true; }
+    if (saEq   > 0 && saEq   > (prs.sa   || 0) + 0.5) { newPRs.push('Zanetti Press');   prs.sa   = saEq;   updated = true; }
+    if (updated) {
+        localStorage.setItem('caliPRs', JSON.stringify(prs));
+        showPRBanner(newPRs);
+    }
+}
+
 function renderLogs() {
     const savedLogs = localStorage.getItem('caliLogs') ? JSON.parse(localStorage.getItem('caliLogs')) : [];
     const container = document.getElementById("logBody");
@@ -1151,7 +1415,7 @@ function deleteLog(i) {
 
 function saveNotes(event) {
     const noteInput = document.getElementById("sessionNotes");
-    const noteText = noteInput.value.trim();
+    const noteText  = noteInput.value.trim();
     if (!noteText) return;
     const timestamp = new Date().toLocaleDateString() + " | " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     let history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
@@ -1161,10 +1425,10 @@ function saveNotes(event) {
     displayNotes();
     const btn = event.currentTarget;
     btn.innerText = "✓ Committed"; btn.style.background = "#00ffcc";
-    setTimeout(() => { btn.innerText = "COMMIT DATA"; btn.style.background = "var(--primary)"; }, 2000);
+    setTimeout(() => { btn.innerText = "SAVE NOTE"; btn.style.background = "var(--primary)"; }, 2000);
 }
 function displayNotes() {
-    const history = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
+    const history   = JSON.parse(localStorage.getItem('cali_biotech_history')) || [];
     const container = document.getElementById("notesHistory");
     if (!container) return;
     if (history.length === 0) { container.innerHTML = `<div style="font-size:0.6em;color:#666;letter-spacing:2px;">NO FEEDBACK ENTRIES</div>`; return; }
@@ -1190,7 +1454,7 @@ function clearAllNotes() {
 
 function openShareModal() {
     if (!isSystemReady || Object.keys(lastScores).length === 0) {
-        alert('Run the analysis first — click PREPARE TRAINING MATRIX');
+        alert('Run the analysis first.');
         return;
     }
     const sys = document.getElementById("unitSystem").value;
@@ -1205,9 +1469,7 @@ function openShareModal() {
     document.getElementById('sc-skills').innerHTML = sorted.map(([name, pct]) => `
         <div class="sc-skill">
             <div class="sc-skill-name">${name}</div>
-            <div class="sc-bar-bg">
-                <div class="sc-bar-fill" style="width:${Math.min(pct, 100)}%"></div>
-            </div>
+            <div class="sc-bar-bg"><div class="sc-bar-fill" style="width:${Math.min(pct, 100)}%"></div></div>
             <div class="sc-pct">${Math.round(pct)}%</div>
         </div>`).join('');
     document.getElementById('sc-date').textContent = `calicalculator.com  ·  ${new Date().toLocaleDateString()}`;
@@ -1240,16 +1502,19 @@ function shareReport() {
     });
 }
 
+// ============================================================
+// MAIN ANALYSIS
+// ============================================================
 function analyze() {
     if (!isSystemReady) return;
     if (!radarChart) initChart();
 
     try {
-        const sys = document.getElementById("unitSystem").value;
+        const sys      = document.getElementById("unitSystem").value;
         const bodyConv = sys === 'imp' ? 0.453592 : 1;
         const loadUnit = document.getElementById("loadUnit").value;
         const loadConv = loadUnit === 'lbs' ? 0.453592 : 1;
-        const u = loadUnit;
+        const u        = loadUnit;
 
         const weightInput = parseFloat(document.getElementById("weight").value);
         let bw = (isNaN(weightInput) || weightInput <= 0) ? 75 : weightInput * bodyConv;
@@ -1274,22 +1539,55 @@ function analyze() {
             document.getElementById("legRatio").value = "1.0";
             document.getElementById("form").value     = "1.0";
             document.getElementById("cns").value      = 10;
-            bw = 75;
-            h = 175;
+            bw = 75; h = 175;
         }
 
+        // Raw 1RM ratios — still used by the biomechanical audit panels
         const pull1RM = (bw + (parseFloat(document.getElementById("wpW").value) || 0) * loadConv * (1 + (parseInt(document.getElementById("wpR").value) || 0) / 30)) / bw;
         const push1RM = (bw + (parseFloat(document.getElementById("wdW").value) || 0) * loadConv * (1 + (parseInt(document.getElementById("wdR").value) || 0) / 30)) / bw;
-        let rawSa = (bw + (parseFloat(document.getElementById("saW").value) || 0) * loadConv * (1 + (parseInt(document.getElementById("saR").value) || 0) / 30)) / bw;
-        const sa1RM = Math.max(rawSa, push1RM * 0.75);
+        const sa1RM   = (bw + (parseFloat(document.getElementById("saW").value) || 0) * loadConv * (1 + (parseInt(document.getElementById("saR").value) || 0) / 30)) / bw;
+
+        // Passive PR detection — fires when user types a new best (not in sim mode)
+        if (!isSimMode) {
+            const pullEq = bw * pull1RM;
+            const pushEq = bw * push1RM;
+            const saEq   = bw * sa1RM;
+            checkLivePR(pullEq, pushEq, saEq);
+        }
+
+        // % of BW added (1RM-equivalent) — unit the benchmark tables use
+        const dipPctBW  = bw > 0 ? (((parseFloat(document.getElementById("wdW").value) || 0) * loadConv) * (1 + (parseInt(document.getElementById("wdR").value) || 0) / 30) / bw * 100) : 0;
+        const pullPctBW = bw > 0 ? (((parseFloat(document.getElementById("wpW").value) || 0) * loadConv) * (1 + (parseInt(document.getElementById("wpR").value) || 0) / 30) / bw * 100) : 0;
+        const saPctBW   = bw > 0 ? (((parseFloat(document.getElementById("saW").value) || 0) * loadConv) * (1 + (parseInt(document.getElementById("saR").value) || 0) / 30) / bw * 100) : 0;
+
+        // Absolute plate-eq (kg) — kept for biomechanical audit panels + gap table
+        const dipPlateEq  = bw * dipPctBW  / 100;
+        const pullPlateEq = bw * pullPctBW / 100;
+        const saPlateEq   = bw * saPctBW   / 100;
+
+        // Beginner mode: no weighted training entered yet
+        const isBeginnerMode = dipPctBW === 0 && pullPctBW === 0 && !isSimMode;
 
         const surfaceMultiplier = parseFloat(document.getElementById("surface").value) || 1.0;
-        const isRings = surfaceMultiplier > 1.0;
-        const ringTax = isRings ? 1.1 : 1.0;
+        const isRings  = surfaceMultiplier > 1.0;
+        const ringTax  = isRings ? 1.1 : 1.0;
         const torqueFactor = Math.pow(h / 170, 2.3) * (parseFloat(document.getElementById("legRatio").value) || 1.0) * surfaceMultiplier;
-        let cnsVal = (parseInt(document.getElementById("cns").value) || 10) / 10;
+        let   cnsVal   = (parseInt(document.getElementById("cns").value) || 10) / 10;
         cnsVal = cnsVal / ringTax;
         const form = parseFloat(document.getElementById("form").value) || 1.0;
+
+        // Leverage adjustment: taller / longer-legged athletes need more relative strength
+        const legMod = parseFloat(document.getElementById("legRatio").value) || 1.0;
+        const hAdj   = heightAdj(h) * legMod;
+
+        // Effective % BW after leverage correction (input to benchmark tables)
+        const effDipPct  = dipPctBW  / hAdj;
+        const effPullPct = pullPctBW / hAdj;
+        const effSaPct   = saPctBW   / hAdj;
+
+        // Legacy shim: bwScale/htScale still used by renderSkillGapTable
+        const bwScale = bw / 75;
+        const htScale = torqueFactor;
 
         if (isSimMode) {
             radarChart.data.datasets[0].label = 'SIMULATED TARGET';
@@ -1300,17 +1598,21 @@ function analyze() {
             saveToLocal();
         }
 
+        // Build skill bar UI shell on first run
         let skillPanel = document.getElementById("skillBars");
         if (!document.getElementById("goalSelect")) {
             skillPanel.innerHTML = `
                 <div style="margin-bottom:20px;">
-                    <label style="color:var(--primary);font-size:0.7em;letter-spacing:2px;">MISSION TARGET</label>
-                    <select id="goalSelect" onchange="analyze()" style="background:#111;color:#fff;width:100%;border:1px solid #333;padding:10px;border-radius:5px;margin-top:5px;">
+                    <label style="color:var(--primary);font-size:0.7em;letter-spacing:2px;">YOUR GOAL</label>
+                    <select id="goalSelect" onchange="syncGoalSelectors('goalSelect'); analyze();" style="background:#111;color:#fff;width:100%;border:1px solid #333;padding:10px;border-radius:5px;margin-top:5px;">
                         <option value="None">No Active Goal</option>
                         ${skills.map(s => `<option value="${s.name}">${s.name}</option>`).join('')}
                     </select>
                 </div>
                 <div id="barContainer"></div>`;
+            // Restore goal from top selector (which is always in DOM)
+            const topGoal = document.getElementById('goalSelectTop')?.value;
+            if (topGoal) document.getElementById('goalSelect').value = topGoal;
         }
 
         const activeGoal = document.getElementById("goalSelect").value;
@@ -1318,30 +1620,77 @@ function analyze() {
         const curScores = [], potScores = [];
         lastScores = {};
 
+        // ── BENCHMARK-DRIVEN SKILL SCORING (v2: % BW basis) ──
+        const activeBench = SKILL_BENCHMARKS_ACTIVE();
         skills.forEach(s => {
-            let vectors = [];
-            if (s.p > 0) vectors.push({ name: "Push", val: (push1RM / (s.p * torqueFactor)) * 100, req: s.p * torqueFactor, raw: push1RM });
-            if (s.l > 0) vectors.push({ name: "Pull", val: (pull1RM / (s.l * torqueFactor)) * 100, req: s.l * torqueFactor, raw: pull1RM });
-            if (s.s > 0) vectors.push({ name: "SA Strength", val: (sa1RM / (s.s * torqueFactor)) * 100, req: s.s * torqueFactor, raw: sa1RM });
+            const bench = activeBench[s.name];
+            if (!bench) { curScores.push('0'); potScores.push('0'); return; }
 
-            const sig = (x) => 100 / (1 + Math.exp(-0.15 * (x - 52)));
-            let minVal = Math.min(...vectors.map(v => v.val));
-            let cur = sig(minVal) * cnsVal * form;
+            const dipScore  = bench.dip  ? lookupScore(effDipPct,  bench.dip)  : null;
+            const pullScore = bench.pull ? lookupScore(effPullPct, bench.pull) : null;
+            const saScore   = bench.sa   ? lookupScore(effSaPct,   bench.sa)   : null;
 
-            if ((s.l > 0 && pull1RM < 1.0) || (s.p > 0 && push1RM < 1.0) || (s.s > 0 && sa1RM < 1.0)) cur = 0;
+            const componentScores = [dipScore, pullScore, saScore].filter(v => v !== null);
+            if (componentScores.length === 0) { curScores.push('0'); potScores.push('0'); return; }
+
+            // Weighted composite
+            const w = bench.w;
+            const weighted =
+                (dipScore  !== null ? dipScore  * (w.p || 0) : 0) +
+                (pullScore !== null ? pullScore * (w.l || 0) : 0) +
+                (saScore   !== null ? saScore   * (w.s || 0) : 0);
+
+            // 65% weighted + 35% bottleneck — weakest link penalises but doesn't zero the score
+            const minScore    = Math.min(...componentScores);
+            const effectiveScore = weighted * 0.65 + minScore * 0.35;
+
+            // Potential = if your weakest link matched your best
+            const maxScore = Math.max(...componentScores);
+
+            let cur       = Math.max(0, Math.min(effectiveScore * cnsVal * form, 100));
+            let potential = Math.max(0, Math.min(maxScore       * cnsVal * form, 100));
+
+            // Muscle-up: count is the primary driver, weighted strength is secondary
+            // 0 MU = 0. 1 MU ≈ 25%. 3 MU ≈ 45%. 5 MU ≈ 60%. 10 MU ≈ 78%. 15+ MU ≈ 90%+
             const rawMu = parseFloat(document.getElementById("mu").value) || 0;
-            if (s.name === "Muscle-up" && rawMu === 0) cur = 0;
+            if (s.name === "Muscle-up") {
+                if (rawMu === 0) {
+                    // No MU at all — show strength potential only (grayed)
+                    cur = 0;
+                    potential = Math.max(0, Math.min(effectiveScore * 0.4, 40)); // cap potential at 40% until MU exists
+                } else {
+                    // MU count score: logarithmic curve — 1→25%, 5→60%, 10→78%, 20→93%
+                    const muCountScore = Math.min(100, 25 + 55 * (Math.log(rawMu) / Math.log(20)));
+                    // Blend: 60% from actual MU count, 40% from weighted strength
+                    cur       = Math.max(0, Math.min((muCountScore * 0.60 + effectiveScore * 0.40) * cnsVal * form, 100));
+                    potential = Math.max(0, Math.min((muCountScore * 0.60 + maxScore      * 0.40) * cnsVal * form, 100));
+                }
+            }
 
-            const isTarget = s.name === activeGoal;
             curScores.push(cur.toFixed(1));
-            potScores.push(sig(Math.max(...vectors.map(v => v.val))).toFixed(1));
+            potScores.push(potential.toFixed(1));
             lastScores[s.name] = cur;
 
+            const isTarget = s.name === activeGoal;
+
+            // Critical-path recommendation for the selected goal
             let recText = "";
             if (isTarget) {
-                let weakest = vectors.reduce((prev, curr) => prev.val < curr.val ? prev : curr);
-                let neededPlate = ((weakest.req * bw) - bw) / loadConv;
-                recText = `CRITICAL PATH: Improve ${weakest.name}. Target 1RM: +${Math.max(0, neededPlate).toFixed(1)}${u}.`;
+                const mvMap = [];
+                if (dipScore  !== null) mvMap.push({ name: "weighted dip",    score: dipScore  });
+                if (pullScore !== null) mvMap.push({ name: "weighted pull-up", score: pullScore });
+                if (saScore   !== null) mvMap.push({ name: "Zanetti Press",         score: saScore   });
+                const weakest = mvMap.reduce((a, b) => a.score < b.score ? a : b);
+
+                // Find the next 10% benchmark plate for the weakest movement
+                const keyMap = { "weighted dip": "dip", "weighted pull-up": "pull", "Zanetti Press": "sa" };
+                const tbl    = bench[keyMap[weakest.name]];
+                const nextBand = Math.min(Math.floor(weakest.score / 10) + 1, 9);
+                // Convert %BW threshold back to display plate weight (undo leverage + rep factor)
+                const nextPctBW   = tbl[nextBand] * hAdj;
+                const nextPlateKg = (nextPctBW / 100 * bw / (1 + 5 / 30) / loadConv).toFixed(0);
+
+                recText = `CRITICAL PATH: Improve ${weakest.name} (${weakest.score.toFixed(0)}% met). Next target: +${nextPlateKg}${u} × 5 reps.`;
             }
 
             barHtml += `
@@ -1356,9 +1705,12 @@ function analyze() {
                 </div>`;
         });
 
+        // ── BIOMECHANICAL AUDIT PANELS ──
+        // (These still use 1RM ratios — independent of skill scoring)
+
         const scapularHealthRaw = pull1RM / push1RM;
         const scapularHealth    = scapularHealthRaw.toFixed(2);
-        let scapStatus, scapColor, scapDesc, scapWhat, scapFix;
+        let scapStatus, scapColor, scapWhat, scapFix;
         if (scapularHealthRaw < 0.80) {
             scapStatus = "⚠ IMBALANCED"; scapColor = "#ff4444";
             scapWhat = "Your pushing strength (weighted dip) is significantly stronger than your pulling strength (weighted pull-up). This creates shoulder impingement risk over time.";
@@ -1376,7 +1728,7 @@ function analyze() {
             scapWhat = "Pulling is significantly stronger than pushing. Uncommon — usually means dip/press volume needs increasing for full skill transfer.";
             scapFix  = "Add weighted dip volume. A 1:1 ratio is the target for skill transfer.";
         }
-        scapDesc = `Pull÷Push ratio: ${scapularHealth} (ideal: 0.90–1.10)`;
+        const scapDesc = `Pull÷Push ratio: ${scapularHealth} (ideal: 0.90–1.10)`;
 
         let tendonLoadRaw = sa1RM / push1RM;
         if (isRings) tendonLoadRaw *= 0.85;
@@ -1401,20 +1753,19 @@ function analyze() {
         }
         const tendonDesc = `SA÷Push ratio: ${tendonLoad}${isRings ? " (ring penalty applied)" : ""} (ideal: 0.65–1.10)`;
 
-        const heightCm = h;
         const leverPct = ((torqueFactor - 1) * 100).toFixed(1);
         let leverEffect, leverColor, leverWhat, leverFix;
         if (torqueFactor < 1.05) {
             leverEffect = "✓ MECHANICAL EDGE"; leverColor = "#00ffcc";
-            leverWhat = `At ${Math.round(heightCm)}cm, your limb length gives you a natural mechanical advantage for calisthenics skills.`;
+            leverWhat = `At ${Math.round(h)}cm, your limb length gives you a natural mechanical advantage for calisthenics skills.`;
             leverFix  = "Use this advantage — your strength-to-lever ratio means you can progress skills faster than taller athletes.";
         } else if (torqueFactor < 1.20) {
             leverEffect = "⚡ SLIGHT TAX"; leverColor = "#ff9900";
-            leverWhat = `At ${Math.round(heightCm)}cm, you carry a ${leverPct}% leverage penalty. You need slightly more strength than a shorter athlete to achieve the same skill.`;
+            leverWhat = `At ${Math.round(h)}cm, you carry a ${leverPct}% leverage penalty. You need slightly more strength than a shorter athlete to achieve the same skill.`;
             leverFix  = "Compensate with higher relative strength targets in your weighted matrix. Every 5cm above 170cm adds roughly 10–15% more required strength.";
         } else {
             leverEffect = "⚠ TALL ATHLETE TAX"; leverColor = "#ff4444";
-            leverWhat = `At ${Math.round(heightCm)}cm, you carry a ${leverPct}% leverage penalty. Full Planche and Iron Cross require significantly more strength than the standard benchmarks.`;
+            leverWhat = `At ${Math.round(h)}cm, you carry a ${leverPct}% leverage penalty. Full Planche and Iron Cross require significantly more strength than the standard benchmarks.`;
             leverFix  = "Accept longer timelines. Target weighted pull-up and dip ratios 20–30% above standard benchmarks to compensate for limb length.";
         }
         const leverDesc = `Torque factor: ${torqueFactor.toFixed(2)}x (penalty: +${leverPct}%)`;
@@ -1536,21 +1887,24 @@ function analyze() {
         }
         const kineticDesc = form < 1.0 ? `Piked form: −${formTax.toFixed(0)}% output` : "Full ROM — no energy leaks detected";
 
+        // ── RECOMMENDED PROTOCOL ──
         let recommendationHtml = "";
         if (activeGoal !== "None") {
-            const skillIndex = skills.findIndex(s => s.name === activeGoal);
-            const currentSkillPct = parseFloat(curScores[skillIndex]);
+            const skillIndex     = skills.findIndex(s => s.name === activeGoal);
+            const currentSkillPct = parseFloat(curScores[skillIndex] || 0);
             let protocol = [];
             if (activeGoal.includes("Planche")) {
-                if (currentSkillPct < 35)     protocol = ["Planche Leans","Scapula Push-ups","Frog Stand"];
-                else if (currentSkillPct < 65) protocol = ["Tuck Planche Max","PPPUs","Straight Arm DB Raise"];
-                else                           protocol = ["Straddle Negatives","Planche Press","90 Degree Push-ups"];
+                if (currentSkillPct < 35)      protocol = ["Planche Leans","Scapula Push-ups","Frog Stand"];
+                else if (currentSkillPct < 65)  protocol = ["Tuck Planche Max","PPPUs","Straight Arm DB Raise"];
+                else                            protocol = ["Straddle Negatives","Planche Press","90 Degree Push-ups"];
             } else if (activeGoal === "Front Lever") {
-                if (currentSkillPct < 35)     protocol = ["Scapular Pulls","Active Arch Hangs","Tuck FL Pulls"];
-                else if (currentSkillPct < 65) protocol = ["Adv. Tuck FL","FL Negatives","Ice Cream Makers"];
-                else                           protocol = ["Full FL Pull-to-Inv","FL Rows","Dragon Flags"];
+                if (currentSkillPct < 35)      protocol = ["Scapular Pulls","Active Arch Hangs","Tuck FL Pulls"];
+                else if (currentSkillPct < 65)  protocol = ["Adv. Tuck FL","FL Negatives","Ice Cream Makers"];
+                else                            protocol = ["Full FL Pull-to-Inv","FL Rows","Dragon Flags"];
             } else if (activeGoal === "Iron Cross") {
                 protocol = currentSkillPct < 35 ? ["Support (Ext. Rot)","Skin the Cat","Wide Support"] : ["Cross Pulls","Ring Flys","Zanetti Press"];
+            } else if (activeGoal === "Maltese") {
+                protocol = currentSkillPct < 35 ? ["Wide Ring Support","Maltese Leans","Zanetti Press"] : ["Maltese Press","Victorian Press","Band Maltese Holds"];
             } else if (activeGoal === "Muscle-up") {
                 protocol = currentSkillPct < 50 ? ["Explosive Pulls","Tricep Dips","Transitions"] : ["Weighted MUs","Slow Negatives","Russian Dips"];
             }
@@ -1562,16 +1916,52 @@ function analyze() {
             }
         }
 
-        const shoulders = document.querySelectorAll('#joint-shoulder-l,#joint-shoulder-r');
-        const elbows    = document.querySelectorAll('#joint-elbow-l,#joint-elbow-r');
-        let riskMsg = "SYSTEMS NOMINAL";
-        if (scapularHealthRaw < 0.85) { shoulders.forEach(s => s.style.fill = "#ff4444"); riskMsg = "SHOULDER RISK"; }
-        else                          { shoulders.forEach(s => s.style.fill = "var(--potential)"); }
-        if (tendonLoadRaw < 0.60)     { elbows.forEach(e => e.style.fill = "#ff4444"); riskMsg = riskMsg === "SHOULDER RISK" ? "MULTI JOINT ADVISORY" : "ELBOW RISK"; }
-        else                          { elbows.forEach(e => e.style.fill = "var(--potential)"); }
-        const rMsg = document.getElementById("risk-msg");
-        if (rMsg) { rMsg.innerText = riskMsg; rMsg.style.color = riskMsg === "SYSTEMS NOMINAL" ? "var(--potential)" : "#ff4444"; }
+        // ── HEATMAP ──
+        const hmShoulders = document.querySelectorAll('#joint-shoulder-l,#joint-shoulder-r');
+        const hmElbows    = document.querySelectorAll('#joint-elbow-l,#joint-elbow-r');
+        const hmWrists    = document.querySelectorAll('#joint-wrist-l,#joint-wrist-r');
 
+        // Shoulder: push/pull balance
+        const sRed  = scapularHealthRaw < 0.80 || scapularHealthRaw > 1.45;
+        const sWarn = scapularHealthRaw < 0.90 || scapularHealthRaw > 1.25;
+        hmShoulders.forEach(s => s.style.fill = sRed ? '#ff4444' : sWarn ? '#ff9900' : '#00ffcc');
+
+        // Elbow: straight-arm tendon load ratio
+        const eRed  = tendonLoadRaw < 0.55;
+        const eWarn = tendonLoadRaw < 0.68;
+        hmElbows.forEach(e => e.style.fill = eRed ? '#ff4444' : eWarn ? '#ff9900' : '#00ffcc');
+
+        // Wrist: only relevant on rings; colour based on total load
+        const totalLoadPct = dipPctBW + pullPctBW;
+        const wRed  = isRings && totalLoadPct > 130;
+        const wWarn = isRings && totalLoadPct > 85;
+        const wGrey = !isRings;
+        hmWrists.forEach(w => w.style.fill = wGrey ? '#444' : wRed ? '#ff4444' : wWarn ? '#ff9900' : '#00ffcc');
+
+        // Build risk message list
+        const hmRisks = [];
+        if (sRed)  hmRisks.push({ msg: 'SHOULDER IMBALANCE',    sev: 'red' });
+        else if (sWarn) hmRisks.push({ msg: 'PUSH/PULL GAP',    sev: 'warn' });
+        if (eRed)  hmRisks.push({ msg: 'ELBOW TENDON STRESS',   sev: 'red' });
+        else if (eWarn) hmRisks.push({ msg: 'TENDON LOAD HIGH', sev: 'warn' });
+        if (wRed)  hmRisks.push({ msg: 'WRIST OVERLOAD (RINGS)',sev: 'red' });
+        else if (wWarn) hmRisks.push({ msg: 'WRIST LOAD (RINGS)',sev: 'warn' });
+
+        const rMsg = document.getElementById('risk-msg');
+        if (rMsg) {
+            if (hmRisks.length === 0) {
+                rMsg.innerText = '✓ SYSTEMS NOMINAL';
+                rMsg.style.color = '#00ffcc';
+            } else {
+                const hasRed = hmRisks.some(r => r.sev === 'red');
+                rMsg.innerHTML = hmRisks.map(r =>
+                    `<span style="color:${r.sev==='red'?'#ff4444':'#ff9900'};">${r.sev==='red'?'⚠ ':'○ '}${r.msg}</span>`
+                ).join('<br>');
+                rMsg.style.color = hasRed ? '#ff4444' : '#ff9900';
+            }
+        }
+
+        // ── AUDIT PANEL RENDER ──
         const createInsight = (title, status, metric, what, fix, color) => `
             <div style="margin-bottom:14px;border:1px solid ${color}22;border-left:3px solid ${color};border-radius:8px;padding:12px 14px;background:rgba(255,255,255,0.02);">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
@@ -1586,22 +1976,95 @@ function analyze() {
             </div>`;
 
         let auditHtml = `<h3 style="font-size:0.75em;letter-spacing:3px;color:var(--primary);margin-bottom:16px;border-bottom:1px solid #333;padding-bottom:10px;">BIOMECHANICAL PROFILING</h3>`;
-        auditHtml += createInsight("Push/Pull Balance",       scapStatus,   scapDesc,    scapWhat,    scapFix,    scapColor);
-        auditHtml += createInsight("Tendon Readiness",        tendonStatus, tendonDesc,  tendonWhat,  tendonFix,  tendonColor);
-        auditHtml += createInsight("Height Leverage",         leverEffect,  leverDesc,   leverWhat,   leverFix,   leverColor);
-        auditHtml += createInsight("CNS & Recovery",          cnsStatus,    cnsDesc,     cnsWhat,     cnsFix,     cnsColor);
-        auditHtml += createInsight("Explosive Transfer",      expStatus,    expDesc,     expWhat,     expFix,     expColor);
-        auditHtml += createInsight("Elbow & Joint Health",    elbowStatus,  elbowDesc,   elbowWhat,   elbowFix,   elbowColor);
-        auditHtml += createInsight("Overall Strength Index",  relStatus,    relDesc,     relWhat,     relFix,     relColor);
-        auditHtml += createInsight("Form & Kinetic Integrity",kineticStatus,kineticDesc, kineticWhat, kineticFix, kineticColor);
+        auditHtml += createInsight("Push/Pull Balance",        scapStatus,    scapDesc,    scapWhat,    scapFix,    scapColor);
+        auditHtml += createInsight("Tendon Readiness",         tendonStatus,  tendonDesc,  tendonWhat,  tendonFix,  tendonColor);
+        auditHtml += createInsight("Height Leverage",          leverEffect,   leverDesc,   leverWhat,   leverFix,   leverColor);
+        auditHtml += createInsight("CNS & Recovery",           cnsStatus,     cnsDesc,     cnsWhat,     cnsFix,     cnsColor);
+        auditHtml += createInsight("Explosive Transfer",       expStatus,     expDesc,     expWhat,     expFix,     expColor);
+        auditHtml += createInsight("Elbow & Joint Health",     elbowStatus,   elbowDesc,   elbowWhat,   elbowFix,   elbowColor);
+        auditHtml += createInsight("Overall Strength Index",   relStatus,     relDesc,     relWhat,     relFix,     relColor);
+        auditHtml += createInsight("Form & Kinetic Integrity", kineticStatus, kineticDesc, kineticWhat, kineticFix, kineticColor);
 
         document.getElementById("aiFeedback").innerHTML = auditHtml + recommendationHtml;
+
+        // ── BEGINNER STATE ── replace skill bars with a start-here guide
+        if (isBeginnerMode) {
+            const rawPullups  = parseInt(document.getElementById('pullups').value) || 0;
+            const rawPushups  = parseInt(document.getElementById('pushups').value) || 0;
+            const rawMuBeg    = parseInt(document.getElementById('mu').value)      || 0;
+
+            // Assess level from BW numbers
+            let level, levelColor, nextStep, targetWeight;
+            if (rawPullups === 0) {
+                level = 'LEVEL 0 — BUILD THE FOUNDATION';
+                levelColor = '#ff4444';
+                nextStep = 'You can\'t do a pull-up yet. That\'s your one and only goal right now.';
+                targetWeight = null;
+            } else if (rawPullups < 5) {
+                level = 'LEVEL 1 — EARLY PULLING';
+                levelColor = '#ff9900';
+                nextStep = `${rawPullups} pull-ups. You need 10 strict reps before adding weight. Do pull-up negatives + band work daily.`;
+                targetWeight = null;
+            } else if (rawPullups < 10) {
+                level = 'LEVEL 2 — GETTING THERE';
+                levelColor = '#ff9900';
+                nextStep = `${rawPullups} pull-ups. Close — build to 10 strict reps before going weighted. Add 1 rep per week.`;
+                targetWeight = null;
+            } else if (rawPullups < 15) {
+                level = 'LEVEL 3 — WEIGHTED READY';
+                levelColor = '#00ffcc';
+                nextStep = `${rawPullups} pull-ups. You\'re ready to start weighted training. Enter +5–${Math.round(bw*0.07)}kg × 5 reps above to unlock your skill scores.`;
+                targetWeight = Math.round(bw * 0.07);
+            } else {
+                level = 'LEVEL 4 — INTERMEDIATE';
+                levelColor = '#00ffcc';
+                nextStep = `${rawPullups} pull-ups. Strong base. Enter your weighted pull-up and dip numbers above — you likely have more skill readiness than you think.`;
+                targetWeight = Math.round(bw * 0.12);
+            }
+
+            // First skill targets based on BW level
+            const begUnit = document.getElementById('loadUnit')?.value || 'kg';
+            const begConv = begUnit === 'lbs' ? 2.205 : 1;
+            const wStr = (kg) => Math.round(kg * begConv) + begUnit;
+            const skillTargets = [
+                { skill: 'Muscle-up',       req: '10 strict pull-ups + 5 dips',                    unlock: rawPullups >= 10 && rawPushups >= 5 },
+                { skill: 'Front Lever',     req: `+${wStr(bw*0.25)} pull-up × 5`,                  unlock: rawPullups >= 10 },
+                { skill: 'Straddle Planche',req: `+${wStr(bw*0.37)} dip × 5`,                      unlock: rawPushups >= 15 },
+                { skill: 'Iron Cross',      req: `+${wStr(bw*0.5)} dip & pull + SA work`,          unlock: false },
+                { skill: 'Full Planche',    req: `+${wStr(bw*0.68)} dip × 5`,                      unlock: false },
+                { skill: 'Maltese',         req: 'Iron Cross first — years of SA work',            unlock: false },
+            ];
+
+            barHtml = `
+                <div style="padding:4px 0 12px;">
+                    <div style="font-size:0.65em;letter-spacing:2px;color:${levelColor};font-weight:900;margin-bottom:6px;">${level}</div>
+                    <div style="font-size:0.82em;color:#ccc;line-height:1.7;margin-bottom:16px;font-family:sans-serif;">${nextStep}</div>
+
+                    ${targetWeight ? `<div style="background:rgba(0,255,204,0.06);border:1px solid #00ffcc33;border-radius:6px;padding:10px 14px;margin-bottom:16px;font-family:monospace;font-size:0.75em;color:#00ffcc;">
+                        ▶ Try entering: <strong>+${wStr(targetWeight)} × 5 reps</strong> in Weighted Pull-up above to see where you stand.
+                    </div>` : ''}
+
+                    <div style="font-size:0.6em;color:#555;letter-spacing:2px;margin-bottom:8px;border-top:1px solid #222;padding-top:12px;">SKILL UNLOCK ROADMAP</div>
+                    ${skillTargets.map(t => `
+                        <div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid #1a1a2a;">
+                            <span style="font-size:0.75em;color:${t.unlock ? '#00ffcc' : '#444'};font-family:monospace;min-width:16px;">${t.unlock ? '✓' : '○'}</span>
+                            <span style="font-size:0.78em;color:${t.unlock ? '#fff' : '#555'};font-weight:${t.unlock ? 'bold' : 'normal'};">${t.skill}</span>
+                            <span style="font-size:0.65em;color:#444;margin-left:auto;font-family:monospace;text-align:right;">${t.req}</span>
+                        </div>`).join('')}
+
+                    <div style="margin-top:16px;padding:10px;background:#0d0d1a;border-left:2px solid #4c6fff;border-radius:3px;font-size:0.75em;color:#888;line-height:1.6;">
+                        💡 Weighted training is the fastest path to advanced skills. Even +5kg on pull-ups unlocks measurable front lever progress.
+                    </div>
+                </div>`;
+        }
+
         document.getElementById("barContainer").innerHTML = barHtml;
         radarChart.data.datasets[0].data = curScores;
         radarChart.data.datasets[1].data = potScores;
         radarChart.update('none');
 
-        renderSkillGapTable(pull1RM, push1RM, sa1RM, torqueFactor, bw, loadConv);
+        renderSkillGapTable(bw, loadConv, bwScale, htScale, u);
+        renderTrainingFocus(lastScores, effDipPct, effPullPct, effSaPct, bw, hAdj, loadConv, u);
 
         const sb = document.getElementById("shareBtns");
         if (sb) sb.style.display = "flex";
@@ -1609,66 +2072,431 @@ function analyze() {
     } catch (err) { console.error("Analysis Error:", err); }
 }
 
-function renderSkillGapTable(pull1RM, push1RM, sa1RM, torqueFactor, bw, loadConv) {
+// ============================================================
+// TODAY'S TRAINING FOCUS
+// ============================================================
+function renderTrainingFocus(scores, effDip, effPull, effSA, bw, hAdj, loadConv, u) {
+    const el = document.getElementById('trainingFocusBody');
+    if (!el) return;
+
+    // Beginner mode guard
+    const allZero = Object.keys(scores).length === 0 || Object.values(scores).every(v => v === 0);
+    if (allZero) {
+        el.innerHTML = `<div style="font-family:monospace;font-size:0.8em;color:#555;line-height:1.9;">
+            Enter your weighted pull-up and dip numbers above to unlock your personalised training focus.<br>
+            <span style="color:#4c6fff;">No weighted training yet?</span> Start with bodyweight — build to 10 pull-ups first.
+        </div>`;
+        return;
+    }
+
+    // ── GOAL ─────────────────────────────────────────────────────────────────
+    const goalEl = document.getElementById('goalSelectTop') || document.getElementById('goalSelect');
+    const selectedGoal = goalEl?.value;
+    let targetSkill, targetScore;
+    if (selectedGoal && selectedGoal !== 'None' && scores[selectedGoal] !== undefined) {
+        targetSkill = selectedGoal; targetScore = scores[selectedGoal];
+    } else {
+        const ranked = Object.entries(scores).filter(([,v]) => v < 98 && v > 0).sort(([,a],[,b]) => b-a);
+        if (!ranked.length) { el.innerHTML = '<span style="color:#00ffcc;">🏆 All skills at max — add more weight.</span>'; return; }
+        [targetSkill, targetScore] = ranked[0];
+    }
+
+    // ── PERIODIZATION ────────────────────────────────────────────────────────
+    // Phase cycles every 4 sessions: Foundation → Strength → Intensity → Deload
+    const logs = JSON.parse(localStorage.getItem('caliLogs') || '[]');
+    const sessionCount = logs.length;
+    const phaseIndex = sessionCount % 16; // 4 sessions × 4 phases
+    let phase, phaseColor, phaseDesc;
+    if      (phaseIndex < 4)  { phase = 'FOUNDATION';  phaseColor = '#4c6fff'; phaseDesc = 'Higher reps, technique focus'; }
+    else if (phaseIndex < 8)  { phase = 'STRENGTH';    phaseColor = '#00ffcc'; phaseDesc = 'Lower reps, heavier loads'; }
+    else if (phaseIndex < 12) { phase = 'INTENSITY';   phaseColor = '#ff9900'; phaseDesc = 'Max effort, PR attempts'; }
+    else                      { phase = 'DELOAD';      phaseColor = '#888';    phaseDesc = 'Light load, technique only'; }
+
+    // ── DAYS SINCE LAST SESSION ──────────────────────────────────────────────
+    const lastLogDate  = localStorage.getItem('caliLastLogDate');
+    const lastFocus    = localStorage.getItem('caliLastFocus');
+    const today        = new Date();
+    const todayStr     = today.toDateString();
+    const trainedToday = lastLogDate === todayStr;
+    let daysSince = null;
+    if (lastLogDate && !trainedToday) {
+        const diff = today - new Date(lastLogDate);
+        daysSince = Math.floor(diff / (1000 * 60 * 60 * 24));
+    }
+
+    // ── ROTATION SEED ────────────────────────────────────────────────────────
+    // Combines session count + day-of-year so exercise varies daily even without logging
+    const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
+    const seed = sessionCount + dayOfYear;
+
+    // ── ROTATION DAY TYPE ────────────────────────────────────────────────────
+    const rotationNext  = { push: 'pull', pull: 'sa', sa: 'push' };
+    const focusLabels   = { push: 'Push', pull: 'Pull', sa: 'SA' };
+    const nextLabels    = { push: '💪 Push', pull: '🔗 Pull', sa: '🔄 SA' };
+    const suggestedFocus = lastFocus ? rotationNext[lastFocus] : (['push','pull','sa'][seed % 3]);
+
+    // ── EXERCISE POOLS (phase-aware) ─────────────────────────────────────────
+    // Each skill has pools for push/pull/sa day × phase (heavy vs volume vs deload)
+    const isDeload = phase === 'DELOAD';
+    const isIntense = phase === 'INTENSITY';
+    const isStrength = phase === 'STRENGTH';
+
+    const pools = {
+        'Straddle Planche': {
+            push: isDeload
+                ? [['Planche Leans 3×15s','Pseudo Planche Push-ups 2×6','Shoulder Stretches 3×30s'],
+                   ['Band-Assisted Tuck Planche 3×10s','Wall Planche Leans 2×15s','Wrist Mobility Work']]
+                : isIntense
+                ? [['Weighted Ring Dips 5×3','Max Effort Planche Lean Hold 3×max','Pseudo Planche Push-ups 3×5'],
+                   ['Weighted Bar Dips 5×3','Straddle Planche Attempt 3×max','Planche Leans 3×25s']]
+                : isStrength
+                ? [['Weighted Ring Dips 4×4','Planche Leans 4×20s','Pseudo Planche Push-ups 3×6'],
+                   ['Weighted Bar Dips 4×4','Tuck Planche Hold 4×12s','Ring Push-ups 3×8']]
+                : [['Weighted Ring Dips 3×6','Planche Leans 3×15s','Pseudo Planche Push-ups 3×10'],
+                   ['Ring Push-ups 3×8','Tuck Planche Hold 3×10s','Planche Leans 3×15s'],
+                   ['Bar Dips 3×10','Wall Planche Lean 3×15s','Diamond Push-ups 3×10']],
+            pull: isDeload
+                ? [['Scapular Pull-ups 3×10','Dead Hang 3×30s','Band Pull-Aparts 3×15']]
+                : isIntense
+                ? [['Weighted Pull-ups 5×3','Straddle FL Hold 3×8s','Explosive Pull-ups 3×4'],
+                   ['Max Weighted Pull-up Single','Tuck Front Lever Rows 4×5','Scapular Pull-ups 3×8']]
+                : isStrength
+                ? [['Weighted Pull-ups 4×4','Front Lever Progressions 3×8s','Scapular Pull-ups 3×8'],
+                   ['Weighted Pull-ups 4×4','Tuck Planche Row 3×8','Dead Hang 3×45s']]
+                : [['Weighted Pull-ups 3×6','Scapular Pull-ups 3×12','Dead Hang 3×30s'],
+                   ['Pull-up Negatives 3×5s each','Tuck FL Hold 3×8s','Band Pull-Aparts 3×15'],
+                   ['Weighted Pull-ups 3×5','Arch Body Hold 3×20s','Hollow Body Hold 3×20s']],
+            sa: isDeload
+                ? [['Zanetti Press 2×8 light','Wrist Circles 3×20','Shoulder Rotations 3×15']]
+                : isIntense
+                ? [['Zanetti Press 4×5 heavy','Ring Fly Negatives 4×5s','Wide Ring Support 3×20s'],
+                   ['Zanetti Press 5×4','Band-Assisted Straddle Hold 4×10s','Ring Fly Negatives 3×6s']]
+                : isStrength
+                ? [['Zanetti Press 4×6','Planche Leans 4×20s','Band-Assisted Straddle Hold 3×10s'],
+                   ['Zanetti Press 4×5','Ring Fly Negatives 3×5s','Wide Ring Support 3×25s']]
+                : [['Zanetti Press 3×8','Planche Leans 3×15s','Wrist Mobility 2×20'],
+                   ['Zanetti Press 3×8','Band-Assisted Planche 3×8s','Shoulder Press 3×10'],
+                   ['Dumbbell SA Raise 3×10','Planche Lean Holds 3×15s','Wrist Curls 3×15']]
+        },
+        'Front Lever': {
+            push: isDeload
+                ? [['Push-up Holds 3×10s','Ring Support 2×20s','Dip Shrugs 3×10']]
+                : isIntense
+                ? [['Weighted Ring Dips 5×3','Ring L-Sit 3×max','Pseudo Planche Push-ups 3×5']]
+                : isStrength
+                ? [['Weighted Ring Dips 4×4','Ring Push-ups 3×6','Ring Support Hold 3×30s'],
+                   ['Weighted Bar Dips 4×4','Ring Push-ups 3×8','Dip Shrugs 3×12']]
+                : [['Weighted Ring Dips 3×6','Ring Push-ups 3×10','Ring Support Hold 3×20s'],
+                   ['Bar Dips 3×8','Push-up Variations 3×10','Ring Support Hold 3×20s'],
+                   ['Ring Dip Negatives 3×5s','Push-ups 3×15','Dip Shrugs 3×12']],
+            pull: isDeload
+                ? [['Tuck FL Hold 2×8s','Dead Hang 3×30s','Arch Body Hold 3×20s']]
+                : isIntense
+                ? [['Weighted Pull-ups 5×3','Full FL Attempt 3×max','Straddle FL Row 4×4'],
+                   ['Max Weighted Pull-up','FL Negatives 4×5s','Explosive Chin-ups 3×4']]
+                : isStrength
+                ? [['Weighted Pull-ups 4×4','Straddle FL Hold 4×8s','Tuck FL Rows 3×6'],
+                   ['Weighted Pull-ups 4×4','FL Negatives 3×5s','Archer Rows 3×6']]
+                : [['Weighted Pull-ups 3×6','Tuck FL Hold 3×8s','Straddle FL Hold 3×5s'],
+                   ['Pull-up Negatives 3×5s each','Tuck FL Rows 3×8','Dead Hang 3×30s'],
+                   ['Weighted Pull-ups 3×5','Arch Body Hold 3×20s','One-Arm Dead Hang 3×10s each']],
+            sa: isDeload
+                ? [['Zanetti Press 2×8 light','Wrist Mobility 3×20','Band Pull-Aparts 2×15']]
+                : isIntense
+                ? [['Zanetti Press 4×5 heavy','FL Negatives 4×5s','Arch Body Hold 3×25s']]
+                : isStrength
+                ? [['Zanetti Press 4×6','Front Lever Negatives 3×5s','Arch Body Hold 3×20s'],
+                   ['Zanetti Press 4×5','Straddle FL Hold 4×8s','Hollow Body Hold 3×25s']]
+                : [['Zanetti Press 3×8','Front Lever Negatives 3×5s','Hollow Body Hold 3×20s'],
+                   ['SA Raise 3×10','Arch Body Hold 3×20s','Dead Bug 3×10'],
+                   ['Zanetti Press 3×10 light','Tuck FL Hold 3×8s','Scapular Pull-ups 3×10']]
+        },
+        'Iron Cross': {
+            push: isDeload
+                ? [['Ring Support Hold 2×30s','Dip Shrugs 3×10','Wrist Circles 3×20']]
+                : isIntense
+                ? [['Weighted Ring Dips 5×3','Ring Support Hold 3×40s','Ring Push-ups 3×5'],
+                   ['Bar Dips Max Weight','Wide Ring Support 3×30s','Ring Dip Holds 3×10s']]
+                : isStrength
+                ? [['Weighted Ring Dips 4×4','Ring Support Hold 3×30s','Ring Push-ups 3×6'],
+                   ['Weighted Ring Dips 4×4','Wide Ring Support 3×25s','Ring Dip Negatives 3×5s']]
+                : [['Weighted Ring Dips 3×6','Ring Push-ups 3×10','Ring Support Hold 3×20s'],
+                   ['Ring Dips 3×8','Wide Ring Support 3×20s','Dip Shrugs 3×12'],
+                   ['Weighted Ring Dips 3×5','Ring Support Hold 3×25s','Band-Assisted Cross Lean 3×10s']],
+            pull: isDeload
+                ? [['Dead Hang 3×30s','Scapular Pull-ups 2×10','Tuck FL Hold 2×8s']]
+                : isIntense
+                ? [['Weighted Pull-ups 5×3','Tuck FL Hold 3×max','Archer Rows 3×4 each'],
+                   ['Max Weighted Pull-up','Ring Rows 4×5','Tuck FL Rows 4×5']]
+                : isStrength
+                ? [['Weighted Pull-ups 4×4','Ring Rows 3×8','Tuck FL Hold 3×10s'],
+                   ['Weighted Chin-ups 4×4','Archer Rows 3×6 each','Dead Hang 3×45s']]
+                : [['Weighted Pull-ups 3×6','Ring Rows 3×10','Dead Hang 3×30s'],
+                   ['Pull-up Variations 3×8','Tuck FL Rows 3×8','Scapular Pull-ups 3×10'],
+                   ['Weighted Pull-ups 3×5','One-Arm Dead Hang 3×10s','Archer Rows 3×8 each']],
+            sa: isDeload
+                ? [['Zanetti Press 2×8 light','Band Fly 2×15','Wrist Mobility 3×20']]
+                : isIntense
+                ? [['Zanetti Press 5×4 heavy','Ring Fly Negatives 5×5s','Band-Assisted Cross Hold 4×8s'],
+                   ['Heavy Zanetti Press 5×3','Wide Ring Support 4×25s','Ring Fly Negatives 4×5s']]
+                : isStrength
+                ? [['Zanetti Press 4×6','Ring Fly Negatives 4×5s','Band-Assisted Cross Hold 3×8s'],
+                   ['Zanetti Press 4×5','Wide Ring Support 3×25s','Ring Fly Negatives 3×6s']]
+                : [['Zanetti Press 3×8','Ring Fly Negatives 3×5s','Band Cross Hold 3×8s'],
+                   ['SA Raise 3×10','Ring Fly Negatives 3×6s','Wide Ring Support 3×20s'],
+                   ['Zanetti Press 3×10','Band-Assisted Cross Leans 3×10s','Ring Fly Negatives 3×5s']]
+        },
+        'Maltese': {
+            push: isDeload
+                ? [['Ring Support Hold 2×25s','Wide Ring Support 2×15s','Wrist Circles 3×20']]
+                : isIntense
+                ? [['Weighted Ring Dips 5×3','Maltese Lean 3×max','Iron Cross Negatives 4×5s']]
+                : isStrength
+                ? [['Weighted Ring Dips 4×4','Iron Cross Negatives 3×5s','Maltese Leans 3×10s'],
+                   ['Weighted Ring Dips 4×4','Wide Ring Support 3×25s','Ring Dip Holds 3×10s']]
+                : [['Weighted Ring Dips 3×6','Maltese Leans 3×8s','Wide Ring Support 3×20s'],
+                   ['Ring Dips 3×8','Iron Cross Negatives 3×5s','Ring Support Hold 3×30s'],
+                   ['Weighted Ring Dips 3×5','Maltese Leans 3×10s','Dip Holds 3×10s']],
+            pull: isDeload
+                ? [['Dead Hang 3×30s','Scapular Pull-ups 2×10','FL Hold 2×8s']]
+                : isIntense
+                ? [['Weighted Pull-ups 5×3','Straddle FL Hold 3×max','Ring Rows 4×4']]
+                : isStrength
+                ? [['Weighted Pull-ups 4×4','FL Negatives 3×5s','Ring Rows 3×8'],
+                   ['Weighted Chin-ups 4×4','Straddle FL Hold 3×8s','Archer Rows 3×6 each']]
+                : [['Weighted Pull-ups 3×6','Front Lever Progressions 3×8s','Ring Rows 3×10'],
+                   ['Pull-up Variations 3×8','Tuck FL Hold 3×8s','Dead Hang 3×30s'],
+                   ['Weighted Pull-ups 3×5','Straddle FL Hold 3×6s','One-Arm Dead Hang 3×10s']],
+            sa: isDeload
+                ? [['Zanetti Press 2×8 light','Band Fly 2×12','Wrist Mobility 3×20']]
+                : isIntense
+                ? [['Zanetti Press 5×4 heavy','Ring Fly Negatives 5×5s','Wide Ring Support 4×25s'],
+                   ['Heavy Zanetti Press 5×3','Maltese Leans 4×10s','Ring Fly Negatives 4×5s']]
+                : isStrength
+                ? [['Zanetti Press 4×6','Ring Fly Negatives 4×5s','Wide Ring Support 3×20s'],
+                   ['Zanetti Press 4×5','Maltese Leans 3×10s','Ring Fly Negatives 3×6s']]
+                : [['Zanetti Press 3×8','Ring Fly Negatives 3×5s','Wide Ring Support 3×20s'],
+                   ['SA Raise 3×10','Maltese Leans 3×8s','Ring Fly Negatives 3×6s'],
+                   ['Zanetti Press 3×10','Wide Ring Support 3×20s','Band Maltese Lean 3×10s']]
+        },
+        'Muscle-up': {
+            push: isDeload
+                ? [['Bar Dips 2×8','Push-up Holds 2×10s','Wrist Circles 3×20']]
+                : isIntense
+                ? [['Weighted Ring Dips 5×3','Muscle-up Negatives 3×3','Ring Dip Holds 3×10s'],
+                   ['Max Weighted Bar Dip','MU Transition Drills 4×3','Ring Dip Holds 3×10s']]
+                : isStrength
+                ? [['Weighted Ring Dips 4×4','Muscle-up Negatives 3×3','Ring Support Hold 3×20s'],
+                   ['Weighted Bar Dips 4×4','MU Transition 3×3','Ring Dip Holds 3×10s']]
+                : [['Weighted Ring Dips 3×6','Muscle-up Negatives 3×3','Ring Dips 3×8'],
+                   ['Bar Dips 3×10','Ring Dip Holds 3×10s','Push-up Variations 3×10'],
+                   ['Ring Dips 3×8','Dip Hold Negatives 3×5s','Bar Dips 3×8']],
+            pull: isDeload
+                ? [['Pull-up Holds 2×8s','Dead Hang 3×30s','Scapular Pull-ups 2×10']]
+                : isIntense
+                ? [['Weighted Pull-ups 5×3','Chest-to-Bar 3×5','Explosive Pull-ups 3×4'],
+                   ['Max Weighted Pull-up','High Pulls 4×4','Explosive Pull-ups 3×3']]
+                : isStrength
+                ? [['Weighted Pull-ups 4×4','Chest-to-Bar Pull-ups 3×5','High Pulls 3×4'],
+                   ['Weighted Chin-ups 4×4','Explosive Pull-ups 3×4','Chest-to-Bar 3×4']]
+                : [['Weighted Pull-ups 3×6','Chest-to-Bar Pull-ups 3×5','High Pulls 3×5'],
+                   ['Pull-up Variations 3×8','Explosive Pull-ups 3×5','Dead Hang 3×30s'],
+                   ['Weighted Pull-ups 3×5','Kipping Practice 3×5','Archer Rows 3×6 each']],
+            sa: isDeload
+                ? [['Shoulder Rotations 3×15','Band Pull-Aparts 3×15','Wrist Mobility 3×20']]
+                : isIntense
+                ? [['Zanetti Press 4×5','Ring Support Hold 3×40s','MU Transition Drill 4×3']]
+                : isStrength
+                ? [['Zanetti Press 4×6','Ring Support Hold 3×30s','Shoulder Stability Work 3×10'],
+                   ['Zanetti Press 4×5','Ring Support Hold 3×35s','Band Pull-Aparts 3×15']]
+                : [['Zanetti Press 3×8','Ring Support Hold 3×20s','Shoulder Dislocates 3×10'],
+                   ['SA Raise 3×10','Band Pull-Aparts 3×15','Ring Support Hold 3×20s'],
+                   ['Zanetti Press 3×8','Wrist Mobility 3×20','Ring Support Hold 3×25s']]
+        },
+        'Full Planche': {
+            push: isDeload
+                ? [['Planche Leans 2×15s','Pseudo Planche Push-ups 2×5','Wrist Mobility 3×20']]
+                : isIntense
+                ? [['Weighted Ring Dips 5×3','Straddle Planche Hold 3×max','Planche Negatives 3×5s'],
+                   ['Max Weighted Bar Dip','Full Planche Attempt 3×max','Straddle Planche Hold 3×8s']]
+                : isStrength
+                ? [['Weighted Ring Dips 4×4','Straddle Planche Negatives 3×5s','Pseudo Planche Push-ups 3×5'],
+                   ['Weighted Bar Dips 4×4','Planche Leans 4×20s','Tuck Planche Hold 3×12s']]
+                : [['Weighted Ring Dips 3×6','Planche Leans 3×15s','Pseudo Planche Push-ups 3×8'],
+                   ['Ring Push-ups 3×8','Tuck Planche Hold 3×10s','Planche Leans 3×15s'],
+                   ['Bar Dips 3×10','Straddle Planche Lean 3×15s','Diamond Push-ups 3×8']],
+            pull: isDeload
+                ? [['Scapular Pull-ups 2×10','Dead Hang 3×30s','Band Pull-Aparts 2×15']]
+                : isIntense
+                ? [['Weighted Pull-ups 5×3','Straddle FL Hold 3×max','Explosive Chin-ups 3×4']]
+                : isStrength
+                ? [['Weighted Pull-ups 4×4','Front Lever Progressions 3×8s','Scapular Pull-ups 3×8'],
+                   ['Weighted Pull-ups 4×4','Tuck FL Hold 4×10s','Dead Hang 3×45s']]
+                : [['Weighted Pull-ups 3×6','Front Lever Progressions 3×8s','Scapular Pull-ups 3×10'],
+                   ['Pull-up Negatives 3×5s','Tuck FL Hold 3×8s','Arch Body Hold 3×20s'],
+                   ['Weighted Pull-ups 3×5','Hollow Body Hold 3×20s','Scapular Pull-ups 3×10']],
+            sa: isDeload
+                ? [['Zanetti Press 2×8 light','Wrist Circles 3×20','Shoulder Rotations 3×15']]
+                : isIntense
+                ? [['Zanetti Press 5×4 heavy','Straddle Planche Hold 4×max','Ring Fly Negatives 4×5s']]
+                : isStrength
+                ? [['Zanetti Press 4×6','Straddle Planche Hold 3×5s','Planche Leans 3×20s'],
+                   ['Zanetti Press 4×5','Band-Assisted Full Planche 3×8s','Ring Fly Negatives 3×6s']]
+                : [['Zanetti Press 3×8','Straddle Planche Hold 3×5s','Planche Leans 3×15s'],
+                   ['SA Raise 3×10','Planche Lean Holds 3×15s','Wrist Curls 3×15'],
+                   ['Zanetti Press 3×8','Band-Assisted Planche 3×8s','Shoulder Press 3×10']]
+        }
+    };
+
+    // Pick exercise set from pool using seed rotation
+    const skillPool = pools[targetSkill];
+    const dayPool = skillPool?.[suggestedFocus] || skillPool?.push || [];
+    const exercises = dayPool[seed % dayPool.length] || ['Check goal selection above'];
+
+    // ── NEXT MILESTONE ───────────────────────────────────────────────────────
+    const moveMap = { push: 'weighted dip', pull: 'weighted pull-up', sa: 'Zanetti Press' };
+    const currentMove = moveMap[suggestedFocus];
+    const keyMap = { 'weighted dip': 'dip', 'weighted pull-up': 'pull', 'Zanetti Press': 'sa', 'explosive pull': 'pull' };
+    const activeBench = SKILL_BENCHMARKS_ACTIVE()[targetSkill];
+    let nextTargetLine = '';
+    const tblKey = keyMap[currentMove];
+    if (activeBench && activeBench[tblKey]) {
+        const curPct = tblKey === 'dip' ? effDip : tblKey === 'pull' ? effPull : effSA;
+        const tbl = activeBench[tblKey];
+        const curBand = Math.floor(lookupScore(curPct, tbl) / 10);
+        const nextBand = Math.min(curBand + 1, 9);
+        const nextKg = (tbl[nextBand] * hAdj / 100 * bw / (1 + 5/30) / loadConv).toFixed(0);
+        nextTargetLine = `<div style="margin:10px 0 6px;color:#fff;font-size:0.9em;">🎯 <strong>Next milestone:</strong> ${currentMove} → <span style="color:var(--primary);">+${nextKg}${u} × 5 reps</span></div>`;
+    }
+
+    // ── TIPS pool — rotates independently ────────────────────────────────────
+    const tipsPool = {
+        'Straddle Planche': ["Planche is 70% dip strength — every kg added to your dip moves the needle.", "Protract your scapula hard at the top of every planche lean. That shoulder position is the skill.", "Pseudo planche push-ups are underrated. Do them slow — 3 seconds down, pause, press.", "Your wrists need prep time. 5 min wrist mobility before every session — non-negotiable."],
+        'Full Planche':     ["You need full straddle planche before full planche. Don't skip the progression.", "The difference between straddle and full is core — not just arms. Train hollow body holds.", "Planche negatives build the exact strength you need. Lower in 5 seconds, every rep.", "Lean forward aggressively. Most people don't lean far enough on planche leans."],
+        'Front Lever':      ["Front lever is 70% pulling strength. Chase your weighted pull-up number relentlessly.", "Arch body holds train the exact position you need. Do them after every pull session.", "The straddle FL is not cheating — it's a legitimate progression. Master it before full.", "Scapular depression is everything. Pull your shoulders DOWN before you pull your body UP."],
+        'Iron Cross':       ["SA strength (Zanetti Press / ring flies) drives 44% of the cross. Don't skip it.", "The cross is a tendon skill as much as a muscle skill. Build slowly — years, not months.", "Ring support holds are your daily minimum. 3×30s every session no matter what.", "Even tiny improvements in SA strength make a huge difference at the cross level."],
+        'Maltese':          ["Maltese requires a solid iron cross first. No shortcuts — earn the cross.", "SA tendon prep takes 2-3 years minimum. Train it consistently, not frantically.", "Wide ring support holds are your best friend. Do them every single session.", "If your elbows are hurting, you're progressing too fast. Back off and build the tendons."],
+        'Muscle-up':        ["Can you do 15+ strict pull-ups? If not, the MU is a pulling strength problem, not technique.", "The transition is a skill — practice it slowly on low rings or a bar you can touch the floor from.", "Chest-to-bar pull-ups are the most direct MU prerequisite. Chase them hard.", "False grip on rings makes the transition far easier. Learn it early."]
+    };
+    const tips = tipsPool[targetSkill] || ["Train consistently and the scores will follow."];
+    const tip = tips[(seed + 1) % tips.length];
+
+    // ── PHASE TIP ────────────────────────────────────────────────────────────
+    const phaseTips = {
+        'FOUNDATION': 'Foundation week — focus on perfect form over weight. Build the pattern.',
+        'STRENGTH':   'Strength week — push the weight. Add load wherever you can.',
+        'INTENSITY':  'Intensity week — attempt PRs. This is your max effort session.',
+        'DELOAD':     'Deload week — go light, move well, let your tendons recover.'
+    };
+
+    // ── DAY BADGE ────────────────────────────────────────────────────────────
+    let dayBadge = '';
+    if (trainedToday) {
+        dayBadge = `<span style="background:rgba(0,255,204,0.1);border:1px solid #00ffcc33;color:#00ffcc;font-size:0.65em;padding:2px 8px;border-radius:3px;letter-spacing:1px;">✓ TRAINED TODAY</span>`;
+    } else if (daysSince === 1) {
+        dayBadge = `<span style="background:rgba(76,111,255,0.1);border:1px solid #4c6fff33;color:#4c6fff;font-size:0.65em;padding:2px 8px;border-radius:3px;letter-spacing:1px;">YESTERDAY'S REST → TRAIN TODAY</span>`;
+    } else if (daysSince !== null && daysSince >= 3) {
+        dayBadge = `<span style="background:rgba(255,153,0,0.1);border:1px solid #ff990033;color:#ff9900;font-size:0.65em;padding:2px 8px;border-radius:3px;letter-spacing:1px;">⚠ ${daysSince} DAYS SINCE LAST SESSION</span>`;
+    } else if (!lastFocus) {
+        dayBadge = `<span style="background:rgba(76,111,255,0.08);border:1px solid #333;color:#555;font-size:0.65em;padding:2px 8px;border-radius:3px;letter-spacing:1px;">FIRST SESSION — LOG IT AFTER TO TRACK PROGRESS</span>`;
+    } else {
+        dayBadge = `<span style="background:rgba(76,111,255,0.08);border:1px solid #333;color:#666;font-size:0.65em;padding:2px 8px;border-radius:3px;letter-spacing:1px;">Last: ${focusLabels[lastFocus]} → Today: ${nextLabels[suggestedFocus]}</span>`;
+    }
+
+    el.innerHTML = `
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+            ${dayBadge}
+            <span style="background:${phaseColor}18;border:1px solid ${phaseColor}44;color:${phaseColor};font-size:0.65em;padding:2px 8px;border-radius:3px;letter-spacing:1px;font-family:monospace;">${phase}</span>
+        </div>
+        <div style="font-size:0.7em;color:#555;font-family:monospace;margin-bottom:6px;">${phaseTips[phase]}</div>
+        <div style="margin-bottom:8px;">
+            <span style="color:#888;">Goal: </span>
+            <span style="color:var(--primary);font-weight:bold;">${targetSkill}</span>
+            <span style="color:#555;"> — ${targetScore.toFixed(0)}% ready</span>
+        </div>
+        ${nextTargetLine}
+        <div style="margin:10px 0 6px;color:#888;font-size:0.85em;">Today's exercises <span style="color:#333;font-size:0.85em;">(${nextLabels[suggestedFocus]} day)</span>:</div>
+        ${exercises.map(e => `<div style="padding:5px 0;color:#ccc;font-family:monospace;">▸ ${e}</div>`).join('')}
+        <div style="margin-top:14px;padding:10px;background:#0d1a0d;border-left:2px solid #00ffcc;border-radius:3px;color:#00ffcc;font-size:0.82em;line-height:1.6;">
+            💡 ${tip}
+        </div>
+    `;
+}
+
+// ============================================================
+// SKILL GAP TABLE — benchmark-driven
+// ============================================================
+function renderSkillGapTable(bw, loadConv, bwScale, htScale, u) {
     const tbody = document.getElementById('skillGapBody');
     if (!tbody) return;
-    const loadUnit = document.getElementById('loadUnit').value;
-    const u = loadUnit;
 
-    const rows = skills.map(s => {
-        const haveArr = [];
-        if (s.l > 0) haveArr.push({ name: 'Pull', have: pull1RM, need: s.l * torqueFactor });
-        if (s.p > 0) haveArr.push({ name: 'Push', have: push1RM, need: s.p * torqueFactor });
-        if (s.s > 0) haveArr.push({ name: 'SA',   have: sa1RM,   need: s.s * torqueFactor });
+    const legMod    = parseFloat(document.getElementById("legRatio").value) || 1.0;
+    const h         = parseFloat(document.getElementById("hCm")?.value) || 170;
+    const hAdj      = heightAdj(h) * legMod;
 
-        const bottleneck = haveArr.reduce((a, b) => (a.have / a.need) < (b.have / b.need) ? a : b);
-        const pct = Math.min(Math.round((bottleneck.have / bottleneck.need) * 100), 100);
-        const currentPlateKg = Math.max(0, (bottleneck.have * bw) - bw) / loadConv;
-        const nextPct     = Math.min(pct + 10, 100);
-        const nextRatio   = bottleneck.need * (nextPct / 100);
-        const nextPlateKg = Math.max(0, (nextRatio * bw) - bw) / loadConv;
+    const dipPctBW  = bw > 0 ? (((parseFloat(document.getElementById("wdW").value) || 0) * loadConv) * (1 + (parseInt(document.getElementById("wdR").value) || 0) / 30) / bw * 100) : 0;
+    const pullPctBW = bw > 0 ? (((parseFloat(document.getElementById("wpW").value) || 0) * loadConv) * (1 + (parseInt(document.getElementById("wpR").value) || 0) / 30) / bw * 100) : 0;
+    const saPctBW   = bw > 0 ? (((parseFloat(document.getElementById("saW").value) || 0) * loadConv) * (1 + (parseInt(document.getElementById("saR").value) || 0) / 30) / bw * 100) : 0;
+
+    const effDip  = dipPctBW  / hAdj;
+    const effPull = pullPctBW / hAdj;
+    const effSA   = saPctBW   / hAdj;
+
+    const activeBench = SKILL_BENCHMARKS_ACTIVE();
+
+    const rows = Object.entries(activeBench).map(([name, bench]) => {
+        const mvMap = [];
+        if (bench.dip)  mvMap.push({ name: 'weighted dip',     pct: effDip,  table: bench.dip  });
+        if (bench.pull) mvMap.push({ name: 'weighted pull-up',  pct: effPull, table: bench.pull });
+        if (bench.sa)   mvMap.push({ name: "Zanetti Press",          pct: effSA,   table: bench.sa   });
+
+        const scores     = mvMap.map(m => ({ ...m, score: lookupScore(m.pct, m.table) }));
+        const bottleneck = scores.reduce((a, b) => a.score < b.score ? a : b);
+        const pct        = Math.min(Math.round(bottleneck.score), 100);
+
+        // Next 10% target — what plate weight is needed for the bottleneck
+        const nextBand    = Math.min(Math.floor(bottleneck.score / 10) + 1, 9);
+        const nextPctBW   = bottleneck.table[nextBand] * hAdj;  // % BW target (adjusted back)
+        const nextPlateKg = nextPctBW / 100 * bw / (1 + 5 / 30);  // back to 5-rep display weight
+        const nextPlate   = (nextPlateKg / loadConv).toFixed(0);
+        const nextTargetText = pct >= 100
+            ? '&#10003; Strength met'
+            : `Hit +${nextPlate}${u} ${bottleneck.name} × 5 reps`;
 
         let color, label;
         if (pct >= 90)      { color = '#00ffcc'; label = 'READY'; }
         else if (pct >= 65) { color = '#4c6fff'; label = 'CLOSE'; }
         else if (pct >= 40) { color = '#ff9900'; label = 'BUILDING'; }
-        else                 { color = '#ff4444'; label = 'EARLY'; }
-
-        const moveName = { Pull: 'weighted pull-up', Push: 'weighted dip', SA: 'SA raise' }[bottleneck.name] || bottleneck.name;
-        let nextTargetText;
-        if (pct >= 100) {
-            nextTargetText = '&#10003; Strength met';
-        } else if (nextPlateKg <= currentPlateKg + 0.5) {
-            nextTargetText = `Maintain +${currentPlateKg.toFixed(0)}${u} ${moveName}`;
-        } else {
-            nextTargetText = `Hit +${nextPlateKg.toFixed(0)}${u} ${moveName} × 5 reps`;
-        }
+        else                { color = '#ff4444'; label = 'EARLY'; }
 
         return `<tr>
-            <td style="font-weight:bold; color:#fff; white-space:nowrap;">${s.name}</td>
+            <td style="font-weight:bold;color:#fff;white-space:nowrap;">${name}</td>
             <td>
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <div style="flex:1; height:6px; background:#222; border-radius:3px; overflow:hidden; min-width:60px;">
-                        <div style="width:${pct}%; height:100%; background:${color}; border-radius:3px; transition:width 0.6s ease;"></div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <div style="flex:1;height:6px;background:#222;border-radius:3px;overflow:hidden;min-width:60px;">
+                        <div style="width:${pct}%;height:100%;background:${color};border-radius:3px;transition:width 0.6s ease;"></div>
                     </div>
-                    <span style="font-family:monospace; font-size:0.75em; color:${color}; font-weight:900; white-space:nowrap;">${pct}%</span>
+                    <span style="font-family:monospace;font-size:0.75em;color:${color};font-weight:900;white-space:nowrap;">${pct}%</span>
                 </div>
-                <div style="font-size:0.6em; color:${color}; letter-spacing:1px; margin-top:3px; font-weight:900;">${label}</div>
+                <div style="font-size:0.6em;color:${color};letter-spacing:1px;margin-top:3px;font-weight:900;">${label}</div>
             </td>
-            <td style="font-size:0.78em; color:#aaa; line-height:1.5;">${nextTargetText}</td>
+            <td style="font-size:0.78em;color:#aaa;line-height:1.5;">${nextTargetText}</td>
         </tr>`;
     });
 
     tbody.innerHTML = rows.join('');
 }
 
+// ============================================================
+// PROGRESS CHART
+// ============================================================
 let progressChartInstance = null;
 
 function renderProgressChart() {
-    const logs = JSON.parse(localStorage.getItem('caliLogs') || '[]').reverse();
-    const metric = document.getElementById('progressMetric')?.value || 'pull';
+    const logs     = JSON.parse(localStorage.getItem('caliLogs') || '[]').reverse();
+    const metric   = document.getElementById('progressMetric')?.value || 'pull';
     const emptyMsg = document.getElementById('progressEmpty');
-    const canvas = document.getElementById('progressChart');
+    const canvas   = document.getElementById('progressChart');
     if (!canvas) return;
 
     function extract1RM(str) {
@@ -1677,9 +2505,9 @@ function renderProgressChart() {
         return match ? parseFloat(match[1]) : null;
     }
 
-    const labels = logs.map(l => l.date);
+    const labels  = logs.map(l => l.date);
     const dataMap = { pull: logs.map(l => extract1RM(l.pull)), push: logs.map(l => extract1RM(l.push)), sa: logs.map(l => extract1RM(l.sa)) };
-    const values = dataMap[metric].map((v, i) => ({ x: labels[i], y: v })).filter(p => p.y !== null);
+    const values  = dataMap[metric].map((v, i) => ({ x: labels[i], y: v })).filter(p => p.y !== null);
 
     if (progressChartInstance) { progressChartInstance.destroy(); progressChartInstance = null; }
 
@@ -1692,7 +2520,7 @@ function renderProgressChart() {
     canvas.style.display = 'block';
 
     const colors = { pull: '#4c6fff', push: '#00ffcc', sa: '#ff9900' };
-    const names  = { pull: 'Weighted Pull-up 1RM', push: 'Weighted Dip 1RM', sa: 'SA Raise 1RM' };
+    const names  = { pull: 'Weighted Pull-up 1RM', push: 'Weighted Dip 1RM', sa: 'Zanetti Press 1RM' };
     const color  = colors[metric];
 
     progressChartInstance = new Chart(canvas.getContext('2d'), {
@@ -1717,16 +2545,19 @@ function renderProgressChart() {
             maintainAspectRatio: false,
             plugins: {
                 legend: { display: false },
-                tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y.toFixed(1)} kg total 1RM` } }
+                tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y.toFixed(1)} ${document.getElementById('loadUnit')?.value || 'kg'} total 1RM` } }
             },
             scales: {
                 x: { ticks: { color: '#555', font: { size: 10, family: 'monospace' } }, grid: { color: '#1a1a2a' } },
-                y: { ticks: { color: '#555', font: { size: 10, family: 'monospace' } }, grid: { color: '#1a1a2a' }, title: { display: true, text: 'Total 1RM (kg)', color: '#555', font: { size: 10 } } }
+                y: { ticks: { color: '#555', font: { size: 10, family: 'monospace' } }, grid: { color: '#1a1a2a' }, title: { display: true, text: `Total 1RM (${document.getElementById('loadUnit')?.value || 'kg'})`, color: '#555', font: { size: 10 } } }
             }
         }
     });
 }
 
+// ============================================================
+// COOKIES
+// ============================================================
 function setCookie(n,v,d){ const dt=new Date(); dt.setTime(dt.getTime()+(d*864e5)); document.cookie=n+"="+v+"; expires="+dt.toUTCString()+"; path=/"; }
 function getCookie(n){ const eq=n+"=",ca=document.cookie.split(';'); for(let c of ca){ c=c.trim(); if(c.indexOf(eq)===0) return c.substring(eq.length); } return null; }
 function showBanner(){ document.getElementById('cookie-banner').style.bottom='0'; }
