@@ -345,32 +345,7 @@
   }
   .toc-item:hover .toc-dot { background: var(--primary); }
 
-  /* Ad card */
-  .ad-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 20px;
-  }
-  .ad-label {
-    padding: 8px 14px;
-    background: var(--surface-2);
-    border-bottom: 1px solid var(--border);
-    font-family: var(--mono);
-    font-size: 0.6rem;
-    letter-spacing: 2px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    text-align: center;
-  }
-  .ad-slot {
-    padding: 12px;
-    min-height: 250px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+
 
   /* ── CATEGORY SECTION ── */
   .faq-section { margin-bottom: 56px; }
@@ -576,23 +551,7 @@
     margin-top: 2px;
   }
 
-  /* ── INLINE AD (between sections) ── */
-  .inline-ad {
-    margin: 40px 0;
-    padding: 12px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    text-align: center;
-  }
-  .inline-ad-label {
-    font-family: var(--mono);
-    font-size: 0.6rem;
-    letter-spacing: 2px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
+
 
   /* ── NO RESULTS ── */
   .no-results {
@@ -678,17 +637,199 @@
     line-height: 1.5;
   }
 
+  /* ── MOBILE CATS (hidden on desktop) ── */
+  .mobile-cats { display: none; }
+
   /* ── RESPONSIVE ── */
+
+  /* Tablet (≤860px) */
   @media (max-width: 860px) {
-    .main-layout { grid-template-columns: 1fr; }
+    .main-layout {
+      grid-template-columns: 1fr;
+      padding: 24px 16px 60px;
+      gap: 0;
+    }
     .sidebar { display: none; }
-    .footer-inner { grid-template-columns: 1fr 1fr; }
+    .mobile-cats { display: flex; }
+    .footer-inner { grid-template-columns: 1fr 1fr; gap: 32px; }
     .protocol-grid { grid-template-columns: 1fr; }
+
+    /* Show a horizontal category strip on tablet instead of sidebar TOC */
+    .mobile-cats {
+      display: flex;
+      overflow-x: auto;
+      gap: 8px;
+      padding: 0 16px 16px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .mobile-cats::-webkit-scrollbar { display: none; }
+    .mobile-cat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      padding: 8px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .mobile-cat-pill:hover {
+      color: var(--primary);
+      border-color: var(--border-hover);
+      background: var(--primary-dim);
+    }
   }
-  @media (max-width: 560px) {
-    .hero h1 { font-size: 1.8rem; }
-    .stats-bar { gap: 20px; }
-    .footer-inner { grid-template-columns: 1fr; }
+
+  /* Mobile (≤600px) */
+  @media (max-width: 600px) {
+
+    /* ── NAV ── */
+    .nav-inner { padding: 0 16px; height: 56px; }
+    .brand { font-size: 0.78rem; letter-spacing: 2px; }
+    .nav-links { gap: 4px; }
+    .nav-links a { padding: 7px 10px; font-size: 0.65rem; letter-spacing: 1px; }
+
+    /* ── HERO ── */
+    .hero { padding: 36px 16px 32px; }
+    .hero-label { font-size: 0.6rem; letter-spacing: 2px; }
+    .hero h1 { font-size: 1.75rem; letter-spacing: -0.5px; margin-bottom: 14px; }
+    .hero p { font-size: 0.95rem; margin-bottom: 24px; }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      padding: 0;
+    }
+    .stat {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .stat:nth-child(odd) { border-right: 1px solid var(--border); }
+    .stat-num { font-size: 1.2rem; }
+    .stat-label { font-size: 0.65rem; }
+
+    /* ── SEARCH ── */
+    .search-wrap { padding: 20px 16px 0; }
+    .search-icon { left: 34px; }
+    .search-box {
+      padding: 14px 16px 14px 42px;
+      font-size: 0.88rem;
+    }
+    .search-box::placeholder {
+      /* Shorter placeholder on mobile */
+      font-size: 0.82rem;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .main-layout { padding: 20px 16px 48px; }
+
+    /* ── SECTION HEADER ── */
+    .section-header { margin-bottom: 16px; }
+    .section-title { font-size: 0.85rem; }
+
+    /* ── FAQ SUMMARY ── */
+    summary {
+      padding: 16px;
+      font-size: 0.9rem;
+      gap: 12px;
+      /* Allow question text to wrap, chevron stays right */
+      align-items: flex-start;
+    }
+    /* Keep chevron vertically centered to first line */
+    .chevron {
+      margin-top: 2px;
+      width: 20px;
+      height: 20px;
+      font-size: 0.7rem;
+    }
+
+    /* ── ANSWER ── */
+    .answer {
+      padding: 16px;
+      font-size: 0.88rem;
+      line-height: 1.75;
+    }
+
+    /* ── TIER ROWS ── */
+    .tier-row {
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 10px 14px;
+      align-items: flex-start;
+    }
+    .tier-row-left {
+      width: 100%;
+      font-size: 0.85rem;
+    }
+    /* Badge sits under the label on mobile */
+    .badge { font-size: 0.6rem; padding: 3px 8px; }
+
+    /* ── TIER HEAD ── */
+    .tier-head { font-size: 0.62rem; padding: 9px 14px; }
+
+    /* ── STEP LIST ── */
+    .step {
+      gap: 10px;
+      padding: 10px 0;
+      font-size: 0.85rem;
+    }
+    .step-num { font-size: 0.62rem; padding: 3px 6px; }
+
+    /* ── CALLOUTS ── */
+    .callout { padding: 14px; font-size: 0.84rem; }
+
+    /* ── PROTOCOL CARDS ── */
+    .protocol-card { padding: 14px; }
+    .protocol-card p { font-size: 0.82rem; }
+
+
+
+    /* ── CONTACT CTA ── */
+    .contact-cta {
+      padding: 28px 16px !important;
+      margin-top: 40px !important;
+    }
+    .contact-email-link {
+      word-break: break-all;
+      font-size: 0.7rem !important;
+      letter-spacing: 0.5px !important;
+      padding: 12px 20px !important;
+    }
+
+    /* ── FOOTER ── */
+    .site-footer { padding: 40px 16px; }
+    .footer-inner { grid-template-columns: 1fr; gap: 28px; }
+    .footer-desc { max-width: 100%; }
+    .footer-bottom {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .disclaimer {
+      text-align: left;
+      font-size: 0.68rem;
+      max-width: 100%;
+    }
+  }
+
+  /* Very small phones (≤380px) */
+  @media (max-width: 380px) {
+    .brand { letter-spacing: 1px; font-size: 0.72rem; }
+    .nav-links a { padding: 6px 8px; font-size: 0.6rem; }
+    .hero h1 { font-size: 1.5rem; }
+    summary { font-size: 0.85rem; padding: 14px; }
+    .answer { padding: 14px; font-size: 0.84rem; }
   }
 </style>
 </head>
@@ -725,6 +866,16 @@
   <input type="text" id="faqSearch" class="search-box" placeholder="Search questions — try 'deload', 'planche', 'elbow', 'protein'..." oninput="filterFAQ()" autocomplete="off">
   <div class="result-count" id="resultCount"></div>
 </div>
+
+<!-- MOBILE CATEGORY PILLS -->
+<nav class="mobile-cats" id="mobileCats">
+  <a href="#benchmarks" class="mobile-cat-pill">📊 Benchmarks</a>
+  <a href="#skills" class="mobile-cat-pill">🎯 Skills</a>
+  <a href="#programming" class="mobile-cat-pill">📋 Programming</a>
+  <a href="#injury" class="mobile-cat-pill">🩺 Injury</a>
+  <a href="#hypertrophy" class="mobile-cat-pill">💪 Hypertrophy</a>
+  <a href="#nutrition" class="mobile-cat-pill">🧪 Nutrition</a>
+</nav>
 
 <!-- MAIN -->
 <div class="main-layout">
@@ -889,7 +1040,6 @@
       </div>
     </section>
 
-   
 
 
     <!-- ═══════════════════════════════════════════════ -->
@@ -988,7 +1138,7 @@
       </div>
     </section>
 
- 
+
 
     <!-- ═══════════════════════════════════════════════ -->
     <!-- CATEGORY 3: PROGRAMMING -->
@@ -1099,7 +1249,7 @@
       </div>
     </section>
 
-  
+
 
     <!-- ═══════════════════════════════════════════════ -->
     <!-- CATEGORY 4: INJURY & RECOVERY -->
@@ -1314,15 +1464,15 @@
     <div class="no-results" id="noResults">
       <div class="no-results-icon">⌀</div>
       <h3>No questions found</h3>
-      <p style="font-size:0.85rem; color:var(--text-muted);">Try a different search term, or <a href="mailto:contactcalicalculator@gmail.com" style="color:var(--primary);">send us your question</a>.</p>
+      <p style="font-size:0.85rem; color:var(--text-muted);">Try a different search term, or <a href="/cdn-cgi/l/email-protection#f1929e9f8590928592909d9892909d92849d90859e83b1969c90989ddf929e9c" style="color:var(--primary);">send us your question</a>.</p>
     </div>
 
     <!-- CONTACT CTA -->
-    <div style="margin-top:64px; padding:48px; background:var(--surface); border:1px solid var(--border); border-radius:16px; text-align:center;">
+    <div class="contact-cta" style="margin-top:64px; padding:48px 32px; background:var(--surface); border:1px solid var(--border); border-radius:16px; text-align:center;">
       <div style="font-family:var(--mono); font-size:0.65rem; letter-spacing:3px; color:var(--text-muted); text-transform:uppercase; margin-bottom:16px;">Submit a Question</div>
       <h2 style="font-family:var(--mono); font-size:1.2rem; color:#fff; font-weight:700; margin-bottom:12px;">Still have questions?</h2>
       <p style="color:var(--text-muted); font-size:0.9rem; max-width:420px; margin:0 auto 28px;">Submit your technical query and receive a researched answer within 24–48 hours.</p>
-      <a href="mailto:contactcalicalculator@gmail.com" style="display:inline-block; padding:14px 32px; background:var(--primary); color:#000; border-radius:8px; font-family:var(--mono); font-size:0.8rem; font-weight:700; letter-spacing:1.5px; text-decoration:none; transition:0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">contactcalicalculator@gmail.com</a>
+      <a href="mailto:contactcalicalculator@gmail.com" class="contact-email-link" style="display:inline-block; padding:14px 32px; background:var(--primary); color:#000; border-radius:8px; font-family:var(--mono); font-size:0.8rem; font-weight:700; letter-spacing:1.5px; text-decoration:none; transition:0.2s; word-break:break-all;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">contactcalicalculator@gmail.com</a>
       <p style="color:#333; font-size:0.7rem; margin-top:16px; font-family:var(--mono); letter-spacing:1px;">Average response time: 24–48 hours</p>
     </div>
 
@@ -1344,7 +1494,7 @@
       </nav>
     </div>
 
-   
+
 
     <!-- QUICK FACTS CARD -->
     <div class="sidebar-card">
@@ -1404,7 +1554,6 @@
     const query = document.getElementById('faqSearch').value.toLowerCase().trim();
     const items = document.querySelectorAll('.faq-item');
     const sections = document.querySelectorAll('.faq-section');
-    const inlineAds = document.querySelectorAll('.inline-ad');
     const noResults = document.getElementById('noResults');
     const countEl = document.getElementById('resultCount');
 
@@ -1421,11 +1570,6 @@
     sections.forEach(section => {
       const hasVisible = [...section.querySelectorAll('.faq-item')].some(i => !i.classList.contains('hidden'));
       section.style.display = hasVisible ? '' : 'none';
-    });
-
-    // Toggle inline ads visibility
-    inlineAds.forEach(ad => {
-      ad.style.display = query ? 'none' : '';
     });
 
     noResults.classList.toggle('visible', visibleCount === 0 && query.length > 0);
