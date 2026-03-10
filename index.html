@@ -831,13 +831,24 @@
 
 
 <!-- PDF PRODUCT CTA -->
+<style>
+@media (max-width: 600px) {
+    #ctaCols { grid-template-columns: 1fr !important; }
+    #ctaTitleRow { flex-direction: column !important; }
+    #ctaPriceBlock { width: 100% !important; box-sizing: border-box; }
+    #ctaButton { width: 100% !important; justify-content: center !important; }
+    #ctaBottomRow { flex-direction: column !important; align-items: stretch !important; }
+    #ctaBottomRow a { text-align: center !important; }
+}
+</style>
+
 <div style="margin-top:25px; position:relative; border-radius:18px; overflow:hidden; background:#0c0c14;">
-    
+
     <div style="position:absolute; inset:0; background:radial-gradient(ellipse at 80% 50%, rgba(0,255,204,0.04) 0%, transparent 65%), radial-gradient(ellipse at 20% 50%, rgba(76,111,255,0.04) 0%, transparent 65%); pointer-events:none;"></div>
     <div style="position:absolute; inset:0; border-radius:18px; border:1px solid #1e1e2e; pointer-events:none;"></div>
     <div style="position:absolute; top:0; left:10%; right:10%; height:1px; background:linear-gradient(90deg, transparent, rgba(0,255,204,0.5), transparent);"></div>
 
-    <div style="position:relative; padding:32px;">
+    <div style="position:relative; padding:24px;">
 
         <!-- Badge -->
         <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(0,255,204,0.06); border:1px solid rgba(0,255,204,0.15); border-radius:4px; padding:5px 12px; margin-bottom:16px;">
@@ -846,46 +857,45 @@
         </div>
 
         <!-- Title + price row -->
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:20px; margin-bottom:20px;">
-            <div>
-                <h3 style="font-size:1.2em; color:#fff; font-weight:900; line-height:1.3; margin:0 0 6px; letter-spacing:-0.3px;">
-                    0 to 50kg Weighted Pull-Up<br>
-                    <span style="background:linear-gradient(90deg, var(--potential), #4c6fff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">The Complete 1-Year System</span>
-                </h3>
-                <div style="font-size:0.68em; color:#555; font-family:monospace; letter-spacing:1px;">28-PAGE PROGRAM  +  EXCEL TRACKER INCLUDED</div>
+        <div id="ctaTitleRow" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-bottom:20px;">
+            <div style="flex:1; min-width:200px;">
+              <h3 style="font-size:1.2em; color:#fff; font-weight:900; line-height:1.3; margin:0 0 6px; letter-spacing:-0.3px;">
+    0 to 50kg <span style="color:#555; font-weight:400; font-size:0.75em;">(110 lbs)</span> Weighted Pull-Up<br>
+    <span style="background:linear-gradient(90deg, var(--potential), #4c6fff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">The Complete 1-Year System</span>
+</h3>
+                <div style="font-size:0.68em; color:#666; font-family:monospace; letter-spacing:1px;">29-PAGE PROGRAM + EXCEL TRACKER INCLUDED</div>
             </div>
 
             <!-- Price block -->
-            <div style="background:#0a0a12; border:1px solid #1e1e2e; border-radius:12px; padding:16px 22px; text-align:center; flex-shrink:0;">
+            <div id="ctaPriceBlock" style="background:#0a0a12; border:1px solid #1e1e2e; border-radius:12px; padding:14px 20px; text-align:center; flex-shrink:0;">
                 <div style="font-size:0.72em; color:#c0392b; font-family:monospace; text-decoration:line-through; letter-spacing:1px; font-weight:700;">WAS $40</div>
-                <div style="font-size:2em; color:var(--potential); font-family:monospace; font-weight:900; line-height:1.1; margin:2px 0;">$20
-                </div>
-                <div style="font-size:0.5em; color:#444; font-family:monospace; letter-spacing:2px;">ONE-TIME · NO UPSELLS</div>
+                <div style="font-size:2em; color:var(--potential); font-family:monospace; font-weight:900; line-height:1.1; margin:2px 0;">$20</div>
+                <div style="font-size:0.5em; color:#555; font-family:monospace; letter-spacing:2px;">ONE-TIME · NO UPSELLS</div>
             </div>
         </div>
 
         <!-- Two column: what you get -->
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:24px;">
+        <div id="ctaCols" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:24px;">
 
             <!-- Column 1: Program -->
             <div style="background:#0a0a12; border:1px solid #1a1a28; border-radius:10px; padding:16px;">
                 <div style="font-size:0.58em; color:var(--primary); font-family:monospace; letter-spacing:3px; font-weight:700; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #1a1a28;">📄 THE PROGRAM — PDF</div>
-                <div style="display:flex; flex-direction:column; gap:7px;">
+                <div style="display:flex; flex-direction:column; gap:8px;">
                     <div style="display:flex; align-items:flex-start; gap:8px;">
                         <span style="color:var(--potential); font-size:0.75em; margin-top:1px; flex-shrink:0;">✓</span>
-                        <span style="font-size:0.68em; color:#aaa; line-height:1.5;">4 periodized phases · 0→12→28→42→50kg</span>
+                        <span style="font-size:0.7em; color:#aaa; line-height:1.5;">4 periodized phases · 0→12→28→42→50kg</span>
                     </div>
                     <div style="display:flex; align-items:flex-start; gap:8px;">
                         <span style="color:var(--potential); font-size:0.75em; margin-top:1px; flex-shrink:0;">✓</span>
-                        <span style="font-size:0.68em; color:#aaa; line-height:1.5;">Linear, Wave, DUP &amp; Conjugate methods</span>
+                        <span style="font-size:0.7em; color:#aaa; line-height:1.5;">Linear, Wave, DUP &amp; Conjugate methods</span>
                     </div>
                     <div style="display:flex; align-items:flex-start; gap:8px;">
                         <span style="color:var(--potential); font-size:0.75em; margin-top:1px; flex-shrink:0;">✓</span>
-                        <span style="font-size:0.68em; color:#aaa; line-height:1.5;">Nutrition &amp; injury prevention protocol</span>
+                        <span style="font-size:0.7em; color:#aaa; line-height:1.5;">Nutrition &amp; injury prevention protocol</span>
                     </div>
                     <div style="display:flex; align-items:flex-start; gap:8px;">
                         <span style="color:var(--potential); font-size:0.75em; margin-top:1px; flex-shrink:0;">✓</span>
-                        <span style="font-size:0.68em; color:#aaa; line-height:1.5;">Test day strategy &amp; peak protocol</span>
+                        <span style="font-size:0.7em; color:#aaa; line-height:1.5;">Test day strategy &amp; peak protocol</span>
                     </div>
                 </div>
             </div>
@@ -896,22 +906,22 @@
                     <span style="font-size:0.48em; color:var(--potential); font-family:monospace; letter-spacing:1px; font-weight:700;">FREE BONUS</span>
                 </div>
                 <div style="font-size:0.58em; color:var(--potential); font-family:monospace; letter-spacing:3px; font-weight:700; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #1a1a28;">📊 EXCEL TRACKER</div>
-                <div style="display:flex; flex-direction:column; gap:7px;">
+                <div style="display:flex; flex-direction:column; gap:8px;">
                     <div style="display:flex; align-items:flex-start; gap:8px;">
                         <span style="color:var(--potential); font-size:0.75em; margin-top:1px; flex-shrink:0;">✓</span>
-                        <span style="font-size:0.68em; color:#aaa; line-height:1.5;">Auto-dashboard · sessions, loads, phase</span>
+                        <span style="font-size:0.7em; color:#aaa; line-height:1.5;">Auto-dashboard · sessions, loads, phase</span>
                     </div>
                     <div style="display:flex; align-items:flex-start; gap:8px;">
                         <span style="color:var(--potential); font-size:0.75em; margin-top:1px; flex-shrink:0;">✓</span>
-                        <span style="font-size:0.68em; color:#aaa; line-height:1.5;">Built-in 1RM calculator · 3 formulas</span>
+                        <span style="font-size:0.7em; color:#aaa; line-height:1.5;">Built-in 1RM calculator · 3 formulas</span>
                     </div>
                     <div style="display:flex; align-items:flex-start; gap:8px;">
                         <span style="color:var(--potential); font-size:0.75em; margin-top:1px; flex-shrink:0;">✓</span>
-                        <span style="font-size:0.68em; color:#aaa; line-height:1.5;">Deload calculator · auto 60% loads</span>
+                        <span style="font-size:0.7em; color:#aaa; line-height:1.5;">Deload calculator · auto 60% loads</span>
                     </div>
                     <div style="display:flex; align-items:flex-start; gap:8px;">
                         <span style="color:var(--potential); font-size:0.75em; margin-top:1px; flex-shrink:0;">✓</span>
-                        <span style="font-size:0.68em; color:#aaa; line-height:1.5;">Progress chart · auto-fills from log</span>
+                        <span style="font-size:0.7em; color:#aaa; line-height:1.5;">Progress chart · auto-fills from log</span>
                     </div>
                 </div>
             </div>
@@ -919,11 +929,11 @@
         </div>
 
         <!-- CTA row -->
-        <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
-            <a href="https://calibiotech.gumroad.com/l/ryxedv" target="_blank" rel="noopener"
-               style="display:inline-flex; align-items:center; gap:10px; background:var(--potential); color:#000; font-family:monospace; font-weight:900; font-size:0.82em; letter-spacing:2px; padding:16px 32px; border-radius:9px; text-decoration:none; text-transform:uppercase; transition:all 0.25s; box-shadow:0 0 0 rgba(0,255,204,0.4);"
+        <div id="ctaBottomRow" style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+            <a id="ctaButton" href="https://calibiotech.gumroad.com/l/ryxedv" target="_blank" rel="noopener"
+               style="display:inline-flex; align-items:center; gap:10px; background:var(--potential); color:#000; font-family:monospace; font-weight:900; font-size:0.82em; letter-spacing:2px; padding:16px 32px; border-radius:9px; text-decoration:none; text-transform:uppercase; transition:all 0.25s;"
                onmouseover="this.style.boxShadow='0 8px 32px rgba(0,255,204,0.3)'; this.style.transform='translateY(-2px)'"
-               onmouseout="this.style.boxShadow='0 0 0 rgba(0,255,204,0.4)'; this.style.transform='translateY(0)'">
+               onmouseout="this.style.boxShadow='none'; this.style.transform='translateY(0)'">
                 GET THE FULL SYSTEM
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
@@ -935,7 +945,6 @@
 
     </div>
 </div>
-
 
     <!-- PROGRESS CHART -->
     <div class="card" style="margin-top:25px;" id="progressCard">
