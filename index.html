@@ -2707,25 +2707,26 @@ document.addEventListener('DOMContentLoaded', () => {
 <!-- STICKY CTA BAR -->
 <style>
     @media (max-width: 600px) {
-        #stickyInner { padding: 12px 16px !important; gap: 10px !important; }
-        #stickyLogo  { display: none !important; }
+        #stickyInner { padding: 10px 14px !important; gap: 8px !important; }
+        #stickyLogo { display: none !important; }
         #stickySubtitle { display: none !important; }
-        #stickyTitle { font-size: 0.75em !important; }
-        #stickyOldPrice { font-size: 0.68em !important; }
-        #stickyNewPrice { font-size: 1.1em !important; }
-        #stickyCTA { padding: 11px 16px !important; font-size: 0.68em !important; letter-spacing: 1px !important; }
-        #stickyDismiss { width: 28px !important; height: 28px !important; }
+        #stickyDivider { display: none !important; }
+        #stickyTitle { font-size: 0.72em !important; white-space: normal !important; line-height: 1.3 !important; }
+        #stickyOldPrice { font-size: 0.65em !important; }
+        #stickyNewPrice { font-size: 1em !important; }
+        #stickyCTA { padding: 10px 14px !important; font-size: 0.65em !important; letter-spacing: 1px !important; }
+        #stickyDismiss { width: 26px !important; height: 26px !important; font-size: 0.7em !important; }
+        #stickyPriceBlock { gap: 5px !important; }
     }
 </style>
 
-<!-- STICKY CTA BAR -->
 <div id="stickyBar" style="position:fixed; bottom:0; left:0; right:0; z-index:8888; background:rgba(8,8,14,0.97); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-top:1px solid #1a1a28; transform:translateY(100%); transition:transform 0.6s cubic-bezier(0.16,1,0.3,1);">
 
     <div style="position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg, transparent 0%, rgba(0,255,204,0.6) 40%, rgba(76,111,255,0.6) 60%, transparent 100%);"></div>
 
     <div id="stickyInner" style="max-width:1300px; margin:0 auto; padding:14px 24px; display:flex; align-items:center; gap:16px;">
 
-        <!-- Logo -->
+        <!-- Logo — hidden mobile -->
         <div id="stickyLogo" style="width:40px; height:40px; border-radius:10px; border:1px solid rgba(0,255,204,0.15); background:rgba(0,255,204,0.04); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
             <span style="font-size:0.55em; color:var(--potential); font-family:monospace; font-weight:900; letter-spacing:1px;">CB</span>
         </div>
@@ -2733,21 +2734,21 @@ document.addEventListener('DOMContentLoaded', () => {
         <!-- Title + features -->
         <div style="flex:1; min-width:0;">
             <div id="stickyTitle" style="font-size:0.85em; color:#fff; font-weight:900; font-family:monospace; margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                0 → 50kg Pull-Up System  ·  Program + Excel Tracker
+                0 → 50kg (110lbs) Pull-Up System · Program + Tracker
             </div>
             <div id="stickySubtitle" style="display:flex; gap:12px; flex-wrap:wrap;">
-                <span style="font-size:0.58em; color:#555; font-family:monospace;">✓ 4 PHASES</span>
-                <span style="font-size:0.58em; color:#555; font-family:monospace;">✓ 1RM CALCULATOR</span>
-                <span style="font-size:0.58em; color:#555; font-family:monospace;">✓ DELOAD CALCULATOR</span>
-                <span style="font-size:0.58em; color:#555; font-family:monospace;">✓ AUTO PROGRESS CHART</span>
+                <span style="font-size:0.58em; color:#666; font-family:monospace;">✓ 4 PHASES</span>
+                <span style="font-size:0.58em; color:#666; font-family:monospace;">✓ 1RM CALCULATOR</span>
+                <span style="font-size:0.58em; color:#666; font-family:monospace;">✓ DELOAD CALCULATOR</span>
+                <span style="font-size:0.58em; color:#666; font-family:monospace;">✓ AUTO PROGRESS CHART</span>
             </div>
         </div>
 
-        <!-- Divider -->
-        <div style="width:1px; height:36px; background:#1e1e2e; flex-shrink:0;"></div>
+        <!-- Divider — hidden mobile -->
+        <div id="stickyDivider" style="width:1px; height:36px; background:#1e1e2e; flex-shrink:0;"></div>
 
         <!-- Price -->
-        <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+        <div id="stickyPriceBlock" style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
             <span id="stickyOldPrice" style="font-size:0.8em; color:#c0392b; font-family:monospace; font-weight:700; text-decoration:line-through; letter-spacing:1px;">$40</span>
             <span id="stickyNewPrice" style="font-size:1.3em; color:var(--potential); font-family:monospace; font-weight:900; line-height:1;">$20</span>
         </div>
@@ -2757,7 +2758,7 @@ document.addEventListener('DOMContentLoaded', () => {
            style="flex-shrink:0; display:inline-flex; align-items:center; gap:8px; background:var(--potential); color:#000; font-family:monospace; font-weight:900; font-size:0.78em; letter-spacing:2px; padding:13px 22px; border-radius:8px; text-decoration:none; text-transform:uppercase; transition:all 0.2s; box-shadow:0 4px 20px rgba(0,255,204,0.2);"
            onmouseover="this.style.boxShadow='0 6px 28px rgba(0,255,204,0.4)'; this.style.transform='translateY(-1px)'"
            onmouseout="this.style.boxShadow='0 4px 20px rgba(0,255,204,0.2)'; this.style.transform='translateY(0)'">
-            GET THE SYSTEM
+            GET IT
             <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
 
