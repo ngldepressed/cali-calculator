@@ -1,806 +1,704 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calorie Calculator </title>
-    <link rel="canonical" href="https://www.calicalculator.com/physio.html">
-    <meta name="description" content="Advanced Cali-Biotech Calorie Calculator. Estimate Body Fat using Navy Formula and TDEE via Mifflin-St Jeor for calisthenics athletes.">
-    <meta name="robots" content="index, follow">
-    <meta name="ga-id" content="G-2DSPNZ4FNT">
-    <meta name="adsense-id" content="ca-pub-1230203526545088">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calorie Calculator | Cali-Biotech</title>
+<link rel="canonical" href="https://www.calicalculator.com/physio.html">
+<meta name="description" content="Advanced Cali-Biotech Calorie Calculator. Estimate Body Fat using Navy Formula and TDEE via Mifflin-St Jeor for calisthenics athletes.">
+<meta name="robots" content="index, follow">
+<meta name="ga-id" content="G-CDL3F645R2">
+<meta name="adsense-id" content="ca-pub-1230203526545088">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080A0E;--s0:#0D1018;--s1:#111520;--s2:#171C2B;
+  --line:#252D42;--line2:#2E3850;
+  --acid:#AAFF00;--acid3:rgba(170,255,0,.06);
+  --blue:#3D6EFF;--red:#FF3535;--orange:#FF7A00;--green:#00D67A;--yellow:#F0C040;
+  --txt:#C8D0E8;--txt2:#6B7494;--txt3:#3A4260;--white:#F0F4FF;
+  --fd:'Bebas Neue',cursive;--fb:'IBM Plex Sans',sans-serif;--fm:'IBM Plex Mono',monospace;
+}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+html,body{width:100%;overflow-x:hidden;font-family:var(--fb);background:var(--bg);color:var(--txt);font-size:16px;line-height:1.6}
 
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* TEXTURE */
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size:200px 200px;opacity:.5}
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(61,110,255,.07) 0%,transparent 70%)}
 
-        :root {
-            --green:     #00ff88;
-            --green-dim: rgba(0,255,136,0.08);
-            --red:       #ff3e3e;
-            --yellow:    #f1c40f;
-            --orange:    #e67e22;
-            --bg:        #07070f;
-            --surface:   #0f0f1a;
-            --card:      #111118;
-            --card-hi:   #18181f;
-            --border:    #1c1c28;
-            --border-hi: #2a2a3a;
-            --text:      #c8c8d8;
-            --text-dim:  #50506a;
-            --mono:      'Space Mono', monospace;
-            --sans:      'Syne', sans-serif;
-            --radius:    10px;
-            --radius-lg: 18px;
-            --ease:      0.2s ease;
-        }
+/* NAV */
+.topnav{
+  position:sticky;top:0;z-index:200;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0 24px;height:52px;
+  background:rgba(8,10,14,.95);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--line);
+}
+.nav-logo{font-family:var(--fd);font-size:1.35rem;letter-spacing:5px;color:var(--acid);text-decoration:none;white-space:nowrap}
+.nav-links{display:flex;align-items:center;gap:2px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.nav-links::-webkit-scrollbar{display:none}
+.npill{
+  font-family:var(--fm);font-size:.58rem;letter-spacing:2px;text-transform:uppercase;
+  color:var(--txt2);text-decoration:none;padding:5px 10px;border-radius:4px;
+  border:1px solid transparent;transition:all .2s;white-space:nowrap;flex-shrink:0;
+}
+.npill:hover{color:var(--acid);background:var(--acid3);border-color:rgba(170,255,0,.2)}
+.npill.hi{color:var(--bg);background:var(--acid);border-color:var(--acid)}
 
-        html { scroll-behavior: smooth; font-size: 17px; }
+/* PAGE */
+.page{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:0 16px 80px}
 
-        body {
-            font-family: var(--sans);
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+/* HERO */
+.hero{padding:40px 0 32px;border-bottom:1px solid var(--line);margin-bottom:28px;text-align:center}
+.hero-tag{
+  font-family:var(--fm);font-size:.58rem;letter-spacing:4px;color:var(--acid);
+  text-transform:uppercase;margin-bottom:12px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.hero-tag::before,.hero-tag::after{content:'';width:20px;height:1px;background:var(--acid);opacity:.5}
+.hero-h1{font-family:var(--fd);font-size:clamp(3rem,8vw,5.5rem);line-height:.95;color:var(--white);margin-bottom:12px}
+.hero-h1 em{color:var(--acid);font-style:normal}
+.hero-sub{font-family:var(--fm);font-size:.62rem;letter-spacing:2px;color:var(--txt2);text-transform:uppercase}
 
-        /* ── GRID BACKGROUND ── */
-        body::before {
-            content: '';
-            position: fixed; inset: 0;
-            background-image:
-                linear-gradient(rgba(0,255,136,0.025) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,255,136,0.025) 1px, transparent 1px);
-            background-size: 36px 36px;
-            pointer-events: none;
-            z-index: 0;
-        }
+/* SEC LABEL */
+.sec-lbl{
+  font-family:var(--fm);font-size:.53rem;letter-spacing:5px;color:var(--txt3);
+  text-transform:uppercase;margin:24px 0 12px;
+  display:flex;align-items:center;gap:12px;
+}
+.sec-lbl::before{content:attr(data-n);color:var(--acid);font-size:.66rem;font-weight:700}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--line)}
 
-        /* ── SCAN LINE ── */
-        body::after {
-            content: '';
-            position: fixed;
-            top: -2px; left: 0;
-            width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--green), transparent);
-            opacity: 0.35;
-            animation: scan 12s linear infinite;
-            pointer-events: none;
-            z-index: 9998;
-        }
-        @keyframes scan { 0% { top: -2px; } 100% { top: 100vh; } }
+/* CARD */
+.card{background:var(--s0);border:1px solid var(--line);border-radius:6px;padding:20px;position:relative;overflow:hidden}
+.card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent 0%,var(--line2) 50%,transparent 100%);pointer-events:none}
+.ctitle{
+  font-family:var(--fm);font-weight:700;font-size:.58rem;letter-spacing:4px;
+  text-transform:uppercase;color:var(--blue);margin-bottom:14px;padding-bottom:10px;
+  border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;
+}
+.ctitle::before{content:'';width:6px;height:6px;background:var(--blue);border-radius:50%;flex-shrink:0}
+.ctitle.acid-t{color:var(--acid)}.ctitle.acid-t::before{background:var(--acid)}
 
-        /* ── PAGE ── */
-        .page {
-            position: relative;
-            z-index: 1;
-            max-width: 1320px;
-            margin: 0 auto;
-            padding: 0 16px 80px;
-        }
+/* FORM FIELDS */
+.fl{
+  display:block;font-family:var(--fm);font-size:.54rem;letter-spacing:2px;
+  text-transform:uppercase;color:var(--txt3);margin-bottom:5px;margin-top:12px;font-weight:500;
+}
+/* Can't rely on :first-of-type with class labels — use explicit class instead */
+.fl.first{margin-top:0}
 
-        /* ── NAV ── */
-        .top-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0 24px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 36px;
-        }
-        .nav-logo {
-            font-family: var(--mono);
-            font-size: 0.82em;
-            font-weight: 700;
-            letter-spacing: 4px;
-            color: var(--green);
-            text-decoration: none;
-            text-transform: uppercase;
-        }
-        .back-link {
-            font-family: var(--mono);
-            font-size: 1.1em;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            text-decoration: none;
-            color: var(--text-dim);
-            border: 1px solid var(--border-hi);
-            padding: 8px 16px;
-            border-radius: 6px;
-            transition: color var(--ease), border-color var(--ease);
-        }
-        .back-link:hover { color: var(--green); border-color: var(--green); }
+input[type=number],select,textarea{
+  width:100%;font-family:var(--fm);font-size:.84rem;color:var(--txt);
+  background:var(--s2);border:1px solid var(--line2);border-radius:4px;
+  /* Minimum 44px touch target height */
+  padding:11px 12px;
+  transition:border-color .2s,box-shadow .2s;outline:none;
+  -moz-appearance:textfield;
+  /* Prevent iOS zoom on focus (needs font-size >= 16px equivalent) */
+  font-size:16px;
+}
+/* Override back for desktop where 16px looks too big */
+@media(min-width:601px){input[type=number],select{font-size:.84rem}}
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+input[type=number]:focus,select:focus{border-color:var(--acid);box-shadow:0 0 0 2px rgba(170,255,0,.15)}
+select{
+  appearance:none;-webkit-appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7494' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;
+}
 
-        /* ── HEADER ── */
-        .page-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        .page-header h1 {
-            font-family: var(--mono);
-            font-size: clamp(1.3em, 4vw, 1.8em);
-            font-weight: 700;
-            letter-spacing: 8px;
-            text-transform: uppercase;
-            color: #fff;
-            text-shadow: 0 0 30px rgba(0,255,136,0.15);
-        }
-        .page-header p {
-            font-family: var(--mono);
-            font-size: 1.1em;
-            color: var(--text-dim);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-top: 8px;
-        }
+.height-imp{display:none;gap:8px}.height-imp.show{display:flex}
+.hip-row{display:none}.hip-row.show{display:block}
 
-        /* ── MAIN GRID ── */
-        .main-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-            margin-bottom: 14px;
-        }
+.field-note{
+  font-family:var(--fm);font-size:.56rem;color:var(--txt3);line-height:1.7;
+  margin-top:12px;padding-top:12px;border-top:1px solid var(--line);
+}
 
-        /* ── CARD ── */
-        .card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 26px;
-        }
-        .card-title {
-            font-family: var(--mono);
-            font-size: 0.9em;
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--green);
-            padding-bottom: 14px;
-            margin-bottom: 18px;
-            border-bottom: 1px solid var(--border);
-        }
+/* STAT NODES */
+.stat-node{
+  background:var(--s2);border:1px solid var(--line);border-radius:4px;
+  padding:11px 13px;display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:6px;transition:border-color .2s;
+}
+.stat-node:hover{border-color:var(--line2)}
+.stat-node:last-child{margin-bottom:0}
+.stat-name{font-family:var(--fm);font-size:.56rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt2)}
+/* Active value — Bebas Neue display */
+.stat-val{font-family:var(--fd);font-size:1.1rem;letter-spacing:2px;color:var(--acid)}
+/* Placeholder state */
+.stat-val.dim{font-family:var(--fm);font-size:.75rem;letter-spacing:0;color:var(--txt3)}
 
-        /* ── FORM ── */
-        .field-label {
-            display: block;
-            font-family: var(--mono);
-            font-size: 0.88em;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: var(--text-dim);
-            margin-bottom: 6px;
-            margin-top: 14px;
-        }
-        .field-label:first-of-type { margin-top: 0; }
+/* GRIDS */
+.main-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.method-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
 
-        input[type="number"], select {
-            width: 100%;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            font-family: var(--mono);
-            font-size: 1.1em;
-            padding: 10px 13px;
-            outline: none;
-            transition: border-color var(--ease), box-shadow var(--ease);
-            -moz-appearance: textfield;
-        }
-        input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
-        input[type="number"]:focus, select:focus {
-            border-color: var(--green);
-            box-shadow: 0 0 0 3px rgba(0,255,136,0.08);
-        }
+/* PROTOCOL TABLE — wrapped for mobile scroll */
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:12px}
+.proto-table{width:100%;border-collapse:collapse;min-width:480px}
+.proto-table th{
+  font-family:var(--fm);font-size:.56rem;letter-spacing:2px;text-transform:uppercase;
+  color:var(--acid);text-align:left;padding:0 8px 10px 0;border-bottom:1px solid var(--line);
+  white-space:nowrap;
+}
+.proto-table td{
+  font-family:var(--fm);font-size:.7rem;color:var(--txt2);
+  padding:10px 8px 10px 0;border-bottom:1px solid rgba(255,255,255,.03);
+}
+.proto-table tr:last-child td{border-bottom:none}
+.proto-table td:first-child{color:var(--white);font-weight:500}
+.proto-table td:nth-child(2){color:var(--acid);font-weight:700}
+.proto-table td:nth-child(3){color:#FF7A90}
+.empty-row td{font-family:var(--fm);font-size:.65rem;color:var(--txt3);text-align:center;padding:20px 0}
 
-        .height-imperial {
-            display: none;
-            gap: 8px;
-        }
-        .height-imperial.visible { display: flex; }
+/* METHOD */
+.method-item{padding:13px 15px;background:rgba(170,255,0,.02);border:1px solid var(--line);border-radius:4px}
+.method-item h4{font-family:var(--fm);font-weight:700;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--acid);margin-bottom:7px}
+.method-item p,.method-item li{font-size:.76rem;color:var(--txt2);line-height:1.7}
+.method-item ul{padding-left:14px;margin-top:5px}
+.formula{
+  font-family:var(--fm);font-size:.68rem;color:var(--acid);
+  background:rgba(170,255,0,.06);border:1px solid rgba(170,255,0,.15);
+  padding:7px 11px;border-radius:3px;margin-top:7px;letter-spacing:.5px;
+  /* allow wrapping on mobile */
+  word-break:break-word;white-space:pre-wrap;
+}
 
-        .field-note {
-            font-family: var(--mono);
-            font-size: 0.75em;
-            color: var(--text-dim);
-            line-height: 1.6;
-            margin-top: 16px;
-            padding-top: 14px;
-            border-top: 1px solid var(--border);
-        }
+/* MACRO TAGS */
+.macro-dist{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.mtag{font-family:var(--fm);font-size:.62rem;letter-spacing:1px;padding:5px 10px;border-radius:20px;border:1px solid var(--line2);color:var(--txt2)}
+.mtag.p{border-color:rgba(255,122,144,.4);color:#FF7A90}
+.mtag.c{border-color:rgba(240,192,64,.4);color:var(--yellow)}
+.mtag.f{border-color:rgba(255,122,0,.4);color:var(--orange)}
 
-        /* ── STAT NODES ── */
-        .stat-node {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 14px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            transition: border-color var(--ease);
-        }
-        .stat-node:hover { border-color: var(--border-hi); }
-        .stat-node:last-child { margin-bottom: 0; }
-        .stat-name {
-            font-family: var(--mono);
-            font-size: 0.9em;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: var(--text-dim);
-        }
-        .stat-val {
-            font-family: var(--mono);
-            font-size: 1.1em;
-            font-weight: 700;
-            color: var(--green);
-        }
-        .stat-val.dim { color: var(--text-dim); }
+/* GLOSSARY */
+.glist{list-style:none;margin-top:10px}
+.glist li{font-size:.76rem;color:var(--txt2);padding:8px 0;border-bottom:1px solid var(--line);line-height:1.6}
+.glist li:last-child{border-bottom:none}
+.glist strong{color:var(--txt);font-family:var(--fm);font-size:.68rem}
 
-        /* ── FULL WIDTH PANELS ── */
-        .full-panel {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 32px;
-            margin-bottom: 14px;
-        }
-        .full-panel.accent-green { border-left: 3px solid var(--green); }
-        .full-panel.accent-dim   { border-left: 3px solid var(--border-hi); }
+/* DISCLAIMER */
+.disclaimer{font-family:var(--fm);font-size:.62rem;color:var(--txt3);line-height:1.7;padding-top:14px;border-top:1px solid var(--line);margin-top:14px}
+.disclaimer strong{color:var(--red)}
 
-        /* ── PROTOCOL TABLE ── */
-        .protocol-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
-        .protocol-table th {
-            font-family: var(--mono);
-            font-size: 0.9em;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--green);
-            text-align: left;
-            padding: 0 0 12px;
-            border-bottom: 1px solid var(--border);
-        }
-        .protocol-table td {
-            font-family: var(--mono);
-            font-size: 0.88em;
-            color: var(--text-dim);
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-        }
-        .protocol-table tr:last-child td { border-bottom: none; }
-        .protocol-table td:first-child { color: var(--text); }
-        .protocol-table td:nth-child(2) { color: var(--green); font-weight: 700; }
+/* FOOTER */
+.footer{border-top:1px solid var(--line);padding:28px 16px;text-align:center;font-size:.7rem;color:var(--txt3);position:relative;z-index:1}
+.footer a{color:var(--txt3);text-decoration:none;margin:0 8px;font-family:var(--fm);transition:color .2s}
+.footer a:hover{color:var(--acid)}
 
-        /* ── METHODOLOGY GRID ── */
-        .method-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            margin-top: 20px;
-        }
-        .method-item {
-            padding: 16px 18px;
-            background: rgba(0,255,136,0.02);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-        }
-        .method-item h4 {
-            font-family: var(--mono);
-            font-size: 0.8em;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: var(--green);
-            margin-bottom: 8px;
-        }
-        .method-item p, .method-item li {
-            font-size: 0.88em;
-            color: var(--text-dim);
-            line-height: 1.7;
-        }
-        .method-item ul { padding-left: 14px; }
-        .formula-block {
-            font-family: var(--mono);
-            font-size: 0.8em;
-            color: var(--green);
-            background: var(--bg);
-            padding: 10px 14px;
-            border-radius: 6px;
-            margin-top: 8px;
-            letter-spacing: 0.5px;
-        }
+/* COOKIE */
+#cookie-banner{
+  position:fixed;bottom:-140px;left:0;right:0;
+  background:var(--s0);border-top:1px solid var(--line);
+  padding:12px 16px;display:flex;align-items:center;justify-content:center;
+  gap:10px;flex-wrap:wrap;z-index:9999;transition:bottom .4s ease;
+  font-family:var(--fm);font-size:.65rem;color:var(--txt2);
+}
+.ck-btn{
+  padding:8px 14px;border-radius:4px;border:1px solid;
+  font-family:var(--fm);font-size:.58rem;letter-spacing:1px;cursor:pointer;
+  font-weight:700;text-transform:uppercase;transition:all .2s;
+  /* touch target */
+  min-height:38px;
+}
+.ck-a{background:var(--acid);color:var(--bg);border-color:var(--acid)}.ck-a:hover{background:#ccff33}
+.ck-r{background:transparent;color:var(--txt3);border-color:var(--line)}.ck-r:hover{border-color:var(--txt3);color:var(--txt)}
 
-        /* ── DISCLAIMER ── */
-        .disclaimer {
-            font-family: var(--mono);
-            font-size: 0.9em;
-            color: var(--text-dim);
-            line-height: 1.7;
-            padding-top: 20px;
-            border-top: 1px solid var(--border);
-            margin-top: 20px;
-        }
-        .disclaimer strong { color: var(--red); }
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.hero{animation:fadeUp .55s ease both}
+.main-grid>.card:nth-child(1){animation:fadeUp .55s .08s ease both}
+.main-grid>.card:nth-child(2){animation:fadeUp .55s .16s ease both}
+.main-grid>.card:nth-child(3){animation:fadeUp .55s .24s ease both}
 
-        /* ── GLOSSARY ── */
-        .glossary-list { list-style: none; margin-top: 14px; }
-        .glossary-list li {
-            font-size: 0.88em;
-            color: var(--text-dim);
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border);
-            line-height: 1.6;
-        }
-        .glossary-list li:last-child { border-bottom: none; }
-        .glossary-list strong { color: var(--text); font-family: var(--mono); }
-
-        /* ── MACRO DIST ── */
-        .macro-dist {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-            flex-wrap: wrap;
-        }
-        .macro-tag {
-            font-family: var(--mono);
-            font-size: 1.1em;
-            letter-spacing: 1px;
-            padding: 6px 12px;
-            border-radius: 20px;
-            border: 1px solid var(--border-hi);
-            color: var(--text-dim);
-        }
-        .macro-tag.protein { border-color: rgba(255,62,62,0.4); color: var(--red); }
-        .macro-tag.carbs   { border-color: rgba(241,196,15,0.4); color: var(--yellow); }
-        .macro-tag.fats    { border-color: rgba(230,126,34,0.4); color: var(--orange); }
-
-        /* ── FOOTER ── */
-        .site-footer {
-            background: var(--card);
-            border-top: 1px solid var(--border);
-            padding: 40px 0 24px;
-            margin-top: 60px;
-        }
-        .footer-inner {
-            max-width: 1320px;
-            margin: 0 auto;
-            padding: 0 16px;
-        }
-        .footer-nav {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-        .footer-nav a {
-            font-family: var(--mono);
-            font-size: 1.1em;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            text-decoration: none;
-            color: var(--text-dim);
-            transition: color var(--ease);
-        }
-        .footer-nav a:hover { color: var(--green); }
-        .footer-copy {
-            font-family: var(--mono);
-            font-size: 0.88em;
-            color: var(--text-dim);
-            text-align: center;
-            opacity: 0.5;
-            letter-spacing: 1px;
-        }
-
-        /* ── COOKIE BANNER ── */
-        #cookie-banner {
-            position: fixed; bottom: -100px; left: 0; right: 0;
-            background: var(--card);
-            border-top: 1px solid var(--border-hi);
-            padding: 14px 20px;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            flex-wrap: wrap;
-            transition: bottom 0.4s ease;
-        }
-        #cookie-banner p {
-            font-family: var(--mono);
-            font-size: 0.8em;
-            color: var(--text-dim);
-            letter-spacing: 0.5px;
-        }
-        .ck-btn {
-            font-family: var(--mono);
-            font-size: 1.1em;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: opacity var(--ease);
-        }
-        .ck-btn:hover { opacity: 0.85; }
-        .ck-accept { background: #1a5c36; color: var(--green); }
-        .ck-reject { background: var(--surface); color: var(--text-dim); border: 1px solid var(--border-hi); }
-
-        /* ── RESPONSIVE ── */
-        @media (max-width: 900px) {
-            .main-grid { grid-template-columns: 1fr; }
-            .method-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .main-grid{grid-template-columns:1fr}
+  .two-col{grid-template-columns:1fr}
+  .method-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .topnav{padding:0 12px;height:48px}
+  .nav-logo{font-size:1.1rem;letter-spacing:3px}
+  .npill{padding:4px 8px;font-size:.52rem}
+  .page{padding:0 12px 60px}
+  .hero{padding:28px 0 24px}
+  .card{padding:16px}
+  .stat-val{font-size:.95rem}
+  /* Stack stat-node label/value tighter */
+  .stat-node{padding:9px 11px}
+  /* Protocol table scroll hint */
+  .table-scroll::after{
+    content:'← scroll →';
+    display:block;font-family:var(--fm);font-size:.5rem;
+    color:var(--txt3);text-align:center;padding-top:6px;
+  }
+}
+</style>
 </head>
 <body>
 
-<!-- COOKIE BANNER -->
-<div id="cookie-banner" role="banner">
-    <p>We use cookies to personalise ads and improve your experience.</p>
-    <button class="ck-btn ck-accept" id="accept-cookies">Accept</button>
-    <button class="ck-btn ck-reject" id="reject-cookies">Reject</button>
+<!-- COOKIE -->
+<div id="cookie-banner">
+  <span>🍪 We use cookies to personalise ads and improve your experience.</span>
+  <button id="accept-cookies" class="ck-btn ck-a">Accept</button>
+  <button id="reject-cookies" class="ck-btn ck-r">Reject</button>
 </div>
+
+<!-- NAV -->
+<nav class="topnav">
+  <a href="index.html" class="nav-logo">CALI-BIOTECH</a>
+  <div class="nav-links">
+    <a href="calc-pullup.html" class="npill">1RM</a>
+    <a href="skills.html" class="npill">Skills</a>
+    <a href="physio.html" class="npill hi">Calories</a>
+    <a href="faq.html" class="npill" target="_blank">FAQ</a>
+  </div>
+</nav>
 
 <div class="page">
 
-    <!-- NAV -->
-    <nav class="top-nav" aria-label="Site navigation">
-        <a href="index.html" class="nav-logo">Home</a>
-        <a href="skills.html" class="back-link">← Back to Skills</a>
-    </nav>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-tag">Body Composition &amp; Nutrition</div>
+    <h1 class="hero-h1">CALORIE<br><em>CALCULATOR</em></h1>
+    <p class="hero-sub">Navy Body Fat · Mifflin-St Jeor TDEE · LBM Protein Scaling</p>
+  </section>
 
-    <!-- HEADER -->
-    <header class="page-header">
-        <h1>Calorie Calculator</h1>
-        <p>Navy Body Fat · Mifflin-St Jeor TDEE · LBM Protein Scaling</p>
-    </header>
+  <!-- INPUTS -->
+  <div class="sec-lbl" data-n="01">Biometric data</div>
+  <div class="main-grid">
 
-    <!-- MAIN GRID -->
-    <div class="main-grid">
+    <!-- CARD 1: STRUCTURE -->
+    <div class="card">
+      <div class="ctitle">Structure</div>
 
-        <!-- BIOMETRICS -->
-        <div class="card">
-            <div class="card-title">Biometric Data</div>
+      <label class="fl first" for="unitSystem">Unit System</label>
+      <select id="unitSystem" onchange="onUnitChange()">
+        <option value="met">Metric (kg / cm)</option>
+        <option value="imp">Imperial (lbs / ft-in)</option>
+      </select>
 
-            <label class="field-label" for="unitSystem">Unit System</label>
-            <select id="unitSystem" onchange="toggleUnits()">
-                <option value="met">Metric (kg / cm)</option>
-                <option value="imp">Imperial (lbs / ft-in)</option>
-            </select>
+      <label class="fl" for="weight" id="weightLabel">Weight (kg)</label>
+      <input type="number" id="weight" placeholder="75" min="1" max="500" inputmode="decimal" oninput="calculate()">
 
-            <label class="field-label" for="weight" id="weightLabel">Weight (kg)</label>
-            <input type="number" id="weight" placeholder="75" min="1" max="500" oninput="calculate()">
+      <label class="fl" id="heightLabel">Height (cm)</label>
+      <div id="metricHeight">
+        <input type="number" id="hCm" placeholder="175" inputmode="decimal" oninput="calculate()">
+      </div>
+      <div class="height-imp" id="imperialHeight">
+        <input type="number" id="hFt" placeholder="ft" inputmode="decimal" style="flex:1" oninput="calculate()">
+        <input type="number" id="hIn" placeholder="in" inputmode="decimal" style="flex:1" oninput="calculate()">
+      </div>
 
-            <label class="field-label" id="heightLabel">Height</label>
-            <div id="metricHeight">
-                <input type="number" id="hCm" placeholder="175" oninput="calculate()">
-            </div>
-            <div class="height-imperial" id="imperialHeight">
-                <input type="number" id="hFt" placeholder="ft" oninput="calculate()">
-                <input type="number" id="hIn" placeholder="in" oninput="calculate()">
-            </div>
+      <label class="fl" for="age">Age</label>
+      <input type="number" id="age" placeholder="25" min="10" max="100" inputmode="numeric" oninput="calculate()">
 
-            <label class="field-label" for="age">Age</label>
-            <input type="number" id="age" placeholder="25" min="10" max="100" oninput="calculate()">
-        </div>
-
-        <!-- NAVY MEASUREMENTS -->
-        <div class="card">
-            <div class="card-title">Navy Measurements</div>
-
-            <label class="field-label" for="neck" id="neckLabel">Neck Circumference (cm)</label>
-            <input type="number" id="neck" placeholder="37" oninput="calculate()">
-
-            <label class="field-label" for="waist" id="waistLabel">Waist Circumference (cm)</label>
-            <input type="number" id="waist" placeholder="80" oninput="calculate()">
-
-            <label class="field-label" for="activity">Activity Level</label>
-            <select id="activity" onchange="calculate()">
-                <option value="1.2">Sedentary (desk / minimal)</option>
-                <option value="1.375">Light (1–2 sessions/wk)</option>
-                <option value="1.55" selected>Moderate (3–5 sessions/wk)</option>
-                <option value="1.725">Heavy (6–7 sessions/wk)</option>
-                <option value="1.9">Professional Athlete</option>
-            </select>
-
-            <p class="field-note">Measure waist at navel level. Measurement precision is critical for Navy Formula accuracy.</p>
-        </div>
-
-        <!-- OUTPUT -->
-        <div class="card">
-            <div class="card-title">Analysis Output</div>
-
-            <div class="stat-node">
-                <span class="stat-name">Body Fat</span>
-                <span class="stat-val dim" id="bf-val">—</span>
-            </div>
-            <div class="stat-node">
-                <span class="stat-name">Lean Body Mass</span>
-                <span class="stat-val dim" id="lm-val">—</span>
-            </div>
-            <div class="stat-node">
-                <span class="stat-name">Maintenance (TDEE)</span>
-                <span class="stat-val dim" id="tdee-val">—</span>
-            </div>
-            <div class="stat-node" style="border-left:2px solid var(--red);">
-                <span class="stat-name">Protein (Build)</span>
-                <span class="stat-val dim" id="prot-val">—</span>
-            </div>
-            <div class="stat-node" style="border-left:2px solid var(--yellow);">
-                <span class="stat-name">Carbs (Fuel)</span>
-                <span class="stat-val dim" id="carb-val">—</span>
-            </div>
-            <div class="stat-node" style="border-left:2px solid var(--orange);">
-                <span class="stat-name">Fats (Hormones)</span>
-                <span class="stat-val dim" id="fat-val">—</span>
-            </div>
-        </div>
-
-    </div><!-- /.main-grid -->
-
-    <!-- PROTOCOL TABLE -->
-    <div class="full-panel accent-green">
-        <div class="card-title">Calorie &amp; Macro Protocols</div>
-        <table class="protocol-table">
-            <thead>
-                <tr>
-                    <th>Objective</th>
-                    <th>kcal / Day</th>
-                    <th>Protein</th>
-                    <th>Primary Effect</th>
-                </tr>
-            </thead>
-            <tbody id="protocol-body">
-                <tr>
-                    <td colspan="4" style="font-family:var(--mono); font-size:0.82em; color:var(--text-dim); text-align:center; padding:20px 0;">
-                        Enter your biometric data above to generate protocols.
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+      <label class="fl" for="sex">Biological Sex</label>
+      <select id="sex" onchange="onSexChange()">
+        <option value="m">Male</option>
+        <option value="f">Female</option>
+      </select>
     </div>
 
-    <!-- METHODOLOGY -->
-    <div class="full-panel accent-dim">
-        <div class="card-title">System Architecture &amp; Methodology</div>
-        <div class="method-grid">
-            <div class="method-item">
-                <h4>1. Basal Metabolic Rate</h4>
-                <p>Uses the <strong style="color:var(--text)">Mifflin-St Jeor Equation</strong> — the current gold standard for metabolic estimation:</p>
-                <div class="formula-block">BMR = (10 × W) + (6.25 × H) − (5 × A) + 5</div>
-            </div>
-            <div class="method-item">
-                <h4>2. TDEE Calculation</h4>
-                <p>Activity multiplier applied to BMR to account for the Thermogenic Effect of Activity:</p>
-                <ul style="margin-top:8px;">
-                    <li>Sedentary → BMR × 1.2</li>
-                    <li>Moderate → BMR × 1.55</li>
-                    <li>Athlete → BMR × 1.9</li>
-                </ul>
-            </div>
-            <div class="method-item">
-                <h4>3. Protein — Lean Mass Logic</h4>
-                <p>Protein scaled from <strong style="color:var(--text)">Lean Body Mass</strong> to optimise power-to-weight ratio for calisthenics athletes:</p>
-                <div class="formula-block">Target = LBM (kg) × 2.2g</div>
-            </div>
-            <div class="method-item">
-                <h4>4. Phase Differentials</h4>
-                <p><strong style="color:var(--text)">Lean Bulk:</strong> +10% surplus for muscle synthesis without excess fat storage.<br><br>
-                   <strong style="color:var(--text)">Lean Cut:</strong> −15% deficit for fat oxidation while preserving neural strength output.</p>
-            </div>
-        </div>
-        <div class="disclaimer">
-            <strong>[ Medical Disclaimer ]</strong> — This tool provides estimates based on statistical averages (Mifflin-St Jeor, 1990). Variables such as TEF and NEAT create individual margins of error. Results are for informational purposes only. Consult a medical professional before beginning any high-intensity or restrictive protocol. Use constitutes acknowledgment of training at your own risk.
-        </div>
+    <!-- CARD 2: MEASUREMENTS -->
+    <div class="card">
+      <div class="ctitle">Navy Measurements</div>
+
+      <label class="fl first" for="neck" id="neckLabel">Neck Circumference (cm)</label>
+      <input type="number" id="neck" placeholder="37" inputmode="decimal" oninput="calculate()">
+
+      <label class="fl" for="waist" id="waistLabel">Waist Circumference (cm)</label>
+      <input type="number" id="waist" placeholder="80" inputmode="decimal" oninput="calculate()">
+
+      <!-- Hip — female only, shown/hidden via JS -->
+      <div class="hip-row" id="hipRow">
+        <label class="fl" for="hip" id="hipLabel">Hip Circumference (cm) <span style="color:var(--acid);font-size:.9em">♀</span></label>
+        <input type="number" id="hip" placeholder="95" inputmode="decimal" oninput="calculate()">
+      </div>
+
+      <label class="fl" for="activity">Activity Level</label>
+      <select id="activity" onchange="calculate()">
+        <option value="1.2">Sedentary (desk / minimal)</option>
+        <option value="1.375">Light (1–2 sessions/wk)</option>
+        <option value="1.55" selected>Moderate (3–5 sessions/wk)</option>
+        <option value="1.725">Heavy (6–7 sessions/wk)</option>
+        <option value="1.9">Professional Athlete</option>
+      </select>
+
+      <div class="field-note">
+        Measure neck at narrowest point. Waist at navel level.
+        Female formula requires hip measurement at widest point.
+      </div>
     </div>
 
-    <!-- GLOSSARY + MACROS -->
-    <div class="full-panel" style="display:grid; grid-template-columns:1fr 1fr; gap:28px;">
-        <div>
-            <div class="card-title">Glossary of Terms</div>
-            <ul class="glossary-list">
-                <li><strong>BMR</strong> — Calories burned at complete rest to sustain vital functions.</li>
-                <li><strong>TDEE</strong> — Total daily calories burned including all physical activity.</li>
-                <li><strong>Lean Body Mass</strong> — Total bodyweight minus fat mass.</li>
-                <li><strong>Navy Formula</strong> — Body fat estimation using circumference measurements.</li>
-                <li><strong>TEF</strong> — Thermic Effect of Food; calories burned during digestion.</li>
-                <li><strong>NEAT</strong> — Non-Exercise Activity Thermogenesis; incidental movement energy.</li>
-            </ul>
-        </div>
-        <div>
-            <div class="card-title">Macronutrient Distribution</div>
-            <p style="font-size:0.9em; color:var(--text-dim); line-height:1.7; margin-bottom:14px;">
-                Recommended intake ranges for general athletic performance. Calisthenics athletes typically bias toward higher protein and moderate carbohydrates.
-            </p>
-            <div class="macro-dist">
-                <span class="macro-tag protein">Protein 10–35%</span>
-                <span class="macro-tag carbs">Carbs 45–65%</span>
-                <span class="macro-tag fats">Fats 20–35%</span>
-            </div>
-            <p style="font-size:0.88em; color:var(--text-dim); line-height:1.7; margin-top:16px;">
-                A 3,500 kcal deficit ≈ 1 lb of fat lost. A safe sustainable deficit is 500–1,000 kcal/day. Focus on whole food sources and keep cholesterol below 300mg/day.
-            </p>
-        </div>
+    <!-- CARD 3: OUTPUT -->
+    <div class="card">
+      <div class="ctitle acid-t">Analysis Output</div>
+
+      <div class="stat-node">
+        <span class="stat-name">Body Fat %</span>
+        <span class="stat-val dim" id="bf-val">—</span>
+      </div>
+      <div class="stat-node">
+        <span class="stat-name">Lean Body Mass</span>
+        <span class="stat-val dim" id="lm-val">—</span>
+      </div>
+      <div class="stat-node">
+        <span class="stat-name">BMR</span>
+        <span class="stat-val dim" id="bmr-val">—</span>
+      </div>
+      <div class="stat-node" style="border-left:2px solid var(--acid)">
+        <span class="stat-name">Maintenance (TDEE)</span>
+        <span class="stat-val dim" id="tdee-val">—</span>
+      </div>
+      <div class="stat-node" style="border-left:2px solid #FF7A90">
+        <span class="stat-name">Protein (Build)</span>
+        <span class="stat-val dim" id="prot-val">—</span>
+      </div>
+      <div class="stat-node" style="border-left:2px solid var(--yellow)">
+        <span class="stat-name">Carbs (Fuel)</span>
+        <span class="stat-val dim" id="carb-val">—</span>
+      </div>
+      <div class="stat-node" style="border-left:2px solid var(--orange)">
+        <span class="stat-name">Fats (Hormones)</span>
+        <span class="stat-val dim" id="fat-val">—</span>
+      </div>
     </div>
+
+  </div>
+
+  <!-- PROTOCOLS -->
+  <div class="sec-lbl" data-n="02">Protocols</div>
+  <div class="card" style="border-left:3px solid var(--acid)">
+    <div class="ctitle acid-t">Calorie &amp; Macro Protocols</div>
+    <div class="table-scroll">
+      <table class="proto-table">
+        <thead>
+          <tr>
+            <th>Objective</th>
+            <th>kcal / Day</th>
+            <th>Protein</th>
+            <th>Effect</th>
+          </tr>
+        </thead>
+        <tbody id="protocol-body">
+          <tr class="empty-row"><td colspan="4">Enter biometric data above to generate protocols.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- METHODOLOGY -->
+  <div class="sec-lbl" data-n="03">Methodology</div>
+  <div class="card" style="border-left:3px solid var(--blue)">
+    <div class="ctitle">System Architecture</div>
+    <div class="method-grid">
+      <div class="method-item">
+        <h4>1. Basal Metabolic Rate</h4>
+        <p>Uses the <strong style="color:var(--white)">Mifflin-St Jeor Equation</strong> — current gold standard for metabolic estimation:</p>
+        <div class="formula">BMR (♂) = (10×W) + (6.25×H) − (5×A) + 5
+BMR (♀) = (10×W) + (6.25×H) − (5×A) − 161</div>
+      </div>
+      <div class="method-item">
+        <h4>2. TDEE Calculation</h4>
+        <p>Activity multiplier applied to BMR to account for the Thermogenic Effect of Activity:</p>
+        <ul>
+          <li>Sedentary → BMR × 1.2</li>
+          <li>Moderate  → BMR × 1.55</li>
+          <li>Athlete   → BMR × 1.9</li>
+        </ul>
+      </div>
+      <div class="method-item">
+        <h4>3. Protein — Lean Mass Logic</h4>
+        <p>Protein dosed from <strong style="color:var(--white)">Lean Body Mass</strong> (not total weight) to remove fat as a variable:</p>
+        <div class="formula">Target = LBM (kg) × 2.2 g/kg</div>
+      </div>
+      <div class="method-item">
+        <h4>4. Phase Differentials</h4>
+        <p><strong style="color:var(--white)">Lean Bulk:</strong> +10% surplus for muscle synthesis.<br><br>
+           <strong style="color:var(--white)">Lean Cut:</strong> −15% deficit. Protein raised to 2.4g/LBM to preserve strength output during deficit.</p>
+      </div>
+    </div>
+    <div class="disclaimer">
+      <strong>[ Medical Disclaimer ]</strong> — Estimates based on statistical averages (Mifflin-St Jeor, 1990). Variables such as TEF and NEAT introduce individual margins of error. For informational purposes only. Consult a medical professional before beginning any high-intensity or restrictive protocol.
+    </div>
+  </div>
+
+  <!-- REFERENCE -->
+  <div class="sec-lbl" data-n="04">Reference</div>
+  <div class="two-col">
+    <div class="card">
+      <div class="ctitle">Glossary</div>
+      <ul class="glist">
+        <li><strong>BMR</strong> — Calories burned at complete rest to sustain vital functions.</li>
+        <li><strong>TDEE</strong> — Total daily calories burned including all physical activity.</li>
+        <li><strong>Lean Body Mass</strong> — Total bodyweight minus fat mass. Basis for protein targets.</li>
+        <li><strong>Navy Formula</strong> — Body fat estimation via circumference measurements (US DoD, 1984).</li>
+        <li><strong>TEF</strong> — Thermic Effect of Food; ~10% of total calories burned during digestion.</li>
+        <li><strong>NEAT</strong> — Non-Exercise Activity Thermogenesis; incidental movement calories.</li>
+        <li><strong>Mifflin-St Jeor</strong> — BMR equation with the highest accuracy in clinical validation studies.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="ctitle">Macronutrient Distribution</div>
+      <p style="font-size:.77rem;color:var(--txt2);line-height:1.7;margin-bottom:10px">
+        Recommended intake ranges for athletic performance. Calisthenics athletes bias toward higher protein with moderate carbohydrates.
+      </p>
+      <div class="macro-dist">
+        <span class="mtag p">Protein 10–35%</span>
+        <span class="mtag c">Carbs 45–65%</span>
+        <span class="mtag f">Fats 20–35%</span>
+      </div>
+      <p style="font-size:.74rem;color:var(--txt2);line-height:1.7;margin-top:12px">
+        A 3,500 kcal deficit ≈ 0.45 kg of fat lost. Safe sustainable deficit: 500–750 kcal/day. Focus on whole food sources (&gt;80% of intake). Keep dietary cholesterol below 300mg/day.
+      </p>
+      <div style="margin-top:12px;padding:11px;background:var(--acid3);border-left:2px solid var(--acid);border-radius:0 4px 4px 0">
+        <div style="font-family:var(--fm);font-size:.55rem;letter-spacing:2px;color:var(--acid);margin-bottom:4px;text-transform:uppercase">Pro Tip — Calisthenics</div>
+        <div style="font-size:.74rem;color:var(--txt2);line-height:1.6">Maintain BMI 21–23.5 for the optimal muscle-to-weight ratio. Every unnecessary kg raises the effective difficulty of every skill by ~2–3%.</div>
+      </div>
+    </div>
+  </div>
 
 </div><!-- /.page -->
 
-<!-- FOOTER -->
-<footer class="site-footer">
-    <div class="footer-inner">
-        <nav class="footer-nav">
-            <a href="about.html">About</a>
-            <a href="privacy-policy.html">Privacy Policy</a>
-            <a href="terms.html">Terms</a>
-            <a href="contact.html">Contact</a>
-        </nav>
-        <p class="footer-copy">© 2026 Cali-Biotech · Data-Driven Bodyweight Training</p>
-    </div>
+<footer class="footer">
+  <p>
+    <a href="/about.html">About</a>
+    <a href="/privacy-policy.html">Privacy</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/terms.html">Terms</a>
+  </p>
+  <p style="margin-top:8px">© 2026 Cali-Biotech | Data-Driven Bodyweight Training</p>
 </footer>
 
 <script>
 'use strict';
 
 /* ── HELPERS ── */
-const $ = id => document.getElementById(id);
-const set = (id, val, active = true) => {
-    const el = $(id); if (!el) return;
-    el.textContent = val;
-    el.className = active ? 'stat-val' : 'stat-val dim';
+const $  = id => document.getElementById(id);
+const setVal = (id, val, active) => {
+  const el = $(id);
+  if (!el) return;
+  el.textContent = val;
+  el.className   = active ? 'stat-val' : 'stat-val dim';
+};
+const resetOutputs = () => {
+  ['bf-val','lm-val','bmr-val','tdee-val','prot-val','carb-val','fat-val']
+    .forEach(id => setVal(id, '—', false));
+  $('protocol-body').innerHTML =
+    '<tr class="empty-row"><td colspan="4">Enter biometric data above to generate protocols.</td></tr>';
 };
 
-/* ── UNIT TOGGLE ── */
-function toggleUnits() {
-    const imp = $('unitSystem').value === 'imp';
-    $('weightLabel').textContent = imp ? 'Weight (lbs)' : 'Weight (kg)';
-    $('heightLabel').textContent = imp ? 'Height (ft / in)' : 'Height (cm)';
-    $('neckLabel').textContent   = imp ? 'Neck Circumference (in)' : 'Neck Circumference (cm)';
-    $('waistLabel').textContent  = imp ? 'Waist Circumference (in)' : 'Waist Circumference (cm)';
-    $('metricHeight').style.display = imp ? 'none' : 'block';
-    $('imperialHeight').classList.toggle('visible', imp);
-    calculate();
+/* ── UNIT CHANGE ── */
+// Called ONLY by unitSystem onchange — updates labels then recalculates
+function onUnitChange() {
+  const imp = $('unitSystem').value === 'imp';
+  const female = $('sex').value === 'f';
+
+  $('weightLabel').textContent = imp ? 'Weight (lbs)' : 'Weight (kg)';
+  $('heightLabel').textContent = imp ? 'Height (ft / in)' : 'Height (cm)';
+  $('neckLabel').textContent   = imp ? 'Neck Circumference (in)' : 'Neck Circumference (cm)';
+  $('waistLabel').textContent  = imp ? 'Waist Circumference (in)' : 'Waist Circumference (cm)';
+
+  // Update hip label text (only relevant when female is selected)
+  const hipLbl = $('hipLabel');
+  if (hipLbl) {
+    // Rebuild — don't use textContent as it would strip the span
+    hipLbl.innerHTML = (imp ? 'Hip Circumference (in)' : 'Hip Circumference (cm)')
+      + ' <span style="color:var(--acid);font-size:.9em">♀</span>';
+  }
+
+  $('metricHeight').style.display = imp ? 'none' : 'block';
+  $('imperialHeight').classList.toggle('show', imp);
+
+  calculate();
 }
 
-/* ── CALCULATE ── */
+/* ── SEX CHANGE ── */
+// Called ONLY by sex onchange — shows/hides hip row then recalculates
+function onSexChange() {
+  const female = $('sex').value === 'f';
+  $('hipRow').classList.toggle('show', female);
+  calculate();
+}
+
+/* ── MAIN CALCULATE ── */
+// Never calls onUnitChange or onSexChange — no circular calls
 function calculate() {
-    const weightRaw = parseFloat($('weight').value);
+  const weightRaw = parseFloat($('weight').value);
+  if (!weightRaw || weightRaw <= 0) { resetOutputs(); return; }
 
-    // Require weight to proceed
-    if (!weightRaw || weightRaw <= 0) {
-        ['bf-val','lm-val','tdee-val','prot-val','carb-val','fat-val']
-            .forEach(id => set(id, '—', false));
-        $('protocol-body').innerHTML = `<tr><td colspan="4" style="font-family:var(--mono);font-size:0.82em;color:var(--text-dim);text-align:center;padding:20px 0;">Enter your biometric data above to generate protocols.</td></tr>`;
-        return;
+  const imp      = $('unitSystem').value === 'imp';
+  const female   = $('sex').value === 'f';
+  const age      = parseFloat($('age').value)      || 25;
+  const activity = parseFloat($('activity').value) || 1.55;
+
+  /* Height → cm */
+  let heightCm;
+  if (imp) {
+    const ft  = parseFloat($('hFt').value) || 5;
+    const ins = parseFloat($('hIn').value) || 7;
+    heightCm  = ft * 30.48 + ins * 2.54;
+  } else {
+    heightCm = parseFloat($('hCm').value) || 170;
+  }
+  if (heightCm < 100 || heightCm > 250) heightCm = 170; // guard
+
+  /* Weight → kg */
+  const weightKg = imp ? weightRaw * 0.453592 : weightRaw;
+  if (weightKg < 20 || weightKg > 400) { resetOutputs(); return; } // guard
+
+  /* Circumferences → cm */
+  let neck  = parseFloat($('neck').value)  || 0;
+  let waist = parseFloat($('waist').value) || 0;
+  let hip   = parseFloat($('hip').value)   || 0;
+  if (imp) { neck *= 2.54; waist *= 2.54; hip *= 2.54; }
+
+  /* ── Body Fat — US Navy Formula (sex-specific) ── */
+  let bodyFat;
+  let validMeasurements = false;
+
+  if (female) {
+    // Female: needs neck, waist, hip, height
+    // Valid only when hip > waist > neck > 10 cm
+    if (neck > 10 && waist > 10 && hip > waist && waist > neck) {
+      validMeasurements = true;
+      const denom = 1.29579 - 0.35004 * Math.log10(waist + hip - neck) + 0.22100 * Math.log10(heightCm);
+      if (denom > 0) bodyFat = (495 / denom) - 450;
     }
-
-    const sys      = $('unitSystem').value;
-    const imp      = sys === 'imp';
-    const age      = parseFloat($('age').value)      || 25;
-    const activity = parseFloat($('activity').value) || 1.55;
-
-    // Height → cm
-    let heightCm;
-    if (imp) {
-        const ft  = parseFloat($('hFt').value) || 5;
-        const ins = parseFloat($('hIn').value) || 7;
-        heightCm  = ft * 30.48 + ins * 2.54;
-    } else {
-        heightCm = parseFloat($('hCm').value) || 170;
+  } else {
+    // Male: needs neck, waist, height
+    // Valid only when waist > neck > 10 cm
+    if (neck > 10 && waist > neck) {
+      validMeasurements = true;
+      const denom = 1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(heightCm);
+      if (denom > 0) bodyFat = (495 / denom) - 450;
     }
+  }
 
-    // Weight → kg
-    const weightKg = imp ? weightRaw * 0.453592 : weightRaw;
+  if (validMeasurements && bodyFat != null && isFinite(bodyFat)) {
+    const minBF = female ? 10 : 3;
+    const maxBF = female ? 50 : 45;
+    bodyFat = Math.max(minBF, Math.min(maxBF, bodyFat));
+    setVal('bf-val', bodyFat.toFixed(1) + '%', true);
+  } else {
+    // Fallback estimate — won't block the rest of the calculation
+    bodyFat = female ? 22 : 15;
+    setVal('bf-val', (female ? '~22%' : '~15%') + ' (est.)', false);
+  }
 
-    // Circumferences → cm
-    let neck  = parseFloat($('neck').value)  || 0;
-    let waist = parseFloat($('waist').value) || 0;
-    if (imp) { neck *= 2.54; waist *= 2.54; }
+  /* ── Lean Body Mass ── */
+  const lbmKg  = weightKg * (1 - bodyFat / 100);
+  const lbmStr = imp
+    ? (lbmKg * 2.20462).toFixed(1) + ' lbs'
+    : lbmKg.toFixed(1) + ' kg';
+  setVal('lm-val', lbmStr, true);
 
-    // ── Body Fat (US Navy Formula) ──
-    let bodyFat;
-    const validMeasurements = waist > neck && neck > 10 && waist > 10;
-    if (validMeasurements) {
-        bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(heightCm)) - 450;
-        bodyFat = Math.max(3, Math.min(50, bodyFat));
-        set('bf-val', bodyFat.toFixed(1) + '%');
-    } else {
-        bodyFat = 15; // athlete fallback
-        set('bf-val', '~15% (est.)');
-    }
+  /* ── BMR — Mifflin-St Jeor (sex-corrected) ── */
+  const offset = female ? -161 : 5;
+  const bmr    = 10 * weightKg + 6.25 * heightCm - 5 * age + offset;
+  if (bmr <= 0) { resetOutputs(); return; }
+  const tdee = bmr * activity;
 
-    // ── Lean Body Mass ──
-    const lbmKg     = weightKg * (1 - bodyFat / 100);
-    const lbmDisplay = imp
-        ? (lbmKg * 2.20462).toFixed(1) + ' lbs'
-        : lbmKg.toFixed(1) + ' kg';
-    set('lm-val', lbmDisplay);
+  setVal('bmr-val',  Math.round(bmr)  + ' kcal', true);
+  setVal('tdee-val', Math.round(tdee) + ' kcal', true);
 
-    // ── BMR + TDEE (Mifflin-St Jeor) ──
-    const bmr  = 10 * weightKg + 6.25 * heightCm - 5 * age + 5;
-    const tdee = bmr * activity;
+  /* ── Macros at maintenance ──
+     Protein : 2.2g × LBM kg
+     Fats    : 25% of TDEE ÷ 9
+     Carbs   : remainder (floored at 0)
+  */
+  const protein   = lbmKg * 2.2;
+  const fatGrams  = (tdee * 0.25) / 9;
+  const carbGrams = Math.max(0, (tdee - protein * 4 - fatGrams * 9) / 4);
 
-    // ── Macros ──
-    const protein  = lbmKg * 2.2;
-    const fatGrams = (tdee * 0.25) / 9;
-    const carbGrams = Math.max(0, (tdee - protein * 4 - fatGrams * 9) / 4);
+  setVal('prot-val', Math.round(protein)   + 'g', true);
+  setVal('carb-val', Math.round(carbGrams) + 'g', true);
+  setVal('fat-val',  Math.round(fatGrams)  + 'g', true);
 
-    // ── Update UI ──
-    set('tdee-val', Math.round(tdee) + ' kcal');
-    set('prot-val', Math.round(protein) + 'g');
-    set('carb-val', Math.round(carbGrams) + 'g');
-    set('fat-val',  Math.round(fatGrams) + 'g');
+  /* ── Protocol Table ── */
+  const rows = [
+    { label: 'Lean Bulk (+10%)',       kcal: tdee * 1.10, prot: protein,       note: 'Muscle synthesis, leverage maintenance' },
+    { label: 'Maintenance',             kcal: tdee,         prot: protein,       note: 'Body recomposition / skill training'   },
+    { label: 'Lean Cut (−15%)',         kcal: tdee * 0.85,  prot: lbmKg * 2.4,  note: 'Power-to-weight ratio optimisation'   },
+    { label: 'Aggressive Cut (−25%)',   kcal: tdee * 0.75,  prot: lbmKg * 2.6,  note: 'Max fat loss — monitor strength'       },
+  ];
 
-    // ── Protocols Table ──
-    const rows = [
-        { label: 'Lean Bulk (+10%)',   kcal: tdee * 1.10,  prot: protein,       note: 'Optimal muscle / leverage ratio' },
-        { label: 'Maintenance',         kcal: tdee,          prot: protein,       note: 'Body recomposition' },
-        { label: 'Lean Cut (−15%)',     kcal: tdee * 0.85,  prot: protein * 1.1, note: 'Skill power-to-weight optimisation' },
-    ];
-
-    $('protocol-body').innerHTML = rows.map(r => `
-        <tr>
-            <td>${r.label}</td>
-            <td>${Math.round(r.kcal)}</td>
-            <td>${Math.round(r.prot)}g</td>
-            <td>${r.note}</td>
-        </tr>`).join('');
+  $('protocol-body').innerHTML = rows
+    .map(r => `<tr>
+      <td>${r.label}</td>
+      <td>${Math.round(r.kcal)}</td>
+      <td>${Math.round(r.prot)}g</td>
+      <td>${r.note}</td>
+    </tr>`)
+    .join('');
 }
 
 /* ── COOKIES ── */
 const setCookie = (n, v, d) => {
-    const dt = new Date(); dt.setTime(dt.getTime() + d * 864e5);
-    document.cookie = `${n}=${v}; expires=${dt.toUTCString()}; path=/`;
+  const dt = new Date();
+  dt.setTime(dt.getTime() + d * 864e5);
+  document.cookie = `${n}=${v}; expires=${dt.toUTCString()}; path=/`;
 };
 const getCookie = n => {
-    const eq = n + '=';
-    return document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith(eq))?.substring(eq.length) ?? null;
+  const eq = n + '=';
+  return document.cookie.split(';')
+    .map(c => c.trim())
+    .find(c => c.startsWith(eq))
+    ?.substring(eq.length) ?? null;
 };
 
 function loadGA() {
-    const id = document.querySelector('meta[name="ga-id"]')?.content;
-    if (!id) return;
-    const s = document.createElement('script');
-    s.async = true; s.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
-    document.head.appendChild(s);
-    s.onload = () => {
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        window.gtag = gtag; gtag('js', new Date()); gtag('config', id);
-    };
+  const id = document.querySelector('meta[name="ga-id"]')?.content;
+  if (!id) return;
+  const s = document.createElement('script');
+  s.async = true;
+  s.src   = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+  document.head.appendChild(s);
+  s.onload = () => {
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    window.gtag = gtag;
+    gtag('js', new Date());
+    gtag('config', id);
+  };
 }
 function loadAdsense(personalised) {
-    const id = document.querySelector('meta[name="adsense-id"]')?.content;
-    if (!id) return;
-    const s = document.createElement('script');
-    s.async = true;
-    s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
-    s.setAttribute('data-ad-client', id);
-    s.crossOrigin = 'anonymous';
-    document.head.appendChild(s);
-    (window.adsbygoogle = window.adsbygoogle || []).push({
-        google_ad_client: id,
-        enable_page_level_ads: true,
-        ...(personalised ? {} : { non_personalized_ads: 1 })
-    });
+  const id = document.querySelector('meta[name="adsense-id"]')?.content;
+  if (!id) return;
+  const s = document.createElement('script');
+  s.async = true;
+  s.src   = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+  s.setAttribute('data-ad-client', id);
+  s.crossOrigin = 'anonymous';
+  document.head.appendChild(s);
+  (window.adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: id,
+    enable_page_level_ads: true,
+    ...(personalised ? {} : { non_personalized_ads: 1 })
+  });
 }
 
 const showBanner = () => { $('cookie-banner').style.bottom = '0'; };
-const hideBanner = () => { $('cookie-banner').style.bottom = '-100px'; };
+const hideBanner = () => { $('cookie-banner').style.bottom = '-140px'; };
 
 const consent = getCookie('cookie_consent');
 if (!consent)                    { showBanner(); }
 else if (consent === 'accepted') { loadGA(); loadAdsense(true); }
 else                             { loadAdsense(false); }
 
-$('accept-cookies').onclick = () => { setCookie('cookie_consent','accepted',365); hideBanner(); loadGA(); loadAdsense(true); };
-$('reject-cookies').onclick = () => { setCookie('cookie_consent','rejected',365); hideBanner(); loadAdsense(false); };
+$('accept-cookies').onclick = () => { setCookie('cookie_consent', 'accepted', 365); hideBanner(); loadGA(); loadAdsense(true); };
+$('reject-cookies').onclick = () => { setCookie('cookie_consent', 'rejected', 365); hideBanner(); loadAdsense(false); };
 
 /* ── INIT ── */
 document.addEventListener('DOMContentLoaded', calculate);
