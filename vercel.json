@@ -4,5 +4,6 @@
     { "source": "/strength-matrix.html", "destination": "/", "permanent": true },
     { "source": "/blog/lat-pulldown-lie.html", "destination": "/blog/lat-pulldown-truth.html", "permanent": true },
     { "source": "/blog/about.html", "destination": "/about.html", "permanent": true }
+    { "source": "/index.html", "destination": "/", "permanent": true }
   ]
 }
